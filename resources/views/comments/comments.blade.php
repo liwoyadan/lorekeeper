@@ -12,13 +12,13 @@
     <div class="alert alert-warning">There are no comments yet.</div>
 @endif
 
-<div class="comment_container">
+<div class="comment_container pb-3">
     <div class="comment_top">
         @if(!isset($type) || $type == "User-User")
             <h2 class="comment_heading">Comments</h2>
         @endif
 
-        <div class="px-5">
+        <div class="px-md-5">
             @auth
                 @include('comments._form')
             @else
@@ -80,9 +80,13 @@
                 @endif
             @endforeach
         </div>
+
+        @isset ($perPage)
+            <div class="comment_pagination">
+                {{ $grouped_comments->links() }}
+            </div>
+        @endisset
     </div>
 </div>
 
-@isset ($perPage)
-    {{ $grouped_comments->links() }}
-@endisset
+

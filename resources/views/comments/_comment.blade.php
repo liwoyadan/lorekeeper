@@ -12,7 +12,7 @@
 <div class="media-body row no-gutters mx-0" style="flex: 1; flex-wrap: wrap;">
     @if(isset($compact) && !$compact)
         <div class="col-2 pr-2 d-none d-md-flex flex-column justify-content-center align-items-center">
-            <img class="img-fluid" src="/images/avatars/{{ $comment->commenter->avatar }}" alt="{{ $comment->commenter->name }} Avatar">
+            <img class="comment_icon" src="/images/avatars/{{ $comment->commenter->avatar }}" alt="{{ $comment->commenter->name }} Avatar">
         </div>
     @endif
 

@@ -710,6 +710,9 @@ tr.accountbound {
 }
 
 .comment_top {
+    background-image: url('https://media.discordapp.net/attachments/805486344943173683/1145112696061169724/image.png?ex=6559314d&is=6546bc4d&hm=dd1a9d25ba0fa2ef7e061828ce1c8079d1ee6e7ed7f95b95ed539e2147d67504&');
+    background-position: top -15px right -75px;
+    background-repeat: no-repeat;
     padding-top: 3rem;
     padding-right: 3rem;
     padding-left: 3rem;
@@ -736,7 +739,7 @@ tr.accountbound {
 }
 
 .comment_textbox {
-    background-color: rgba(0,0,0, 0.35);
+    background-color: rgba(0,0,0, 0.55);
     border-color: rgba(255, 255, 255, 0.55);
 }
 
@@ -778,6 +781,10 @@ tr.accountbound {
 
 .comment_comments h5 a {
     color: #fff;
+}
+
+.comment_icon {
+    max-width: 75%;
 }
 
 .comment_comment {
@@ -835,7 +842,7 @@ tr.accountbound {
     width: 2px;
 
     position: absolute;
-    left: 10px;
+    left: 20px;
     top: 0;
     bottom: 0;
 }
@@ -847,7 +854,7 @@ tr.accountbound {
     width: 2%;
 
     position: absolute;
-    left: 10px;
+    left: 20px;
     top: 50%;
 }
 
@@ -865,5 +872,117 @@ tr.accountbound {
 }
 
 @media only screen and (max-width: 600px) {
-    .comment_replies { padding-left:1rem;}
+    .comment_replies { padding-left:1rem; }
+
+    .comment_replies::before { left: 5px; }
+
+    .comment_replies::after { left: 5px; }
+}
+
+.comment_pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.comment_pagination ul {
+    margin-bottom: 0;
+}
+
+.comment_pagination .page-link {
+    background-color: transparent!important;
+    border-color: transparent!important;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.35);
+    margin-left: 0.1rem;
+    margin-right: 0.1rem;
+    transition: border-color 150ms linear;
+}
+
+.comment_pagination .page-link:hover {
+    background-color: transparent!important;
+    border-color: #fff!important;
+}
+
+.comment_pagination .page-item.active .page-link {
+    border-color: #fff!important;
+    color: #fff;
+}
+
+.comment_pagination .page-item:first-child .page-link,
+.comment_pagination .page-item:last-child .page-link {
+    border-color: transparent!important;
+    border-radius: 0!important;
+    color: transparent;
+    position: relative;
+}
+
+.comment_pagination .page-item:first-child .page-link {
+    margin-right: 0.75rem;
+}
+
+.comment_pagination .page-item:first-child .page-link:hover::after {
+    background-color: #181717;
+}
+
+.comment_pagination .page-item:last-child .page-link {
+    margin-left: 0.75rem;
+}
+
+.comment_pagination .page-item:last-child .page-link:hover::after {
+    background-color: #181717;
+}
+
+.comment_pagination .page-item:first-child .page-link::before,
+.comment_pagination .page-item:last-child .page-link::before {
+    content: '';
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 0;
+}
+
+.comment_pagination .page-item:not(.disabled):first-child .page-link::before,
+.comment_pagination .page-item:not(.disabled):last-child .page-link::before {
+    background-color: #fff;
+}
+
+.comment_pagination .disabled.page-item:first-child .page-link::before,
+.comment_pagination .disabled.page-item:last-child .page-link::before {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.comment_pagination .page-item:first-child .page-link::before {
+    clip-path: polygon(100% 0, 0 50%, 100% 100%);
+    left: 0;
+    right: 1px;
+}
+
+.comment_pagination .page-item:last-child .page-link::before {
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    left: 1px;
+    right: 0;
+}
+
+.comment_pagination .page-item:first-child .page-link::after,
+.comment_pagination .page-item:last-child .page-link::after {
+    content: '';
+    background-color: #282828;
+    transition: background-color 150ms linear;
+
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    bottom: 3px;
+    right: 3px;
+    z-index: 1;
+}
+
+.comment_pagination .page-item:first-child .page-link::after {
+    clip-path: polygon(100% 0, 0 50%, 100% 100%);
+}
+
+.comment_pagination .page-item:last-child .page-link::after {
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
