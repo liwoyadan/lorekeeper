@@ -8,10 +8,6 @@
     }
 @endphp
 
-@if($comments->count() < 1)
-    <div class="alert alert-warning">There are no comments yet.</div>
-@endif
-
 <div class="comment_container pb-3">
     <div class="comment_top">
         @if(!isset($type) || $type == "User-User")
@@ -36,7 +32,11 @@
     <div class="comment_divider"></div>
 
     <div class="comment_comments">
-        <div class="d-flex mw-100 row mx-0" style="overflow:hidden;">
+
+        @if($comments->count() < 1)
+            <h5 class="text-center text-muted mb-0">There are no comments yet.</h5>
+        @endif
+        <div class="d-flex mw-100 row mx-0" style="overflow: hidden;">
             @php
                 $comments = $comments->sortByDesc('created_at');
 

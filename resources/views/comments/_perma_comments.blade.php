@@ -1,51 +1,77 @@
 @inject('markdown', 'Parsedown')
-@php 
+@php
     $markdown->setSafeMode(true);
 @endphp
+
+
 @if(isset($reply) && $reply === true)
-  <div id="comment-{{ $comment->getKey() }}" class="comment_replies border-left col-12 column mw-100 pr-0 pt-4" style="flex-basis: 100%;">
+    <div id="comment-{{ $comment->getKey() }}" class="comment_replies col-12 column mw-100 pr-0 pt-4" style="flex-basis: 100%;">
 @else
-  <div id="comment-{{ $comment->getKey() }}"  class="pt-4" style="flex-basis: 100%;">
+    <div id="comment-{{ $comment->getKey() }}"  class="pt-4" style="flex-basis: 100%;">
 @endif
-<div class="media-body row mw-100 mx-0" style="flex:1;flex-wrap:wrap;">
-    <div class="d-none d-md-block">
-        <img class="mr-3 mt-2" src="/images/avatars/{{ $comment->commenter->avatar }}" style="width:70px; height:70px; border-radius:50%;" alt="{{ $comment->commenter->name }} Avatar">
-    </div>
-    <div class="d-block" style="flex:1">
-        <div class="row mx-0 px-0 align-items-md-end">
-            <h5 class="mt-0 mb-1 col mx-0 px-0">
-                {!! $comment->commenter->commentDisplayName !!} @if($comment->commenter->isStaff == true)<small class="text-muted">Staff Member</small>@endif
-            </h5>
-            @if($comment->is_featured)<div class="ml-1 text-muted text-right col-6 mx-0 pr-1"><small class="text-success">Featured by Owner</small></div> @endif
+
+    <div class="media-body row no-gutters mx-0" style="flex: 1; flex-wrap: wrap;">
+        <div class="col-2 pr-2 d-none d-md-flex flex-column justify-content-center align-items-center">
+            <img class="comment_icon" src="/images/avatars/{{ $comment->commenter->avatar }}" alt="{{ $comment->commenter->name }} Avatar">
         </div>
-        <div class="border p-3 rounded {{ $limit == 0 ? 'shadow-sm border-info' : '' }} {{ ($comment->is_featured && ($limit != 0)) ? 'border-success' : '' }} "><p>{!! nl2br($markdown->line($comment->comment)) !!} </p>
-        <p class="border-top pt-1 text-right mb-0">
-            <small class="text-muted">{!! $comment->created_at !!}
-            @if($comment->created_at != $comment->updated_at) 
-                <span class="text-muted border-left mx-1 px-1">(Edited {!! ($comment->updated_at) !!})</span>
-            @endif
-            </small>
-            <a href="{{ url('comment/').'/'.$comment->id }}"><i class="fas fa-link ml-1" style="opacity: 50%;"></i></a>
-        </p>
-    </div>
-    @if(Auth::check())
-        <div class="my-1">
-            @can('reply-to-comment', $comment)
-                <button data-toggle="modal" data-target="#reply-modal-{{ $comment->getKey() }}" class="btn btn-sm px-3 py-2 px-sm-2 py-sm-1  btn-faded text-uppercase"><i class="fas fa-comment"></i><span class="ml-2 d-none d-sm-inline-block">Reply</span></button>
-            @endcan
-            @can('edit-comment', $comment)
-                <button data-toggle="modal" data-target="#comment-modal-{{ $comment->getKey() }}" class="btn btn-sm px-3 py-2 px-sm-2 py-sm-1  btn-faded text-uppercase"><i class="fas fa-edit"></i><span class="ml-2 d-none d-sm-inline-block">Edit</span></button>
-            @endcan
-            @if((Auth::user()->id == $comment->commentable_id) || Auth::user()->isStaff)
-                <button data-toggle="modal" data-target="#feature-modal-{{ $comment->getKey() }}" class="btn btn-sm px-3 py-2 px-sm-2 py-sm-1  btn-faded text-success text-uppercase"><i class="fas fa-star"></i><span class="ml-2 d-none d-sm-inline-block">{{$comment->is_featured ? 'Unf' : 'F' }}eature Comment</span></button>
-            @endif
-            @can('delete-comment', $comment)
-                <button data-toggle="modal" data-target="#delete-modal-{{ $comment->getKey() }}" class="btn btn-sm px-3 py-2 px-sm-2 py-sm-1 btn-outline-danger text-uppercase"><i class="fas fa-minus-circle"></i><span class="ml-2 d-none d-sm-inline-block">Delete</span></button>
-            @endcan
+
+        <div class="col d-block" style="flex: 1;">
+            <div class="row no-gutters mx-0 px-0">
+                <div class="col-md-6">
+                    <h5 class="m-0 col px-0 d-flex flex-column flex-md-row align-items-md-end">
+                        {!! $comment->commenter->displayName !!}
+                        <span class="text-muted ml-1" style="font-size: 0.75rem;">
+                            {!! $comment->commenter->rank->displayName !!} -
+                            {!! $comment->created_at !!}
+                        </span>
+                    </h5>
+                </div>
+                @if($comment->is_featured)
+                    <div class="text-muted text-right col-md-6 mx-0 pr-1"><small class="text-danger">Featured Comment</small></div>
+                @endif
+            </div>
+
+            <div class="comment_comment px-3 pt-3 pb-1 {{ ($comment->is_featured && ($limit != 0)) ? 'featured' : '' }}">
+                <p class="comment_content">{!! nl2br($markdown->line($comment->comment)) !!}</p>
+
+                <div class="text-muted text-right" style="font-size: 0.8em;">
+                    @if($comment->created_at != $comment->updated_at)
+                        <span class="text-muted mx-1 px-1">[Edited {!! ($comment->updated_at) !!}]</span>
+                    @endif
+                </div>
+
+                <div class="pt-1 d-flex align-items-center justify-content-end">
+                    <a href="{{ url('comment/').'/'.$comment->id }}"><i class="fas fa-link ml-1 text-danger" style="opacity: 50%;"></i></a>
+                    <a href="{{ url('reports/new?url=') . $comment->url }}"><i class="fas fa-exclamation-triangle text-danger" data-toggle="tooltip" title="Click here to report this comment." style="opacity: 50%;"></i></a>
+
+                    @if(Auth::check())
+                        <span class="mx-1">||</span>
+
+                        @can('edit-comment', $comment)
+                            <button data-toggle="modal" data-target="#comment-modal-{{ $comment->getKey() }}" class="btn btn-sm comment_options text-uppercase"><i class="fas fa-edit d-inline-block d-sm-none"></i><span class="d-none d-sm-inline-block">Edit</span></button>
+                            <span class="mx-1">|</span>
+                        @endcan
+
+                        @if((Auth::user()->id == $comment->commentable_id) || Auth::user()->isStaff)
+                            <button data-toggle="modal" data-target="#feature-modal-{{ $comment->getKey() }}" class="btn btn-sm comment_options text-uppercase"><i class="fas fa-star d-inline-block d-sm-none"></i><span class="d-none d-sm-inline-block">{{$comment->is_featured ? 'Unf' : 'F' }}eature Comment</span></button>
+                            <span class="mx-1">|</span>
+                        @endif
+
+                        @can('delete-comment', $comment)
+                            <button data-toggle="modal" data-target="#delete-modal-{{ $comment->getKey() }}" class="btn btn-sm comment_options text-uppercase"><i class="fas fa-minus-circle d-inline-block d-sm-none"></i><span class="d-none d-sm-inline-block">Delete</span></button>
+                            <span class="mx-1">|</span>
+                        @endcan
+
+                        @can('reply-to-comment', $comment)
+                            <button data-toggle="modal" data-target="#reply-modal-{{ $comment->getKey() }}" class="btn btn-sm comment_options text-uppercase"><i class="fas fa-comment d-inline-block d-sm-none"></i><span class="d-none d-sm-inline-block">Reply</span></button>
+                        @endcan
+                    @endif
+                </div>
+            </div>
         </div>
-    @endif
-    
-        @can('edit-comment', $comment)
+    </div>
+
+    @can('edit-comment', $comment)
             <div class="modal fade" id="comment-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -102,7 +128,7 @@
                     </div>
                 </div>
             </div>
-        @endcan 
+        @endcan
 
         @can('delete-comment', $comment)
             <div class="modal fade" id="delete-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
@@ -125,7 +151,7 @@
                     </div>
                 </div>
             </div>
-        @endcan 
+        @endcan
 
         <div class="modal fade" id="feature-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -141,20 +167,19 @@
                     </div>
                     <div class="alert alert-warning">Comments can be unfeatured.</div>
                     {!! Form::open(['url' => 'comments/'.$comment->id.'/feature']) !!}
-                        @if(!$comment->is_featured) {!! Form::submit('Feature', ['class' => 'btn btn-primary w-100 mb-0 mx-0']) !!}
-                        @else {!! Form::submit('Unfeature', ['class' => 'btn btn-primary w-100 mb-0 mx-0']) !!}
+                        @if (!$comment->is_featured)
+                            {!! Form::submit('Feature', ['class' => 'btn btn-primary w-100 mb-0 mx-0']) !!}
+                        @else
+                            {!! Form::submit('Unfeature', ['class' => 'btn btn-primary w-100 mb-0 mx-0']) !!}
                         @endif
                     {!! Form::close() !!}
                 </div>
             </div>
-    </div>
-</div>
+        </div>
 
-        
-{{-- add a limit check so if limit is reached but replies are still presnt to display a button with current amount of replies
-use child function
-url should be equal to the last replies permalink (e.g reply 5)--}}
-
+        {{-- add a limit check so if limit is reached but replies are still presnt to display a button with current amount of replies
+        use child function
+        url should be equal to the last replies permalink (e.g reply 5)--}}
 
         {{-- Recursion for children --}}
         <div class="w-100 mw-100">
@@ -162,8 +187,8 @@ url should be equal to the last replies permalink (e.g reply 5)--}}
             @foreach($children as $reply)
                 @php $limit++; @endphp
 
-                @if($limit >= 5 && $depth >= 1) 
-                    <a href="{{ url('comment/').'/'.$comment->id }}"><span class="btn btn-secondary w-100">See More Replies</span></a>
+                @if($limit >= 5 && $depth >= 1)
+                    <a href="{{ url('comment/').'/'.$comment->id }}"><span class="btn comment_more w-100 my-2"><span class="d-none d-md-inline-block">Click to </span>&nbsp;see more&nbsp;<span class="d-none d-md-inline-block"> of this thread...</span></span></a>
                     @break
                 @endif
 
@@ -174,7 +199,11 @@ url should be equal to the last replies permalink (e.g reply 5)--}}
                     'depth' => $depth+1
                 ])
                 @endforeach
-            @if($depth == 0) {!! $children->render() !!} @endif
+            @if($depth == 0)
+                <div class="comment_pagination">
+                    {!! $children->render() !!}
+                </div>
+            @endif
         </div>
     </div>
-</div>
+

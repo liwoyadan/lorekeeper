@@ -709,6 +709,12 @@ tr.accountbound {
     border: 3px solid #333333;
 }
 
+.comment_container.perma {
+    background-image: url('https://media.discordapp.net/attachments/805486344943173683/1145112696061169724/image.png?ex=6559314d&is=6546bc4d&hm=dd1a9d25ba0fa2ef7e061828ce1c8079d1ee6e7ed7f95b95ed539e2147d67504&');
+    background-position: top -15px right -75px;
+    background-repeat: no-repeat;
+}
+
 .comment_top {
     background-image: url('https://media.discordapp.net/attachments/805486344943173683/1145112696061169724/image.png?ex=6559314d&is=6546bc4d&hm=dd1a9d25ba0fa2ef7e061828ce1c8079d1ee6e7ed7f95b95ed539e2147d67504&');
     background-position: top -15px right -75px;
@@ -777,6 +783,10 @@ tr.accountbound {
     margin-left: 2rem;
     margin-right: 2rem;
     padding: 1rem 2rem;
+}
+
+.comment_comments.perma {
+    background-color: rgba(41, 41, 41, 0.90);
 }
 
 .comment_comments h5 a {
