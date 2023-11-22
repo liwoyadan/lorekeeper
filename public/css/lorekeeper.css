@@ -996,3 +996,7 @@ tr.accountbound {
 .comment_pagination .page-item:last-child .page-link::after {
     clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
+
+.comment_modal .modal-content {
+    background-color: #181717;
+}

@@ -72,7 +72,7 @@
     </div>
 
     @can('edit-comment', $comment)
-            <div class="modal fade" id="comment-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
+            <div class="modal fade comment_modal" id="comment-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <form method="POST" action="{{ route('comments.update', $comment->getKey()) }}">
@@ -92,8 +92,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-outline-secondary text-uppercase" data-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-sm btn-outline-success text-uppercase">Update</button>
+                                <button type="button" class="btn btn-sm comment_submit text-uppercase" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-sm comment_submit text-uppercase">Update</button>
                             </div>
                         </form>
                     </div>
@@ -102,7 +102,7 @@
         @endcan
 
         @can('reply-to-comment', $comment)
-            <div class="modal fade" id="reply-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
+            <div class="modal fade comment_modal" id="reply-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <form method="POST" action="{{ route('comments.reply', $comment->getKey()) }}">
@@ -121,8 +121,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-outline-secondary text-uppercase" data-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-sm btn-outline-success text-uppercase">Reply</button>
+                                <button type="button" class="btn btn-sm comment_submit text-uppercase" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-sm comment_submit text-uppercase">Reply</button>
                             </div>
                         </form>
                     </div>
@@ -131,7 +131,7 @@
         @endcan
 
         @can('delete-comment', $comment)
-            <div class="modal fade" id="delete-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
+            <div class="modal fade comment_modal" id="delete-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -143,7 +143,7 @@
                             <div class="modal-body">
                                 <div class="form-group">Are you sure you want to delete this comment?</div></div>
                                 <div class="alert alert-warning"><strong>Comments can be restored in the database.</strong> <br> Deleting a comment does not delete the comment record.</div>
-                                <a href="{{ route('comments.destroy', $comment->getKey()) }}" onclick="event.preventDefault();document.getElementById('comment-delete-form-{{ $comment->getKey() }}').submit();" class="btn btn-danger text-uppercase">Delete</a>
+                                <a href="{{ route('comments.destroy', $comment->getKey()) }}" onclick="event.preventDefault();document.getElementById('comment-delete-form-{{ $comment->getKey() }}').submit();" class="btn comment_submit text-uppercase">Delete</a>
                         <form id="comment-delete-form-{{ $comment->getKey() }}" action="{{ route('comments.destroy', $comment->getKey()) }}" method="POST" style="display: none;">
                             @method('DELETE')
                             @csrf
@@ -153,7 +153,7 @@
             </div>
         @endcan
 
-        <div class="modal fade" id="feature-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
+        <div class="modal fade comment_modal" id="feature-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -168,9 +168,9 @@
                     <div class="alert alert-warning">Comments can be unfeatured.</div>
                     {!! Form::open(['url' => 'comments/'.$comment->id.'/feature']) !!}
                         @if (!$comment->is_featured)
-                            {!! Form::submit('Feature', ['class' => 'btn btn-primary w-100 mb-0 mx-0']) !!}
+                            {!! Form::submit('Feature', ['class' => 'btn comment_submit w-100 mb-0 mx-0']) !!}
                         @else
-                            {!! Form::submit('Unfeature', ['class' => 'btn btn-primary w-100 mb-0 mx-0']) !!}
+                            {!! Form::submit('Unfeature', ['class' => 'btn comment_submit w-100 mb-0 mx-0']) !!}
                         @endif
                     {!! Form::close() !!}
                 </div>
