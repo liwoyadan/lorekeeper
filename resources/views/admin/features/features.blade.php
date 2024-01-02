@@ -40,7 +40,7 @@
 @if(!count($features))
     <p>No traits found.</p>
 @else
-    {!! $features->render() !!}
+    {!! $features->render('layouts._pagination') !!}
       <div class="row ml-md-2">
         <div class="d-flex row flex-wrap col-12 pb-1 px-0 ubt-bottom">
           <div class="col-12 col-md-3 font-weight-bold">Name</div>
@@ -60,7 +60,7 @@
         </div>
         @endforeach
       </div>
-    {!! $features->render() !!}
+    {!! $features->render('layouts._pagination') !!}
     <div class="text-center mt-4 small text-muted">{{ $features->total() }} result{{ $features->total() == 1 ? '' : 's' }} found.</div>
 @endif
 

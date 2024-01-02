@@ -12,7 +12,7 @@
         <a href="#" class="btn btn-primary" id="clearButton">Clear All</a>
     {!! Form::close() !!}
 </div>
-{!! $notifications->render() !!}
+{!! $notifications->render('layouts._pagination') !!}
 
 @foreach($notifications->pluck('notification_type_id')->unique() as $type)
 <div class="card mb-4">
@@ -56,7 +56,7 @@
     <div class="text-center">No notifications.</div>
 @endif
 
-{!! $notifications->render() !!}
+{!! $notifications->render('layouts._pagination') !!}
 
 <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">

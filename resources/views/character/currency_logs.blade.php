@@ -11,7 +11,7 @@
 
 <h3>Currency Logs</h3>
 
-{!! $logs->render() !!}
+{!! $logs->render('layouts._pagination') !!}
 
 <div class="row ml-md-2">
   <div class="d-flex row flex-wrap col-12 mt-1 pt-1 px-0 ubt-bottom">
@@ -25,6 +25,6 @@
         @include('user._currency_log_row', ['log' => $log, 'owner' => $character])
     @endforeach
 </div>
-{!! $logs->render() !!}
+{!! $logs->render('layouts._pagination') !!}
 
 @endsection

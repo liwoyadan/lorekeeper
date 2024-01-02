@@ -26,7 +26,7 @@
     </div>
 </div>
 
-{!! $bookmarks->render() !!}
+{!! $bookmarks->render('layouts._pagination') !!}
 <div class="table-responsive mb-3">
     <table class="table table-sm bookmark-table mb-0">
         <thead>
@@ -85,7 +85,7 @@
     <div class="text-center">No bookmarks. You can bookmark characters from their respective pages.</div>
 @endif
 
-{!! $bookmarks->render() !!}
+{!! $bookmarks->render('layouts._pagination') !!}
 
 @endsection
 @section('scripts')

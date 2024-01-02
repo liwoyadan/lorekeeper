@@ -17,7 +17,7 @@
     {!! Form::close() !!}
 </div>
 
-{!! $subtypes->render() !!}
+{!! $subtypes->render('layouts._pagination') !!}
 @foreach($subtypes as $subtype)
     <div class="card mb-3">
         <div class="card-body">
@@ -25,7 +25,7 @@
         </div>
     </div>
 @endforeach
-{!! $subtypes->render() !!}
+{!! $subtypes->render('layouts._pagination') !!}
 
 <div class="text-center mt-4 small text-muted">{{ $subtypes->total() }} result{{ $subtypes->total() == 1 ? '' : 's' }} found.</div>
 

@@ -38,7 +38,7 @@
     {!! Form::close() !!}
 </div>
 
-{!! $items->render() !!}
+{!! $items->render('layouts._pagination') !!}
 @foreach($items as $item)
     <div class="card mb-3">
         <div class="card-body">
@@ -49,7 +49,7 @@
         </div>
     </div>
 @endforeach
-{!! $items->render() !!}
+{!! $items->render('layouts._pagination') !!}
 
 <div class="text-center mt-4 small text-muted">{{ $items->total() }} result{{ $items->total() == 1 ? '' : 's' }} found.</div>
 

@@ -29,7 +29,7 @@
 @if(!count($prompts))
     <p>No prompts found.</p>
 @else
-    {!! $prompts->render() !!}
+    {!! $prompts->render('layouts._pagination') !!}
 
     <div class="row ml-md-2">
       <div class="d-flex row flex-wrap col-12 pb-1 px-0 ubt-bottom">
@@ -63,7 +63,7 @@
       @endforeach
     </div>
 
-    {!! $prompts->render() !!}
+    {!! $prompts->render('layouts._pagination') !!}
 
     <div class="text-center mt-4 small text-muted">{{ $prompts->total() }} result{{ $prompts->total() == 1 ? '' : 's' }} found.</div>
 @endif

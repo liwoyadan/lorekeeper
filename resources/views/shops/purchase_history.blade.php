@@ -9,7 +9,7 @@
     My Purchase History
 </h1>
 
-{!! $logs->render() !!}
+{!! $logs->render('layouts._pagination') !!}
 
 
 <div class="row ml-md-2">
@@ -25,6 +25,6 @@
         @include('shops._purchase_history_row', ['log' => $log])
     @endforeach
 </div>
-{!! $logs->render() !!}
+{!! $logs->render('layouts._pagination') !!}
 
 @endsection

@@ -13,7 +13,7 @@
 @if(!count($tables))
     <p>No loot tables found.</p>
 @else
-    {!! $tables->render() !!}
+    {!! $tables->render('layouts._pagination') !!}
       <div class="row ml-md-2">
         <div class="d-flex row flex-wrap col-12 pb-1 px-0 ubt-bottom">
           <div class="col-3 col-md-2 font-weight-bold">ID</div>
@@ -29,7 +29,7 @@
         </div>
         @endforeach
       </div>
-    {!! $tables->render() !!}
+    {!! $tables->render('layouts._pagination') !!}
     <div class="text-center mt-4 small text-muted">{{ $tables->total() }} result{{ $tables->total() == 1 ? '' : 's' }} found.</div>
 @endif
 

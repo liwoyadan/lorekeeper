@@ -21,12 +21,6 @@
         <div class="d-flex mw-100 row mx-0" style="overflow: hidden;">
             @include('comments._perma_comments', ['comment' => $comment, 'limit' => 0, 'depth' => 0])
         </div>
-
-        @isset ($perPage)
-            <div class="comment_pagination">
-                {{ $grouped_comments->links() }}
-            </div>
-        @endisset
     </div>
 </div>
 

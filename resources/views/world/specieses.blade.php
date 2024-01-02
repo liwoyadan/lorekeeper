@@ -17,7 +17,7 @@
     {!! Form::close() !!}
 </div>
 
-{!! $specieses->render() !!}
+{!! $specieses->render('layouts._pagination') !!}
 @foreach($specieses as $species)
     <div class="card mb-3">
         <div class="card-body">
@@ -25,7 +25,7 @@
         </div>
     </div>
 @endforeach
-{!! $specieses->render() !!}
+{!! $specieses->render('layouts._pagination') !!}
 
 <div class="text-center mt-4 small text-muted">{{ $specieses->total() }} result{{ $specieses->total() == 1 ? '' : 's' }} found.</div>
 

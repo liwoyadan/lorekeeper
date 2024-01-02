@@ -17,7 +17,7 @@
     {!! Form::close() !!}
 </div>
 
-{!! $rarities->render() !!}
+{!! $rarities->render('layouts._pagination') !!}
 @foreach($rarities as $rarity)
     <div class="card mb-3">
         <div class="card-body">
@@ -25,7 +25,7 @@
         </div>
     </div>
 @endforeach
-{!! $rarities->render() !!}
+{!! $rarities->render('layouts._pagination') !!}
 
 <div class="text-center mt-4 small text-muted">{{ $rarities->total() }} result{{ $rarities->total() == 1 ? '' : 's' }} found.</div>
 

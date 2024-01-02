@@ -21,7 +21,7 @@
   </li>
 </ul>
 
-{!! $requests->render() !!}
+{!! $requests->render('layouts._pagination') !!}
   <div class="row ml-md-2">
     <div class="d-flex row flex-wrap col-12 pb-1 px-0 ubt-bottom">
       <div class="col-md-3 font-weight-bold">{{ $isMyo ? 'MYO Slot' : 'Character' }}</div>
@@ -58,7 +58,7 @@
     </div>
     @endforeach
   </div>
-{!! $requests->render() !!}
+{!! $requests->render('layouts._pagination') !!}
 
 <div class="text-center mt-4 small text-muted">{{ $requests->total() }} result{{ $requests->total() == 1 ? '' : 's' }} found.</div>
 

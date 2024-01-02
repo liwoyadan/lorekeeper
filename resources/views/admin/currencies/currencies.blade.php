@@ -12,7 +12,7 @@
 <p>The order of currencies as displayed on user and character profiles can be edited from the <strong><a href="{{ url('admin/data/currencies/sort') }}">Sort Currencies</a></strong> page.</p>
 
 <div class="text-right mb-3"><a class="btn btn-primary" href="{{ url('admin/data/currencies/create') }}"><i class="fas fa-plus"></i> Create New Currency</a></div>
-{!! $currencies->render() !!}
+{!! $currencies->render('layouts._pagination') !!}
   <div class="row ml-md-2">
     <div class="d-flex row flex-wrap col-12 pb-1 px-0 ubt-bottom">
       <div class="col-12 col-md-4 font-weight-bold">Name</div>
@@ -28,6 +28,6 @@
     </div>
     @endforeach
   </div>
-{!! $currencies->render() !!}
+{!! $currencies->render('layouts._pagination') !!}
 <div class="text-center mt-4 small text-muted">{{ $currencies->total() }} result{{ $currencies->total() == 1 ? '' : 's' }} found.</div>
 @endsection

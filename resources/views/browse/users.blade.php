@@ -27,7 +27,7 @@
                 'alias-reverse'  => 'Sort by Alias (Z-A)',
                 'rank'           => 'Sort by Rank (Default)',
                 'newest'         => 'Newest First',
-                'oldest'         => 'Oldest First'    
+                'oldest'         => 'Oldest First'
             ], Request::get('sort') ? : 'category', ['class' => 'form-control']) !!}
         </div>
         <div class="form-group mb-3">
@@ -35,7 +35,7 @@
         </div>
     {!! Form::close() !!}
 </div>
-{!! $users->render() !!}
+{!! $users->render('layouts._pagination') !!}
   <div class="row ml-md-2">
     <div class="d-flex row flex-wrap col-12 pb-1 px-0 ubt-bottom">
       <div class="col-12 col-md-4 font-weight-bold">Username</div>
@@ -52,7 +52,7 @@
     </div>
     @endforeach
   </div>
-{!! $users->render() !!}
+{!! $users->render('layouts._pagination') !!}
 
 <div class="text-center mt-4 small text-muted">{{ $users->total() }} result{{ $users->total() == 1 ? '' : 's' }} found.</div>
 

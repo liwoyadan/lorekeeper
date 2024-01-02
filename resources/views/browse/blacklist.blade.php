@@ -25,13 +25,13 @@
                     {!! Form::submit('Submit', ['class' => 'btn btn-primary']) !!}
                 </div>
             {!! Form::close() !!}
-    @else 
+    @else
         <p>You cannot view this page.</p>
     @endif
 
-@else 
+@else
 
-    {!! $users->render() !!}
+    {!! $users->render('layouts._pagination') !!}
     <table class="users-table table table-sm table-responsive-xs">
         <thead>
             <tr>
@@ -52,7 +52,7 @@
             @endforeach
         </tbody>
     </table>
-    {!! $users->render() !!}
+    {!! $users->render('layouts._pagination') !!}
 
     <div class="text-center mt-4 small text-muted">{{ $users->total() }} result{{ $users->total() == 1 ? '' : 's' }} found.</div>
 @endif

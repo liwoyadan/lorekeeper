@@ -34,7 +34,7 @@
 </ul>
 
 @if(count($submissions))
-    {!! $submissions->render() !!}
+    {!! $submissions->render('layouts._pagination') !!}
     <div class="row ml-md-2">
       <div class="d-flex row flex-wrap col-12 mt-1 pt-1 px-0 ubt-bottom">
         @if(!$isClaims)
@@ -61,7 +61,7 @@
         </div>
       @endforeach
       </div>
-    {!! $submissions->render() !!}
+    {!! $submissions->render('layouts._pagination') !!}
     <div class="text-center mt-4 small text-muted">{{ $submissions->total() }} result{{ $submissions->total() == 1 ? '' : 's' }} found.</div>
 @else
     <p>No {{ $isClaims ? 'claims' : 'submissions' }} found.</p>

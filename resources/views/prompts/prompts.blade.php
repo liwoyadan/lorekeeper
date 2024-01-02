@@ -27,7 +27,7 @@
                     'start'          => 'Starts Earliest',
                     'start-reverse'  => 'Starts Latest',
                     'end'            => 'Ends Earliest',
-                    'end-reverse'    => 'Ends Latest'      
+                    'end-reverse'    => 'Ends Latest'
                 ], Request::get('sort') ? : 'category', ['class' => 'form-control']) !!}
             </div>
             <div class="form-group ml-3 mb-3">
@@ -37,7 +37,7 @@
     {!! Form::close() !!}
 </div>
 
-{!! $prompts->render() !!}
+{!! $prompts->render('layouts._pagination') !!}
 @foreach($prompts as $prompt)
     <div class="card mb-3">
         <div class="card-body">
@@ -45,7 +45,7 @@
         </div>
     </div>
 @endforeach
-{!! $prompts->render() !!}
+{!! $prompts->render('layouts._pagination') !!}
 
 <div class="text-center mt-4 small text-muted">{{ $prompts->total() }} result{{ $prompts->total() == 1 ? '' : 's' }} found.</div>
 

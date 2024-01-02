@@ -7,7 +7,7 @@
 <h1>Gallery</h1>
 
 @if($galleries->count())
-    {!! $galleries->render() !!}
+    {!! $galleries->render('layouts._pagination') !!}
 
     @foreach($galleries as $gallery)
         <div class="card mb-4">
@@ -64,7 +64,7 @@
         </div>
     @endforeach
 
-    {!! $galleries->render() !!}
+    {!! $galleries->render('layouts._pagination') !!}
 @else
     <p>There aren't any galleries!</p>
 @endif

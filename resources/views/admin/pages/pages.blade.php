@@ -13,7 +13,7 @@
 @if(!count($pages))
     <p>No pages found.</p>
 @else
-    {!! $pages->render() !!}
+    {!! $pages->render('layouts._pagination') !!}
       <div class="row ml-md-2">
         <div class="d-flex row flex-wrap col-12 pb-1 px-0 ubt-bottom">
           <div class="col-12 col-md-5 font-weight-bold">Title</div>
@@ -29,7 +29,7 @@
         </div>
         @endforeach
       </div>
-    {!! $pages->render() !!}
+    {!! $pages->render('layouts._pagination') !!}
 
     <div class="text-center mt-4 small text-muted">{{ $pages->total() }} result{{ $pages->total() == 1 ? '' : 's' }} found.</div>
 

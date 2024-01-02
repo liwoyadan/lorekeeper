@@ -39,7 +39,7 @@
 
 <h3>Tickets</h3>
 
-<div class="text-right">{!! $tickets->render() !!}</div>
+<div class="text-right">{!! $tickets->render('layouts._pagination') !!}</div>
 <div class="table-responsive">
     <table class="table table-sm">
         <thead><th class="col-xs-1 text-center" style="width:100px;">#</th><th>User</th>@if($raffle->is_active < 2)<th></th>@endif</thead>
@@ -56,7 +56,7 @@
         </tbody>
     </table>
 </div>
-<div class="text-right">{!! $tickets->render() !!}</div>
+<div class="text-right">{!! $tickets->render('layouts._pagination') !!}</div>
 
 <div class="modal fade" id="raffle-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">

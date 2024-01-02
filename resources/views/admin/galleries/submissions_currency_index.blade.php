@@ -29,13 +29,13 @@
     {!! Form::close() !!}
 </div>
 
-{!! $submissions->render() !!}
+{!! $submissions->render('layouts._pagination') !!}
 
 @foreach($submissions as $key=>$submission)
     @include('galleries._queue_submission', ['queue' => true])
 @endforeach
 
-{!! $submissions->render() !!}
+{!! $submissions->render('layouts._pagination') !!}
 <div class="text-center mt-4 small text-muted">{{ $submissions->total() }} result{{ $submissions->total() == 1 ? '' : 's' }} found.</div>
 
 @endsection

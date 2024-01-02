@@ -9,7 +9,7 @@
     {!! $user->displayName !!}'s Character History
 </h1>
 
-{!! $logs->render() !!}
+{!! $logs->render('layouts._pagination') !!}
 <div class="row ml-md-2 mb-4">
   <div class="d-flex row flex-wrap col-12 mt-1 pt-1 px-0 ubt-bottom">
     <div class="col-6 col-md-2 font-weight-bold">Sender</div>
@@ -22,6 +22,6 @@
       @include('user._ownership_log_row', ['log' => $log, 'user' => $user, 'showCharacter' => true])
   @endforeach
 </div>
-{!! $logs->render() !!}
+{!! $logs->render('layouts._pagination') !!}
 
 @endsection

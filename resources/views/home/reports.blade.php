@@ -25,7 +25,7 @@ My Reports
 </ul>
 
 @if(count($reports))
-    {!! $reports->render() !!}
+    {!! $reports->render('layouts._pagination') !!}
     <div class="row ml-md-2">
       <div class="d-flex row flex-wrap col-12 mt-1 pt-1 px-0 ubt-bottom">
         <div class="col-6 col-md-4 font-weight-bold">Link/Title</div>
@@ -36,9 +36,9 @@ My Reports
                 @include('home._report', ['report' => $report])
             @endforeach
       </div>
-    {!! $reports->render() !!}
+    {!! $reports->render('layouts._pagination') !!}
     <div class="text-center mt-4 small text-muted">{{ $reports->total() }} result{{ $reports->total() == 1 ? '' : 's' }} found.</div>
-@else 
+@else
     <p>No reports found.</p>
 @endif
 

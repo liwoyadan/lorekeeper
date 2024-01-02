@@ -15,7 +15,7 @@
 @if(!count($invitations))
     <p>No invitations found.</p>
 @else
-    {!! $invitations->render() !!}
+    {!! $invitations->render('layouts._pagination') !!}
       <div class="row ml-md-2">
         <div class="d-flex row flex-wrap col-12 pb-1 px-0 ubt-bottom">
           <div class="col-6 col-md-2 font-weight-bold">Code</div>
@@ -42,7 +42,7 @@
         @endforeach
       </div>
 
-    {!! $invitations->render() !!}
+    {!! $invitations->render('layouts._pagination') !!}
     <div class="text-center mt-4 small text-muted">{{ $invitations->total() }} result{{ $invitations->total() == 1 ? '' : 's' }} found.</div>
 @endif
 

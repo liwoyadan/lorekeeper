@@ -17,7 +17,7 @@
     {!! Form::close() !!}
 </div>
 
-{!! $currencies->render() !!}
+{!! $currencies->render('layouts._pagination') !!}
 @foreach($currencies as $currency)
     <div class="card mb-3">
         <div class="card-body">
@@ -25,7 +25,7 @@
         </div>
     </div>
 @endforeach
-{!! $currencies->render() !!}
+{!! $currencies->render('layouts._pagination') !!}
 
 <div class="text-center mt-4 small text-muted">{{ $currencies->total() }} result{{ $currencies->total() == 1 ? '' : 's' }} found.</div>
 

@@ -19,7 +19,7 @@
 
 @if(isset($favorites) && $favorites->count())
 
-    {!! $favorites->render() !!}
+    {!! $favorites->render('layouts._pagination') !!}
 
 <div class="d-flex align-content-around flex-wrap mb-2">
     @foreach($favorites as $submission)
@@ -27,7 +27,7 @@
     @endforeach
 </div>
 
-    {!! $favorites->render() !!}
+    {!! $favorites->render('layouts._pagination') !!}
 @else
     <p>No favorites found!</p>
 @endif

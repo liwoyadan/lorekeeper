@@ -14,7 +14,7 @@
             <h2 class="comment_heading">Comments</h2>
         @endif
 
-        <div class="px-md-5">
+        <div class="px-md-5 pb-md-3">
             @auth
                 @include('comments._form')
             @else
@@ -82,9 +82,7 @@
         </div>
 
         @isset ($perPage)
-            <div class="comment_pagination">
-                {{ $grouped_comments->links() }}
-            </div>
+            {{ $grouped_comments->links('layouts._pagination') }}
         @endisset
     </div>
 </div>

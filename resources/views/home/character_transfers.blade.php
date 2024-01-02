@@ -21,11 +21,11 @@
   </li>
 </ul>
 
-{!! $transfers->render() !!}
+{!! $transfers->render('layouts._pagination') !!}
 @foreach($transfers as $transfer)
     @include('home._transfer', ['transfer' => $transfer])
 @endforeach
-{!! $transfers->render() !!}
+{!! $transfers->render('layouts._pagination') !!}
 
 
 @endsection

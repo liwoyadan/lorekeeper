@@ -136,7 +136,7 @@
     </div>
 </div>
 
-{!! $characters->render() !!}
+{!! $characters->render('layouts._pagination') !!}
 <div id="gridView" class="hide">
     @foreach($characters->chunk(4) as $chunk)
         <div class="row">
@@ -180,6 +180,6 @@
         </tbody>
     </table>
 </div>
-{!! $characters->render() !!}
+{!! $characters->render('layouts._pagination') !!}
 
 <div class="text-center mt-4 small text-muted">{{ $characters->total() }} result{{ $characters->total() == 1 ? '' : 's' }} found.</div>

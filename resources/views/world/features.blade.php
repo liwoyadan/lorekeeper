@@ -32,7 +32,7 @@
                     'rarity'         => 'Sort by Rarity (Rare to Common)',
                     'species'        => 'Sort by Species',
                     'newest'         => 'Newest First',
-                    'oldest'         => 'Oldest First'    
+                    'oldest'         => 'Oldest First'
                 ], Request::get('sort') ? : 'category', ['class' => 'form-control']) !!}
             </div>
             <div class="form-group ml-3 mb-3">
@@ -42,7 +42,7 @@
     {!! Form::close() !!}
 </div>
 
-{!! $features->render() !!}
+{!! $features->render('layouts._pagination') !!}
 @foreach($features as $feature)
     <div class="card mb-3">
         <div class="card-body">
@@ -50,7 +50,7 @@
         </div>
     </div>
 @endforeach
-{!! $features->render() !!}
+{!! $features->render('layouts._pagination') !!}
 
 <div class="text-center mt-4 small text-muted">{{ $features->total() }} result{{ $features->total() == 1 ? '' : 's' }} found.</div>
 

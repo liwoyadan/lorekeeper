@@ -9,7 +9,7 @@
     {!! $user->displayName !!}'s Submissions
 </h1>
 
-{!! $logs->render() !!}
+{!! $logs->render('layouts._pagination') !!}
 <div class="row ml-md-2">
   <div class="d-flex row flex-wrap col-12 mt-1 pt-1 px-0 ubt-bottom">
     <div class="col-12 col-md-2 font-weight-bold">Prompt</div>
@@ -28,6 +28,6 @@
     </div>
   @endforeach
   </div>
-{!! $logs->render() !!}
+{!! $logs->render('layouts._pagination') !!}
 
 @endsection

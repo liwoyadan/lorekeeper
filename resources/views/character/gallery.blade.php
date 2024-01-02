@@ -16,7 +16,7 @@
 <p>These images are user-submitted and should not be confused with the official record of the character's design and history visible <a href="{{ url($character->url . '/images') }}">here</a>.</p>
 
 @if($character->gallerySubmissions->count())
-    {!! $submissions->render() !!}
+    {!! $submissions->render('layouts._pagination') !!}
 
 <div class="d-flex align-content-around flex-wrap mb-2">
     @foreach($submissions as $submission)
@@ -24,7 +24,7 @@
     @endforeach
 </div>
 
-    {!! $submissions->render() !!}
+    {!! $submissions->render('layouts._pagination') !!}
 @else
     <p>No submissions found!</p>
 @endif

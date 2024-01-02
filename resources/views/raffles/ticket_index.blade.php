@@ -34,7 +34,7 @@
   <p class="text-center"> That's a <strong>{{ $chance }}%</strong> chance! </p>
 @endif
 
-<div class="text-right">{!! $tickets->render() !!}</div>
+<div class="text-right">{!! $tickets->render('layouts._pagination') !!}</div>
 
   <div class="row ml-md-2">
     <div class="d-flex row flex-wrap col-12 mt-1 pt-1 px-0 ubt-bottom">
@@ -54,7 +54,7 @@
         @endforeach
   </div>
 
-<div class="text-right">{!! $tickets->render() !!}</div>
+<div class="text-right">{!! $tickets->render('layouts._pagination') !!}</div>
 @endsection
 @section('scripts')
 @parent

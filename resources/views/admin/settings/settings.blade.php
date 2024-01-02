@@ -11,8 +11,8 @@
 
 @if(!count($settings))
     <p>No settings found.</p>
-@else 
-    {!! $settings->render() !!}
+@else
+    {!! $settings->render('layouts._pagination') !!}
     <table class="table table-sm setting-table">
         <thead>
             <tr>
@@ -42,7 +42,7 @@
         </tbody>
 
     </table>
-    {!! $settings->render() !!}
+    {!! $settings->render('layouts._pagination') !!}
 @endif
 
 @endsection

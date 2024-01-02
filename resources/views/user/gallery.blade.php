@@ -10,7 +10,7 @@
 </h1>
 
 @if($user->gallerySubmissions->count())
-    {!! $submissions->render() !!}
+    {!! $submissions->render('layouts._pagination') !!}
 
 <div class="d-flex align-content-around flex-wrap mb-2">
     @foreach($submissions as $submission)
@@ -18,7 +18,7 @@
     @endforeach
 </div>
 
-    {!! $submissions->render() !!}
+    {!! $submissions->render('layouts._pagination') !!}
 @else
     <p>No submissions found!</p>
 @endif

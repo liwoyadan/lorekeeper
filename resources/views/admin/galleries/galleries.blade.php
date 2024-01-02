@@ -13,7 +13,7 @@
 @if(!count($galleries))
     <p>No galleries found.</p>
 @else
-    {!! $galleries->render() !!}
+    {!! $galleries->render('layouts._pagination') !!}
 
     <div class="d-flex row flex-wrap col-12 mt-1 pt-1 px-0 ubt-bottom">
         <div class="col-6 col-md-1 font-weight-bold">Open</div>
@@ -27,7 +27,7 @@
         @include('admin.galleries._galleries', ['gallery' => $gallery])
     @endforeach
 
-    {!! $galleries->render() !!}
+    {!! $galleries->render('layouts._pagination') !!}
 
 @endif
 

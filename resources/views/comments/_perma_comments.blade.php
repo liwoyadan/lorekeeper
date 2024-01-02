@@ -200,9 +200,7 @@
                 ])
                 @endforeach
             @if($depth == 0)
-                <div class="comment_pagination">
-                    {!! $children->render() !!}
-                </div>
+                {!! $children->render('layouts._pagination') !!}
             @endif
         </div>
     </div>

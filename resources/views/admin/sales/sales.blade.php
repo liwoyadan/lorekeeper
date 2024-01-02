@@ -12,8 +12,8 @@
 <div class="text-right mb-3"><a class="btn btn-primary" href="{{ url('admin/sales/create') }}"><i class="fas fa-plus"></i> Create New Sales Post</a></div>
 @if(!count($saleses))
     <p>No sales found.</p>
-@else 
-    {!! $saleses->render() !!}
+@else
+    {!! $saleses->render('layouts._pagination') !!}
     <table class="table table-sm page-table">
         <thead>
             <tr>
@@ -30,7 +30,7 @@
                         @if(!$sales->is_visible)
                             @if($sales->post_at)
                                 <i class="fas fa-clock" data-toggle="tooltip" title="This post is scheduled to be posted in the future."></i>
-                            @else 
+                            @else
                                 <i class="fas fa-eye-slash" data-toggle="tooltip" title="This post is hidden."></i>
                             @endif
                         @endif
@@ -46,7 +46,7 @@
         </tbody>
 
     </table>
-    {!! $saleses->render() !!}
+    {!! $saleses->render('layouts._pagination') !!}
 @endif
 
 @endsection

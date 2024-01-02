@@ -15,7 +15,7 @@
 
 <h3>Change Log</h3>
 
-{!! $logs->render() !!}
+{!! $logs->render('layouts._pagination') !!}
 <div class="row ml-md-2 mb-4">
   <div class="d-flex row flex-wrap col-12 mt-1 pt-1 px-0 ubt-bottom">
     <div class="col-6 col-md-2 font-weight-bold">Edited By</div>
@@ -27,6 +27,6 @@
   @endforeach
 
 </div>
-{!! $logs->render() !!}
+{!! $logs->render('layouts._pagination') !!}
 
 @endsection

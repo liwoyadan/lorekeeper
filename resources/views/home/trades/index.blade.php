@@ -28,11 +28,11 @@
     </li>
 </ul>
 
-{!! $trades->render() !!}
+{!! $trades->render('layouts._pagination') !!}
 @foreach($trades as $trade)
     @include('home.trades._trade', ['trade' => $trade])
 @endforeach
-{!! $trades->render() !!}
+{!! $trades->render('layouts._pagination') !!}
 
 
 @endsection

@@ -34,7 +34,7 @@
 @if(!count($items))
     <p>No items found.</p>
 @else
-    {!! $items->render() !!}
+    {!! $items->render('layouts._pagination') !!}
 
         <div class="row ml-md-2 mb-4">
           <div class="d-flex row flex-wrap col-12 pb-1 px-0 ubt-bottom">
@@ -52,7 +52,7 @@
           @endforeach
         </div>
 
-    {!! $items->render() !!}
+    {!! $items->render('layouts._pagination') !!}
 @endif
 
 @endsection

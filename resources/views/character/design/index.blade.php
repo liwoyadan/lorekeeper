@@ -30,7 +30,7 @@
 @endif
 
 @if(count($requests))
-    {!! $requests->render() !!}
+    {!! $requests->render('layouts._pagination') !!}
     <table class="table table-sm">
         <thead>
             <tr>
@@ -57,8 +57,8 @@
             @endforeach
         </tbody>
     </table>
-    {!! $requests->render() !!}
-@else 
+    {!! $requests->render('layouts._pagination') !!}
+@else
     <p>No {{ 'requests' }} found.</p>
 @endif
 

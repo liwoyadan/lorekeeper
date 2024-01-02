@@ -710,18 +710,32 @@ tr.accountbound {
 }
 
 .comment_container.perma {
-    background-image: url('https://media.discordapp.net/attachments/805486344943173683/1145112696061169724/image.png?ex=6559314d&is=6546bc4d&hm=dd1a9d25ba0fa2ef7e061828ce1c8079d1ee6e7ed7f95b95ed539e2147d67504&');
-    background-position: top -15px right -75px;
+    background-image: url('../files/comment_bg.png');
+    background-position: top -50px right -200px;
     background-repeat: no-repeat;
+    background-size: 1200px;
 }
 
 .comment_top {
-    background-image: url('https://media.discordapp.net/attachments/805486344943173683/1145112696061169724/image.png?ex=6559314d&is=6546bc4d&hm=dd1a9d25ba0fa2ef7e061828ce1c8079d1ee6e7ed7f95b95ed539e2147d67504&');
-    background-position: top -15px right -75px;
+    background-image: url('../files/comment_bg.png');
+    background-position: top -50px right -200px;
     background-repeat: no-repeat;
+    background-size: 1200px;
     padding-top: 3rem;
     padding-right: 3rem;
     padding-left: 3rem;
+}
+
+@media (max-width: 421px) {
+    .comment_container.perma {
+        background-position: top -10px right -100px;
+        background-size: 600px;
+    }
+
+    .comment_top {
+        background-position: top -10px right -100px;
+        background-size: 600px;
+    }
 }
 
 .comment_top a {
@@ -892,7 +906,9 @@ tr.accountbound {
 .comment_pagination {
     display: flex;
     justify-content: center;
+    align-items: center;
     margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 .comment_pagination ul {
@@ -919,7 +935,45 @@ tr.accountbound {
     color: #fff;
 }
 
+.comment_pagination img {
+    height: 35px;
+}
+
 .comment_pagination .page-item:first-child .page-link,
+.comment_pagination .page-item:last-child .page-link {
+    border-color: transparent!important;
+    border-radius: 0!important;
+    padding: 0;
+    transition: all 150ms linear;
+}
+
+.comment_pagination .page-item:first-child .page-link img {
+    transform: scaleX(-1);
+}
+
+.comment_pagination .page-item:first-child .page-link {
+    padding-right: 0.25rem;
+}
+
+.comment_pagination .page-item:last-child .page-link {
+    padding-left: 0.25rem;
+}
+
+.comment_pagination .page-item:first-child .page-link:hover {
+    transform: translateX(-0.25rem);
+}
+
+.comment_pagination .page-item:last-child .page-link:hover {
+    transform: translateX(0.25rem);
+}
+
+.comment_pagination .disabled.page-item:first-child .page-link,
+.comment_pagination .disabled.page-item:last-child .page-link {
+    filter: grayscale(100%);
+    opacity: 75%;
+}
+
+/*.comment_pagination .page-item:first-child .page-link,
 .comment_pagination .page-item:last-child .page-link {
     border-color: transparent!important;
     border-radius: 0!important;
@@ -995,7 +1049,7 @@ tr.accountbound {
 
 .comment_pagination .page-item:last-child .page-link::after {
     clip-path: polygon(0 0, 100% 50%, 0 100%);
-}
+}*/
 
 .comment_modal .modal-content {
     background-color: #181717;

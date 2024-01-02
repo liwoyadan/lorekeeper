@@ -21,7 +21,7 @@
 <h3>Account Updates</h3>
 <p>This is a list of changes that have been made to this account's information, whether by the user or by a staff member.</p>
 
-{!! $logs->render() !!}
+{!! $logs->render('layouts._pagination') !!}
 <table class="table table-sm">
     <thead>
         <tr>
@@ -50,7 +50,7 @@
         @endforeach
     </tbody>
 </table>
-{!! $logs->render() !!}
+{!! $logs->render('layouts._pagination') !!}
 
 @endsection
 

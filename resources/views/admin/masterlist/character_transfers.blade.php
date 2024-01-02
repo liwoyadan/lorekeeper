@@ -11,11 +11,11 @@
 
 @include('admin.masterlist._header', ['tradeCount' => $tradeCount, 'transferCount' => $transferCount])
 
-{!! $transfers->render() !!}
+{!! $transfers->render('layouts._pagination') !!}
 @foreach($transfers as $transfer)
     @include('admin.masterlist._transfer', ['transfer' => $transfer])
 @endforeach
-{!! $transfers->render() !!}
+{!! $transfers->render('layouts._pagination') !!}
 
 
 @endsection
@@ -24,13 +24,13 @@
 @section('scripts')
 @parent
 <script>
-$( document ).ready(function() {    
+$( document ).ready(function() {
     $('.transfer-action-button').on('click', function(e) {
         e.preventDefault();
         console.log("{{ url('admin/masterlist/transfer/act') }}/" + $(this).data('id') + "/" + $(this).data('action'));
         loadModal("{{ url('admin/masterlist/transfer/act') }}/" + $(this).data('id') + "/" + $(this).data('action') , 'Process Transfer');
     });
 });
-    
+
 </script>
 @endsection

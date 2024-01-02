@@ -17,7 +17,7 @@
     {!! Form::close() !!}
 </div>
 
-{!! $categories->render() !!}
+{!! $categories->render('layouts._pagination') !!}
 @foreach($categories as $category)
     <div class="card mb-3">
         <div class="card-body">
@@ -25,7 +25,7 @@
         </div>
     </div>
 @endforeach
-{!! $categories->render() !!}
+{!! $categories->render('layouts._pagination') !!}
 
 <div class="text-center mt-4 small text-muted">{{ $categories->total() }} result{{ $categories->total() == 1 ? '' : 's' }} found.</div>
 

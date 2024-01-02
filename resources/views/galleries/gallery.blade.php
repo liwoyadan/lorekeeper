@@ -50,7 +50,7 @@
 </div>
 
 @if($gallery->submissions->count())
-    {!! $submissions->render() !!}
+    {!! $submissions->render('layouts._pagination') !!}
 
 <div class="d-flex align-content-around flex-wrap mb-2">
     @foreach($submissions as $submission)
@@ -58,7 +58,7 @@
     @endforeach
 </div>
 
-    {!! $submissions->render() !!}
+    {!! $submissions->render('layouts._pagination') !!}
 @elseif($childSubmissions->count())
     <div class="d-flex align-content-around flex-wrap mb-2">
         @foreach($childSubmissions->orderBy('created_at', 'DESC')->get()->take(20) as $submission)
