@@ -282,8 +282,6 @@ class FileController extends Controller {
     /**
      * Deletes a default user profile banner file.
      *
-     * @param App\Services\FileManager $service
-     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeleteBanner(Request $request) {

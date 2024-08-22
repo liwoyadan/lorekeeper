@@ -111,7 +111,7 @@ class FileManager extends Service {
     /**
      * Uploads a default banner.
      *
-     * @param array  $file
+     * @param array $file
      *
      * @return bool
      */
