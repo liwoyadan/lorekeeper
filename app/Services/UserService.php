@@ -419,14 +419,14 @@ class UserService extends Service {
             }
 
             $styling = json_encode([
-                'attachment'  => isset($data['attachment']) && $data['attachment'] ? $data['attachment'] : null,
-                'size_type'   => isset($data['size_type']) && $data['size_type'] ? $data['size_type'] : null,
-                'size_1'    => isset($data['size_1']) && $data['size_1'] ? $data['size_1'] : null,
-                'size_2'    => $size_2 ? $size_2 : null,
-                'repeat' => isset($data['repeat']) && $data['repeat'] ? $data['repeat'] : null,
+                'attachment'    => isset($data['attachment']) && $data['attachment'] ? $data['attachment'] : null,
+                'size_type'     => isset($data['size_type']) && $data['size_type'] ? $data['size_type'] : null,
+                'size_1'        => isset($data['size_1']) && $data['size_1'] ? $data['size_1'] : null,
+                'size_2'        => $size_2 ? $size_2 : null,
+                'repeat'        => isset($data['repeat']) && $data['repeat'] ? $data['repeat'] : null,
                 'position_type' => isset($data['position_type']) && $data['position_type'] ? $data['position_type'] : null,
-                'position_x' => isset($data['position_x']) && $data['position_x'] ? $data['position_x'] : null,
-                'position_y'  => $position_y ? $position_y : null,
+                'position_x'    => isset($data['position_x']) && $data['position_x'] ? $data['position_x'] : null,
+                'position_y'    => $position_y ? $position_y : null,
             ]);
 
             $user->banner_styling = $styling;

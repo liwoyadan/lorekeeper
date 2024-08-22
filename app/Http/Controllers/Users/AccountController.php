@@ -121,7 +121,7 @@ class AccountController extends Controller {
      */
     public function postBannerStyling(Request $request, UserService $service) {
         $data = $request->only([
-            'attachment', 'size_type', 'size_1', 'size_2', 'repeat', 'position_type', 'position_x', 'position_y'
+            'attachment', 'size_type', 'size_1', 'size_2', 'repeat', 'position_type', 'position_x', 'position_y',
         ]);
         if ($service->updateBannerStyling($data, Auth::user())) {
             flash('Header styling updated successfully.')->success();
