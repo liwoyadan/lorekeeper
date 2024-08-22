@@ -120,6 +120,12 @@ class AccountController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postBannerStyling(Request $request, UserService $service) {
+        $request->validate([
+            'attachment'    => 'nullable|in:fixed,scroll',
+            'repeat'       => 'nullable|in:repeat,repeat-x,repeat-y,space,round,no-repeat',
+            'size_type'    => 'nullable|in:keyword,numerical',
+            'position_type' => 'nullable|in:keyword,numerical',
+        ]);
         $data = $request->only([
             'attachment', 'size_type', 'size_1', 'size_2', 'repeat', 'position_type', 'position_x', 'position_y',
         ]);

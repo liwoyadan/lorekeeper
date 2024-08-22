@@ -398,7 +398,26 @@ class UserService extends Service {
         DB::beginTransaction();
 
         try {
+            // Keyword Size Handling
+            if (isset($data['size_type']) && $data['size_type'] == 'keyword') {
+                // Keyword Size Validation
+                if (!preg_match('/auto|cover|contain/i', $data['size_1'])) {
+                    throw new \Exception('Invalid size value. Size must be auto, cover, or contain.');
+                }
+            }
+
+            // Numerical Size Handling
             if (isset($data['size_type']) && $data['size_type'] == 'numerical') {
+                // Numerical Size Validation
+                if (!preg_match('/auto|cover|contain|\d+(px|em|rem|vw|vh|%)/i', $data['size_1'])) {
+                    throw new \Exception('Invalid size value. Size one must be auto, cover, contain, or a numerical value with a units px, em, rem, vw, vh, or %.');
+                } elseif (isset($data['size_2']) && preg_match('/cover|contain/i', $data['size_2'])) {
+                    throw new \Exception('Invalid size value. Size two cannot be cover or contain.');
+                } elseif (isset($data['size_2']) && !preg_match('/auto|\d+(px|em|rem|vw|vh|%)/i', $data['size_2'])) {
+                    throw new \Exception('Invalid size value. Size two must be auto or a numerical value with a units px, em, rem, vw, vh, or %.');
+                }
+
+                // If only size one is set, set size two to auto
                 if (isset($data['size_1']) && !isset($data['size_2'])) {
                     $size_2 = 'auto';
                 } else {
@@ -408,7 +427,31 @@ class UserService extends Service {
                 $size_2 = null;
             }
 
+            // Keyword Position Handling
+            if (isset($data['position_type']) && $data['position_type'] == 'keyword') {
+                // Keyword Position Validation
+                if (!preg_match('/top|bottom|left|right|center/i', $data['position_x'])) {
+                    throw new \Exception('Invalid position value. Position keyword must be top, bottom, left, right, or center.');
+                }
+            }
+
+            // Numerical Position Handling
             if (isset($data['position_type']) && $data['position_type'] == 'numerical') {
+                // Numerical Position Validation
+                if (!isset($data['position_x']) && isset($data['position_y'])) {
+                    throw new \Exception('Invalid position values. If you are setting a Y value, please define an X value.');
+                } elseif (preg_match('/top|bottom/i', $data['position_x']) && preg_match('/top|bottom/i', $data['position_y'])) {
+                    throw new \Exception('Invalid position values. If one value is top or bottom, then the other value cannot also be top or bottom.');
+                } elseif (preg_match('/right|left/i', $data['position_x']) && preg_match('/right|left/i', $data['position_y'])) {
+                    throw new \Exception('Invalid position values. If one value is left or right, then the other value cannot also be left or right.');
+                } elseif (preg_match('/\d+(px|em|rem|vw|vh|%)/i', $data['position_x']) && preg_match('/right|left/i', $data['position_y'])) {
+                    throw new \Exception('Invalid position values. If the X value is a numerical value, then the Y value cannot be left or right.');
+                } elseif (preg_match('/top|bottom/i', $data['position_x']) && preg_match('/\d+(px|em|rem|vw|vh|%)/i', $data['position_y'])) {
+                    throw new \Exception('Invalid position values. If the Y value is a numerical value, then the X value cannot be top or bottom.');
+                } elseif (!preg_match('/top|bottom|left|right|center|\d+(px|em|rem|vw|vh|%)/i', $data['position_x']) || isset($data['position_y']) && !preg_match('/top|bottom|center|\d+(px|em|rem|vw|vh|%)/i', $data['position_y'])) {
+                    throw new \Exception('Invalid position value. Position values must be top, bottom, left, right, center, or a numerical value with a units px, em, rem, vw, vh, or %.');
+                }
+
                 if (isset($data['position_x']) && !isset($data['position_y'])) {
                     $position_y = '50%';
                 } else {

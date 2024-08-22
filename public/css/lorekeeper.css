@@ -534,6 +534,10 @@ tr.outflow {
     background-color: white;
 }
 
+.user-banner {
+    min-height: 150px;
+}
+
 /* INVENTORY *************************************************************************************/
 
 .inventory-category .inventory-body .inventory-item img {

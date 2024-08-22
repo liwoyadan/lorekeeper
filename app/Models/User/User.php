@@ -463,7 +463,7 @@ class User extends Authenticatable implements MustVerifyEmail {
         // background-size
         if (isset($this->bannerData['size_type']) && $this->bannerData['size_type'] == 'keyword') {
             $size = 'background-size: '.$this->bannerData['size_1'].';';
-        } elseif (isset($this->bannerData['position_type']) && $this->bannerData['position_type'] == 'numerical') {
+        } elseif (isset($this->bannerData['size_type']) && $this->bannerData['size_type'] == 'numerical') {
             $size = 'background-size: '.$this->bannerData['size_1'].' '.$this->bannerData['size_2'].';';
         } else {
             $size = null;

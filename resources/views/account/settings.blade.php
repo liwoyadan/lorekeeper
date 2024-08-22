@@ -75,8 +75,8 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        {!! Form::label('Background Size Type') !!} {!! add_help('Keyword will allow you to select from keywords auto, cover, and contain. Numerical will allow you to enter up to two valid numerical values.') !!}
-                        {!! Form::select('size_type', ['keyword' => 'Keyword', 'numerical' => 'Numerical'], isset(Auth::user()->bannerData['size_type']) ? Auth::user()->bannerData['size_type'] : null, [
+                        {!! Form::label('Background Size Type') !!} {!! add_help('Keyword will allow you to select from keywords auto, cover, and contain. Two Values will allow you to enter up to two valid numerical values.') !!}
+                        {!! Form::select('size_type', ['keyword' => 'Single Keyword', 'numerical' => 'Two Values'], isset(Auth::user()->bannerData['size_type']) ? Auth::user()->bannerData['size_type'] : null, [
                             'class' => 'form-control banner-size-select',
                             'placeholder' => 'Select Background Size Type',
                         ]) !!}
@@ -90,8 +90,8 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        {!! Form::label('Background Position Type') !!} {!! add_help('Keyword will allow you to select from keywords. Numerical will allow you to enter up to two valid numerical values.') !!}
-                        {!! Form::select('position_type', ['keyword' => 'Keyword', 'numerical' => 'Numerical'], isset(Auth::user()->bannerData['position_type']) ? Auth::user()->bannerData['position_type'] : null, [
+                        {!! Form::label('Background Position Type') !!} {!! add_help('Keyword will allow you to select from keywords. Two Values will allow you to enter up to two valid numerical or keyword values.') !!}
+                        {!! Form::select('position_type', ['keyword' => 'Single Keyword', 'numerical' => 'Two Values'], isset(Auth::user()->bannerData['position_type']) ? Auth::user()->bannerData['position_type'] : null, [
                             'class' => 'form-control banner-position-select',
                             'placeholder' => 'Select Background Position Type',
                         ]) !!}
@@ -102,8 +102,8 @@
                 </div>
             </div>
 
-            <div class="d-flex justify-content-end">
-                {!! Form::submit('Edit Banner Styling', ['class' => 'btn btn-primary mr-2']) !!}
+            <div class="d-flex flex-column flex-sm-row align-items-end align-items-sm-center justify-content-end">
+                {!! Form::submit('Edit Banner Styling', ['class' => 'btn btn-primary mr-sm-2 mb-1 mb-sm-0']) !!}
                 {!! Form::close() !!}
 
                 {!! Form::open(['url' => 'account/banner-delete']) !!}
@@ -117,13 +117,13 @@
                     {!! Form::select('size_1', ['auto' => 'Auto', 'cover' => 'Cover', 'contain' => 'Contain'], isset(Auth::user()->bannerData['size_1']) ? Auth::user()->bannerData['size_1'] : 'auto', ['class' => 'form-control']) !!}
                 </div>
 
-                <div class="form-group row banner-size-numerical">
-                    <div class="col-sm">
+                <div class="form-group row no-gutters banner-size-numerical mb-2">
+                    <div class="col pr-2">
                         {!! Form::label('Value One') !!} {!! add_help('The value must either be auto or ending with a valid unit, such as %, px, em, etc.') !!}
                         {!! Form::text('size_1', isset(Auth::user()->bannerData['size_1']) ? Auth::user()->bannerData['size_1'] : null, ['class' => 'form-control']) !!}
                     </div>
-                    <div class="col-sm">
-                        {!! Form::label('Value Two (Optional)') !!} {!! add_help('The value must either be auto or ending with a valid unit, such as %, px, em, etc.') !!}
+                    <div class="col">
+                        {!! Form::label('Value Two (Opt.)') !!} {!! add_help('The value must either be auto or ending with a valid unit, such as %, px, em, etc. If you do not set this value, it will default to auto.') !!}
                         {!! Form::text('size_2', isset(Auth::user()->bannerData['size_2']) ? Auth::user()->bannerData['size_2'] : null, ['class' => 'form-control']) !!}
                     </div>
                 </div>
@@ -135,64 +135,17 @@
                     ]) !!}
                 </div>
 
-                <div class="form-group row banner-position-numerical">
-                    <div class="col-sm">
+                <div class="form-group row no-gutters banner-position-numerical mb-2">
+                    <div class="col pr-2">
                         {!! Form::label('X Value') !!} {!! add_help('The value must either be left, right, or center, or end with a valid unit, such as %, px, em, etc.') !!}
                         {!! Form::text('position_x', isset(Auth::user()->bannerData['position_x']) ? Auth::user()->bannerData['position_x'] : null, ['class' => 'form-control']) !!}
                     </div>
-                    <div class="col-sm">
-                        {!! Form::label('Y Value (Optional)') !!} {!! add_help('The value must either be top, bottom, or center, such as %, px, em, etc. If you do not set this value, it will default to 50%.') !!}
+                    <div class="col">
+                        {!! Form::label('Y Value (Opt.)') !!} {!! add_help('The value must either be top, bottom, or center, such as %, px, em, etc. If you do not set this value, it will default to 50%.') !!}
                         {!! Form::text('position_y', isset(Auth::user()->bannerData['position_y']) ? Auth::user()->bannerData['position_y'] : null, ['class' => 'form-control']) !!}
                     </div>
                 </div>
             </div>
-
-            <script>
-                $(document).ready(function() {
-                    var $bannerSizeKeyword = $('.banner-size-keyword');
-                    var $bannerSizeNumerical = $('.banner-size-numerical');
-                    var $bannerPositionKeyword = $('.banner-position-keyword');
-                    var $bannerPositionNumerical = $('.banner-position-numerical');
-                    var $sizeCell = $('.banner-size-options');
-                    var $positionCell = $('.banner-position-options');
-
-                    @if (isset(Auth::user()->bannerData['size_type']))
-                        if ('{{ Auth::user()->bannerData['size_type'] }}' == 'keyword') $sizeCell.append($bannerSizeKeyword);
-                        if ('{{ Auth::user()->bannerData['size_type'] }}' == 'numerical') $sizeCell.append($bannerSizeNumerical);
-                    @endif
-
-                    @if (isset(Auth::user()->bannerData['position_type']))
-                        if ('{{ Auth::user()->bannerData['position_type'] }}' == 'keyword') $positionCell.append($bannerPositionKeyword);
-                        if ('{{ Auth::user()->bannerData['position_type'] }}' == 'numerical') $positionCell.append($bannerPositionNumerical);
-                    @endif
-
-                    $('.banner-size-select').on('change', function(e) {
-                        var val = $(this).val();
-
-                        var $clone = null;
-                        if (val == 'keyword') $clone = $bannerSizeKeyword.clone();
-                        else if (val == 'numerical') $clone = $bannerSizeNumerical.clone();
-
-                        $sizeCell.html('');
-                        $sizeCell.append($clone);
-                    });
-
-                    $('.banner-position-select').on('change', function(e) {
-                        var val = $(this).val();
-
-                        var $clone = null;
-                        if (val == 'keyword') $clone = $bannerPositionKeyword.clone();
-                        else if (val == 'numerical') $clone = $bannerPositionNumerical.clone();
-
-                        $positionCell.html('');
-                        $positionCell.append($clone);
-                    });
-
-                    $('body').tooltip({
-                        selector: '.help-icon'
-                    });
-                });
-            </script>
         @endif
     </div>
 
@@ -340,4 +293,52 @@
             {!! Form::close() !!}
         @endif
     </div>
+@endsection
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            var $bannerSizeKeyword = $('.banner-size-keyword');
+            var $bannerSizeNumerical = $('.banner-size-numerical');
+            var $bannerPositionKeyword = $('.banner-position-keyword');
+            var $bannerPositionNumerical = $('.banner-position-numerical');
+            var $sizeCell = $('.banner-size-options');
+            var $positionCell = $('.banner-position-options');
+
+            @if (isset(Auth::user()->bannerData['size_type']))
+                if ('{{ Auth::user()->bannerData['size_type'] }}' == 'keyword') $sizeCell.append($bannerSizeKeyword);
+                if ('{{ Auth::user()->bannerData['size_type'] }}' == 'numerical') $sizeCell.append($bannerSizeNumerical);
+            @endif
+
+            @if (isset(Auth::user()->bannerData['position_type']))
+                if ('{{ Auth::user()->bannerData['position_type'] }}' == 'keyword') $positionCell.append($bannerPositionKeyword);
+                if ('{{ Auth::user()->bannerData['position_type'] }}' == 'numerical') $positionCell.append($bannerPositionNumerical);
+            @endif
+
+            $('.banner-size-select').on('change', function(e) {
+                var val = $(this).val();
+
+                var $clone = null;
+                if (val == 'keyword') $clone = $bannerSizeKeyword.clone();
+                else if (val == 'numerical') $clone = $bannerSizeNumerical.clone();
+
+                $sizeCell.html('');
+                $sizeCell.append($clone);
+            });
+
+            $('.banner-position-select').on('change', function(e) {
+                var val = $(this).val();
+
+                var $clone = null;
+                if (val == 'keyword') $clone = $bannerPositionKeyword.clone();
+                else if (val == 'numerical') $clone = $bannerPositionNumerical.clone();
+
+                $positionCell.html('');
+                $positionCell.append($clone);
+            });
+
+            $('body').tooltip({
+                selector: '.help-icon'
+            });
+        });
+    </script>
 @endsection
