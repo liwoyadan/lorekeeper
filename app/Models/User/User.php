@@ -36,7 +36,7 @@ class User extends Authenticatable implements MustVerifyEmail {
      */
     protected $fillable = [
         'name', 'alias', 'rank_id', 'email', 'email_verified_at', 'password', 'is_news_unread', 'is_banned', 'has_alias', 'avatar', 'is_sales_unread', 'birthday',
-        'is_deactivated', 'deactivater_id',
+        'is_deactivated', 'deactivater_id', 'header',
     ];
 
     /**
@@ -398,6 +398,78 @@ class User extends Authenticatable implements MustVerifyEmail {
         }
 
         return url('images/avatars/'.$this->avatar.'?v='.filemtime(public_path('images/avatars/'.$this->avatar)));
+    }
+
+    /**
+     * Displays the user's banner.
+     *
+     * @return string
+     */
+    public function getBanner() {
+        return $this->banner;
+    }
+
+    /**
+     * Gets the display URL for a user's banner.
+     *
+     * @return url
+     */
+    public function getBannerUrlAttribute() {
+        if (!file_exists(public_path('images/data/user-banners/'.$this->banner))) {
+            return null;
+        }
+
+        return url('images/data/user-banners/'.$this->banner.'?v='.filemtime(public_path('images/data/user-banners/'.$this->banner)));
+    }
+
+    /**
+     * Gets the display URL for a user's banner.
+     *
+     * @return url
+     */
+    public function getBannerDataAttribute() {
+        return json_decode($this->attributes['banner_styling'], true);
+    }
+
+    /**
+     * Gets the inline styles for a user's banner image.
+     *
+     * @return url
+     */
+    public function getBannerStylingAttribute() {
+        // background-attachment
+        if (isset($this->bannerData['attachment'])) {
+            $attachment = 'background-attachment: '.$this->bannerData['attachment'].';';
+        } else {
+            $attachment = null;
+        }
+
+        // background-repeat
+        if (isset($this->bannerData['repeat'])) {
+            $repeat = 'background-repeat: '.$this->bannerData['repeat'].';';
+        } else {
+            $repeat = null;
+        }
+
+        // background-position
+        if (isset($this->bannerData['position_type']) && $this->bannerData['position_type'] == 'keyword') {
+            $position = 'background-position: '.$this->bannerData['position_x'].';';
+        } elseif (isset($this->bannerData['position_type']) && $this->bannerData['position_type'] == 'numerical') {
+            $position = 'background-position: '.$this->bannerData['position_x'].' '.$this->bannerData['position_y'].';';
+        } else {
+            $position = null;
+        }
+
+        // background-size
+        if (isset($this->bannerData['size_type']) && $this->bannerData['size_type'] == 'keyword') {
+            $size = 'background-size: '.$this->bannerData['size_1'].';';
+        } elseif (isset($this->bannerData['position_type']) && $this->bannerData['position_type'] == 'numerical') {
+            $size = 'background-size: '.$this->bannerData['size_1'].' '.$this->bannerData['size_2'].';';
+        } else {
+            $size = null;
+        }
+
+        return $attachment.$repeat.$position.$size;
     }
 
     /**
