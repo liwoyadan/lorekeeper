@@ -45,7 +45,8 @@
                             <a href="{{ asset($banner) }}" class="btn btn-info btn-sm float-right">View Current</a>
                         @endif
                     </h3>
-                    <p>You may define a default user profile banner here. If a default banner is not uploaded, then user profiles will not display a banner until a user sets one for themself. The default banner widget is set at a height of 150px, which may be adjusted with CSS. Filetypes supported are JPG, PNG, GIF, BMP, and WebP.</p>
+                    <p>You may define a default user profile banner here. If a default banner is not uploaded, then user profiles will not display a banner until a user sets one for themself. The default banner widget is set at a height of 150px, which
+                        may be adjusted with CSS. Filetypes supported are JPG, PNG, GIF, BMP, and WebP.</p>
                     {!! Form::open(['url' => 'admin/images/upload-banner', 'files' => true]) !!}
                     <div class="d-flex">
                         {!! Form::file('file', ['class' => 'form-control mr-2']) !!}
