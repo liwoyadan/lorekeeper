@@ -85,7 +85,7 @@
         {!! Form::close() !!}
     </div>
 
-    @if($user->banner)
+    @if ($user->banner)
         <div class="card p-3 mb-2">
             <h3>Banner Image</h3>
             @include('widgets._user_banner', ['user' => $user])

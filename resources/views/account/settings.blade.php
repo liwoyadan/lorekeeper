@@ -62,7 +62,12 @@
                 <div class="col-md">
                     <div class="form-group">
                         {!! Form::label('Background Repeat') !!}
-                        {!! Form::select('repeat', ['repeat' => 'Repeat', 'repeat-x' => 'Repeat X', 'repeat-y' => 'Repeat Y', 'space' => 'Space', 'round' => 'Round', 'no-repeat' => 'No Repeat'], isset(Auth::user()->bannerData['repeat']) ? Auth::user()->bannerData['repeat'] : null, ['class' => 'form-control']) !!}
+                        {!! Form::select(
+                            'repeat',
+                            ['repeat' => 'Repeat', 'repeat-x' => 'Repeat X', 'repeat-y' => 'Repeat Y', 'space' => 'Space', 'round' => 'Round', 'no-repeat' => 'No Repeat'],
+                            isset(Auth::user()->bannerData['repeat']) ? Auth::user()->bannerData['repeat'] : null,
+                            ['class' => 'form-control'],
+                        ) !!}
                     </div>
                 </div>
             </div>
@@ -71,7 +76,10 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         {!! Form::label('Background Size Type') !!} {!! add_help('Keyword will allow you to select from keywords auto, cover, and contain. Numerical will allow you to enter up to two valid numerical values.') !!}
-                        {!! Form::select('size_type', ['keyword' => 'Keyword', 'numerical' => 'Numerical'], isset(Auth::user()->bannerData['size_type']) ? Auth::user()->bannerData['size_type'] : null, ['class' => 'form-control banner-size-select', 'placeholder' => 'Select Background Size Type']) !!}
+                        {!! Form::select('size_type', ['keyword' => 'Keyword', 'numerical' => 'Numerical'], isset(Auth::user()->bannerData['size_type']) ? Auth::user()->bannerData['size_type'] : null, [
+                            'class' => 'form-control banner-size-select',
+                            'placeholder' => 'Select Background Size Type',
+                        ]) !!}
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -83,7 +91,10 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         {!! Form::label('Background Position Type') !!} {!! add_help('Keyword will allow you to select from keywords. Numerical will allow you to enter up to two valid numerical values.') !!}
-                        {!! Form::select('position_type', ['keyword' => 'Keyword', 'numerical' => 'Numerical'], isset(Auth::user()->bannerData['position_type']) ? Auth::user()->bannerData['position_type'] : null, ['class' => 'form-control banner-position-select', 'placeholder' => 'Select Background Position Type']) !!}
+                        {!! Form::select('position_type', ['keyword' => 'Keyword', 'numerical' => 'Numerical'], isset(Auth::user()->bannerData['position_type']) ? Auth::user()->bannerData['position_type'] : null, [
+                            'class' => 'form-control banner-position-select',
+                            'placeholder' => 'Select Background Position Type',
+                        ]) !!}
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -119,7 +130,9 @@
 
                 <div class="form-group banner-position-keyword">
                     {!! Form::label('Keyword') !!} {!! add_help('If a keyword is selected, then the Y axis is assumed to be 50%') !!}
-                    {!! Form::select('position_x', ['top' => 'Top', 'bottom' => 'Bottom', 'left' => 'Left', 'right' => 'Right', 'center' => 'Center'], isset(Auth::user()->bannerData['position_x']) ? Auth::user()->bannerData['position_x'] : 'top', ['class' => 'form-control']) !!}
+                    {!! Form::select('position_x', ['top' => 'Top', 'bottom' => 'Bottom', 'left' => 'Left', 'right' => 'Right', 'center' => 'Center'], isset(Auth::user()->bannerData['position_x']) ? Auth::user()->bannerData['position_x'] : 'top', [
+                        'class' => 'form-control',
+                    ]) !!}
                 </div>
 
                 <div class="form-group row banner-position-numerical">
