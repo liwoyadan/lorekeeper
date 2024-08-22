@@ -370,7 +370,7 @@ class UserService extends Service {
                     }
                 } else {
                     if (!Image::make($banner)->save(public_path($directory.$filename))) {
-                        throw new \Exception('Failed to process avatar.');
+                        throw new \Exception('Failed to process banner.');
                     }
                 }
             }

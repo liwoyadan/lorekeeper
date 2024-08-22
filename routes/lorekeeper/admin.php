@@ -83,6 +83,8 @@ Route::group(['prefix' => 'images', 'middleware' => 'power:edit_site_settings'],
 
     Route::post('upload/css', 'FileController@postUploadCss');
     Route::post('upload', 'FileController@postUploadImage');
+    Route::post('upload-banner', 'FileController@postUploadBanner');
+    Route::post('delete-banner', 'FileController@postDeleteBanner');
     Route::post('reset', 'FileController@postResetFile');
 });
 

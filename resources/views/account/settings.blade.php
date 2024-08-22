@@ -9,7 +9,6 @@
 
     <h1>Settings</h1>
 
-
     <div class="card p-3 mb-2">
         <h3>Avatar</h3>
         @if (Auth::user()->isStaff)
