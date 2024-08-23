@@ -410,31 +410,20 @@ class User extends Authenticatable implements MustVerifyEmail {
     }
 
     /**
-     * Checks if a default banner exists and returns it if it does.
-     *
-     * @return string
-     */
-    public function getBannerDefaultAttribute() {
-        if (!$this->banner && glob('images/data/user-banners/default-banner*')) {
-            $defaultBanner = glob('images/data/user-banners/default-banner*')[0];
-
-            return $defaultBanner.'?v='.filemtime(public_path($defaultBanner));
-        } else {
-            return $this->banner;
-        }
-    }
-
-    /**
-     * Gets the display URL for a user's banner.
+     * Gets the display URL for a user's banner, or the default banner if one is set.
      *
      * @return url
      */
     public function getBannerUrlAttribute() {
-        if (!file_exists(public_path('images/data/user-banners/'.$this->banner))) {
+        if (!$this->banner && glob('images/data/user-banners/default-banner*')) {
+            $defaultBanner = glob('images/data/user-banners/default-banner*')[0];
+
+            return url($defaultBanner.'?v='.filemtime(public_path($defaultBanner)));
+        } elseif ($this->banner) {
+            return url('images/data/user-banners/'.$this->banner.'?v='.filemtime(public_path('images/data/user-banners/'.$this->banner)));
+        } else {
             return null;
         }
-
-        return url('images/data/user-banners/'.$this->banner.'?v='.filemtime(public_path('images/data/user-banners/'.$this->banner)));
     }
 
     /**
