@@ -22,7 +22,7 @@
     @include('character._header', ['character' => $character])
 
     <div class="mb-3">
-        <div class="text-center">
+        <div class="text-center character-image-container">
             <a href="{{ $character->image->canViewFull(Auth::check() ? Auth::user() : null) && file_exists(public_path($character->image->imageDirectory . '/' . $character->image->fullsizeFileName)) ? $character->image->fullsizeUrl : $character->image->imageUrl }}"
                 data-lightbox="entry" data-title="{{ $character->fullName }}">
                 <img src="{{ $character->image->canViewFull(Auth::check() ? Auth::user() : null) && file_exists(public_path($character->image->imageDirectory . '/' . $character->image->fullsizeFileName)) ? $character->image->fullsizeUrl : $character->image->imageUrl }}"

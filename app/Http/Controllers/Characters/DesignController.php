@@ -216,8 +216,15 @@ class DesignController extends Controller {
      */
     public function getFeatures($id) {
         $r = CharacterDesignUpdate::find($id);
+        $rarity = $r->character->image->rarity_id;
+
         if (!$r || ($r->user_id != Auth::user()->id && !Auth::user()->hasPower('manage_characters'))) {
             abort(404);
+        }
+        if (!Auth::user()->isStaff && $r->user_id != Auth::user()->id) {
+            $features = Feature::where('rarity_id', '<=', $rarity)->orderByRaw('ISNULL(features.sort), features.sort ASC')->pluck('name', 'id')->toArray();
+        } else {
+            $features = Feature::visible()->orderByRaw('ISNULL(features.sort), features.sort ASC')->pluck('name', 'id')->toArray();
         }
 
         return view('character.design.features', [
@@ -225,7 +232,7 @@ class DesignController extends Controller {
             'specieses' => ['0' => 'Select Species'] + Species::visible()->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes'  => ['0' => 'No Subtype'] + Subtype::visible()->where('species_id', '=', $r->species_id)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'rarities'  => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'features'  => Feature::getDropdownItems(),
+            'features'  => $features,
         ]);
     }
 

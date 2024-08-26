@@ -137,7 +137,7 @@
             @endforeach
         </div>
     @endif
-
+    <div class="character-creation-whitespace"></div>
 @endsection
 
 @section('scripts')

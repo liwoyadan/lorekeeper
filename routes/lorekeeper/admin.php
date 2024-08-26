@@ -313,6 +313,7 @@ Route::group(['prefix' => 'masterlist', 'namespace' => 'Characters', 'middleware
     Route::post('create-myo', 'CharacterController@postCreateMyo');
 
     Route::get('check-subtype', 'CharacterController@getCreateCharacterMyoSubtype');
+    Route::get('check-rarity', 'CharacterController@getCreateCharacterMyoRarity');
 });
 Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware' => 'power:edit_inventories'], function () {
     Route::post('{slug}/grant', 'GrantController@postCharacterCurrency');

@@ -219,7 +219,7 @@
             {!! Form::label('Species') !!} @if ($isMyo)
                 {!! add_help('This will lock the slot into a particular species. Leave it blank if you would like to give the user a choice.') !!}
             @endif
-            {!! Form::select('species_id', $specieses, old('species_id'), ['class' => 'form-control', 'id' => 'species']) !!}
+            {!! Form::select('species_id', $specieses, 1, ['class' => 'form-control', 'id' => 'species']) !!}
         </div>
 
         <div class="form-group" id="subtypes">
@@ -235,7 +235,7 @@
             {!! Form::label('Character Rarity') !!} @if ($isMyo)
                 {!! add_help('This will lock the slot into a particular rarity. Leave it blank if you would like to give the user more choices.') !!}
             @endif
-            {!! Form::select('rarity_id', $rarities, old('rarity_id'), ['class' => 'form-control']) !!}
+            {!! Form::select('rarity_id', $rarities, old('rarity_id'), ['class' => 'form-control', 'id' => 'rarity']) !!}
         </div>
 
         <div class="form-group">
@@ -248,7 +248,7 @@
             <div id="featureList">
             </div>
             <div class="feature-row hide mb-2">
-                {!! Form::select('feature_id[]', $features, null, ['class' => 'form-control mr-2 feature-select', 'placeholder' => 'Select Trait']) !!}
+                {!! Form::select('feature_id[]', $features, null, ['class' => 'form-control mr-2 feature-select', 'id' => 'traits']) !!}
                 {!! Form::text('feature_data[]', null, ['class' => 'form-control mr-2', 'placeholder' => 'Extra Info (Optional)']) !!}
                 <a href="#" class="remove-feature btn btn-danger mb-2">×</a>
             </div>
@@ -259,6 +259,8 @@
         </div>
         {!! Form::close() !!}
     @endif
+
+    <div class="character-creation-whitespace"></div>
 
 @endsection
 
@@ -281,6 +283,20 @@
                 dataType: "text"
             }).done(function(res) {
                 $("#subtypes").html(res);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                alert("AJAX call failed: " + textStatus + ", " + errorThrown);
+            });
+        });
+
+        $("#rarity").change(function() {
+            var rarity = $('#rarity').val();
+            var myo = '<?php echo $isMyo; ?>';
+            $.ajax({
+                type: "GET",
+                url: "{{ url('admin/masterlist/check-rarity') }}?rarity=" + rarity + "&myo=" + myo,
+                dataType: "text"
+            }).done(function(res) {
+                $("#traits").html(res);
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 alert("AJAX call failed: " + textStatus + ", " + errorThrown);
             });

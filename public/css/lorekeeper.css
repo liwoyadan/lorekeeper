@@ -753,3 +753,13 @@ tr.accountbound {
 @media only screen and (max-width: 600px) {
     .comment_replies { padding-left:1rem;}
 }
+
+@media (min-width: 992px) {
+    .character-creation-whitespace {
+        min-height: 150px;
+    }
+}
+
+.character-image-container img {
+    max-height: 900px;
+}

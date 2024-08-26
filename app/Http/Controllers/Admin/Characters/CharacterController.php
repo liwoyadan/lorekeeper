@@ -52,7 +52,7 @@ class CharacterController extends Controller {
             'rarities'    => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'specieses'   => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes'    => ['0' => 'Pick a Species First'],
-            'features'    => Feature::getDropdownItems(1),
+            'features'    => ['0' => 'Select Rarity First'],
             'isMyo'       => false,
         ]);
     }
@@ -68,7 +68,7 @@ class CharacterController extends Controller {
             'rarities'    => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'specieses'   => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes'    => ['0' => 'Pick a Species First'],
-            'features'    => Feature::getDropdownItems(1),
+            'features'    => ['0' => 'Select Rarity First'],
             'isMyo'       => true,
         ]);
     }
@@ -83,6 +83,20 @@ class CharacterController extends Controller {
 
         return view('admin.masterlist._create_character_subtype', [
             'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id', '=', $species)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'isMyo'    => $request->input('myo'),
+        ]);
+    }
+
+    /**
+     * Shows the edit image subtype portion of the modal.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCreateCharacterMyoRarity(Request $request) {
+        $rarity = $request->input('rarity');
+
+        return view('admin.masterlist._create_character_traits', [
+            'features' => ['0' => 'Select Trait'] + Feature::where('rarity_id', '<=', $rarity)->orderByRaw('ISNULL(features.sort), features.sort ASC')->pluck('name', 'id')->toArray(),
             'isMyo'    => $request->input('myo'),
         ]);
     }
