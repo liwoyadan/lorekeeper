@@ -21,7 +21,7 @@ Route::get('/login/callback/{driver}', 'Auth\LoginController@getAuthCallback');
 Route::get('register/{driver}', 'Auth\RegisterController@getRegisterWithDriver');
 Route::post('register/{driver}', 'Auth\RegisterController@postRegisterWithDriver');
 
-Route::group(['middleware' => ['privacy']], function() {
+Route::group(['middleware' => ['privacy']], function () {
     Route::get('/', 'HomeController@getIndex')->name('home');
 
     // BROWSE
