@@ -115,7 +115,7 @@ class CharacterImage extends Model {
             ->leftJoin('feature_categories', 'feature_categories.id', '=', 'features.feature_category_id')
             ->select(['character_features.*', 'features.*', 'character_features.id AS character_feature_id', 'feature_categories.sort']);
 
-        return $query->orderByDesc('sort');
+        return $query->orderByRaw('ISNULL(features.sort), features.sort ASC');
     }
 
     /**

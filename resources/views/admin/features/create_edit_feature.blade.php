@@ -24,11 +24,15 @@
                 {!! Form::text('name', $feature->name, ['class' => 'form-control']) !!}
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="form-group">
                 {!! Form::label('Rarity') !!}
                 {!! Form::select('rarity_id', $rarities, $feature->rarity_id, ['class' => 'form-control']) !!}
             </div>
+        </div>
+        <div class="col-md-2">
+            {!! Form::label('Sort (Optional)') !!} {!! add_help('Traits are first sorted by number and then by internal creation ID.') !!}
+            {!! Form::number('sort', $feature->sort, ['class' => 'form-control']) !!}
         </div>
     </div>
 

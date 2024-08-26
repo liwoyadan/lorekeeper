@@ -163,7 +163,7 @@ class FeatureController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getFeatureIndex(Request $request) {
-        $query = Feature::query();
+        $query = Feature::query()->orderByRaw('ISNULL(sort), sort ASC');
         $data = $request->only(['rarity_id', 'feature_category_id', 'species_id', 'subtype_id', 'name']);
         if (isset($data['rarity_id']) && $data['rarity_id'] != 'none') {
             $query->where('rarity_id', $data['rarity_id']);
@@ -238,7 +238,7 @@ class FeatureController extends Controller {
     public function postCreateEditFeature(Request $request, FeatureService $service, $id = null) {
         $id ? $request->validate(Feature::$updateRules) : $request->validate(Feature::$createRules);
         $data = $request->only([
-            'name', 'species_id', 'subtype_id', 'rarity_id', 'feature_category_id', 'description', 'image', 'remove_image', 'is_visible',
+            'name', 'species_id', 'subtype_id', 'rarity_id', 'feature_category_id', 'description', 'image', 'remove_image', 'is_visible', 'sort',
         ]);
         if ($id && $service->updateFeature(Feature::find($id), $data, Auth::user())) {
             flash('Trait updated successfully.')->success();
