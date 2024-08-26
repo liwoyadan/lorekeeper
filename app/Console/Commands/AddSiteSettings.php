@@ -83,6 +83,8 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('comment_dislikes_enabled', 0, '0: Dislikes disabled, 1: Dislikes enabled.');
 
+        $this->addSiteSetting('privacy_mode', 0, '0: Site is normal, 1: The site will be in privacy mode and all pages except login and register will lead to a 404. Only logged in users will be able to access site content.');
+
         $this->line("\nSite settings up to date!");
     }
 
