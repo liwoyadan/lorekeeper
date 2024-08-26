@@ -147,7 +147,7 @@ class WorldController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getFeatures(Request $request) {
-        $query = Feature::visible(Auth::check() ? Auth::user() : null)->with('category')->with('rarity')->with('species');
+        $query = Feature::visible(Auth::check() ? Auth::user() : null)->with('category')->with('rarity')->with('species')->orderByRaw('ISNULL(sort), sort ASC');
         $data = $request->only(['rarity_id', 'feature_category_id', 'species_id', 'subtype_id', 'name', 'sort']);
         if (isset($data['rarity_id']) && $data['rarity_id'] != 'none') {
             $query->where('rarity_id', $data['rarity_id']);
