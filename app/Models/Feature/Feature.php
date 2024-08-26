@@ -331,4 +331,49 @@ class Feature extends Model {
             return self::where('is_visible', '>=', $visibleOnly)->orderBy('name')->pluck('name', 'id')->toArray();
         }
     }
+
+    public static function getSortedDropdownItems($withHidden = 0, $rarity = null) {
+        $visibleOnly = 1;
+        if ($withHidden) {
+            $visibleOnly = 0;
+        }
+
+        if (config('lorekeeper.extensions.organised_traits_dropdown')) {
+            $sorted_feature_categories = collect(FeatureCategory::all()->where('is_visible', '>=', $visibleOnly)->sortBy('sort')->pluck('name')->toArray());
+
+            if ($rarity) {
+                $grouped = self::where('is_visible', '>=', $visibleOnly)->where('rarity_id', '<=', $rarity)->select('name', 'id', 'feature_category_id')->with('category')->orderByRaw('ISNULL(sort), sort ASC')->get()->keyBy('id')->groupBy('category.name', $preserveKeys = true)->toArray();
+            } else {
+                $grouped = self::where('is_visible', '>=', $visibleOnly)->select('name', 'id', 'feature_category_id')->with('category')->orderByRaw('ISNULL(sort), sort ASC')->get()->keyBy('id')->groupBy('category.name', $preserveKeys = true)->toArray();
+            }
+
+            if (isset($grouped[''])) {
+                if (!$sorted_feature_categories->contains('Miscellaneous')) {
+                    $sorted_feature_categories->push('Miscellaneous');
+                }
+                $grouped['Miscellaneous'] ??= [] + $grouped[''];
+            }
+
+            $sorted_feature_categories = $sorted_feature_categories->filter(function ($value, $key) use ($grouped) {
+                return in_array($value, array_keys($grouped), true);
+            });
+
+            foreach ($grouped as $category => $features) {
+                foreach ($features as $id  => $feature) {
+                    $grouped[$category][$id] = $feature['name'];
+                }
+            }
+            $features_by_category = $sorted_feature_categories->map(function ($category) use ($grouped) {
+                return [$category => $grouped[$category]];
+            });
+
+            return $features_by_category;
+        } else {
+            if ($rarity) {
+                return self::where('is_visible', '>=', $visibleOnly)->where('rarity_id', '<=', $rarity)->orderByRaw('ISNULL(features.sort), features.sort ASC')->pluck('name', 'id')->toArray();
+            } else {
+                return self::where('is_visible', '>=', $visibleOnly)->orderByRaw('ISNULL(features.sort), features.sort ASC')->pluck('name', 'id')->toArray();
+            }
+        }
+    }
 }

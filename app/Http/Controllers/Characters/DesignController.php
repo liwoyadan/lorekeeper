@@ -222,9 +222,9 @@ class DesignController extends Controller {
             abort(404);
         }
         if (!Auth::user()->isStaff && $r->user_id != Auth::user()->id) {
-            $features = Feature::where('rarity_id', '<=', $rarity)->orderByRaw('ISNULL(features.sort), features.sort ASC')->pluck('name', 'id')->toArray();
+            $features = Feature::getSortedDropdownItems(0, $rarity);
         } else {
-            $features = Feature::visible()->orderByRaw('ISNULL(features.sort), features.sort ASC')->pluck('name', 'id')->toArray();
+            $features = Feature::getSortedDropdownItems();
         }
 
         return view('character.design.features', [

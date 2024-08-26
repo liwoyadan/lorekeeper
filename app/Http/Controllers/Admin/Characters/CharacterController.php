@@ -96,7 +96,7 @@ class CharacterController extends Controller {
         $rarity = $request->input('rarity');
 
         return view('admin.masterlist._create_character_traits', [
-            'features' => ['0' => 'Select Trait'] + Feature::where('rarity_id', '<=', $rarity)->orderByRaw('ISNULL(features.sort), features.sort ASC')->pluck('name', 'id')->toArray(),
+            'features' => Feature::getSortedDropdownItems(0, $rarity),
             'isMyo'    => $request->input('myo'),
         ]);
     }
