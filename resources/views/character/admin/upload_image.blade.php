@@ -148,6 +148,7 @@
     </div>
     {!! Form::close() !!}
 
+    <div class="character-creation-whitespace"></div>
 @endsection
 
 @section('scripts')
