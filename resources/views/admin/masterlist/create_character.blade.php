@@ -232,7 +232,8 @@
         </div>
 
         <div class="form-group" id="rarityRow">
-            {!! Form::label('Character Rarity') !!} <span class="small text-danger" id="documentCheck">(Please wait to change rarity.)</span> @if ($isMyo)
+            {!! Form::label('Character Rarity') !!} <span class="small text-danger" id="documentCheck">(Please wait to change rarity.)</span>
+            @if ($isMyo)
                 {!! add_help('This will lock the slot into a particular rarity. Leave it blank if you would like to give the user more choices.') !!}
             @endif
             {!! Form::select('rarity_id', $rarities, old('rarity_id'), ['class' => 'form-control', 'id' => 'rarity']) !!}
@@ -288,8 +289,8 @@
             });
         });
 
-        $(document).ready(function () {
-            $("#rarityRow").ready(function () {
+        $(document).ready(function() {
+            $("#rarityRow").ready(function() {
                 $("#documentCheck").text('(You may now change rarity.)').removeClass('text-danger').addClass('text-success');
             });
 

@@ -50,22 +50,22 @@
                 @else
                     allowing you to make further edits.
                 @endif
+            </div>
+        </div>
+        @if (Auth::user()->hasPower('manage_characters'))
+            <div class="card mb-3">
+                <div class="card-body">
+                    <a href="#" class="btn btn-outline-success process-button btn-sm float-right" data-action="approve">Approve</a>
+                    <strong class="text-success">Approving</strong> the request creates the update.
                 </div>
             </div>
-            @if (Auth::user()->hasPower('manage_characters'))
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <a href="#" class="btn btn-outline-success process-button btn-sm float-right" data-action="approve">Approve</a>
-                        <strong class="text-success">Approving</strong> the request creates the update.
-                    </div>
+            <div class="card">
+                <div class="card-body">
+                    <a href="#" class="btn btn-outline-danger process-button btn-sm float-right" data-action="reject">Reject</a>
+                    <strong class="text-danger">Rejecting</strong> the update returns any attached items and the user may not edit it any more.
                 </div>
-                <div class="card">
-                    <div class="card-body">
-                        <a href="#" class="btn btn-outline-danger process-button btn-sm float-right" data-action="reject">Reject</a>
-                        <strong class="text-danger">Rejecting</strong> the update returns any attached items and the user may not edit it any more.
-                    </div>
-                </div>
-            @endif
+            </div>
+        @endif
     @elseif($request->status == 'Approved')
         <p>This request has been approved. The data is preserved as a record of this submission.</p>
     @endif
