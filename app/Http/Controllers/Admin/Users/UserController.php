@@ -170,17 +170,94 @@ class UserController extends Controller {
             flash('Invalid user.')->error();
         } elseif (!Auth::user()->canEditRank($user->rank)) {
             flash('You cannot edit the information of a user that has a higher rank than yourself.')->error();
-        } elseif ($user->settings->update(['is_fto' => $request->get('is_fto') ?: 0])) {
+        } elseif ($user->email != $request->get('email') || $user->settings->is_fto != $request->get('is_fto')) {
+            if ($user->email != $request->get('email')) {
+                $request->validate([
+                    'email' => 'required|email',
+                ]);
+                $logData = ['old_email' => $user->email, 'new_email' => $request->get('email')];
+                $user->update(['email' => $request->get('email')]);
+                flash('Updated user\'s email address successfully.')->success();
+            }
+            if ($user->settings->is_fto != $request->get('is_fto')) {
+                $user->settings->update(['is_fto' => $request->get('is_fto') ?: 0]);
+                $logData = isset($logData) ? $logData + ['is_fto' => $request->get('is_fto') ? 'Yes' : 'No'] : ['is_fto' => $request->get('is_fto') ? 'Yes' : 'No'];
+                flash('Updated user\'s FTO status successfully.')->success();
+            }
+
             if (!(new UserService)->logAdminAction(Auth::user(), 'Edited User', 'Edited '.$user->displayname)) {
                 flash('Failed to log admin action.')->error();
 
                 return redirect()->back();
             }
 
-            UserUpdateLog::create(['staff_id' => Auth::user()->id, 'user_id' => $user->id, 'data' => json_encode(['is_fto' => $request->get('is_fto') ? 'Yes' : 'No']), 'type' => 'FTO Status Change']);
-            flash('Updated user\'s account information successfully.')->success();
+            UserUpdateLog::create(['staff_id' => Auth::user()->id, 'user_id' => $user->id, 'data' => json_encode($logData), 'type' => 'User Account Update']);
         } else {
             flash('Failed to update user\'s account information.')->error();
+        }
+
+        return redirect()->back();
+    }
+
+    public function postEmailVerification(Request $request, $name) {
+        $user = User::where('name', $name)->first();
+        if (!$user) {
+            flash('Invalid user.')->error();
+        } elseif ($user->email_verified_at) {
+            flash('User\'s email address is already verified')->error();
+        } elseif ($user->update(['email_verified_at' => Carbon::now()->format('Y-m-d H:i:s')])) {
+            if (!(new UserService)->logAdminAction(Auth::user(), 'Email Verification', 'Verified email of '.$user->displayname)) {
+                flash('Failed to log admin action.')->error();
+
+                return redirect()->back();
+            }
+
+            UserUpdateLog::create(['staff_id' => Auth::user()->id, 'user_id' => $user->id, 'data' => json_encode(['email_verified_at' => Carbon::now()->format('Y-m-d H:i:s')]), 'type' => 'Email Verified']);
+            flash('Verified user\'s email address successfully.')->success();
+        } else {
+            flash('Failed to verify user\'s email.')->error();
+        }
+
+        return redirect()->back();
+    }
+
+    public function postAddAlias(Request $request, $name) {
+        $user = User::where('name', $name)->first();
+        $request->validate([
+            'alias' => 'required',
+            'site'  => 'required',
+        ]);
+        if (!$user) {
+            flash('Invalid user.')->error();
+        } elseif ($user->has_alias != 0) {
+            flash('This user already has an alias.')->error();
+        } elseif ($request->get('alias') && $request->get('site')) {
+            $check = UserAlias::where('alias', $request->get('alias'))->where('site', $request->get('site'))->first();
+            if ($check) {
+                flash('That alias is already in use by another user.')->error();
+            } else {
+                $data = [
+                    'user_id' => $user->id,
+                    'site'    => $request->get('site'),
+                    'alias'   => $request->get('alias'),
+                    'is_primary_alias' => 1,
+                    'is_visible' => 1,
+                ];
+
+                if (!UserAlias::create($data)) {
+                    flash('Failed to add alias.')->error();
+                } else {
+                    $user->update(['has_alias' => 1]);
+                    if (!(new UserService)->logAdminAction(Auth::user(), 'Added Alias', 'Added an alias to '.$user->displayname)) {
+                        flash('Failed to log admin action.')->error();
+
+                        return redirect()->back();
+                    }
+
+                    UserUpdateLog::create(['staff_id' => Auth::user()->id, 'user_id' => $user->id, 'data' => json_encode(['alias' => $request->get('alias') . '@' . $request->get('site')]), 'type' => 'Alias Added']);
+                    flash('Added user alias successfully.')->success();
+                }
+            }
         }
 
         return redirect()->back();
