@@ -237,11 +237,11 @@ class UserController extends Controller {
                 flash('That alias is already in use by another user.')->error();
             } else {
                 $data = [
-                    'user_id' => $user->id,
-                    'site'    => $request->get('site'),
-                    'alias'   => $request->get('alias'),
+                    'user_id'          => $user->id,
+                    'site'             => $request->get('site'),
+                    'alias'            => $request->get('alias'),
                     'is_primary_alias' => 1,
-                    'is_visible' => 1,
+                    'is_visible'       => 1,
                 ];
 
                 if (!UserAlias::create($data)) {
@@ -254,7 +254,7 @@ class UserController extends Controller {
                         return redirect()->back();
                     }
 
-                    UserUpdateLog::create(['staff_id' => Auth::user()->id, 'user_id' => $user->id, 'data' => json_encode(['alias' => $request->get('alias') . '@' . $request->get('site')]), 'type' => 'Alias Added']);
+                    UserUpdateLog::create(['staff_id' => Auth::user()->id, 'user_id' => $user->id, 'data' => json_encode(['alias' => $request->get('alias').'@'.$request->get('site')]), 'type' => 'Alias Added']);
                     flash('Added user alias successfully.')->success();
                 }
             }
