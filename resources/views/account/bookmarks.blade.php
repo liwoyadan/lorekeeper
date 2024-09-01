@@ -71,7 +71,7 @@
                         </td>
                         <td>
                             <h5 class="mb-0">{!! $bookmark->character->displayName !!}</h5>
-                            {!! $bookmark->character->image->species_id ? $bookmark->character->image->species->displayName : 'No Species' !!} ・ {!! $bookmark->character->image->rarity_id ? $bookmark->character->image->rarity->displayName : 'No Rarity' !!} ・ {!! $bookmark->character->displayOwner !!}
+                            {!! $bookmark->character->image->rarity_id ? $bookmark->character->image->rarity->displayName : 'No Rarity' !!} ・ {!! $bookmark->character->displayOwner !!}
 
                             @if ($bookmark->character->is_gift_art_allowed > 0 && !$bookmark->character->is_myo_slot)
                                 <div><i class="{{ $bookmark->character->is_gift_art_allowed == 1 ? 'text-success' : 'text-warning' }} far fa-circle fa-fw mr-2"></i>

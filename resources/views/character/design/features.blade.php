@@ -10,21 +10,21 @@
     @include('character.design._header', ['request' => $request])
 
     <h2>
-        Traits</h2>
+        Traits
+    </h2>
 
     @if ($request->status == 'Draft' && $request->user_id == Auth::user()->id)
         <p>Select the traits for the {{ $request->character->is_myo_slot ? 'created' : 'updated' }} character. @if ($request->character->is_myo_slot)
                 Some traits may have been restricted for you - you cannot change them.
             @endif Staff will not be able to modify these traits for you during approval, so if in doubt, please communicate with them beforehand to make sure that your design is acceptable.</p>
         {!! Form::open(['url' => 'designs/' . $request->id . '/traits']) !!}
-        <div class="form-group">
+        <div class="form-group hide">
             {!! Form::label('species_id', 'Species') !!}
             @if ($request->character->is_myo_slot && $request->character->image->species_id)
                 <div class="alert alert-secondary">{!! $request->character->image->species->displayName !!}</div>
             @else
-                {!! Form::select('species_id', $specieses, $request->species_id, ['class' => 'form-control', 'id' => 'species']) !!}
+                {!! Form::select('species_id', $specieses, 1, ['class' => 'form-control', 'id' => 'species']) !!}
             @endif
-
         </div>
 
         <div class="form-group">

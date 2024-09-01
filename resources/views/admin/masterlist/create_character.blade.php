@@ -222,7 +222,7 @@
             {!! Form::select('species_id', $specieses, 1, ['class' => 'form-control', 'id' => 'species']) !!}
         </div>
 
-        <div class="form-group" id="subtypes">
+        <div class="form-group hide" id="subtypes">
             {!! Form::label('Subtype (Optional)') !!} @if ($isMyo)
                 {!! add_help(
                     'This will lock the slot into a particular subtype. Leave it blank if you would like to give the user a choice, or not select a subtype. The subtype must match the species selected above, and if no species is specified, the subtype will not be applied.',
@@ -231,8 +231,8 @@
             {!! Form::select('subtype_id', $subtypes, old('subtype_id'), ['class' => 'form-control disabled', 'id' => 'subtype']) !!}
         </div>
 
-        <div class="form-group">
-            {!! Form::label('Character Rarity') !!} @if ($isMyo)
+        <div class="form-group" id="rarityRow">
+            {!! Form::label('Character Rarity') !!} <span class="small text-danger" id="documentCheck">(Please wait to change rarity.)</span> @if ($isMyo)
                 {!! add_help('This will lock the slot into a particular rarity. Leave it blank if you would like to give the user more choices.') !!}
             @endif
             {!! Form::select('rarity_id', $rarities, old('rarity_id'), ['class' => 'form-control', 'id' => 'rarity']) !!}
@@ -288,17 +288,23 @@
             });
         });
 
-        $("#rarity").change(function() {
-            var rarity = $('#rarity').val();
-            var myo = '<?php echo $isMyo; ?>';
-            $.ajax({
-                type: "GET",
-                url: "{{ url('admin/masterlist/check-rarity') }}?rarity=" + rarity + "&myo=" + myo,
-                dataType: "text"
-            }).done(function(res) {
-                $("#traits").html(res);
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                alert("AJAX call failed: " + textStatus + ", " + errorThrown);
+        $(document).ready(function () {
+            $("#rarityRow").ready(function () {
+                $("#documentCheck").text('(You may now change rarity.)').removeClass('text-danger').addClass('text-success');
+            });
+
+            $("#rarity").on('change', function() {
+                var rarity = $('#rarity').val();
+                var myo = '<?php echo $isMyo; ?>';
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('admin/masterlist/check-rarity') }}?rarity=" + rarity + "&myo=" + myo,
+                    dataType: "text"
+                }).done(function(res) {
+                    $("#traits").html(res);
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    alert("AJAX call failed: " + textStatus + ", " + errorThrown);
+                });
             });
         });
     </script>

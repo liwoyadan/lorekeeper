@@ -342,7 +342,7 @@ class Feature extends Model {
             $sorted_feature_categories = collect(FeatureCategory::all()->where('is_visible', '>=', $visibleOnly)->sortBy('sort')->pluck('name')->toArray());
 
             if ($rarity) {
-                $grouped = self::where('is_visible', '>=', $visibleOnly)->where('rarity_id', '<=', $rarity)->select('name', 'id', 'feature_category_id')->with('category')->orderByRaw('ISNULL(sort), sort ASC')->get()->keyBy('id')->groupBy('category.name', $preserveKeys = true)->toArray();
+                $grouped = self::where('is_visible', '>=', $visibleOnly)->where('rarity_id', '>=', $rarity)->select('name', 'id', 'feature_category_id')->with('category')->orderByRaw('ISNULL(sort), sort ASC')->get()->keyBy('id')->groupBy('category.name', $preserveKeys = true)->toArray();
             } else {
                 $grouped = self::where('is_visible', '>=', $visibleOnly)->select('name', 'id', 'feature_category_id')->with('category')->orderByRaw('ISNULL(sort), sort ASC')->get()->keyBy('id')->groupBy('category.name', $preserveKeys = true)->toArray();
             }
@@ -370,7 +370,7 @@ class Feature extends Model {
             return $features_by_category;
         } else {
             if ($rarity) {
-                return self::where('is_visible', '>=', $visibleOnly)->where('rarity_id', '<=', $rarity)->orderByRaw('ISNULL(features.sort), features.sort ASC')->pluck('name', 'id')->toArray();
+                return self::where('is_visible', '>=', $visibleOnly)->where('rarity_id', '>=', $rarity)->orderByRaw('ISNULL(features.sort), features.sort ASC')->pluck('name', 'id')->toArray();
             } else {
                 return self::where('is_visible', '>=', $visibleOnly)->orderByRaw('ISNULL(features.sort), features.sort ASC')->pluck('name', 'id')->toArray();
             }

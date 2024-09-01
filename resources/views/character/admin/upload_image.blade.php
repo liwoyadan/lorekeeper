@@ -107,12 +107,12 @@
         Traits
     </h3>
 
-    <div class="form-group">
+    <div class="form-group hide">
         {!! Form::label('Species') !!}
         {!! Form::select('species_id', $specieses, old('species_id') ?: $character->image->species_id, ['class' => 'form-control', 'id' => 'species']) !!}
     </div>
 
-    <div class="form-group" id="subtypes">
+    <div class="form-group hide" id="subtypes">
         {!! Form::label('Subtype (Optional)') !!}
         {!! Form::select('subtype_id', $subtypes, old('subtype_id') ?: $character->image->subtype_id, ['class' => 'form-control', 'id' => 'subtype']) !!}
     </div>

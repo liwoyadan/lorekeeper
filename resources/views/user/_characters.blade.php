@@ -13,11 +13,11 @@
                     </a>
                 </div>
                 <div class="small">
-                    {!! $character->image->species_id ? $character->image->species->displayName : 'No Species' !!} ・ {!! $character->image->rarity_id ? $character->image->rarity->displayName : 'No Rarity' !!}
+                    {!! $character->image->rarity_id ? $character->image->rarity->displayName : 'No Rarity' !!}
                 </div>
             </div>
         @endforeach
     </div>
 @else
-    <p>No {{ $myo ? 'MYO slots' : 'characters' }} found.</p>
+    <p>No {{ $myo ? 'MYO slots' : 'Mignyans' }} found.</p>
 @endif

@@ -16,8 +16,6 @@
                     <h5 class="card-title">Characters</h5>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><a href="{{ url('world/species') }}">Species</a></li>
-                    <li class="list-group-item"><a href="{{ url('world/subtypes') }}">Subtypes</a></li>
                     <li class="list-group-item"><a href="{{ url('world/rarities') }}">Rarities</a></li>
                     <li class="list-group-item"><a href="{{ url('world/trait-categories') }}">Trait Categories</a></li>
                     <li class="list-group-item"><a href="{{ url('world/traits') }}">All Traits</a></li>

@@ -6,10 +6,7 @@
             {!! Form::text('name', Request::get('name'), ['class' => 'form-control']) !!}
         </div>
         <div class="form-group mb-3 mr-1">
-            {!! Form::select('rarity_id', $rarities, Request::get('rarity_id'), ['class' => 'form-control mr-2']) !!}
-        </div>
-        <div class="form-group mb-3">
-            {!! Form::select('species_id', $specieses, Request::get('species_id'), ['class' => 'form-control']) !!}
+            {!! Form::select('rarity_id', $rarities, Request::get('rarity_id'), ['class' => 'form-control']) !!}
         </div>
     </div>
     <div class="text-right mb-3"><a href="#advancedSearch" class="btn btn-sm btn-outline-info" data-toggle="collapse">Show Advanced Search Options <i class="fas fa-caret-down"></i></a></div>
@@ -20,7 +17,7 @@
                     {!! Form::label('character_category_id', 'Category: ') !!}
                     {!! Form::select('character_category_id', $categories, Request::get('character_category_id'), ['class' => 'form-control mr-2', 'style' => 'width: 250px']) !!}
                 </div>
-                <div class="masterlist-search-field">
+                <div class="masterlist-search-field hide">
                     {!! Form::label('subtype_id', 'Species Subtype: ') !!}
                     {!! Form::select('subtype_id', $subtypes, Request::get('subtype_id'), ['class' => 'form-control mr-2', 'style' => 'width: 250px']) !!}
                 </div>
@@ -30,27 +27,31 @@
                 {!! Form::label('owner', 'Owner Username: ') !!}
                 {!! Form::select('owner', $userOptions, Request::get('owner'), ['class' => 'form-control mr-2 userselectize', 'style' => 'width: 250px', 'placeholder' => 'Select a User']) !!}
             </div>
-            <div class="masterlist-search-field">
-                {!! Form::label('artist', 'Artist: ') !!}
-                {!! Form::select('artist', $userOptions, Request::get('artist'), ['class' => 'form-control mr-2 userselectize', 'style' => 'width: 250px', 'placeholder' => 'Select a User']) !!}
-            </div>
-            <div class="masterlist-search-field">
-                {!! Form::label('designer', 'Designer: ') !!}
-                {!! Form::select('designer', $userOptions, Request::get('designer'), ['class' => 'form-control mr-2 userselectize', 'style' => 'width: 250px', 'placeholder' => 'Select a User']) !!}
-            </div>
+            @if (!$isMyo)
+                <div class="masterlist-search-field">
+                    {!! Form::label('artist', 'Artist: ') !!}
+                    {!! Form::select('artist', $userOptions, Request::get('artist'), ['class' => 'form-control mr-2 userselectize', 'style' => 'width: 250px', 'placeholder' => 'Select a User']) !!}
+                </div>
+                <div class="masterlist-search-field">
+                    {!! Form::label('designer', 'Designer: ') !!}
+                    {!! Form::select('designer', $userOptions, Request::get('designer'), ['class' => 'form-control mr-2 userselectize', 'style' => 'width: 250px', 'placeholder' => 'Select a User']) !!}
+                </div>
+            @endif
             <hr />
             <div class="masterlist-search-field">
                 {!! Form::label('owner_url', 'Owner URL / Username: ') !!} {!! add_help('Example: https://deviantart.com/username OR username') !!}
                 {!! Form::text('owner_url', Request::get('owner_url'), ['class' => 'form-control mr-2', 'style' => 'width: 250px', 'placeholder' => 'Type a Username']) !!}
             </div>
-            <div class="masterlist-search-field">
-                {!! Form::label('artist_url', 'Artist URL / Username: ') !!} {!! add_help('Example: https://deviantart.com/username OR username') !!}
-                {!! Form::text('artist_url', Request::get('artist_url'), ['class' => 'form-control mr-2', 'style' => 'width: 250px', 'placeholder' => 'Type a Username']) !!}
-            </div>
-            <div class="masterlist-search-field">
-                {!! Form::label('designer_url', 'Designer URL / Username: ') !!} {!! add_help('Example: https://deviantart.com/username OR username') !!}
-                {!! Form::text('designer_url', Request::get('designer_url'), ['class' => 'form-control mr-2', 'style' => 'width: 250px', 'placeholder' => 'Type a Username']) !!}
-            </div>
+            @if (!$isMyo)
+                <div class="masterlist-search-field">
+                    {!! Form::label('artist_url', 'Artist URL / Username: ') !!} {!! add_help('Example: https://deviantart.com/username OR username') !!}
+                    {!! Form::text('artist_url', Request::get('artist_url'), ['class' => 'form-control mr-2', 'style' => 'width: 250px', 'placeholder' => 'Type a Username']) !!}
+                </div>
+                <div class="masterlist-search-field">
+                    {!! Form::label('designer_url', 'Designer URL / Username: ') !!} {!! add_help('Example: https://deviantart.com/username OR username') !!}
+                    {!! Form::text('designer_url', Request::get('designer_url'), ['class' => 'form-control mr-2', 'style' => 'width: 250px', 'placeholder' => 'Type a Username']) !!}
+                </div>
+            @endif
             <hr />
             <div class="masterlist-search-field">
                 {!! Form::label('sale_value_min', 'Resale Minimum ($): ') !!}
@@ -152,7 +153,7 @@
     @foreach ($characters->chunk(4) as $chunk)
         <div class="row">
             @foreach ($chunk as $character)
-                <div class="col-md-3 col-6 text-center">
+                <div class="col-md-3 col-6 text-center pb-2">
                     <div>
                         <a href="{{ $character->url }}"><img src="{{ $character->image->thumbnailUrl }}" class="img-thumbnail" alt="Thumbnail for {{ $character->fullName }}" /></a>
                     </div>
@@ -164,7 +165,7 @@
                         </a>
                     </div>
                     <div class="small">
-                        {!! $character->image->species_id ? $character->image->species->displayName : 'No Species' !!} ・ {!! $character->image->rarity_id ? $character->image->rarity->displayName : 'No Rarity' !!} ・ {!! $character->displayOwner !!}
+                        {!! $character->image->rarity_id ? $character->image->rarity->displayName : 'No Rarity' !!} ・ {!! $character->displayOwner !!}
                     </div>
                 </div>
             @endforeach

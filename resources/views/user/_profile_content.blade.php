@@ -28,7 +28,7 @@
 
         <!-- User Information -->
         <div class="row no-gutters">
-            <div class="row col-sm-5">
+            <div class="row col-sm-6">
                 <div class="col-lg-2 col-md-3 col-4">
                     <h5>Alias</h5>
                 </div>
@@ -46,20 +46,20 @@
                     @endif
                 </div>
             </div>
-            <div class="row col-sm-7">
+            <div class="row col-sm-6">
                 <div class="col-md-3 col-4">
                     <h5>Joined</h5>
                 </div>
                 <div class="col-md-9 col-8">{!! format_date($user->created_at, false) !!} ({{ $user->created_at->diffForHumans() }})</div>
             </div>
-            <div class="row col-sm-5">
+            <div class="row col-sm-6">
                 <div class="col-lg-2 col-md-3 col-4">
                     <h5>Rank</h5>
                 </div>
                 <div class="col-lg-10 col-md-9 col-8">{!! $user->rank->displayName !!} {!! add_help($user->rank->parsed_description) !!}</div>
             </div>
             @if ($user->birthdayDisplay && isset($user->birthday))
-                <div class="row col-sm-7">
+                <div class="row col-sm-6">
                     <div class="col-md-3 col-4">
                         <h5>Birthday</h5>
                     </div>
@@ -116,12 +116,7 @@
 </div>
 
 <h2>
-    <a href="{{ $user->url . '/characters' }}">Characters</a>
-    @if (isset($sublists) && $sublists->count() > 0)
-        @foreach ($sublists as $sublist)
-            / <a href="{{ $user->url . '/sublist/' . $sublist->key }}">{{ $sublist->name }}</a>
-        @endforeach
-    @endif
+    <a href="{{ $user->url . '/characters' }}">Mignyans</a>
 </h2>
 
 @foreach ($characters->take(4)->get()->chunk(4) as $chunk)

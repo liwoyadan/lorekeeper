@@ -1,10 +1,10 @@
 {!! Form::open(['url' => 'admin/character/image/' . $image->id . '/traits']) !!}
-<div class="form-group">
+<div class="form-group hide">
     {!! Form::label('Species') !!}
     {!! Form::select('species_id', $specieses, $image->species_id, ['class' => 'form-control', 'id' => 'species']) !!}
 </div>
 
-<div class="form-group" id="subtypes">
+<div class="form-group hide" id="subtypes">
     {!! Form::label('Subtype (Optional)') !!}
     {!! Form::select('subtype_id', $subtypes, $image->subtype_id, ['class' => 'form-control', 'id' => 'subtype']) !!}
 </div>

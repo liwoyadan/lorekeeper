@@ -58,7 +58,7 @@
     {!! Form::select('species_id', $specieses, $tag->getData()['species_id'], ['class' => 'form-control', 'id' => 'species']) !!}
 </div>
 
-<div class="form-group">
+<div class="form-group hide">
     {!! Form::label('Subtype (Optional)') !!} {!! add_help(
         'This will lock the slot into a particular subtype. Leave it blank if you would like to give the user a choice, or not select a subtype. The subtype must match the species selected above, and if no species is specified, the subtype will not be applied.',
     ) !!}

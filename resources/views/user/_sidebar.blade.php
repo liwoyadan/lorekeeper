@@ -9,10 +9,24 @@
     <li class="sidebar-section">
         <div class="sidebar-section-header">User</div>
         <div class="sidebar-item"><a href="{{ $user->url . '/aliases' }}" class="{{ set_active('user/' . $user->name . '/aliases*') }}">Aliases</a></div>
-        <div class="sidebar-item"><a href="{{ $user->url . '/characters' }}" class="{{ set_active('user/' . $user->name . '/characters*') }}">Characters</a></div>
+        <div class="sidebar-item"><a href="{{ $user->url . '/characters' }}" class="{{ set_active('user/' . $user->name . '/characters*') }}">All Mignyans</a></div>
         @if (isset($sublists) && $sublists->count() > 0)
+            @php
+                if ($user->characters->where('character_category_id', 4)->count() > 0) {
+                    $ownsNpcs = true;
+                } else {
+                    $ownsNpcs = false;
+                }
+            @endphp
             @foreach ($sublists as $sublist)
-                <div class="sidebar-item"><a href="{{ $user->url . '/sublist/' . $sublist->key }}" class="{{ set_active('user/' . $user->name . '/sublist/' . $sublist->key) }}">{{ $sublist->name }}</a></div>
+                @if ($sublist->key == 'NPC' && !$ownsNpcs)
+                    @continue
+                @endif
+                <div class="sidebar-item">
+                    <a href="{{ $user->url . '/sublist/' . $sublist->key }}" class="{{ set_active('user/' . $user->name . '/sublist/' . $sublist->key) }}">
+                        {{ $user->name.'\'s ' }}{{ $sublist->name.'s' }}
+                    </a>
+                </div>
             @endforeach
         @endif
         <div class="sidebar-item"><a href="{{ $user->url . '/myos' }}" class="{{ set_active('user/' . $user->name . '/myos*') }}">MYO Slots</a></div>
