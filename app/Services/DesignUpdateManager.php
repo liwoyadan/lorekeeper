@@ -799,10 +799,11 @@ class DesignUpdateManager extends Service {
      * @param array                                       $data
      * @param \App\Models\Character\CharacterDesignUpdate $request
      * @param \App\Models\User\User                       $user
+     * @param mixed                                       $isStaff
      *
      * @return bool
      */
-    public function cancelRequest($data, $request, $user) {
+    public function cancelRequest($data, $request, $user, $isStaff = true) {
         DB::beginTransaction();
 
         try {
@@ -810,8 +811,10 @@ class DesignUpdateManager extends Service {
                 throw new \Exception('This request cannot be processed.');
             }
 
-            if (!$this->logAdminAction($user, 'Cancelled Design Update', 'Cancelled design update <a href="'.$request->url.'">#'.$request->id.'</a>')) {
-                throw new \Exception('Failed to log admin action.');
+            if ($isStaff) {
+                if (!$this->logAdminAction($user, 'Cancelled Design Update', 'Cancelled design update <a href="'.$request->url.'">#'.$request->id.'</a>')) {
+                    throw new \Exception('Failed to log admin action.');
+                }
             }
 
             // Soft removes the request from the queue -
@@ -828,12 +831,14 @@ class DesignUpdateManager extends Service {
             }
             $request->save();
 
-            // Notify the user
-            Notifications::create('DESIGN_CANCELED', $request->user, [
-                'design_url'    => $request->url,
-                'character_url' => $request->character->url,
-                'name'          => $request->character->fullName,
-            ]);
+            if ($isStaff) {
+                // Notify the user
+                Notifications::create('DESIGN_CANCELED', $request->user, [
+                    'design_url'    => $request->url,
+                    'character_url' => $request->character->url,
+                    'name'          => $request->character->fullName,
+                ]);
+            }
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {

@@ -41,26 +41,31 @@
                 As a staff member with the ability to edit the masterlist, you can view the details of the request, but can only edit certain parts of it.
             @endif
         </p>
-        @if (Auth::user()->hasPower('manage_characters'))
-            <div class="card mb-3">
-                <div class="card-body">
-                    <a href="#" class="btn btn-outline-secondary process-button btn-sm float-right" data-action="cancel">Cancel</a>
-                    <strong class="text-secondary">Cancelling</strong> the request returns it to its draft status, allowing the user to make further edits.
+        <div class="card mb-3">
+            <div class="card-body">
+                <a href="#" class="btn btn-outline-secondary process-button btn-sm float-right" data-action="cancel">Cancel</a>
+                <strong class="text-secondary">Cancelling</strong> the request returns it to its draft status,
+                @if (Auth::user()->hasPower('manage_characters'))
+                    allowing the user to make further edits.
+                @else
+                    allowing you to make further edits.
+                @endif
                 </div>
             </div>
-            <div class="card mb-3">
-                <div class="card-body">
-                    <a href="#" class="btn btn-outline-success process-button btn-sm float-right" data-action="approve">Approve</a>
-                    <strong class="text-success">Approving</strong> the request creates the update.
+            @if (Auth::user()->hasPower('manage_characters'))
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <a href="#" class="btn btn-outline-success process-button btn-sm float-right" data-action="approve">Approve</a>
+                        <strong class="text-success">Approving</strong> the request creates the update.
+                    </div>
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <a href="#" class="btn btn-outline-danger process-button btn-sm float-right" data-action="reject">Reject</a>
-                    <strong class="text-danger">Rejecting</strong> the update returns any attached items and the user may not edit it any more.
+                <div class="card">
+                    <div class="card-body">
+                        <a href="#" class="btn btn-outline-danger process-button btn-sm float-right" data-action="reject">Reject</a>
+                        <strong class="text-danger">Rejecting</strong> the update returns any attached items and the user may not edit it any more.
+                    </div>
                 </div>
-            </div>
-        @endif
+            @endif
     @elseif($request->status == 'Approved')
         <p>This request has been approved. The data is preserved as a record of this submission.</p>
     @endif
@@ -80,6 +85,12 @@
                     loadModal("{{ url('designs/' . $request->id . '/delete/') }}", 'Delete Submission');
                 });
             @endif
+
+            $('.cancel-button').on('click', function(e) {
+                e.preventDefault();
+                console.log($(this).data('action'));
+                loadModal("{{ url('designs/' . $request->id) }}/" + $(this).data('action'), 'Confirm Action');
+            });
 
             @if (Auth::user()->hasPower('manage_characters'))
                 $('.process-button').on('click', function(e) {
