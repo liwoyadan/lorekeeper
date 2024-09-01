@@ -59,9 +59,16 @@
         {!! Form::open(['url' => 'admin/users/' . $user->name . '/account']) !!}
         <div class="form-group row">
             <label class="col-md-2 col-form-label">Email Address</label>
-            <div class="col-md-10">
-                {!! Form::text('email', $user->email, ['class' => 'form-control', 'disabled']) !!}
-            </div>
+            @if (!$user->email_verified_at)
+                <div class="col-md-10">
+                    {!! Form::text('email', $user->email, ['class' => 'form-control']) !!}
+                    <span class="small">This user has yet to verify their email. If the email they entered is incorrect, you may change it here. The user will have to request a new verification email themself.</span>
+                </div>
+            @else
+                <div class="col-md-10">
+                    {!! Form::text('email', $user->email, ['class' => 'form-control', 'disabled']) !!}
+                </div>
+            @endif
         </div>
         <div class="form-group row">
             <label class="col-md-2 col-form-label">Join Date</label>
@@ -83,6 +90,15 @@
             {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
         </div>
         {!! Form::close() !!}
+
+        @if (!$user->email_verified_at)
+            {!! Form::open(['url' => 'admin/users/' . $user->name . '/verify-email']) !!}
+            <p class="mt-2 mb-1"><b>This user has yet to verify their email.</b> If they are having difficulties, such as their email provider being unable to receive the verification emails, you may manually verify them here.</p>
+            <div class="text-right">
+                {!! Form::submit('Verify Email', ['class' => 'btn btn-primary']) !!}
+            </div>
+            {!! Form::close() !!}
+        @endif
     </div>
 
     <div class="card p-3 mb-2">
@@ -130,6 +146,26 @@
             @endforeach
         @else
             <p>No aliases found.</p>
+            @if (!$user->email_verified_at)
+                <p>This user must have a verified email before you can manually add an alias for them.</p>
+            @else
+                @php
+                    $sites = [];
+                    foreach (config('lorekeeper.sites') as $provider => $site) {
+                        if (isset($site['auth']) && $site['auth'] && isset($site['primary_alias']) && $site['primary_alias']) {
+                            $sites[str_replace('.', '', strtolower($site['full_name']))] = $site['full_name'];
+                        }
+                    }
+                @endphp
+                <p>You may manually add an alias for the user here if they are having difficulty adding an alias. Only sites in the config file enabled as both being able to be a primary alias and authenticated with will be shown in the dropdown.</p>
+                {!! Form::open(['url' => 'admin/users/' . $user->name . '/add-alias']) !!}
+                <div class="d-flex">
+                    {!! Form::text('alias', null, ['class' => 'form-control mr-2', 'placeholder' => 'Enter a valid alias name...']) !!}
+                    {!! Form::select('site', $sites, null, ['class' => 'form-control', 'placeholder' => 'Select A Site']) !!}
+                    <div class="text-right ml-2">{!! Form::submit('Submit Alias', ['class' => 'btn btn-primary']) !!}</div>
+                </div>
+                {!! Form::close() !!}
+            @endif
         @endif
     </div>
 @endsection

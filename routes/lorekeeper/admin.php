@@ -26,6 +26,8 @@ Route::group(['prefix' => 'users', 'namespace' => 'Users'], function () {
         Route::post('{name}/basic', 'UserController@postUserBasicInfo');
         Route::post('{name}/alias/{id}', 'UserController@postUserAlias');
         Route::post('{name}/account', 'UserController@postUserAccount');
+        Route::post('{name}/verify-email', 'UserController@postEmailVerification');
+        Route::post('{name}/add-alias', 'UserController@postAddAlias');
         Route::post('{name}/birthday', 'UserController@postUserBirthday');
         Route::get('{name}/updates', 'UserController@getUserUpdates');
 
