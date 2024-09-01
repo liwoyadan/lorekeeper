@@ -24,7 +24,7 @@
                 @endif
                 <div class="sidebar-item">
                     <a href="{{ $user->url . '/sublist/' . $sublist->key }}" class="{{ set_active('user/' . $user->name . '/sublist/' . $sublist->key) }}">
-                        {{ $user->name.'\'s ' }}{{ $sublist->name.'s' }}
+                        {{ Illuminate\Support\Str::limit($user->name, 10, $end = '...').'\'s ' }}{{ $sublist->name.'s' }}
                     </a>
                 </div>
             @endforeach
