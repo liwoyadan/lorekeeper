@@ -8,17 +8,17 @@
         @if ($saleses->count())
             @foreach ($saleses as $sales)
                 <div class="row {{ $loop->last ? '' : 'border-bottom' }} py-3 align-items-center">
-                            <div class="col-md-3 text-center">
-                                <a href="{{ $sales->url }}">
-                                    @if ($sales->has_image)
-                                        <img src="{{ $sales->imageUrl }}" alt="{!! $sales->name !!}" class="img-thumbnail" />
-                                    @else
-                                        @if ($sales->characters->count())
-                                            <img src="{{ $sales->characters->first()->character->image->thumbnailUrl }}" alt="{!! $sales->characters->first()->character->fullName !!}" class="img-thumbnail" />
-                                        @endif
-                                    @endif
-                                </a>
-                            </div>
+                    <div class="col-md-3 text-center">
+                        <a href="{{ $sales->url }}">
+                            @if ($sales->has_image)
+                                <img src="{{ $sales->imageUrl }}" alt="{!! $sales->name !!}" class="img-thumbnail" />
+                            @else
+                                @if ($sales->characters->count())
+                                    <img src="{{ $sales->characters->first()->character->image->thumbnailUrl }}" alt="{!! $sales->characters->first()->character->fullName !!}" class="img-thumbnail" />
+                                @endif
+                            @endif
+                        </a>
+                    </div>
 
                     <div class="{{ $sales->characters->count() || $sales->has_image ? 'col-md-9' : 'col-12' }} d-flex flex-column justify-content-center">
                         <span class="d-flex flex-column flex-sm-row align-items-sm-end">
@@ -49,7 +49,7 @@
                                 @endif
                             </div>
                         @else
-                            <p class="pl-3 mb-0">{!! substr(strip_tags(str_replace("<br />", "&nbsp;", $sales->parsed_text)), 0, 300) !!}... <a href="{!! $sales->url !!}">View sale <i class="fas fa-arrow-right"></i></a></p>
+                            <p class="pl-3 mb-0">{!! substr(strip_tags(str_replace('<br />', '&nbsp;', $sales->parsed_text)), 0, 300) !!}... <a href="{!! $sales->url !!}">View sale <i class="fas fa-arrow-right"></i></a></p>
                         @endif
                     </div>
                 </div>
