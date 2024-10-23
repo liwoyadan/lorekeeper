@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gallery\GallerySubmission;
-use App\Models\SitePage;
 use App\Models\Sales\Sales;
+use App\Models\SitePage;
 use App\Services\LinkService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -37,7 +37,7 @@ class HomeController extends Controller {
 
         return view('welcome', [
             'about'               => SitePage::where('key', 'about')->first(),
-            'saleses' => Sales::visible()->orderBy('id', 'DESC')->take(2)->get(),
+            'saleses'             => Sales::visible()->orderBy('id', 'DESC')->take(2)->get(),
             'gallerySubmissions'  => $gallerySubmissions,
         ]);
     }
