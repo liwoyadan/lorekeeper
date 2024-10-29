@@ -99,7 +99,7 @@
             </div>
             <div class="row">
 
-                <div class="sidebar col-lg-2 {!! (View::hasSection('sidebar') && !Request::is('admin*')) ? 'sidebar-replaced' : '' !!}" id="sidebar">
+                <div class="sidebar col-lg-2 {!! View::hasSection('sidebar') && !Request::is('admin*') ? 'sidebar-replaced' : '' !!}" id="sidebar">
                     @yield('sidebar')
                 </div>
                 <div class="main-content col-lg-8 p-4">
