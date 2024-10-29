@@ -1,5 +1,6 @@
 <?php
 
+
 /*
 |--------------------------------------------------------------------------
 | Helpers
@@ -41,6 +42,13 @@ function add_help($text) {
  */
 function breadcrumbs($links) {
     $ret = '<nav><ol class="breadcrumb">';
+    if (View::getShared()['hasSidebar']) {
+        $menu = View::make('widgets._breadcrumb_sidebar')->with('viewName', View::getShared()['viewName']);
+        foreach (View::getShared()['viewData'] as $key => $value) {
+            $menu->with($key, $value);
+        }
+        $ret .= $menu->render();
+    }
     $count = 0;
     $ret .= '<li class="breadcrumb-item"><a href="'.url('/').'">'.config('lorekeeper.settings.site_name', 'Lorekeeper').'</a></li>';
     foreach ($links as $key => $link) {

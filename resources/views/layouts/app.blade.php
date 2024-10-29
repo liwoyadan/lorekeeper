@@ -87,15 +87,19 @@
 <body>
     <div id="app">
         <div class="site-header-image" id="header" style="background-image: url('{{ asset('images/header.png') }}');"></div>
-        @include('layouts._nav')
         @if (View::hasSection('sidebar'))
             <div class="site-mobile-header bg-secondary"><a href="#" class="btn btn-sm btn-outline-light" id="mobileMenuButton">Menu <i class="fas fa-caret-right ml-1"></i></a></div>
         @endif
 
         <main class="container-fluid">
+            <div class="row no-gutters justify-content-center">
+                <div class="col-lg-8">
+                    @include('layouts._nav')
+                </div>
+            </div>
             <div class="row">
 
-                <div class="sidebar col-lg-2" id="sidebar">
+                <div class="sidebar col-lg-2 {!! (View::hasSection('sidebar') && !Request::is('admin*')) ? 'sidebar-replaced' : '' !!}" id="sidebar">
                     @yield('sidebar')
                 </div>
                 <div class="main-content col-lg-8 p-4">

@@ -8,6 +8,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider {
     /**
@@ -25,6 +26,30 @@ class AppServiceProvider extends ServiceProvider {
         Schema::defaultStringLength(191);
         Paginator::defaultView('layouts._pagination');
         Paginator::defaultSimpleView('layouts._simple-pagination');
+
+        view()->composer('*', function ($view) {
+            // Getting the view's name
+            $fullName = $view->getName();
+            $directory = substr($fullName, 0, strrpos($fullName, '.'));
+            View::share('viewName', $directory);
+
+            $viewData = $view->getData();
+            View::share('viewData', $viewData);
+
+            // Declaring which views don't have a sidebar in the first place
+            // Doing it this way because...yielded and included views apparently
+            // can't access what sections are present on the layout...?
+            // Currently this is just the layout blades, user list, pages blades, auth blades, and widgets.
+            // Also excludes admin blades because those have an incredibly long sidebar.
+            // If you are using featured character then you might want to edit this.
+            $noSidebar = '/((layout.)(.*)|browse.users|(pages.)(.*)|(auth.)(.*))|(widgets.)(.*)|(admin.)(.*)/i';
+
+            if (preg_match_all($noSidebar, $fullName)) {
+                View::share('hasSidebar', false);
+            } else {
+                View::share('hasSidebar', true);
+            }
+        });
 
         /*
          * Paginate a standard Laravel Collection.

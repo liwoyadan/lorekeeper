@@ -17,6 +17,11 @@ return [
         'description' => 'The header banner displayed at the top of the page. PNG format, default height of 200px. Tiles in both directions.',
         'filename'    => 'header.png',
     ],
+    'site_bg'      => [
+        'name'        => 'Site Background Image',
+        'description' => 'The background image of your site. PNG format. Default styling sets the background-size to cover and not to repeat, so an image close to 1920px in width is recommended. Styling can be edited in the lorekeeper.css file. (It is on a pseudo-element of app to stop it from changing sizes on different pages.)',
+        'filename'    => 'site_bg.png',
+    ],
     'characters'      => [
         'name'        => 'Characters Icon',
         'description' => 'The characters graphic on the front page. PNG format, default size of 200px x 200px (no restriction).',

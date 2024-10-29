@@ -45,7 +45,7 @@ a:hover {
 }
 
 body {
-    background-color: transparent;
+    background-color: #ddd;
     font-family: Lato, sans-serif;
     min-height: 100vh;
     font-size: 80%;
@@ -78,7 +78,18 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: #ddd;
+}
+
+#app::before {
+    content: '';
+    background-image: url('../images/site_bg.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100vw;
+
+    position: fixed;
+    z-index: -1;
 }
 
 main {
@@ -88,8 +99,25 @@ main {
     word-wrap: break-word;
 }
 
-main > .row {
+main > .row:not(:first-child) {
     flex-grow: 1;
+}
+
+main > .row:first-child {
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
+@media (max-width: 992px) {
+    main > .row:first-child {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    #headerNav {
+        position: fixed;
+        top: 0;
+    }
 }
 
 .main-content {
@@ -99,11 +127,25 @@ main > .row {
     flex-direction: column;
 }
 
+#headerNav {
+    background-color: #000!important;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+@media (max-width: 992px) {
+    #headerNav {
+        border-radius: 0;
+    }
+}
+
 /* Header */
 
 .site-header-image {
     /*background-color: #eee;*/
-    background-repeat: repeat;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     min-height: 200px;
 }
 
@@ -119,6 +161,12 @@ main > .row {
 .sidebar {
     text-align: right;
     padding-right: 0px;
+}
+
+@media(min-width: 991px) {
+    .sidebar-replaced {
+        visibility: hidden;
+    }
 }
 
 .sidebar ul {
@@ -161,24 +209,33 @@ main > .row {
     padding: 0.1em 1em;
 }
 
-.sidebar a {
+.sidebar a, .breadcrumb-menu .sidebar-item {
     text-transform: uppercase;
     font-family: Roboto Condensed, serif;
     color: rgba(0,0,0,0.4);
 }
-.sidebar a:hover {
+
+.breadcrumb-menu .sidebar-item {
+    padding: 0.1em 0.5em;
+}
+
+.sidebar a:hover, .breadcrumb-menu .sidebar-item:hover {
     color: #16181b;
     background-color: #f8f9fa;
+    text-decoration: none;
 }
+
 .sidebar a:hover, .sidebar a:active, .sidebar a:focus, .sidebar a:link {
     text-decoration: none;
 }
-.sidebar a:hover {
-    text-decoration: none;
-}
-.sidebar a.active, .sidebar a.active:hover {
+
+.sidebar a.active, .sidebar a.active:hover, .breadcrumb-menu .sidebar-item:has(.active), .breadcrumb-menu .sidebar-item:has(.active):hover {
     color: white;
     background-color: #343a40;
+}
+
+.breadcrumb-menu .sidebar-item:has(.active) a, .breadcrumb-menu .sidebar-item:has(.active):hover a {
+    color: white;
 }
 
 .site-mobile-header {
@@ -340,12 +397,66 @@ main > .row {
 }
 
 .breadcrumb {
-    background-color: transparent;
-    padding: 0;
+    background-color: rgba(0, 0, 0, 0.15);
+    padding: 0.5rem 0.75rem;
     font-family: Roboto Condensed, serif;
     text-transform: uppercase;
     align-items: center;
 }
+
+.breadcrumb-menu .btn {
+    background-color: rgba(0, 0, 0, 0.05);
+    text-transform: uppercase;
+    transition: all 150ms linear;
+}
+
+.breadcrumb-menu .btn:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.breadcrumb-menu .dropdown-toggle::after {
+    display: none;
+}
+
+.breadcrumb-menu .dropdown-menu {
+    white-space: nowrap;
+}
+
+.breadcrumb-menu ul {
+    list-style: none;
+    display: inline-block;
+    padding-left: 0;
+    width: 100%;
+}
+
+.breadcrumb-menu .sidebar-header {
+    display: none;
+}
+
+.breadcrumb-menu .sidebar-section {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.breadcrumb-menu .sidebar-section-header {
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 0.15rem 0;
+    position: relative;
+}
+
+.breadcrumb-menu .sidebar-section-header::after {
+    content: '';
+    background-color: rgba(0, 0, 0, 0.25);
+    display: block;
+    height: 1px;
+
+    position: absolute;
+    left: 2.5%;
+    right: 2.5%;
+    bottom: 0;
+}
+
 .breadcrumb a {
     color: rgba(0,0,0,0.3);
 }
