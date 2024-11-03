@@ -193,7 +193,7 @@ main > .row:first-child {
 }
 
 .sidebar .sidebar-header {
-    background-color: #343a40;
+    background-color: #000;
 }
 .sidebar .sidebar-header a {
     color: white;
@@ -354,6 +354,8 @@ main > .row:first-child {
 }
 
 .mce-content-body {
+    background-color: #fff;
+    background-image: none;
     padding: 20px;
 }
 
