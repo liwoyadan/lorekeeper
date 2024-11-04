@@ -42,9 +42,9 @@ class AppServiceProvider extends ServiceProvider {
             // Currently this is just the layout blades, user list, pages blades, auth blades, and widgets.
             // Also excludes admin blades because those have an incredibly long sidebar.
             // This means if you have any sidebars on the front page i.e. featured character, it will display normally.
-            $noSidebar = '/layout\.|browse.users|pages\.|auth\.|widgets\.|admin\./i';
+            $noSidebar = '/layout\.|browse.users|pages\.|auth\.|widgets\.|^admin\./i';
 
-            if (preg_match_all($noSidebar, $fullName)) {
+            if (preg_match($noSidebar, $fullName)) {
                 View::share('hasSidebar', false);
             } else {
                 View::share('hasSidebar', true);
