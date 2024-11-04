@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider {
             // Declaring which views don't have a sidebar in the first place
             // Doing it this way because...yielded and included views apparently
             // can't access what sections are present on the parent layout...?
-            // Currently this is just the layout blades, user list, pages blades, auth blades, and widgets.
+            // Currently this is just the welcome blade (site index), layout blades, user list, pages blades, auth blades, and widgets.
             // Also excludes admin blades because those have an incredibly long sidebar.
             // This means if you have any sidebars on the front page i.e. featured character, it will display normally.
             $noSidebar = '/layout\.|browse.users|pages\.|auth\.|widgets\.|^admin\.|^welcome\z/i';
