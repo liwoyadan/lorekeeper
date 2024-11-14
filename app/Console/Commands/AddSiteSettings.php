@@ -34,10 +34,10 @@ class AddSiteSettings extends Command
 
     /**
      * Add a site setting.
-     * 
+     *
      * Example usage:
      * $this->addSiteSetting("site_setting_key", 1, "0: does nothing. 1: does something.");
-     * 
+     *
      * @param  string  $key
      * @param  int     $value
      * @param  string  $description
@@ -98,8 +98,12 @@ class AddSiteSettings extends Command
         $this->addSiteSetting('design_votes_needed', 3, 'Number of approval votes needed for a design update or MYO submission to be considered as having approval.');
 
         $this->addSiteSetting('admin_user', 1, 'ID of the site\'s admin user.');
-		
+
         $this->addSiteSetting('adopts_user', 1, 'ID of the site\'s adoption center user.');
+
+        $this->addSiteSetting('adopt_limit', 3, 'The maximum amount of characters a user can obtain from the adoption center in a month.');
+
+        $this->addSiteSetting('adopt_cooldown', 7, 'The amount of days a character adopted from the adoption center must be kept before it can be surrendered or transferred.');
 
         $this->addSiteSetting('gallery_submissions_open', 1, '0: Gallery submissions closed, 1: Gallery submissions open.');
 

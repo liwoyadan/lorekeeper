@@ -14,9 +14,16 @@
     <p>{!! $adoption->parsed_description !!}</p>
 </div>
 
+<div class="text-center mb-2">
+    Users can adopt <b>{{ Settings::get('adopt_limit') }}</b> character{{ Settings::get('adopt_limit') > 1 ? 's' : '' }} in a month.<br>
+    @if (Auth::check())
+        You have adopted <b>{{ Auth::user()->settings->adopt_limit }}</b> character{{ Settings::get('adopt_limit') > 1 ? 's' : '' }} this month. You can adopt <b>{{ Settings::get('adopt_limit') - Auth::user()->settings->adopt_limit }}</b> more this month.
+    @endif
+</div>
+
 @if(!count($stocks))
     <p>No stock found.</p>
-@else 
+@else
     <div class="row">
         @foreach($stocks as $stock)
             <div class="col-md-3 col-6 profile-inventory-item">
@@ -30,7 +37,7 @@
                         <strong>Adoption Fee:</strong>
                         <br>
                         @if($stock->currency->count() > 1)
-                            <?php 
+                            <?php
                                 $currencies = []; // Create an empty array
                                 foreach($stock->currency as $currency)
                                 {
@@ -48,7 +55,7 @@
                                 <br>
                             @endforeach
                         @endif
-                        
+
                         <a href="#" class="btn btn-primary m-2">
                             @if($stock->use_character_bank == 1) <i class="fas fa-paw mr-1" data-toggle="tooltip" title="Can be purchased using Character Bank"></i>@endif
                             <strong>Purchase</strong>
@@ -74,7 +81,7 @@
     $(document).ready(function() {
         $('.inventory-character').on('click', function(e) {
             e.preventDefault();
-            
+
             loadModal("{{ url('adoptions/'.$adoption->id) }}/" + $(this).data('id'), 'Purchase Character');
         });
     });

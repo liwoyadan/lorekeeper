@@ -49,7 +49,11 @@ class SurrenderManager extends Service
 
             // might be needed
             $characters = Character::where('user_id', $user->id)->where('id', $data['character_id'])->first();
-            
+
+            if (isset($characters->transferrable_at) && $characters->transferrable_at > Carbon::now()) {
+                throw new \Exception("This character is on cooldown and cannot be surrendered.");
+            }
+
             // Get a list of rewards, then create the surrender itself
             $surrender = Surrender::create([
                 'user_id' => $user->id,
@@ -61,7 +65,7 @@ class SurrenderManager extends Service
                 ]);
 
             return $this->commitReturn($surrender);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -86,7 +90,7 @@ class SurrenderManager extends Service
             else $surrender = null;
             if(!$surrender) throw new \Exception("Invalid surrender.");
 
-            // The only things we need to set are: 
+            // The only things we need to set are:
             // 1. staff comment
             // 2. staff ID
             // 3. status
@@ -104,7 +108,7 @@ class SurrenderManager extends Service
             ]);
 
             return $this->commitReturn($surrender);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -131,7 +135,7 @@ class SurrenderManager extends Service
                 throw new \Exception("Please select a currency type.");
             }
             // Distribute user currency
-            if(!(new CurrencyManager)->creditCurrency(NULL, $surrender->user, 'Adoption Stock', 'Stock worth', $data['currency_id'], $data['grant'])) { 
+            if(!(new CurrencyManager)->creditCurrency(NULL, $surrender->user, 'Adoption Stock', 'Stock worth', $data['currency_id'], $data['grant'])) {
                 throw new \Exception("Failed to distribute currency to user.");
             }
             // Manual stuff
@@ -163,8 +167,8 @@ class SurrenderManager extends Service
             if(!(new AdoptionService)->createAdoptionStock(Adoption::find(1), $data, null)) {
                 throw new \Exception("Failed to create stock.");
             }
-            
-            // Finally, set: 
+
+            // Finally, set:
 			// 1. staff comments
             // 2. staff ID
             // 3. status
@@ -181,10 +185,10 @@ class SurrenderManager extends Service
             ]);
 
             return $this->commitReturn($surrender);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
     }
-    
+
 }

@@ -13,6 +13,7 @@ use App\Models\Adoption\AdoptionLog;
 use App\Models\Adoption\AdoptionCurrency;
 use App\Models\User\User;
 use App\Services\CharacterManager;
+use Carbon\Carbon;
 
 class AdoptionManager extends Service
 {
@@ -49,6 +50,12 @@ class AdoptionManager extends Service
             // Check if the character has a quantity, and if it does, check there is stock remaining
             if($adoptionStock->is_limited_stock && $adoptionStock->quantity < 1) throw new \Exception("This character is no longer available.");
 
+            // Check the site's monthly adoption limit and how many characters the user has adopted this month
+            $limit = Settings::get('adopt_limit');
+            if ($user->settings->adopt_limit >= $limit) {
+                throw new \Exception("You have already adopted the maximum number of characters this month.");
+            }
+
             $character = null;
             if($data['bank'] == 'character')
             {
@@ -73,7 +80,7 @@ class AdoptionManager extends Service
             }
 
             // If the character has a limited quantity, decrease the quantity
-            if($adoptionStock->is_limited_stock) 
+            if($adoptionStock->is_limited_stock)
             {
                 $adoptionStock->quantity--;
                 $adoptionStock->save();
@@ -83,31 +90,42 @@ class AdoptionManager extends Service
 
             // Add a purchase log
             $adoptionLog = AdoptionLog::create([
-                'adoption_id' => $adoption->id, 
-                'character_id' => $character ? $character->id : null, 
-                'user_id' => $user->id, 
-                'currency_id' => $adoptionCurrency->currency->id, 
-                'cost' => $adoptionCurrency->cost, 
-                'adopt_id' => $adoptionStock->character_id, 
+                'adoption_id' => $adoption->id,
+                'character_id' => $character ? $character->id : null,
+                'user_id' => $user->id,
+                'currency_id' => $adoptionCurrency->currency->id,
+                'cost' => $adoptionCurrency->cost,
+                'adopt_id' => $adoptionStock->character_id,
                 'quantity' => $quantity
             ]);
-            
+
+            // Add onto the user's adoption limit
+            $user->settings->adopt_limit++;
+            $user->settings->save();
+
+
             // doing stuff manually because why not and because hopefully no one ever looks here
             $data = [];
             $data['recipient_id'] = $user->id;
             $data['reason'] = 'Bought from adoption center';
             $adopt = Character::find($adoptionStock->character_id);
             $admin = User::find(1);
-            
+
             if(!(new CharacterManager)->adminTransfer($data, $adopt, $admin)) {
                 throw new \Exception("Failed to transfer character.");
+            }
+
+            // Set the character's transfer cooldown if adoption cooldown is set
+            if (Settings::get('adopt_cooldown') > 0) {
+                $adopt->transferrable_at = Carbon::now()->addDays(Settings::get('adopt_cooldown'));
+                $adopt->save();
             }
 
             $adoptionStock->delete();
             AdoptionCurrency::where('stock_id', $adoptionStock->id)->delete();
 
             return $this->commitReturn($adoption);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);

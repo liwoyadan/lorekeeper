@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Carbon\Carbon;
 use Settings;
 
 use Illuminate\Http\Request;
@@ -51,6 +52,8 @@ class SurrenderController extends Controller
     public function getSurrender()
     {
         $characters = Character::orderBy('id')->where('user_id', Auth::user()->id)->where(function ($query) {
+            return $query->where('transferrable_at', '<', Carbon::now())->orWhereNull('transferrable_at');
+        })->where(function ($query) {
             return $query->where('is_sellable', 1)->orWhere('is_tradeable', 1)->orwhere('is_giftable', 1);
         })->get()->pluck('fullName', 'id');
         $adoption = Adoption::where('id', 1)->where('is_active', 1)->first();

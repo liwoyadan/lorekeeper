@@ -10,7 +10,10 @@
 @if(!Settings::get('is_surrenders_open'))
 <div class="alert alert-danger">Surrenders are currently closed</div>
 @else
-<div class="alert alert-warning">Please note that by surrendering your characters you acknowledge they will be sold for onsite currency and retrieval after the form has been approved may not be possible</div>
+<div class="alert alert-warning">
+    Please note that by surrendering your characters you acknowledge they will be sold for onsite currency and retrieval after the form has been approved may not be possible.<br>
+    Characters on transfer cooldown cannot be surrendered.
+</div>
 
 {!! Form::open(['url' => 'surrenders/new/post']) !!}
 
