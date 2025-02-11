@@ -17,6 +17,12 @@
     src: url('../webfonts/BebasNeue-Regular.woff') format('woff'),
         url('../webfonts/BebasNeue-Regular.woff2') format('woff2');
 }
+@font-face {
+    font-family: 'Font Awesome 5';
+    src: url('../webfonts/fa-solid-900.woff') format('woff'),
+        url('../webfonts/fa-solid-900.woff2') format('woff2');
+}
+
 
 /**************************************************************************************************
 
@@ -26,6 +32,7 @@
 
 h1, h2, h3, h4, h5,
 .h1, .h2, .h3, .h4, .h5 {
+    color: #3b051f;
     text-transform: uppercase;
     font-family: 'Bebas Neue', serif;
     font-weight: bold;
@@ -33,7 +40,7 @@ h1, h2, h3, h4, h5,
 
 h1 a, h2 a, h3 a, h4 a, h5 a,
 a.h1, a.h2, a.h3, a.h4, a.h5 {
-    color: rgba(0,0,0,0.7);
+    color: #810a45;
 }
 h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover,
 a.h1:hover, a.h2:hover, a.h3:hover, a.h4:hover, a.h5:hover {
@@ -42,18 +49,23 @@ a.h1:hover, a.h2:hover, a.h3:hover, a.h4:hover, a.h5:hover {
 }
 
 a {
-    color: rgba(0,0,0,0.7);
+    color: #810a45;
 }
 a:hover {
-    color: rgba(0,0,0,1);
+    color: #630635;
     text-decoration: none;
 }
 
 body {
     background-color: transparent;
+    color: #1d010f;
     font-family: Lato, sans-serif;
     min-height: 100vh;
     font-size: 80%;
+}
+
+hr {
+    border-color: #FF1382;
 }
 
 /**************************************************************************************************
@@ -84,7 +96,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     background-color: #FF88C1;
-    background-image: linear-gradient(to bottom, #FF88C1 0%, #FF0D7E 100%);
+    background-image: url('../images/bg-pattern.png'), linear-gradient(to bottom, #FF88C1 0%, #FF0D7E 100%);
 }
 
 main {
@@ -99,12 +111,12 @@ main > .row {
 }
 
 .main-content {
-    background-color: #FFD5E9;
+    background-color: rgba(255, 213, 233, 0.9);
     border: 2px solid #FF1382;
     display: flex;
     flex-direction: column;
     margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 /* Header */
@@ -152,8 +164,22 @@ main > .row {
     font-size: 1.35em;
 }
 
+#headerNav .dropdown-menu {
+    background-color: #A26C53;
+    border: 2px solid #684332;
+}
+
+#headerNav .dropdown-divider {
+    border-color: #684332;
+}
+
 #headerNav .dropdown-item {
+    color: #fff;
     font-size: 1.15em;
+}
+
+#headerNav .dropdown-item:hover {
+    background-color: rgba(104, 67, 50, 0.65);
 }
 
 .nav-link.btn-secondary {
@@ -174,11 +200,12 @@ main > .row {
 .sidebar ul {
     list-style-type: none;
     display: inline-block;
-    padding-top: 30px;
+    padding-top: 50px;
+    width: 100%;
 }
 
 .sidebar ul li {
-    background-color: white;
+    background-color: #A26C53;
     border-top-left-radius: .25rem;
     border-bottom-left-radius: .25rem;
     margin-bottom: 1em;
@@ -189,13 +216,26 @@ main > .row {
 
 .sidebar .sidebar-header,
 .sidebar .sidebar-section .sidebar-section-header {
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 1px;
     text-transform: uppercase;
-    font-family: Roboto Condensed, serif;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.25em;
     font-weight: bold;
+    position: relative;
+}
+
+.sidebar .sidebar-header::before,
+.sidebar .sidebar-section .sidebar-section-header::before {
+    content: '\f564';
+    font-family: 'Font Awesome 5';
+    position: absolute;
+    left: 0.5em;
+    z-index: 1;
 }
 
 .sidebar .sidebar-header {
-    background-color: #343a40;
+    background-color: #684332;
 }
 .sidebar .sidebar-header a {
     color: white;
@@ -213,12 +253,11 @@ main > .row {
 
 .sidebar a {
     text-transform: uppercase;
-    font-family: Roboto Condensed, serif;
-    color: rgba(0,0,0,0.4);
+    color: rgba(255, 255, 255, 0.75);
 }
 .sidebar a:hover {
-    color: #16181b;
-    background-color: #f8f9fa;
+    color: rgba(255, 255, 255, 1);
+    background-color: #684332;
 }
 .sidebar a:hover, .sidebar a:active, .sidebar a:focus, .sidebar a:link {
     text-decoration: none;
@@ -228,7 +267,7 @@ main > .row {
 }
 .sidebar a.active, .sidebar a.active:hover {
     color: white;
-    background-color: #343a40;
+    background-color: #684332;
 }
 
 .site-mobile-header {
@@ -238,6 +277,7 @@ main > .row {
 
 @media (max-width: 767px) {
 	.site-mobile-header {
+        background-color: #684332!important;
 		top: 54px !important;
     }
 
@@ -276,7 +316,7 @@ main > .row {
         position: absolute;
         padding-left: 0px;
         text-align: left;
-        background-color: #ddd;
+        background-color: rgba(59, 5, 31, 0.8);
         z-index: 3;
         right: 0px;
         bottom: 0px;
@@ -302,12 +342,19 @@ main > .row {
     }
 
     .sidebar ul li {
-        background-color: white;
         border-radius: 0;
         margin-bottom: 1em;
         padding: 0.4em 0;
 
         box-shadow: none;
+    }
+
+    .sidebar .sidebar-header {
+        padding-left: 1em;
+    }
+
+    .sidebar .sidebar-section .sidebar-section-header {
+        padding-left: 2em;
     }
 
 	/*fix for screen being over-wide on mobile*/
@@ -337,13 +384,16 @@ main > .row {
     flex-direction: row;
 }
 .site-footer .navbar .navbar-nav .nav-link {
+    color: rgba(129, 10, 69, 0.5);
     padding-right: .5rem;
     padding-left: .5rem;
 }
-
+.site-footer .navbar .navbar-nav .nav-link:hover {
+    color: rgba(129, 10, 69, 0.85);
+}
 .site-footer .copyright {
     padding: 0 1rem 1rem;
-    color: rgba(0,0,0,.3);
+    color: #810a45;
 }
 
 .mce-content-body {
@@ -386,7 +436,7 @@ main > .row {
     /*vertical-align: middle;*/
     cursor: pointer;
     margin: 0 5px;
-    color: rgba(0,0,0,0.3);
+    color: rgba(129, 10, 69, 0.5);
 }
 
 .breadcrumb {
@@ -397,14 +447,18 @@ main > .row {
     align-items: center;
 }
 .breadcrumb a {
-    color: rgba(0,0,0,0.3);
+    color: rgba(129, 10, 69, 0.5);
 }
 .breadcrumb a:hover {
-    color: rgba(0,0,0,0.4);
+    color: rgba(129, 10, 69, 0.85);
     text-decoration: none;
+}
+.breadcrumb-item.active {
+    color: #810a45;
 }
 .breadcrumb-item+.breadcrumb-item:before {
     content: "»";
+    color: #810a45;
 }
 .collapse-title {
     position: relative;
@@ -442,6 +496,7 @@ main > .row {
 /* Firefox */
 .pagination-popover input[type=number] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .spoiler {
@@ -477,7 +532,7 @@ main > .row {
 /* NOTIFICATIONS *********************************************************************************/
 
 .notifications-table .unread, .notifications-table .unread td {
-    background-color: #fffdf0;
+    background-color: rgba(255, 255, 255, 0.15);
 }
 
 /* BROWSE ****************************************************************************************/
@@ -528,16 +583,16 @@ main > .row {
 
 /* LOGS ******************************************************************************************/
 tr.inflow {
-    background-color: #fafaff;
+    background-color: rgba(255, 255, 255, 0.15);
 }
 tr.outflow {
-    background-color: #fffafa;
+    background-color: rgba(255, 255, 255, 0.15);
 }
 
 /* These are not truly tables, but divs styled to look like tables */
 .logs-table .logs-table-header {
-    border-top: 1px solid #dee2e6;
-    border-bottom: 2px solid #dee2e6;
+    border-top: 1px solid #FF88C1;
+    border-bottom: 2px solid #FF88C1;
     font-weight: bold;
     padding: 0px;
     flex-wrap: wrap;
@@ -551,7 +606,7 @@ tr.outflow {
 }
 .logs-table .logs-table-body > .logs-table-row,
 .logs-table-row .logs-table-row {
-    border-top: 1px solid #dee2e6;
+    border-top: 1px solid #FF88C1;
 }
 .logs-table .logs-table-body .logs-table-cell .inflow,
 .logs-table .logs-table-body .logs-table-cell .outflow {
@@ -563,6 +618,10 @@ tr.outflow {
     margin-bottom: -.6rem;
     vertical-align: middle;
     color: #fff;
+}
+
+.table td, .table th {
+    border-top: 1px solid #FF88C1;
 }
 
 

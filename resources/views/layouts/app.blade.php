@@ -88,7 +88,7 @@
 <body>
     <div id="app">
         <div class="site-header">
-            <img class="img-fluid site-header-image" src="{{ asset('images/header.png') }}" alt="Header Image">
+            <img class="img-fluid site-header-image" src="{{ asset('images/header.png?v=' . filemtime(public_path('images/header.png'))) }}" alt="Header Image">
         </div>
         @include('layouts._nav')
         @if (View::hasSection('sidebar'))
