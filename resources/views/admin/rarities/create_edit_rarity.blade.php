@@ -48,15 +48,19 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('MYO Image (Optional)') !!} {!! add_help('If set, then any MYO with this rarity created through the admin panel or through a slot item tag will have this image as its character image and thumbnail. <b>The thumbnail is automatically processed using the uploaded image.</b>') !!}
+        {!! Form::label('MYO Image (Optional)') !!} {!! add_help(
+            'If set, then any MYO with this rarity created through the admin panel or through a slot item tag will have this image as its character image and thumbnail. <b>The thumbnail is automatically processed using the uploaded image.</b>',
+        ) !!}
         <div class="custom-file">
             {!! Form::label('myo_image', 'Choose MYO file...', ['class' => 'custom-file-label']) !!}
             {!! Form::file('myo_image', ['class' => 'custom-file-input']) !!}
         </div>
-        <div class="text-muted">PNG format. Uploaded image will be resized to the thumbnail size declared in config: {{ config('lorekeeper.settings.masterlist_thumbnails.width') }}px x {{ config('lorekeeper.settings.masterlist_thumbnails.height') }}px</div>
+        <div class="text-muted">PNG format. Uploaded image will be resized to the thumbnail size declared in config: {{ config('lorekeeper.settings.masterlist_thumbnails.width') }}px x {{ config('lorekeeper.settings.masterlist_thumbnails.height') }}px
+        </div>
         @if ($rarity->has_myo_image)
             <div class="text-muted">
-                Current Image: <a href="{{ url($rarity->imageDirectory.'/'.$rarity->rarityMyoImageFileName) }}" target="_blank">Fullsize Image</a> // <a href="{{ url($rarity->imageDirectory.'/'.$rarity->rarityMyoThumbnailFileName) }}" target="_blank">Thumbnail Image</a>
+                Current Image: <a href="{{ url($rarity->imageDirectory . '/' . $rarity->rarityMyoImageFileName) }}" target="_blank">Fullsize Image</a> // <a href="{{ url($rarity->imageDirectory . '/' . $rarity->rarityMyoThumbnailFileName) }}"
+                    target="_blank">Thumbnail Image</a>
             </div>
             <div class="form-check">
                 {!! Form::checkbox('remove_myo_image', 1, false, ['class' => 'form-check-input']) !!}
