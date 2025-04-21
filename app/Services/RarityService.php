@@ -188,6 +188,30 @@ class RarityService extends Service {
     }
 
     /**
+     * Processes the rarity image into a thumbnail.
+     *
+     * @param \App\Models\Rarity $rarity
+     */
+    public function processThumbnail($rarity) {
+        $image = Image::make($rarity->rarityImagePath.'/'.$rarity->rarityMyoImageFileName);
+
+        if ($image->width() > $image->height()) {
+            // Landscape
+            $canvas = Image::canvas($image->width(), $image->width());
+            $image = $canvas->insert($image, 'center');
+        } else {
+            // Portrait
+            $canvas = Image::canvas($image->height(), $image->height());
+            $image = $canvas->insert($image, 'center');
+        }
+
+        $image->resize(config('lorekeeper.settings.masterlist_thumbnails.width'), config('lorekeeper.settings.masterlist_thumbnails.height'));
+
+        // Save the thumbnail
+        $image->save($rarity->rarityImagePath.'/'.$rarity->rarityMyoThumbnailFileName, 100, 'png');
+    }
+
+    /**
      * Processes user input for creating/updating a rarity.
      *
      * @param array              $data
@@ -222,29 +246,5 @@ class RarityService extends Service {
         }
 
         return $data;
-    }
-
-    /**
-     * Processes the rarity image into a thumbnail.
-     *
-     * @param \App\Models\Rarity $rarity
-     */
-    public function processThumbnail($rarity) {
-        $image = Image::make($rarity->rarityImagePath.'/'. $rarity->rarityMyoImageFileName);
-
-        if ($image->width() > $image->height()) {
-            // Landscape
-            $canvas = Image::canvas($image->width(), $image->width());
-            $image = $canvas->insert($image, 'center');
-        } else {
-            // Portrait
-            $canvas = Image::canvas($image->height(), $image->height());
-            $image = $canvas->insert($image, 'center');
-        }
-
-        $image->resize(config('lorekeeper.settings.masterlist_thumbnails.width'), config('lorekeeper.settings.masterlist_thumbnails.height'));
-
-        // Save the thumbnail
-        $image->save($rarity->rarityImagePath.'/'.$rarity->rarityMyoThumbnailFileName, 100, 'png');
     }
 }
