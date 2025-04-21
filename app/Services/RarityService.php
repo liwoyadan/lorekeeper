@@ -6,6 +6,7 @@ use App\Models\Character\Character;
 use App\Models\Character\CharacterImage;
 use App\Models\Rarity;
 use Illuminate\Support\Facades\DB;
+use Intervention\Image\Facades\Image;
 
 class RarityService extends Service {
     /*
@@ -41,10 +42,25 @@ class RarityService extends Service {
                 $data['has_image'] = 0;
             }
 
+            $myoImage = null;
+            if (isset($data['myo_image']) && $data['myo_image']) {
+                $data['myo_hash'] = randomString(10);
+                $data['has_myo_image'] = 1;
+                $myoImage = $data['myo_image'];
+                unset($data['myo_image']);
+            } else {
+                $data['has_myo_image'] = 0;
+            }
+
             $rarity = Rarity::create($data);
 
             if ($image) {
                 $this->handleImage($image, $rarity->rarityImagePath, $rarity->rarityImageFileName);
+            }
+
+            if ($myoImage) {
+                $this->handleImage($myoImage, $rarity->rarityImagePath, $rarity->rarityMyoImageFileName);
+                $this->processThumbnail($rarity);
             }
 
             return $this->commitReturn($rarity);
@@ -83,10 +99,25 @@ class RarityService extends Service {
                 unset($data['image']);
             }
 
+            $myoImage = null;
+            if (isset($data['myo_image']) && $data['myo_image']) {
+                $data['myo_hash'] = randomString(10);
+                $data['has_myo_image'] = 1;
+                $myoImage = $data['myo_image'];
+                unset($data['myo_image']);
+            } else {
+                $data['has_myo_image'] = 0;
+            }
+
             $rarity->update($data);
 
             if ($rarity) {
                 $this->handleImage($image, $rarity->rarityImagePath, $rarity->rarityImageFileName);
+            }
+
+            if ($myoImage) {
+                $this->handleImage($myoImage, $rarity->rarityImagePath, $rarity->rarityMyoImageFileName);
+                $this->processThumbnail($rarity);
             }
 
             return $this->commitReturn($rarity);
@@ -115,6 +146,10 @@ class RarityService extends Service {
 
             if ($rarity->has_image) {
                 $this->deleteImage($rarity->rarityImagePath, $rarity->rarityImageFileName);
+            }
+            if ($rarity->has_myo_image) {
+                $this->deleteImage($rarity->rarityImagePath, $rarity->rarityMyoImageFileName);
+                $this->deleteImage($rarity->rarityImagePath, $rarity->rarityMyoThumbnailFileName);
             }
             $rarity->delete();
 
@@ -177,6 +212,39 @@ class RarityService extends Service {
             unset($data['remove_image']);
         }
 
+        if (isset($data['remove_myo_image'])) {
+            if ($rarity && $rarity->has_image && $data['remove_myo_image']) {
+                $data['has_myo_image'] = 0;
+                $this->deleteImage($rarity->rarityImagePath, $rarity->rarityMyoImageFileName);
+                $this->deleteImage($rarity->rarityImagePath, $rarity->rarityMyoThumbnailFileName);
+            }
+            unset($data['remove_myo_image']);
+        }
+
         return $data;
+    }
+
+    /**
+     * Processes the rarity image into a thumbnail.
+     *
+     * @param \App\Models\Rarity $rarity
+     */
+    public function processThumbnail($rarity) {
+        $image = Image::make($rarity->rarityImagePath.'/'. $rarity->rarityMyoImageFileName);
+
+        if ($image->width() > $image->height()) {
+            // Landscape
+            $canvas = Image::canvas($image->width(), $image->width());
+            $image = $canvas->insert($image, 'center');
+        } else {
+            // Portrait
+            $canvas = Image::canvas($image->height(), $image->height());
+            $image = $canvas->insert($image, 'center');
+        }
+
+        $image->resize(config('lorekeeper.settings.masterlist_thumbnails.width'), config('lorekeeper.settings.masterlist_thumbnails.height'));
+
+        // Save the thumbnail
+        $image->save($rarity->rarityImagePath.'/'.$rarity->rarityMyoThumbnailFileName, 100, 'png');
     }
 }

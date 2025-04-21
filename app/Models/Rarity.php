@@ -9,7 +9,7 @@ class Rarity extends Model {
      * @var array
      */
     protected $fillable = [
-        'name', 'sort', 'color', 'has_image', 'description', 'parsed_description', 'hash',
+        'name', 'sort', 'color', 'has_image', 'description', 'parsed_description', 'hash', 'has_myo_image', 'myo_hash',
     ];
 
     /**
@@ -28,6 +28,7 @@ class Rarity extends Model {
         'color'       => 'nullable|regex:/^#?[0-9a-fA-F]{6}$/i',
         'description' => 'nullable',
         'image'       => 'mimes:png',
+        'myo_image'   => 'mimes:png',
     ];
 
     /**
@@ -40,6 +41,7 @@ class Rarity extends Model {
         'color'       => 'nullable|regex:/^#?[0-9a-fA-F]{6}$/i',
         'description' => 'nullable',
         'image'       => 'mimes:png',
+        'myo_image'   => 'mimes:png',
     ];
 
     /**********************************************************************************************
@@ -73,6 +75,24 @@ class Rarity extends Model {
      */
     public function getRarityImageFileNameAttribute() {
         return $this->hash.$this->id.'-image.png';
+    }
+
+    /**
+     * Gets the file name of the model's MYO image.
+     *
+     * @return string
+     */
+    public function getRarityMyoImageFileNameAttribute() {
+        return $this->myo_hash.$this->id.'-myo-image.png';
+    }
+
+    /**
+     * Gets the file name of the model's MYO thumbnail image.
+     *
+     * @return string
+     */
+    public function getRarityMyoThumbnailFileNameAttribute() {
+        return $this->myo_hash.$this->id.'-myo-th.png';
     }
 
     /**

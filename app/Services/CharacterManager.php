@@ -14,6 +14,7 @@ use App\Models\Character\CharacterImage;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Sales\SalesCharacter;
 use App\Models\Species\Subtype;
+use App\Models\Rarity;
 use App\Models\User\User;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
@@ -1904,8 +1905,16 @@ class CharacterManager extends Service {
 
                 // Use default images for MYO slots without an image provided
                 if (!isset($data['image'])) {
-                    $data['image'] = public_path('images/myo.png');
-                    $data['thumbnail'] = public_path('images/myo-th.png');
+                    if (isset($data['rarity_id']) && $data['rarity_id']) {
+                        $imageRarity = Rarity::find($data['rarity_id']);
+                        if ($imageRarity && $imageRarity->has_myo_image) {
+                            $data['image'] = public_path($imageRarity->imageDirectory.'/'.$imageRarity->rarityMyoImageFileName);
+                            $data['thumbnail'] = public_path($imageRarity->imageDirectory.'/'.$imageRarity->rarityMyoThumbnailFileName);
+                        } else {
+                            $data['image'] = public_path('images/myo.png');
+                            $data['thumbnail'] = public_path('images/myo-th.png');
+                        }
+                    }
                     $data['extension'] = config('lorekeeper.settings.masterlist_image_format') ?? 'png';
                     $data['fullsize_extension'] = config('lorekeeper.settings.masterlist_fullsizes_format') ?? $data['extension'];
                     $data['default_image'] = true;
