@@ -1914,6 +1914,9 @@ class CharacterManager extends Service {
                             $data['image'] = public_path('images/myo.png');
                             $data['thumbnail'] = public_path('images/myo-th.png');
                         }
+                    } else {
+                        $data['image'] = public_path('images/myo.png');
+                        $data['thumbnail'] = public_path('images/myo-th.png');
                     }
                     $data['extension'] = config('lorekeeper.settings.masterlist_image_format') ?? 'png';
                     $data['fullsize_extension'] = config('lorekeeper.settings.masterlist_fullsizes_format') ?? $data['extension'];
