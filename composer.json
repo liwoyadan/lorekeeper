@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "benjamincrozat/laravel-dropbox-driver": "^3.0",
         "bacon/bacon-qr-code": "^3.0",
         "doctrine/dbal": "^3.7",
         "erusev/parsedown": "^1.7",
@@ -29,6 +30,7 @@
         "socialiteproviders/tumblr": "^4.1",
         "socialiteproviders/twitch": "^5.3",
         "spatie/laravel-feed": "^4.1",
+        "spatie/laravel-backup": "^6.16",
         "spatie/laravel-honeypot": "^4.1"
     },
     "require-dev": {
