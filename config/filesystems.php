@@ -56,8 +56,9 @@ return [
         ],
 
         'dropbox' => [
-            'driver' => 'dropbox',
-            'token'  => env('DROPBOX_TOKEN'),
+            'driver'        => 'dropbox',
+            'token_url'     => env('DROPBOX_TOKEN_URL'),
+            'refresh_token' => env('DROPBOX_REFRESH_TOKEN'),
         ],
 
         's3'     => [
