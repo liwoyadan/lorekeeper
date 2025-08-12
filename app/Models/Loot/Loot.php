@@ -97,4 +97,17 @@ class Loot extends Model {
 
         return json_decode($this->attributes['data'], true);
     }
+
+    /**
+     * Get the max quantity data if set.
+     *
+     * @return array
+     */
+    public function getMaxQuantityAttribute() {
+        if (!$this->data || !isset($this->data['max_quantity']) && !$this->data['max_quantity']) {
+            return null;
+        }
+
+        return $this->data['max_quantity'];
+    }
 }

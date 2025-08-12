@@ -45,6 +45,7 @@
                 <th width="25%">Loot Type</th>
                 <th width="35%">Reward</th>
                 <th width="10%">Quantity</th>
+                <th width="10%">Max Qty. {!! add_help('<b>(Optional)</b> If this is set, when this loot is rolled it will randomize the quantity between the minimum set quantity and this value as the upper range.') !!}</th>
                 <th width="10%">Weight {!! add_help('A higher weight means a reward is more likely to be rolled. Weights have to be integers above 0 (round positive number, no decimals) and do not have to add up to be a particular number.') !!}</th>
                 <th width="10%">Chance</th>
                 <th width="10%"></th>
@@ -87,6 +88,7 @@
                             @endif
                         </td>
                         <td>{!! Form::text('quantity[]', $loot->quantity, ['class' => 'form-control']) !!}</td>
+                        <td>{!! Form::text('max_quantity[]', $loot->maxQuantity, ['class' => 'form-control']) !!}</td>
                         <td class="loot-row-weight">{!! Form::text('weight[]', $loot->weight, ['class' => 'form-control loot-weight']) !!}</td>
                         <td class="loot-row-chance"></td>
                         <td class="text-right"><a href="#" class="btn btn-danger remove-loot-button">Remove</a></td>
@@ -116,6 +118,7 @@
                     ) !!}</td>
                     <td class="loot-row-select"></td>
                     <td>{!! Form::text('quantity[]', 1, ['class' => 'form-control']) !!}</td>
+                    <td>{!! Form::text('max_quantity[]', null, ['class' => 'form-control']) !!}</td>
                     <td class="loot-row-weight">{!! Form::text('weight[]', 1, ['class' => 'form-control loot-weight']) !!}</td>
                     <td class="loot-row-chance"></td>
                     <td class="text-right"><a href="#" class="btn btn-danger remove-loot-button">Remove</a></td>

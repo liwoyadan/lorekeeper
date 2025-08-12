@@ -40,6 +40,9 @@ class LootService extends Service {
                 if (!$data['quantity'][$key] || $data['quantity'][$key] < 1) {
                     throw new \Exception('Quantity is required and must be an integer greater than 0.');
                 }
+                if (isset($data['max_quantity'][$key]) && ($data['max_quantity'][$key] < $data['quantity'][$key])) {
+                    throw new \Exception('The maximum quantity value cannot be less than the default quantity value.');
+                }
                 if (!$data['weight'][$key] || $data['weight'][$key] < 1) {
                     throw new \Exception('Weight is required and must be an integer greater than 0.');
                 }
@@ -55,7 +58,7 @@ class LootService extends Service {
 
             $table = LootTable::create(Arr::only($data, ['name', 'display_name']));
 
-            $this->populateLootTable($table, Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity', 'weight', 'criteria', 'rarity']));
+            $this->populateLootTable($table, Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity', 'max_quantity', 'weight', 'criteria', 'rarity']));
 
             return $this->commitReturn($table);
         } catch (\Exception $e) {
@@ -103,7 +106,7 @@ class LootService extends Service {
 
             $table->update(Arr::only($data, ['name', 'display_name']));
 
-            $this->populateLootTable($table, Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity', 'weight', 'criteria', 'rarity']));
+            $this->populateLootTable($table, Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity', 'max_quantity', 'weight', 'criteria', 'rarity']));
 
             return $this->commitReturn($table);
         } catch (\Exception $e) {
@@ -158,6 +161,12 @@ class LootService extends Service {
                     'criteria' => $data['criteria'][$key],
                     'rarity'   => $data['rarity'][$key],
                 ];
+            }
+
+            if (isset($data['max_quantity'][$key]) && $data['max_quantity'][$key]) {
+                $lootData['max_quantity'] = $data['max_quantity'][$key];
+            } else {
+                $lootData['max_quantity'] = null;
             }
 
             Loot::create([
