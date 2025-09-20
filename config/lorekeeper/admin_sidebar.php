@@ -196,6 +196,23 @@ return [
             ],
         ],
     ],
+    'Raids'       => [
+        'power' => 'edit_data',
+        'links' => [
+            [
+                'name' => 'Raids',
+                'url'  => 'admin/data/raids',
+            ],
+            [
+                'name' => 'Raid Bosses',
+                'url'  => 'admin/data/raids/bosses',
+            ],
+            [
+                'name' => 'Raid Logs',
+                'url'  => 'admin/data/raids/logs',
+            ],
+        ],
+    ],
     'Raffles'    => [
         'power' => 'manage_raffles',
         'links' => [
