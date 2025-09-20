@@ -32,10 +32,13 @@
         <div class="mb-4 logs-table">
             <div class="logs-table-header">
                 <div class="row">
-                    <div class="col-12 col-md-5">
+                    <div class="col-12 col-md-4">
                         <div class="logs-table-cell">Name</div>
                     </div>
-                    <div class="col col-md-5">
+                    <div class="col col-md-3">
+                        <div class="logs-table-cell">Health</div>
+                    </div>
+                    <div class="col col-md-3">
                         <div class="logs-table-cell">Raid</div>
                     </div>
                 </div>
@@ -44,7 +47,7 @@
                 @foreach ($bosses as $boss)
                     <div class="logs-table-row">
                         <div class="row flex-wrap">
-                            <div class="col-12 col-md-5 text-truncate">
+                            <div class="col-12 col-md-4 text-truncate">
                                 <div class="logs-table-cell">
                                     @if (!$boss->is_visible)
                                         <i class="fas fa-eye-slash" data-toggle="tooltip" title="This raid is currently not visible."></i>
@@ -52,7 +55,12 @@
                                     {{ $boss->name }}
                                 </div>
                             </div>
-                            <div class="col col-md-5">
+                            <div class="col col-md-3">
+                                <div class="logs-table-cell">
+                                    {!! $boss->health ?? 'No Limit' !!}
+                                </div>
+                            </div>
+                            <div class="col col-md-3">
                                 <div class="logs-table-cell">
                                     {!! $boss->raid_id ? $boss->raid->displayName : '-' !!}
                                 </div>
