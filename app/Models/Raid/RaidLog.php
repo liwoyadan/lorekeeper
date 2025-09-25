@@ -12,7 +12,7 @@ class RaidLog extends Model {
      * @var array
      */
     protected $fillable = [
-        'user_id', 'raid_id', 'log', 'log_type', 'data',
+        'user_id', 'raid_id', 'log', 'log_type', 'data', 'damage',
     ];
 
     /**
@@ -21,6 +21,7 @@ class RaidLog extends Model {
      * @var string
      */
     protected $table = 'raids_log';
+
     /**
      * Whether the model contains timestamps to be saved and updated.
      *

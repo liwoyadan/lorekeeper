@@ -35,8 +35,14 @@
         <div class="mb-4 logs-table">
             <div class="logs-table-header">
                 <div class="row">
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-3">
                         <div class="logs-table-cell">Name</div>
+                    </div>
+                    <div class="col col-md-2">
+                        <div class="logs-table-cell">
+                            Active?
+                            {!! add_help('This is <b>regardless of visibility</b>, whether or not the raid is active based on <b>start time</b> and <b>end time</b>.') !!}
+                        </div>
                     </div>
                     <div class="col col-md-3">
                         <div class="logs-table-cell">Starts</div>
@@ -50,12 +56,21 @@
                 @foreach ($raids as $raid)
                     <div class="logs-table-row">
                         <div class="row flex-wrap">
-                            <div class="col-12 col-md-4 text-truncate">
+                            <div class="col-12 col-md-3 text-truncate">
                                 <div class="logs-table-cell">
                                     @if (!$raid->is_visible)
                                         <i class="fas fa-eye-slash" data-toggle="tooltip" title="This raid is currently not visible."></i>
                                     @endif
                                     {{ $raid->name }}
+                                </div>
+                            </div>
+                            <div class="col col-md-2">
+                                <div class="logs-table-cell">
+                                    @if ($raid->isActive)
+                                        <i class="fas fa-check text-success" data-toggle="tooltip" title="This raid is currently active."></i>
+                                    @else
+                                        <i class="fas fa-times text-danger" data-toggle="tooltip" title="This raid is currently inactive."></i>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col col-md-3">

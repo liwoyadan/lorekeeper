@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Data;
 use App\Http\Controllers\Controller;
 use App\Models\Raid\Raid;
 use App\Models\Raid\RaidBoss;
+use App\Models\Raid\RaidBossImage;
 use App\Services\RaidService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -82,7 +83,8 @@ class RaidController extends Controller {
     public function postCreateEditRaid(Request $request, RaidService $service, $id = null) {
         $id ? $request->validate(Raid::$updateRules) : $request->validate(Raid::$createRules);
         $data = $request->only([
-            'name', 'description', 'start_at', 'end_at', 'is_visible', 'rewardable_type', 'rewardable_id', 'quantity', 'image', 'remove_image',
+            'name', 'description', 'start_at', 'end_at', 'is_visible', 'rewardable_type', 'rewardable_id', 'quantity', 'damage_required',
+            'image', 'remove_image', 'damage_type', 'damage_id', 'damage_quantity', 'damage_base', 'damage_max',
         ]);
         if ($id && $service->updateRaid(Raid::find($id), $data, Auth::user())) {
             flash('Raid updated successfully.')->success();
@@ -190,9 +192,14 @@ class RaidController extends Controller {
         if (!$raidBoss) {
             abort(404);
         }
+        $bossImages = $raidBoss->images->count() ? $raidBoss->images()->get() : null;
+        if ($bossImages) {
+            $bossImages = $bossImages->sortByDesc('thresholdCalc');
+        }
 
         return view('admin.raids.create_edit_raid_boss', [
             'raidBoss'     => $raidBoss,
+            'bossImages' => $bossImages,
         ]);
     }
 
@@ -212,7 +219,7 @@ class RaidController extends Controller {
         if ($boss = $service->createRaidBoss($data, Auth::user())) {
             flash('Raid Boss created successfully.')->success();
 
-            return redirect()->to('admin/data/raids/bosses/edit/'.$boss->id);
+            return redirect()->to('admin/data/raid-bosses/edit/'.$boss->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -233,7 +240,7 @@ class RaidController extends Controller {
     public function postEditRaidBoss(Request $request, RaidService $service, $id) {
         $request->validate(RaidBoss::$updateRules);
         $data = $request->only([
-            'name', 'raid_id', 'description', 'is_visible', 'health', 'threshold', 'threshold_color',
+            'name', 'raid_id', 'description', 'is_visible', 'health', 'threshold_type', 'threshold_amount', 'threshold_bar_color', 'threshold_text_color',
         ]);
         if ($id && $service->updateRaidBoss(RaidBoss::find($id), $data, Auth::user())) {
             flash('Raid Boss updated successfully.')->success();
@@ -278,6 +285,110 @@ class RaidController extends Controller {
             }
         }
 
-        return redirect()->to('admin/data/raids/bosses');
+        return redirect()->to('admin/data/raid-bosses');
+    }
+
+    /**
+     * Gets the raid deletion modal.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCreateRaidBossImage($id) {
+        $raidBoss = RaidBoss::find($id);
+
+        return view('admin.raids._create_edit_raid_boss_image', [
+            'raidBoss' => $raidBoss,
+            'bossImage'     => new RaidBossImage,
+        ]);
+    }
+
+    /**
+     * Gets the raid deletion modal.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getEditRaidBossImage($id, $imageId) {
+        $bossImage = RaidBossImage::find($imageId);
+
+        return view('admin.raids._create_edit_raid_boss_image', [
+            'raidBoss' => $bossImage->boss,
+            'bossImage'     => $bossImage,
+        ]);
+    }
+
+    /**
+     * Creates or edits a raid.
+     *
+     * @param App\Services\RaidService $service
+     * @param int|null                   $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postCreateEditRaidBossImage(Request $request, RaidService $service, $id, $imageId = null) {
+        $imageId ? $request->validate(RaidBossImage::$updateRules) : $request->validate(RaidBossImage::$createRules);
+        $data = $request->only([
+            'image', 'threshold_type', 'health_threshold',
+        ]);
+        $raidBoss = RaidBoss::find($id);
+
+        if ($imageId && $service->updateRaidBossImage($raidBoss, $data, Auth::user(), RaidBossImage::find($imageId))) {
+            flash('Raid boss image updated successfully.')->success();
+        } elseif (!$imageId && $service->createRaidBossImage($raidBoss, $data, Auth::user())) {
+            flash('Raid boss image created successfully.')->success();
+
+            return redirect()->to('admin/data/raid-bosses/edit/'.$raidBoss->id);
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Gets the boss image deletion modal.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getDeleteRaidBossImage($id, $imageId) {
+        $raidBoss = RaidBoss::find($id);
+        $bossImage = RaidBossImage::find($imageId);
+        if ($raidBoss->id != $bossImage->raid_boss_id) {
+            abort(404);
+        }
+
+        return view('admin.raids._delete_raid_boss_image', [
+            'raidBoss' => $raidBoss,
+            'bossImage' => $bossImage,
+        ]);
+    }
+
+    /**
+     * Deletes a boss image.
+     *
+     * @param App\Services\RaidService $service
+     * @param int                        $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postDeleteRaidBossImage(Request $request, RaidService $service, $id, $imageId) {
+        $raidBoss = RaidBoss::find($id);
+
+        if ($id && $service->deleteRaidBossImage($raidBoss, RaidBossImage::find($imageId))) {
+            flash('Boss image deleted successfully.')->success();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
+
+        return redirect()->to('admin/data/raid-bosses/edit/'.$raidBoss->id);
     }
 }

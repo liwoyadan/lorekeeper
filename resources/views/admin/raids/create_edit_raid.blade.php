@@ -55,7 +55,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                {!! Form::label('start_at', 'Start Time (Optional)') !!} {!! add_help('Raids cannot be attacked before the starting time.') !!}
+                {!! Form::label('start_at', 'Start Time (Optional)') !!} {!! add_help('Raids cannot be attacked before the starting time. If the raid currently is set to not be visible, the raid will <b>automatically become visible</b> once past starting time.') !!}
                 {!! Form::text('start_at', $raid->start_at, ['class' => 'form-control datepicker']) !!}
             </div>
         </div>
@@ -74,57 +74,65 @@
         </div>
 
         <h3>Raid Boss</h3>
-        @if (!$raid->bosses->count())
+        @if (!$raid->currentBoss())
             <p>
                 Click the button below to create a boss for this raid.
             </p>
-            <a href="{{ url('admin/data/raids/bosses/create/'.$raid->id) }}" class="btn btn-primary d-block mb-3">
+            <a href="{{ url('admin/data/raid-bosses/create/'.$raid->id) }}" class="btn btn-primary d-block mb-3">
                 Create Raid Boss
             </a>
+        @else
+            @if ($raid->currentBoss())
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h4 class="mb-1">
+                                Current Boss Preview
+                            </h4>
+                            @include('widgets.raids._raid_boss_display', ['raid' => $raid, 'raidBoss' => $raid->currentBoss()])
+                            <a class="btn btn-primary m-1" href="{{ $raid->currentBoss()->adminUrl }}">
+                                Edit Boss
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endif
         @endif
 
+        <hr>
+
+        <h3>Damage</h3>
+        <p>
+            Indicate what deals damage to this raid below. You may indicate a currency or an item, its required quantity per attack, and how much damage an attack deals with an optional range for varied damage.
+        </p>
+        @include('widgets.raids._raid_damage_select', ['damage' => $raid->damage])
+
+        <hr>
+
         <h3>Rewards</h3>
-        <p>Rewards are credited on a per-user basis. Mods are able to modify the specific rewards granted at approval time.</p>
-        <p>You can add loot tables containing any kind of currencies (both user- and character-attached), but be sure to keep track of which are being distributed! Character-only currencies cannot be given to users.</p>
-        @include('widgets._loot_select', ['loots' => $raid->rewards, 'showLootTables' => true, 'showRaffles' => true])
+        <p>
+            Rewards are credited on a per-user basis. Only users who have participated in the raid and have done sufficient enough damage will be rewarded anything indicated below. Rewards are distributed at the end of the raid. The prizes a user receives is <b>inclusive of all the damage thresholds they have passed</b> - i.e. if you reward 5 currency for dealing 20 damage, 10 currency for dealing 30 damage, and 50 currency for dealing 35 damage, a user who has dealt 31 damage by the end of the raid will receive a total of 15 currency.
+        </p>
+        <p>
+            If you want a reward to be distributed to <i>all participating users</i> regardless of the amount of damage they dealt, set the damage requirement to <b>0</b>
+        </p>
+        @include('widgets.raids._raid_loot_select', ['loots' => $raid->rewards, 'showLootTables' => true, 'showRaffles' => true])
     @endif
 
-    <div class="text-right">
+    <div class="text-right mt-3">
         {!! Form::submit($raid->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
     </div>
     {!! Form::close() !!}
 
     @if ($raid->id)
-        @include('widgets._loot_select_row', ['showLootTables' => true, 'showRaffles' => true])
-        <div class="row mb-2 threshold-row hide">
-            <div class="col">
-                <div class="form-group">
-                    {!! Form::label('Health Percentage') !!}
-                    {!! Form::number('threshold[]', 0, ['class' => 'form-control']) !!}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    {!! Form::label('Color') !!}
-                    <div class="input-group cp">
-                        {!! Form::text('threshold_color[]', null, ['class' => 'form-control']) !!}
-                        <span class="input-group-append">
-                            <span class="input-group-text colorpicker-input-addon"><i></i></span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-auto text-right">
-                <a href="#" class="btn btn-danger remove-threshold"><i class="fas fa-times"></i></a>
-            </div>
-        </div>
+        @include('widgets.raids._raid_loot_select_row', ['showLootTables' => true, 'showRaffles' => true])
     @endif
 @endsection
 
 @section('scripts')
     @parent
     @if ($raid->id)
-        @include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true])
+        @include('js._raid_loot_js', ['showLootTables' => true, 'showRaffles' => true])
     @endif
     @include('widgets._datetimepicker_js')
     <script>
@@ -132,6 +140,23 @@
             $('.delete-raid-button').on('click', function(e) {
                 e.preventDefault();
                 loadModal("{{ url('admin/data/raids/delete') }}/{{ $raid->id }}", 'Delete Raid');
+            });
+
+            $('#damageTableBody .selectize').selectize();
+            var $damageItemSelect = $('.damage-data').find('.damage-item-select');
+            var $damageCurrencySelect = $('.damage-data').find('.damage-currency-select');
+
+            $('.damage-type').on('change', function(e) {
+                var val = $(this).val();
+                var $cell = $(this).parent().parent().parent().find('.damage-row-select');
+
+                var $clone = null;
+                if (val == 'Item') $clone = $damageItemSelect.clone();
+                else if (val == 'Currency') $clone = $damageCurrencySelect.clone();
+
+                $cell.html('');
+                $cell.append($clone);
+                $clone.selectize();
             });
         });
     </script>

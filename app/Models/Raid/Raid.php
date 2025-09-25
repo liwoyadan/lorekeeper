@@ -140,6 +140,17 @@ class Raid extends Model {
         return $query->orderBy('id', $reverse ? 'ASC' : 'DESC');
     }
 
+    /**
+     * Scope a query to only include posts that are scheduled to be posted and are ready to post.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeShouldBeVisible($query) {
+        return $query->whereNotNull('start_at')->where('start_at', '<', Carbon::now())->where('is_visible', 0);
+    }
+
     /**********************************************************************************************
 
         ACCESSORS
@@ -237,6 +248,117 @@ class Raid extends Model {
      * @return string
      */
     public function getAdminPowerAttribute() {
-        return 'edit_data';
+        return 'edit_raids';
+    }
+
+    /**
+     * Gets whether or not the raid is currently active.
+     *
+     * @return string
+     */
+    public function getIsActiveAttribute() {
+        if ($this->start_at && ($this->start_at > Carbon::now())) {
+            return false;
+        }
+        if ($this->end_at && ($this->end_at < Carbon::now())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Gets the damage array from the raid's data.
+     *
+     * @return array
+     */
+    public function getDamageAttribute() {
+        if (!$this->data || !isset($this->data['damage'])) {
+            return null;
+        }
+
+        return $this->data['damage'];
+    }
+
+    /**
+     * Calculates the damage dealt.
+     *
+     * @return int
+     */
+    public function getDamageDealtAttribute() {
+        if (!$this->data || !isset($this->data['damage']['base'])) {
+            return 0;
+        }
+        $damageData = $this->data['damage'];
+        if (!isset($damageData['max']) || isset($damageData['max']) && ($damageData['base'] == $damageData['max'])) {
+            return $damageData['base'];
+        }
+        if (isset($damageData['max']) && ($damageData['base'] > $damageData['max'])) {
+            $roll = rand($damageData['max'], $damageData['base']);
+        } else {
+            $roll = rand($damageData['base'], $damageData['max']);
+        }
+
+        return $roll;
+    }
+
+    /**
+     * Get the required asset to make an attack on this raid.
+     *
+     * @return array
+     */
+    public function attackAsset() {
+        if ($this->data && isset($this->data['damage'])) {
+            $damageData = $this->damage;
+            $attack = [];
+            switch ($damageData['type']) {
+                case 'Item':
+                    $class = getAssetModelString('items');
+                    $asset = $class::find($damageData['id']);
+                    if (!$asset) {
+                        break;
+                    }
+
+                    $attack['items'] = [
+                        'asset' => $asset,
+                        'quantity' => $class::find($damageData['quantity']),
+                    ];
+                    break;
+                case 'Currency':
+                    $class = getAssetModelString('currencies');
+                    $asset = $class::find($damageData['id']);
+                    if (!$asset) {
+                        break;
+                    }
+
+                    $attack['currencies'] = [
+                        'asset' => $asset,
+                        'quantity' => $class::find($damageData['quantity']),
+                    ];
+                    break;
+            }
+            if (!count($attack)) {
+                return null;
+            }
+
+            return $attack;
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets the current boss of raid.
+     *
+     * @return mixed
+     */
+    public function currentBoss() {
+        if (!$this->bosses || !$this->bosses->count()) {
+            return null;
+        } elseif ($this->bosses->count() == 1) {
+            return $this->bosses->first();
+        }
+
+        return null;
     }
 }

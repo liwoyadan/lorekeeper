@@ -77,7 +77,7 @@ class RaidBoss extends Model {
      * Get the images that belong to this boss.
      */
     public function images() {
-        return $this->hasMany(RaidBossImage::class, 'raid_boss_id');
+        return $this->hasMany(RaidBossImage::class, 'raid_boss_id')->whereNull('deleted_at');
     }
 
     /**********************************************************************************************
@@ -145,7 +145,36 @@ class RaidBoss extends Model {
      * @return string
      */
     public function getUrlAttribute() {
-        return url('raids/bosses/'.$this->id);
+        return url('raid-bosses/'.$this->id);
+    }
+
+    /**
+     * Gets the current image of the boss.
+     *
+     * @return string
+     */
+    public function getImageUrlAttribute() {
+        if (!$this->images->count()) {
+            return null;
+        } elseif ($this->images->count() == 1) {
+            return $this->images->first()->imageUrl;
+        }
+        $bossImages = $this->images()->get()->sortByDesc('thresholdCalc');
+        $imageKey = $bossImages->search(function ($boss, $key) {
+            if ($this->remainingHealth <= $boss->thresholdCalc) {
+                return $key;
+            }
+
+            return false;
+        });
+
+        if ($imageKey != false) {
+            $image = $bossImages[$imageKey];
+        } else {
+            $image = $bossImages->first();
+        }
+
+        return $image->imageUrl;
     }
 
     /**
@@ -159,6 +188,94 @@ class RaidBoss extends Model {
         }
 
         return $this->data['thresholds'];
+    }
+
+    /**
+     * Gets the raid boss's remaining health.
+     *
+     * @return int
+     */
+    public function getRemainingHealthAttribute() {
+        $damageDone = $this->damage ?? 0;
+        $remaining = $this->health - $damageDone;
+        if ($remaining < 0) {
+            return 0;
+        }
+
+        return $remaining;
+    }
+
+    /**
+     * Gets the raid boss's remaining health.
+     *
+     * @return int
+     */
+    public function getRemainingHealthPercentageAttribute() {
+        if (!$this->health) {
+            return null;
+        } elseif ($this->remainingHealth == 0) {
+            return 0;
+        } elseif ($this->remainingHealth == $this->health) {
+            return 100;
+        }
+        $remaining = $this->remainingHealth;
+        $division = $remaining / $this->health;
+        $calc = $division * 100;
+
+        return $calc;
+    }
+
+    /**
+     * Gets the raid boss's health bar styling.
+     *
+     * @return string
+     */
+    public function getBarStylingAttribute() {
+        if (!$this->thresholds) {
+            return null;
+        }
+        $initialArray = $this->thresholds;
+        foreach ($initialArray as $initialKey => $initialValue) {
+            if ($initialValue['type'] == 'percent' && $initialValue['amount'] > 0) {
+                $percent = $initialValue['amount'] / 100;
+                $calc = $this->health * $percent;
+                if (is_float($calc)) {
+                    $calc = round($calc);
+                }
+            } else {
+                $calc = $initialValue['amount'];
+            }
+
+            $initialArray[$initialKey]['calc'] = intval($calc);
+        }
+
+        $styleCollect = collect($initialArray);
+        $styleCollect = $styleCollect->sortByDesc(function ($style, $key) {
+            return $style['calc'];
+        });
+
+        $byHealth = $styleCollect->search(function ($style, $key) {
+            if ($this->remainingHealth <= $style['calc']) {
+                return $key;
+            }
+
+            return false;
+        });
+
+        if ($byHealth != false) {
+            $style = $styleCollect[$byHealth];
+            $string = '';
+            if (isset($style['bar_color'])) {
+                $string .= 'background-color: '.$style['bar_color'].'; ';
+            }
+            if (isset($style['text_color'])) {
+                $string .= 'color: '.$style['text_color'].';';
+            }
+
+            return $string;
+        }
+
+        return null;
     }
 
     /**
@@ -176,7 +293,7 @@ class RaidBoss extends Model {
      * @return string
      */
     public function getAdminUrlAttribute() {
-        return url('admin/data/raids/bosses/edit/'.$this->id);
+        return url('admin/data/raid-bosses/edit/'.$this->id);
     }
 
     /**
@@ -185,6 +302,6 @@ class RaidBoss extends Model {
      * @return string
      */
     public function getAdminPowerAttribute() {
-        return 'edit_data';
+        return 'edit_raids';
     }
 }

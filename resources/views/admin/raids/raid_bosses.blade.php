@@ -5,7 +5,7 @@
 @endsection
 
 @section('admin-content')
-    {!! breadcrumbs(['Admin Panel' => 'admin', 'Raid Bosses' => 'admin/data/raids/bosses']) !!}
+    {!! breadcrumbs(['Admin Panel' => 'admin', 'Raid Bosses' => 'admin/data/raid-bosses']) !!}
 
     <h1>Raid Bosses</h1>
 
@@ -32,14 +32,17 @@
         <div class="mb-4 logs-table">
             <div class="logs-table-header">
                 <div class="row">
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-3">
                         <div class="logs-table-cell">Name</div>
                     </div>
-                    <div class="col col-md-3">
+                    <div class="col-6 col-md-3">
                         <div class="logs-table-cell">Health</div>
                     </div>
-                    <div class="col col-md-3">
+                    <div class="col-6 col-md-3">
                         <div class="logs-table-cell">Raid</div>
+                    </div>
+                    <div class="col col-md-2">
+                        <div class="logs-table-cell">Image Count</div>
                     </div>
                 </div>
             </div>
@@ -47,27 +50,33 @@
                 @foreach ($bosses as $boss)
                     <div class="logs-table-row">
                         <div class="row flex-wrap">
-                            <div class="col-12 col-md-4 text-truncate">
+                            <div class="col-12 col-md-3 text-truncate">
                                 <div class="logs-table-cell">
                                     @if (!$boss->is_visible)
-                                        <i class="fas fa-eye-slash" data-toggle="tooltip" title="This raid is currently not visible."></i>
+                                        <i class="fas fa-eye-slash" data-toggle="tooltip" title="This boss is currently not visible."></i>
                                     @endif
                                     {{ $boss->name }}
                                 </div>
                             </div>
-                            <div class="col col-md-3">
+                            <div class="col-6 col-md-3">
                                 <div class="logs-table-cell">
-                                    {!! $boss->health ?? 'No Limit' !!}
+                                    {{ $boss->remainingHealth }} /
+                                    {{ $boss->health ?? 'No Limit' }}
                                 </div>
                             </div>
-                            <div class="col col-md-3">
+                            <div class="col-6 col-md-3">
                                 <div class="logs-table-cell">
                                     {!! $boss->raid_id ? $boss->raid->displayName : '-' !!}
                                 </div>
                             </div>
+                            <div class="col col-md-2">
+                                <div class="logs-table-cell">
+                                    {!! $boss->images->count() !!}
+                                </div>
+                            </div>
                             <div class="col text-right">
                                 <div class="logs-table-cell">
-                                    <a href="{{ url('admin/data/raids/bosses/edit/' . $boss->id) }}" class="btn btn-primary py-0 px-2">Edit</a>
+                                    <a href="{{ url('admin/data/raid-bosses/edit/' . $boss->id) }}" class="btn btn-primary py-0 px-2">Edit</a>
                                 </div>
                             </div>
                         </div>

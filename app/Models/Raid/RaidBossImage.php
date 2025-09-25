@@ -15,7 +15,7 @@ class RaidBossImage extends Model {
      * @var array
      */
     protected $fillable = [
-        'raid_boss_id', 'health_threshold', 'hash', 'extension', 'has_image',
+        'raid_boss_id', 'health_threshold', 'hash', 'extension', 'has_image', 'threshold_type',
     ];
 
     /**
@@ -38,7 +38,9 @@ class RaidBossImage extends Model {
      * @var array
      */
     public static $createRules = [
-        'image'              => 'mimes:png,gif,webp',
+        'image'              => 'required|mimes:png,gif,webp',
+        'health_threshold' => 'nullable|integer',
+        'threshold_type'     => 'in:percent,amount',
     ];
 
     /**
@@ -48,6 +50,8 @@ class RaidBossImage extends Model {
      */
     public static $updateRules = [
         'image'              => 'mimes:png,gif,webp',
+        'health_threshold' => 'nullable|integer',
+        'threshold_type'     => 'in:percent,amount',
     ];
 
     /**********************************************************************************************
@@ -68,18 +72,6 @@ class RaidBossImage extends Model {
         SCOPES
 
     **********************************************************************************************/
-
-    /**
-     * Scope a query to sort raids in alphabetical order.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param bool                                  $reverse
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeHealth($query, $reverse = false) {
-        return $query->orderBy('health_threshold', $reverse ? 'DESC' : 'ASC');
-    }
 
     /**
      * Scope a query to sort features by newest first.
@@ -136,5 +128,57 @@ class RaidBossImage extends Model {
         }
 
         return asset($this->imageDirectory.'/'.$this->imageFileName);
+    }
+
+    /**
+     * Gets the threshold calculation based on
+     * the boss's max HP.
+     *
+     * @return int
+     */
+    public function getThresholdCalcAttribute() {
+        if (!isset($this->health_threshold)) {
+            return 0;
+        }
+
+        if ($this->threshold_type == 'percent') {
+            $totalHealth = $this->boss->health ?? null;
+            if ($totalHealth) {
+                if ($this->health_threshold == 100) {
+                    $calc = $totalHealth;
+                } else {
+                    $percent = $this->health_threshold / 100;
+                    $calc = $totalHealth * $percent;
+
+                    if (is_float($calc)) {
+                        $calc = round($calc);
+                    }
+                }
+                return $calc;
+            }
+        } elseif ($this->threshold_type == 'amount') {
+            $calc = $this->health_threshold ?? 0;
+
+            return $calc;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Gets the threshold string.
+     *
+     * @return string
+     */
+    public function getThresholdStringAttribute() {
+        if (isset($this->health_threshold)) {
+            if ($this->threshold_type == 'percent') {
+                return 'At '.$this->health_threshold.'% health '.'('.$this->thresholdCalc.' HP)';
+            } elseif ($this->threshold_type == 'amount') {
+                return 'At '.$this->health_threshold.' health';
+            }
+        }
+
+        return 'Unknown';
     }
 }

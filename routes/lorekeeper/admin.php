@@ -238,7 +238,10 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('prompts/create', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/edit/{id?}', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/delete/{id}', 'PromptController@postDeletePrompt');
+});
 
+// RAIDS
+Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:edit_raids'], function () {
     Route::get('raids', 'RaidController@getRaidIndex');
     Route::get('raids/create', 'RaidController@getCreateRaid');
     Route::get('raids/edit/{id}', 'RaidController@getEditRaid');
@@ -247,13 +250,20 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('raids/edit/{id?}', 'RaidController@postCreateEditRaid');
     Route::post('raids/delete/{id}', 'RaidController@postDeleteRaid');
 
-    Route::get('raids/bosses', 'RaidController@getRaidBossIndex');
-    Route::get('raids/bosses/create/{id}', 'RaidController@getCreateRaidBoss');
-    Route::get('raids/bosses/edit/{id}', 'RaidController@getEditRaidBoss');
-    Route::get('raids/bosses/delete/{id}', 'RaidController@getDeleteRaidBoss');
-    Route::post('raids/bosses/create/{id}', 'RaidController@postCreateRaidBoss');
-    Route::post('raids/bosses/edit/{id?}', 'RaidController@postEditRaidBoss');
-    Route::post('raids/bosses/delete/{id}', 'RaidController@postDeleteRaidBoss');
+    Route::get('raid-bosses', 'RaidController@getRaidBossIndex');
+    Route::get('raid-bosses/create/{id}', 'RaidController@getCreateRaidBoss');
+    Route::get('raid-bosses/edit/{id}', 'RaidController@getEditRaidBoss');
+    Route::get('raid-bosses/delete/{id}', 'RaidController@getDeleteRaidBoss');
+    Route::post('raid-bosses/create/{id}', 'RaidController@postCreateRaidBoss');
+    Route::post('raid-bosses/edit/{id?}', 'RaidController@postEditRaidBoss');
+    Route::post('raid-bosses/delete/{id}', 'RaidController@postDeleteRaidBoss');
+
+    Route::get('raid-bosses/{id}/image/create', 'RaidController@getCreateRaidBossImage');
+    Route::get('raid-bosses/{id}/image/edit/{imageId}', 'RaidController@getEditRaidBossImage');
+    Route::get('raid-bosses/{id}/image/delete/{imageId}', 'RaidController@getDeleteRaidBossImage');
+    Route::post('raid-bosses/{id}/image/create', 'RaidController@postCreateEditRaidBossImage');
+    Route::post('raid-bosses/{id}/image/edit/{imageId?}', 'RaidController@postCreateEditRaidBossImage');
+    Route::post('raid-bosses/{id}/image/delete/{imageId}', 'RaidController@postDeleteRaidBossImage');
 });
 
 // PAGES

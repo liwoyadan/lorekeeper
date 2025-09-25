@@ -205,7 +205,7 @@ return [
             ],
             [
                 'name' => 'Raid Bosses',
-                'url'  => 'admin/data/raids/bosses',
+                'url'  => 'admin/data/raid-bosses',
             ],
             [
                 'name' => 'Raid Logs',
