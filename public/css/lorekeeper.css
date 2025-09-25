@@ -762,7 +762,7 @@ tr.accountbound {
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 0.5rem;
-    padding: 1rem;
+    padding: 0.75rem;
     max-width: 100%;
 
     display: flex;
