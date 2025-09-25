@@ -212,7 +212,7 @@ class Raid extends Model {
      * @return string
      */
     public function getUrlAttribute() {
-        return url('raids/raid-index?name='.$this->name);
+        return url('raids?name='.$this->name);
     }
 
     /**
@@ -221,7 +221,7 @@ class Raid extends Model {
      * @return string
      */
     public function getIdUrlAttribute() {
-        return url('raids/'.$this->id);
+        return url('raids/data/'.$this->id);
     }
 
     /**
@@ -307,7 +307,7 @@ class Raid extends Model {
      *
      * @return array
      */
-    public function attackAsset() {
+    public function attackAsset($flat = true) {
         if ($this->data && isset($this->data['damage'])) {
             $damageData = $this->damage;
             $attack = [];
@@ -319,10 +319,17 @@ class Raid extends Model {
                         break;
                     }
 
-                    $attack['items'] = [
-                        'asset' => $asset,
-                        'quantity' => $class::find($damageData['quantity']),
-                    ];
+                    if ($flat) {
+                        $attack = [
+                            'asset' => $asset,
+                            'quantity' => $damageData['quantity'],
+                        ];
+                    } else {
+                        $attack['items'] = [
+                            'asset' => $asset,
+                            'quantity' => $damageData['quantity'],
+                        ];
+                    }
                     break;
                 case 'Currency':
                     $class = getAssetModelString('currencies');
@@ -331,10 +338,17 @@ class Raid extends Model {
                         break;
                     }
 
-                    $attack['currencies'] = [
-                        'asset' => $asset,
-                        'quantity' => $class::find($damageData['quantity']),
-                    ];
+                    if ($flat) {
+                        $attack = [
+                            'asset' => $asset,
+                            'quantity' => $damageData['quantity'],
+                        ];
+                    } else {
+                        $attack['currencies'] = [
+                            'asset' => $asset,
+                            'quantity' => $damageData['quantity'],
+                        ];
+                    }
                     break;
             }
             if (!count($attack)) {

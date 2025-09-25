@@ -145,7 +145,16 @@ class RaidBoss extends Model {
      * @return string
      */
     public function getUrlAttribute() {
-        return url('raid-bosses/'.$this->id);
+        return url('raids/bosses?name='.$this->name);
+    }
+
+    /**
+     * Gets the URL of the model's page.
+     *
+     * @return string
+     */
+    public function getIdUrlAttribute() {
+        return url('raids/boss/'.$this->id);
     }
 
     /**

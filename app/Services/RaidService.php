@@ -100,7 +100,7 @@ class RaidService extends Service {
             }
 
             $this->populateDamage(Arr::only($data, ['damage_type', 'damage_id', 'damage_quantity', 'damage_base', 'damage_max']), $raid);
-            $this->populateRewards(Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity']), $raid);
+            $this->populateRewards(Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity', 'damage_required']), $raid);
 
             return $this->commitReturn($raid);
         } catch (\Exception $e) {
@@ -499,6 +499,7 @@ class RaidService extends Service {
         $raidData = $raid->data;
         $raidData['damage']['type'] = $data['damage_type'] ?? null;
         $raidData['damage']['id'] = $data['damage_id'] ?? null;
+        $raidData['damage']['quantity'] = $data['damage_quantity'] ?? null;
         $raidData['damage']['base'] = $data['damage_base'] ?? 1;
         $raidData['damage']['max'] = $data['damage_max'] ?? null;
         $raid->data = $raidData;
@@ -517,6 +518,9 @@ class RaidService extends Service {
 
             try {
                 Raid::shouldBeVisible()->update(['is_visible' => 1]);
+                $bosses = RaidBoss::where('is_visible', 0)->whereHas('raid', function($r) {
+                    $r->where('is_visible', 1);
+                })->update(['is_visible' => 1]);
 
                 return $this->commitReturn(true);
             } catch (\Exception $e) {
