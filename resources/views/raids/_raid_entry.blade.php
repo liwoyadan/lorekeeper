@@ -2,7 +2,7 @@
     <div class="card-body">
         <div class="mb-1">
             @if (!$raid->is_visible)
-                <i class="fas fa-eye-slash" data-toggle="tooltip" title="This raid is not visible to regular users."></i>
+                <i class="fas fa-eye-slash" data-toggle="tooltip" title="This {{ __('raids.raid') }} is not visible to regular users."></i>
             @endif
             <a href="{{ $raid->idUrl }}" class="h3 mb-0">
                 {!! $raid->name !!}
@@ -20,10 +20,10 @@
                     @if ($raid->end_at && $raid->end_at > Carbon\Carbon::now())
                         <b>Ends</b> {!! 'at ' . format_date($raid->end_at) !!}.
                     @else
-                        <b>Ends</b> when boss is defeated.
+                        <b>Ends</b> when {{ __('raids.boss') }} is defeated.
                     @endif
                 @else
-                    <b>Ended</b> {!! $raid->end_at ? pretty_date($raid->end_at) : 'when boss was defeated' !!}.
+                    <b>Ended</b> {!! $raid->end_at ? pretty_date($raid->end_at) : 'when '.__('raids.boss').' was defeated' !!}.
                 @endif
             </div>
         </div>

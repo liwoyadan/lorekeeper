@@ -21,7 +21,9 @@
                 <div class="logs-table-row">
                     <div class="row flex-wrap">
                         <div class="col-12 col-md-5">
-                            <div class="logs-table-cell">{!! $reward->reward->displayName !!} ({{ $reward->rewardable_type }})</div>
+                            <div class="logs-table-cell">
+                                {!! $reward->reward->displayName !!} ({{ $reward->rewardable_type }})
+                            </div>
                         </div>
                         <div class="col-6 col-md">
                             <div class="logs-table-cell">
@@ -31,6 +33,9 @@
                         <div class="col-6 col-md">
                             <div class="logs-table-cell">
                                 {{ $reward->damage_required }}
+                                @if (isset($raid) && $raid->userDamage(Auth::user() ?? null) && ($raid->userDamage(Auth::user() ?? null) >= $reward->damage_required))
+                                    <i class="text-success fas fa-check ml-1" data-toggle="tooltip" title="You have dealt enough damage to receive this reward!"></i>
+                                @endif
                             </div>
                         </div>
                     </div>

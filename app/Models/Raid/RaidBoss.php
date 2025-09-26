@@ -223,7 +223,7 @@ class RaidBoss extends Model {
         if (!$this->health) {
             return null;
         } elseif ($this->remainingHealth == 0) {
-            return 0;
+            return 100;
         } elseif ($this->remainingHealth == $this->health) {
             return 100;
         }
@@ -258,21 +258,37 @@ class RaidBoss extends Model {
             $initialArray[$initialKey]['calc'] = intval($calc);
         }
 
+        $leftover = $this->remainingHealth;
         $styleCollect = collect($initialArray);
-        $styleCollect = $styleCollect->sortByDesc(function ($style, $key) {
-            return $style['calc'];
+        $sortedStyles = $styleCollect->sortByDesc(function ($styleItem) {
+            return $styleItem['calc'];
         });
-
-        $byHealth = $styleCollect->search(function ($style, $key) {
-            if ($this->remainingHealth <= $style['calc']) {
-                return $key;
+        foreach ($sortedStyles as $styleKey => $styleItem) {
+            if ($leftover < $styleItem['calc']) {
+                $lastKey = $styleKey;
+                unset($sortedStyles[$styleKey]);
             }
+        }
 
-            return false;
-        });
+        if (!$sortedStyles->count() && isset($lastKey)) {
+            $style = $styleCollect[$lastKey];
+        } elseif ($sortedStyles->count()) {
+            $byHealth = $styleCollect->search(function ($style, $key) {
+                if ($this->remainingHealth <= $style['calc']) {
+                    return $key;
+                }
 
-        if ($byHealth != false) {
-            $style = $styleCollect[$byHealth];
+                return false;
+            });
+
+            if ($byHealth != false) {
+                $style = $styleCollect[$byHealth];
+            }
+        } else {
+            $style = null;
+        }
+
+        if ($style) {
             $string = '';
             if (isset($style['bar_color'])) {
                 $string .= 'background-color: '.$style['bar_color'].'; ';

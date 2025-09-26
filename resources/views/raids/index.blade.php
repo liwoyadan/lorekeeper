@@ -5,11 +5,11 @@
 @endsection
 
 @section('content')
-    {!! breadcrumbs(['Raids Index' => 'raids']) !!}
+    {!! breadcrumbs([ucfirst(__('raids.raids')).' Index' => __('raids.raids')]) !!}
 
-    <h1>Raids Index</h1>
+    <h1>{{ ucfirst(__('raids.raids')) }} Index</h1>
     <p>
-        Here you can view all the past and present raids as well as their boss and additional data such as rewards and attack method.
+        Here you can view all the past and present {{ __('raids.raids') }} as well as their {{ __('raids.bosses') }} and additional data such as rewards and attack method.
     </p>
     <hr>
     <div class="mb-2">
@@ -45,7 +45,7 @@
         @endforeach
     @else
         <div class="text-center text-muted">
-            No raids so far.
+            No {{ __('raids.raids') }} so far.
         </div>
     @endif
     {!! $raids->render() !!}

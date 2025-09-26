@@ -1,13 +1,16 @@
 @extends('raids.layout')
 
 @section('raids-title')
-    Raid Bosses
+    {{ ucwords(__('raids.raid').' '.__('raids.bosses')) }}
 @endsection
 
 @section('content')
-    {!! breadcrumbs(['Raids Bosses' => 'raids/bosses']) !!}
+    {!! breadcrumbs([ucwords(__('raids.raid').' '.__('raids.bosses')) => __('raids.raids').'/'.__('raids.bosses')]) !!}
 
-    <h1>Raids Bosses</h1>
+    <h1>
+        {{ ucwords(__('raids.raid').' '.__('raids.bosses')) }}
+    </h1>
+
     <div class="mb-2">
         {!! Form::open(['method' => 'GET', 'class' => '']) !!}
         <div class="form-inline justify-content-end">
@@ -41,7 +44,7 @@
         @endforeach
     @else
         <div class="text-center text-muted">
-            No raid bosses encountered so far.
+            No {{ __('raids.raid').' '.__('raids.bosses') }} encountered so far.
         </div>
     @endif
     {!! $bosses->render() !!}

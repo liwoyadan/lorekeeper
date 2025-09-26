@@ -5,6 +5,7 @@ namespace App\Models\Raid;
 use App\Models\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Services\RaidManager;
 
 class Raid extends Model {
     use SoftDeletes;
@@ -212,7 +213,7 @@ class Raid extends Model {
      * @return string
      */
     public function getUrlAttribute() {
-        return url('raids?name='.$this->name);
+        return url( __('raids.raids').'?name='.$this->name);
     }
 
     /**
@@ -221,7 +222,7 @@ class Raid extends Model {
      * @return string
      */
     public function getIdUrlAttribute() {
-        return url('raids/data/'.$this->id);
+        return url( __('raids.raids').'/data/'.$this->id);
     }
 
     /**
@@ -239,7 +240,7 @@ class Raid extends Model {
      * @return string
      */
     public function getAdminUrlAttribute() {
-        return url('admin/data/raids/edit/'.$this->id);
+        return url('admin/data/'.__('raids.raids').'/edit/'.$this->id);
     }
 
     /**
@@ -374,5 +375,42 @@ class Raid extends Model {
         }
 
         return null;
+    }
+
+    /**
+     * Checks if the user has the requirements to
+     * make an attack.
+     *
+     * @return mixed
+     */
+    public function canAttack($user = null) {
+        if (!$user) {
+            return null;
+        }
+        if (!$this->damage) {
+            return null;
+        }
+
+        $manager = new RaidManager;
+        if (!$manager->pluckRequirements($user, $this, $this->currentBoss())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Gets how much damage a user has
+     * done so far.
+     *
+     * @return int
+     */
+    public function userDamage($user = null) {
+        if (!$user) {
+            return null;
+        }
+        $logs = $this->logs()->where('user_id', $user->id)->whereNotNull('damage')->sum('damage');
+
+        return $logs ?? 0;
     }
 }

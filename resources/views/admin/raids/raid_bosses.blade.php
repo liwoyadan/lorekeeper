@@ -1,16 +1,16 @@
 @extends('admin.layout')
 
 @section('admin-title')
-    Raid Bosses
+    {{ ucwords(__('raids.raid').' '.__('raids.bosses')) }}
 @endsection
 
 @section('admin-content')
-    {!! breadcrumbs(['Admin Panel' => 'admin', 'Raid Bosses' => 'admin/data/raid-bosses']) !!}
+    {!! breadcrumbs(['Admin Panel' => 'admin', ucwords(__('raids.raid').' '.__('raids.bosses')) => 'admin/data/'.__('raids.raid').'-'.__('raids.bosses')]) !!}
 
-    <h1>Raid Bosses</h1>
+    <h1>{{ ucwords(__('raids.raid').' '.__('raids.bosses')) }}</h1>
 
     <p>
-        This is a list of all the raid bosses on the site. <b>Raid bosses must be created directly from a raid's page.</b>
+        This is a list of all the {{ __('raids.raid').' '.__('raids.bosses') }} on the site. <b>{{ ucfirst(__('raids.raid').' '.__('raids.bosses')) }} must be created directly from a {{ __('raids.raid') }}'s page.</b>
     </p>
 
     <div>
@@ -19,14 +19,14 @@
             {!! Form::text('name', Request::get('name'), ['class' => 'form-control', 'placeholder' => 'Name']) !!}
         </div>
         <div class="form-group mr-3 mb-3">
-            {!! Form::select('raid_id', ['any' => 'Any Raid'] + $raids->pluck('name', 'id')->toArray(), Request::get('raid_id'), ['class' => 'form-control']) !!}
+            {!! Form::select('raid_id', ['any' => 'Any '.ucfirst(__('raids.raid'))] + $raids->pluck('name', 'id')->toArray(), Request::get('raid_id'), ['class' => 'form-control']) !!}
         </div>
         <div class="form-group mb-3">{!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}</div>
         {!! Form::close() !!}
     </div>
 
     @if (!count($bosses))
-        <p>No raid bosses found.</p>
+        <p>No {{ __('raids.raid').' '.__('raids.bosses') }} found.</p>
     @else
         {!! $bosses->render() !!}
         <div class="mb-4 logs-table">
@@ -39,7 +39,7 @@
                         <div class="logs-table-cell">Health</div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="logs-table-cell">Raid</div>
+                        <div class="logs-table-cell">{{ ucfirst(__('raids.raid')) }}</div>
                     </div>
                     <div class="col col-md-2">
                         <div class="logs-table-cell">Image Count</div>
@@ -53,7 +53,10 @@
                             <div class="col-12 col-md-3 text-truncate">
                                 <div class="logs-table-cell">
                                     @if (!$boss->is_visible)
-                                        <i class="fas fa-eye-slash" data-toggle="tooltip" title="This boss is currently not visible."></i>
+                                        <i class="fas fa-eye-slash" data-toggle="tooltip" title="This {{ __('raids.boss') }} is currently not visible."></i>
+                                    @endif
+                                    @if ($boss->damage >= $boss->health)
+                                        <i class="fas fa-skull text-danger" data-toggle="tooltip" title="This {{ __('raids.boss') }} has had all its health depleted."></i>
                                     @endif
                                     {{ $boss->name }}
                                 </div>
@@ -76,7 +79,7 @@
                             </div>
                             <div class="col text-right">
                                 <div class="logs-table-cell">
-                                    <a href="{{ url('admin/data/raid-bosses/edit/' . $boss->id) }}" class="btn btn-primary py-0 px-2">Edit</a>
+                                    <a href="{{ url('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/edit/' . $boss->id) }}" class="btn btn-primary py-0 px-2">Edit</a>
                                 </div>
                             </div>
                         </div>

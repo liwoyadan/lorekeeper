@@ -207,7 +207,6 @@ Route::group(['prefix' => 'designs', 'namespace' => 'Characters'], function () {
 /**************************************************************************************************
     Shops
 **************************************************************************************************/
-
 Route::group(['prefix' => 'shops'], function () {
     Route::post('buy', 'ShopController@postBuy');
     Route::get('history', 'ShopController@getPurchaseHistory');
@@ -224,4 +223,11 @@ Route::group(['prefix' => 'comments', 'namespace' => 'Comments'], function () {
     Route::post('/{id}/feature', 'CommentController@feature')->name('comments.feature');
     Route::post('/{id}/like/{action}', 'CommentController@like')->name('comments.like');
     Route::get('/liked', 'CommentController@getLikedComments');
+});
+
+/**************************************************************************************************
+    Raids
+**************************************************************************************************/
+Route::group(['prefix' => __('raids.raids')], function () {
+    Route::post('attack/{id}/'.__('raids.boss').'/{bossId}', 'RaidController@postAttackRaid');
 });

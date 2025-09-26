@@ -1,11 +1,11 @@
 <ul>
-    <li class="sidebar-header"><a href="{{ url('raids') }}" class="card-link">Raids</a></li>
+    <li class="sidebar-header"><a href="{{ url(__('raids.raids')) }}" class="card-link">{{ ucfirst(__('raids.raids')) }}</a></li>
 
     @if ($currentRaid)
         <li class="sidebar-section text-center">
-            <div class="sidebar-section-header h5 mb-0">Current Raid</div>
+            <div class="sidebar-section-header h5 mb-0">Current {{ ucfirst(__('raids.raid')) }}</div>
             <div class="sidebar-item">
-                <a href="{{ url('raids/current') }}" class="font-weight-bold {{ set_active('raids/current*') }}">
+                <a href="{{ url(__('raids.raids').'/current') }}" class="font-weight-bold {{ set_active(__('raids.raids').'/current*') }}">
                     {!! $currentRaid->name !!}
                 </a>
             </div>
@@ -15,14 +15,14 @@
                 </div>
             @endif
             <div class="sidebar-item small">
-                Until {!! $currentRaid->end_at ? format_date($currentRaid->end_at) : 'boss defeated.' !!}
+                Until {!! $currentRaid->end_at ? format_date($currentRaid->end_at) : __('raids.boss').' defeated.' !!}
             </div>
         </li>
     @endif
 
     <li class="sidebar-section">
-        <div class="sidebar-section-header">Raid Data</div>
-        <div class="sidebar-item"><a href="{{ url('raids') }}" class="{{ set_active('raids') }}">All Raids</a></div>
-        <div class="sidebar-item"><a href="{{ url('raids/bosses') }}" class="{{ set_active('raids/bosses*') }}">Raid Bosses</a></div>
+        <div class="sidebar-section-header">{{ ucfirst(__('raids.raid')) }} Data</div>
+        <div class="sidebar-item"><a href="{{ url(__('raids.raids')) }}" class="{{ set_active(__('raids.raids')) }}">All {{ ucfirst(__('raids.raids')) }}</a></div>
+        <div class="sidebar-item"><a href="{{ url(__('raids.raids').'/'.__('raids.bosses')) }}" class="{{ set_active(__('raids.raids').'/'.__('raids.bosses').'*') }}">{{ ucwords(__('raids.raid').' '.__('raids.bosses')) }}</a></div>
     </li>
 </ul>

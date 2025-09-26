@@ -209,7 +209,7 @@ return [
             ],
             [
                 'name' => 'Raid Logs',
-                'url'  => 'admin/data/raids/logs',
+                'url'  => 'admin/data/raids-logs',
             ],
         ],
     ],

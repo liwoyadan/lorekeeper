@@ -1,21 +1,21 @@
 @extends('admin.layout')
 
 @section('admin-title')
-    Raids
+    {{ ucfirst(__('raids.raids')) }}
 @endsection
 
 @section('admin-content')
-    {!! breadcrumbs(['Admin Panel' => 'admin', 'Raids' => 'admin/data/raids']) !!}
+    {!! breadcrumbs(['Admin Panel' => 'admin', ucfirst(__('raids.raids')) => 'admin/data/'.__('raids.raids')]) !!}
 
-    <h1>Raids</h1>
+    <h1>{{ ucfirst(__('raids.raids')) }}</h1>
 
     <p>
-        This is a list of all the raids on the site.
+        This is a list of all the {{ __('raids.raids') }} on the site.
     </p>
 
     <div class="text-right mb-3">
-        <a class="btn btn-primary" href="{{ url('admin/data/raids/create') }}">
-            <i class="fas fa-plus"></i> Create New Raid
+        <a class="btn btn-primary" href="{{ url('admin/data/'.__('raids.raids').'/create') }}">
+            <i class="fas fa-plus"></i> Create New {{ ucfirst(__('raids.raid')) }}
         </a>
     </div>
 
@@ -29,7 +29,7 @@
     </div>
 
     @if (!count($raids))
-        <p>No raids found.</p>
+        <p>No {{ __('raids.raids') }} found.</p>
     @else
         {!! $raids->render() !!}
         <div class="mb-4 logs-table">
@@ -41,7 +41,7 @@
                     <div class="col col-md-2">
                         <div class="logs-table-cell">
                             Active?
-                            {!! add_help('This is <b>regardless of visibility</b>, whether or not the raid is active based on <b>start time</b> and <b>end time</b>.') !!}
+                            {!! add_help('This is <b>regardless of visibility</b>, whether or not the '.__('raids.raid').' is active based on <b>start time</b> and <b>end time</b>.') !!}
                         </div>
                     </div>
                     <div class="col col-md-3">
@@ -59,7 +59,7 @@
                             <div class="col-12 col-md-3 text-truncate">
                                 <div class="logs-table-cell">
                                     @if (!$raid->is_visible)
-                                        <i class="fas fa-eye-slash" data-toggle="tooltip" title="This raid is currently not visible."></i>
+                                        <i class="fas fa-eye-slash" data-toggle="tooltip" title="This {{ __('raids.raid') }} is currently not visible."></i>
                                     @endif
                                     {{ $raid->name }}
                                 </div>
@@ -67,9 +67,9 @@
                             <div class="col col-md-2">
                                 <div class="logs-table-cell">
                                     @if ($raid->isActive)
-                                        <i class="fas fa-check text-success" data-toggle="tooltip" title="This raid is currently active."></i>
+                                        <i class="fas fa-check text-success" data-toggle="tooltip" title="This {{ __('raids.raid') }} is currently active."></i>
                                     @else
-                                        <i class="fas fa-times text-danger" data-toggle="tooltip" title="This raid is currently inactive."></i>
+                                        <i class="fas fa-times text-danger" data-toggle="tooltip" title="This {{ __('raids.raid') }} is currently inactive."></i>
                                     @endif
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
                             </div>
                             <div class="col text-right">
                                 <div class="logs-table-cell">
-                                    <a href="{{ url('admin/data/raids/edit/' . $raid->id) }}" class="btn btn-primary py-0 px-2">Edit</a>
+                                    <a href="{{ url('admin/data/'.__('raids.raids').'/edit/' . $raid->id) }}" class="btn btn-primary py-0 px-2">Edit</a>
                                 </div>
                             </div>
                         </div>

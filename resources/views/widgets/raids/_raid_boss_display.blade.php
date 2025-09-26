@@ -6,7 +6,7 @@
         @if ($raidBoss->imageUrl)
             <div class="boss-image d-flex flex-column flex-grow-1 justify-content-center">
                 <div>
-                    <img src="{{ $raidBoss->imageUrl }}" class="img-fluid" alt="Image of the current boss for raid {{ $raid->name }}">
+                    <img src="{{ $raidBoss->imageUrl }}" class="img-fluid" alt="Image of the current {{ __('raids.boss') }} for {{ __('raids.raid') }} {{ $raid->name }}">
                 </div>
             </div>
         @endif

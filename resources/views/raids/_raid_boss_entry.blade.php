@@ -3,7 +3,7 @@
         <div class="mb-2 row justify-content-between align-items-end">
             <div class="col-md-auto">
                 @if (!$boss->is_visible)
-                    <i class="fas fa-eye-slash" data-toggle="tooltip" title="This raid boss is not visible to regular users."></i>
+                    <i class="fas fa-eye-slash" data-toggle="tooltip" title="This {{ __('raids.raid').' '.__('raids.boss') }} is not visible to regular users."></i>
                 @endif
                 <a href="{{ $boss->idUrl }}" class="h3 mb-0">
                     {!! $boss->name !!}

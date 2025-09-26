@@ -1,6 +1,17 @@
-@if ($boss->health < 1)
+@if ($boss->damage >= $boss->health)
     <div class="text-center">
-        This boss has already been defeated!
+        This {{ __('raids.boss') }} has already been defeated!
+    </div>
+    <div class="alert alert-{{ $raid->logs()->where('user_id', Auth::user()->id)->first() ? 'success' : 'primary' }} text-center mt-2">
+        @if ($raid->logs()->where('user_id', Auth::user()->id)->first())
+            <b>You participated in this {{ __('raids.raid') }}!</b> Please wait for rewards to be distributed.
+            @if ($raid->userDamage(Auth::user() ?? null) && $raid->userDamage(Auth::user() ?? null) >= 0)
+                <br>
+                You have dealt a total of <b>{{ $raid->userDamage(Auth::user() ?? null) }} damage</b> to this {{ __('raids.raid').' '.__('raids.boss') }}.
+            @endif
+        @else
+            You didn't participate in this {{ __('raids.raid') }}.
+        @endif
     </div>
 @else
     @if ($raid->damage)
@@ -19,11 +30,22 @@
                 <b>{{ $raid->damage['base'] }}</b> points of damage per attack.
             @endif
         </div>
-        {!! Form::open(['url' => 'raids/attack/' . $raid->id .'/boss/' . $boss->id]) !!}
+        @if ($raid->userDamage(Auth::user() ?? null) && $raid->userDamage(Auth::user() ?? null) >= 0)
+            <div class="text-center">
+                You have dealt <b>{{ $raid->userDamage(Auth::user() ?? null) }} damage</b> to this {{ __('raids.raid').' '.__('raids.boss') }} so far.
+            </div>
+        @endif
 
-        <div class="text-center">
-            {!! Form::submit('Attack!', ['class' => 'btn btn-primary font-weight-bold']) !!}
-        </div>
-        {!! Form::close() !!}
+        @if ($raid->canAttack(Auth::user() ?? null))
+            {!! Form::open(['url' => __('raids.raids').'/attack/' . $raid->id .'/'.__('raids.boss').'/' . $boss->id, 'class' => 'mt-2']) !!}
+            <div class="text-center">
+                {!! Form::submit('Attack!', ['class' => 'btn btn-primary font-weight-bold']) !!}
+            </div>
+            {!! Form::close() !!}
+        @else
+            <div class="alert alert-danger text-center mt-2">
+                You lack the requirements to make an attack.
+            </div>
+        @endif
     @endif
 @endif

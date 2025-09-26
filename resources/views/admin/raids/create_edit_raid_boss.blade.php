@@ -1,17 +1,17 @@
 @extends('admin.layout')
 
 @section('admin-title')
-    {{ $raidBoss->id ? 'Edit' : 'Create' }} Raid Boss
+    {{ $raidBoss->id ? 'Edit' : 'Create' }} {{ ucwords(__('raids.raid').' '.__('raids.boss')) }}
 @endsection
 
 @section('admin-content')
-    {!! breadcrumbs(['Admin Panel' => 'admin', 'Raid Bosses' => 'admin/data/raid-bosses', ($raidBoss->id ? 'Edit' : 'Create') . ' Raid Boss' => $raidBoss->id ? 'admin/data/raid-bosses/edit/' . $raidBoss->id : 'admin/data/raid-bosses/create']) !!}
+    {!! breadcrumbs(['Admin Panel' => 'admin', ucwords(__('raids.raid').' '.__('raids.bosses')) => 'admin/data/'.__('raids.raid').'-'.__('raids.bosses'), ($raidBoss->id ? 'Edit' : 'Create') . ' '.ucwords(__('raids.raid').' '.__('raids.boss')) => $raidBoss->id ? 'admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/edit/' . $raidBoss->id : 'admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/create']) !!}
 
     <h1>
-        {{ $raidBoss->id ? 'Edit' : 'Create' }} Raid Boss
+        {{ $raidBoss->id ? 'Edit' : 'Create' }} {{ ucwords(__('raids.raid').' '.__('raids.boss')) }}
         @if ($raidBoss->id)
-            <a href="#" class="btn btn-danger float-right delete-raid-boss-button m-1">Delete Raid Boss</a>
-            <a href="{{ url('admin/data/raids/edit/'.$raidBoss->raid_id) }}" class="btn btn-info float-right m-1">Edit Raid</a>
+            <a href="#" class="btn btn-danger float-right delete-raid-boss-button m-1">Delete {{ ucwords(__('raids.raid').' '.__('raids.boss')) }}</a>
+            <a href="{{ url('admin/data/raids/edit/'.$raidBoss->raid_id) }}" class="btn btn-info float-right m-1">Edit {{ ucfirst(__('raids.raid')) }}</a>
         @endif
     </h1>
 
@@ -22,18 +22,18 @@
                     {!! $raidBoss->displayName !!}
                 </h3>
                 <h5>
-                    Belongs to raid {!! $raidBoss->raid->displayName !!}
+                    Belongs to {{ __('raids.raid') }} {!! $raidBoss->raid->displayName !!}
                 </h5>
                 @include('widgets.raids._raid_boss_health', ['raidBoss' => $raidBoss])
             </div>
         </div>
     @endif
 
-    {!! Form::open(['url' => $raidBoss->id ? 'admin/data/raid-bosses/edit/' . $raidBoss->id : 'admin/data/raid-bosses/create/' . $raid->id, 'files' => true]) !!}
+    {!! Form::open(['url' => $raidBoss->id ? 'admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/edit/' . $raidBoss->id : 'admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/create/' . $raid->id, 'files' => true]) !!}
 
     @if (!$raidBoss->id)
         <div class="alert alert-danger">
-            You are creating a raid boss for <b>{!! $raid->name !!}</b>.
+            You are creating a {{ __('raids.raid').' '.__('raids.boss') }} for <b>{!! $raid->name !!}</b>.
             {!! Form::hidden('raid_id', $raid->id) !!}
         </div>
     @endif
@@ -47,12 +47,12 @@
 
     @if (!$raidBoss->id)
         <div class="alert alert-danger">
-            You will be able to upload images <b>after the boss is first created.</b>
+            You will be able to upload images <b>after the {{ __('raids.boss') }} is first created.</b>
         </div>
     @endif
 
     <div class="form-group">
-        {!! Form::label('Description (Optional)') !!} {!! add_help('This is the description of the raid boss.') !!}
+        {!! Form::label('Description (Optional)') !!} {!! add_help('This is the description of the '.__('raids.raid').' '.__('raids.boss').'.') !!}
         {!! Form::textarea('description', $raidBoss->description, ['class' => 'form-control wysiwyg']) !!}
     </div>
 
@@ -60,13 +60,13 @@
         <div class="col-md">
             <div class="form-group">
                 {!! Form::checkbox('is_visible', 1, $raidBoss->id ? $raidBoss->is_visible : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-                {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Raid bosses that are not visible will be hidden from the raid boss list.') !!}
+                {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help(ucfirst(__('raids.raid')).' '.__('raids.bosses').' that are not visible will be hidden from the '.__('raids.raid').' '.__('raids.boss').' list.') !!}
             </div>
         </div>
 
         <div class="col-md">
             <div class="form-group">
-                {!! Form::label('health', 'Health', ['class' => 'form-label']) !!} {!! add_help('The total health the raid boss has.') !!}
+                {!! Form::label('health', 'Health', ['class' => 'form-label']) !!} {!! add_help('The total health the '.__('raids.raid').' '.__('raids.boss').' has.') !!}
                 {!! Form::number('health', $raidBoss->id ? $raidBoss->health : null, ['class' => 'form-control', 'placeholder' => 'Enter health...']) !!}
             </div>
         </div>
@@ -75,7 +75,7 @@
     @if ($raidBoss->id)
         <h3>Health Thresholds</h3>
         <p class="mb-0">
-            Here you can indicate if the color of the remaining health bar and text should change based on the boss's current health. <b>You must indicate a color for the bar AND/OR bar's text</b> for the entry to be saved. Type and amount are <b>required</b>.
+            Here you can indicate if the color of the remaining health bar and text should change based on the {{ __('raids.boss') }}'s current health. <b>You must indicate a color for the bar AND/OR bar's text</b> for the entry to be saved. Type and amount are <b>required</b>.
         </p>
         <div class="text-right mb-2">
             <a class="btn btn-primary" id="addThreshold" href="#" type="button">Add Threshold</a>
@@ -131,7 +131,7 @@
                             </div>
 
                             <div class="text-right">
-                                This threshold will be active when the boss is at
+                                This threshold will be active when the {{ __('raids.boss') }} is at
                                 @if ($threshold['type'] == 'amount')
                                     <b>{{ $threshold['amount'] }} amount of health</b> or less.
                                 @else
@@ -172,10 +172,10 @@
         <hr>
 
         <h3 class="mb-1">
-            Boss Images
+            {{ ucfirst(__('raids.boss')) }} Images
         </h3>
         <p>
-            You may create and edit images for this boss below. You may set a single image, or instead define multiple images that will display based on the boss's current health. Decimal values for health thresholds are always rounded.
+            You may create and edit images for this {{ __('raids.boss') }} below. You may set a single image, or instead define multiple images that will display based on the {{ __('raids.boss') }}'s current health. Decimal values for health thresholds are always rounded.
         </p>
         <div class="text-right mb-1">
             <a href="#" class="btn btn-sm btn-primary create-boss-image">
@@ -186,7 +186,7 @@
             <div class="card-body">
                 @if (!$bossImages)
                     <p class="text-center text-muted">
-                        This boss doesn't have any images yet.
+                        This {{ __('raids.boss') }} doesn't have any images yet.
                     </p>
                 @else
                     <div class="row no-gutters">
@@ -280,19 +280,19 @@
             @if ($raidBoss->id)
                 $('.delete-raid-boss-button').on('click', function(e) {
                     e.preventDefault();
-                    loadModal("{{ url('admin/data/raid-bosses/delete') }}/{{ $raidBoss->id }}", 'Delete Raid Boss');
+                    loadModal("{{ url('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/delete') }}/{{ $raidBoss->id }}", "Delete {{ ucwords(__('raids.raid').' '.__('raids.boss')) }}");
                 });
                 $('.create-boss-image').on('click', function(e) {
                     e.preventDefault();
-                    loadModal("{{ url('admin/data/raid-bosses/'.$raidBoss->id.'/image/create') }}", 'Add Boss Image');
+                    loadModal("{{ url('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/'.$raidBoss->id.'/image/create') }}", "Add {{ ucfirst(__('raids.boss')) }} Image");
                 });
                 $('.edit-boss-image').on('click', function(e) {
                     e.preventDefault();
-                    loadModal("{{ url('admin/data/raid-bosses/'.$raidBoss->id.'/image/edit') }}/" + $(this).data('id'), 'Edit Boss Image');
+                    loadModal("{{ url('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/'.$raidBoss->id.'/image/edit') }}/" + $(this).data('id'), "Edit {{ ucfirst(__('raids.boss')) }} Image");
                 });
                 $('.delete-boss-image').on('click', function(e) {
                     e.preventDefault();
-                    loadModal("{{ url('admin/data/raid-bosses/'.$raidBoss->id.'/image/delete') }}/" + $(this).data('id'), 'Delete Boss Image');
+                    loadModal("{{ url('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/'.$raidBoss->id.'/image/delete') }}/" + $(this).data('id'), "Delete {{ ucfirst(__('raids.boss')) }} Image");
                 });
 
                 var $thresholds = $('#thresholdsBody');

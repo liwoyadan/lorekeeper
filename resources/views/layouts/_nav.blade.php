@@ -116,6 +116,10 @@
                         <a class="dropdown-item" href="{{ url('shops') }}">
                             Shops
                         </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url(__('raids.raids')) }}">
+                            {{ ucfirst(__('raids.raids')) }}
+                        </a>
                     </div>
                 </li>
                 <li class="nav-item">

@@ -10,6 +10,7 @@ use App\Models\User\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use App\Services\RaidManager;
 
 class RaidController extends Controller {
     /*
@@ -169,5 +170,34 @@ class RaidController extends Controller {
         return view('raids.boss', [
             'boss' => $boss,
         ]);
+    }
+
+    /**
+     * Attacks the current raid.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function postAttackRaid(Request $request, RaidManager $service, $id, $bossId) {
+        $raid = Raid::find($id);
+        $boss = RaidBoss::find($bossId);
+        if (!$raid || !$raid->is_visible) {
+            abort(404);
+        }
+        if (!$boss) {
+            abort(404);
+        }
+        if ($boss->raid_id != $raid->id) {
+            abort(404);
+        }
+
+        if ($service->attackBoss($raid, $boss, Auth::user())) {
+            flash('Successfully attacked the '.__('raids.boss').'!')->success();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
+
+        return redirect()->back();
     }
 }
