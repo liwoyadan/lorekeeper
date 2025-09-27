@@ -145,7 +145,7 @@ class RaidBoss extends Model {
      * @return string
      */
     public function getUrlAttribute() {
-        return url('raids/bosses?name='.$this->name);
+        return url(__('raids.raids').'/'.__('raids.bosses').'?name='.$this->name);
     }
 
     /**
@@ -154,7 +154,7 @@ class RaidBoss extends Model {
      * @return string
      */
     public function getIdUrlAttribute() {
-        return url('raids/boss/'.$this->id);
+        return url(__('raids.raids').'/'.__('raids.boss').'/'.$this->id);
     }
 
     /**
@@ -318,7 +318,7 @@ class RaidBoss extends Model {
      * @return string
      */
     public function getAdminUrlAttribute() {
-        return url('admin/data/raid-bosses/edit/'.$this->id);
+        return url('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/edit/'.$this->id);
     }
 
     /**
@@ -327,6 +327,6 @@ class RaidBoss extends Model {
      * @return string
      */
     public function getAdminPowerAttribute() {
-        return 'edit_raids';
+        return 'manage_raids';
     }
 }

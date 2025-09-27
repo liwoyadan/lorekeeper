@@ -96,7 +96,7 @@ class RaidBossImage extends Model {
      * @return string
      */
     public function getImageDirectoryAttribute() {
-        return 'images/data/raid-bosses';
+        return 'images/data/raids/bosses';
     }
 
     /**

@@ -251,7 +251,7 @@ class Raid extends Model {
      * @return string
      */
     public function getAdminPowerAttribute() {
-        return 'edit_raids';
+        return 'manage_raids';
     }
 
     /**

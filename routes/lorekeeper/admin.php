@@ -241,7 +241,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
 });
 
 // RAIDS
-Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:edit_raids'], function () {
+Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:manage_raids'], function () {
     Route::get(__('raids.raids'), 'RaidController@getRaidIndex');
     Route::get(__('raids.raids').'/create', 'RaidController@getCreateRaid');
     Route::get(__('raids.raids').'/edit/{id}', 'RaidController@getEditRaid');
