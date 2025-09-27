@@ -55,6 +55,9 @@
                                     @if (!$boss->is_visible)
                                         <i class="fas fa-eye-slash" data-toggle="tooltip" title="This {{ __('raids.boss') }} is currently not visible."></i>
                                     @endif
+                                    @if ($boss->raid->status == 3)
+                                        <i class="fas fa-check-circle text-success" data-toggle="tooltip" title="This {{ __('raids.boss') }}'s {{ __('raids.raid') }} has <b>concluded</b>."></i>
+                                    @endif
                                     @if ($boss->damage >= $boss->health)
                                         <i class="fas fa-skull text-danger" data-toggle="tooltip" title="This {{ __('raids.boss') }} has had all its health depleted."></i>
                                     @endif
@@ -63,8 +66,12 @@
                             </div>
                             <div class="col-6 col-md-3">
                                 <div class="logs-table-cell">
-                                    {{ $boss->remainingHealth }} /
-                                    {{ $boss->health ?? 'No Limit' }}
+                                    @if (isset($boss->health) && $boss->health)
+                                        {{ $boss->remainingHealth }} /
+                                        {{ $boss->health ?? 'No Limit' }}
+                                    @else
+                                        {{ $boss->damage }} DMG
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-6 col-md-3">

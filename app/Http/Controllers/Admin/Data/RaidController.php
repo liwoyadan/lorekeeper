@@ -87,11 +87,11 @@ class RaidController extends Controller {
             'image', 'remove_image', 'damage_type', 'damage_id', 'damage_quantity', 'damage_base', 'damage_max',
         ]);
         if ($id && $service->updateRaid(Raid::find($id), $data, Auth::user())) {
-            flash('Raid updated successfully.')->success();
+            flash(ucfirst(__('raids.raid')).' updated successfully.')->success();
         } elseif (!$id && $raid = $service->createRaid($data, Auth::user())) {
-            flash('Raid created successfully.')->success();
+            flash(ucfirst(__('raids.raid')).' created successfully.')->success();
 
-            return redirect()->to('admin/data/raids/edit/'.$raid->id);
+            return redirect()->to('admin/data/'.__('raids.raids').'/edit/'.$raid->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -126,14 +126,119 @@ class RaidController extends Controller {
      */
     public function postDeleteRaid(Request $request, RaidService $service, $id) {
         if ($id && $service->deleteRaid(Raid::find($id))) {
-            flash('Raid deleted successfully.')->success();
+            flash(ucfirst(__('raids.raid')).' deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
             }
         }
 
-        return redirect()->to('admin/data/raids');
+        return redirect()->to('admin/data/'.__('raids.raids'));
+    }
+
+    /**
+     * Gets the raid manual start modal.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getStartRaid($id) {
+        $raid = Raid::find($id);
+
+        return view('admin.raids._start_raid', [
+            'raid' => $raid,
+        ]);
+    }
+
+    /**
+     * Starts a raid.
+     *
+     * @param App\Services\RaidService $service
+     * @param int                        $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postStartRaid(Request $request, RaidService $service, $id) {
+        if ($id && $service->startRaid(Raid::find($id))) {
+            flash(ucfirst(__('raids.raid')).' began successfully.')->success();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Gets the raid manual end modal.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getEndRaid($id) {
+        $raid = Raid::find($id);
+
+        return view('admin.raids._end_raid', [
+            'raid' => $raid,
+        ]);
+    }
+
+    /**
+     * Ends a raid.
+     *
+     * @param App\Services\RaidService $service
+     * @param int                        $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postEndRaid(Request $request, RaidService $service, $id) {
+        if ($id && $service->endRaid(Raid::find($id))) {
+            flash(ucfirst(__('raids.raid')).' ended successfully.')->success();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Gets the raid reward distribution modal.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getRewardRaid($id) {
+        $raid = Raid::find($id);
+
+        return view('admin.raids._reward_raid', [
+            'raid' => $raid,
+        ]);
+    }
+
+    /**
+     * Rewards a raid.
+     *
+     * @param App\Services\RaidService $service
+     * @param int                        $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postRewardRaid(Request $request, RaidService $service, $id) {
+        if ($id && $service->rewardRaid(Raid::find($id))) {
+            flash(ucfirst(__('raids.raid')).' participants rewarded successfully.')->success();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
+
+        return redirect()->back();
     }
 
     /**********************************************************************************************
@@ -217,9 +322,9 @@ class RaidController extends Controller {
             'name', 'raid_id', 'description', 'is_visible', 'health',
         ]);
         if ($boss = $service->createRaidBoss($data, Auth::user())) {
-            flash('Raid Boss created successfully.')->success();
+            flash(ucfirst(__('raids.raid')).' '.__('raids.boss').' created successfully.')->success();
 
-            return redirect()->to('admin/data/raid-bosses/edit/'.$boss->id);
+            return redirect()->to('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/edit/'.$boss->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -243,7 +348,7 @@ class RaidController extends Controller {
             'name', 'raid_id', 'description', 'is_visible', 'health', 'threshold_type', 'threshold_amount', 'threshold_bar_color', 'threshold_text_color',
         ]);
         if ($id && $service->updateRaidBoss(RaidBoss::find($id), $data, Auth::user())) {
-            flash('Raid Boss updated successfully.')->success();
+            flash(ucfirst(__('raids.raid')).' '.__('raids.boss').' updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -278,14 +383,14 @@ class RaidController extends Controller {
      */
     public function postDeleteRaidBoss(Request $request, RaidService $service, $id) {
         if ($id && $service->deleteRaidBoss(RaidBoss::find($id))) {
-            flash('Raid Boss deleted successfully.')->success();
+            flash(ucfirst(__('raids.raid')).' '.__('raids.boss').' deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
             }
         }
 
-        return redirect()->to('admin/data/raid-bosses');
+        return redirect()->to('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'');
     }
 
     /**
@@ -336,11 +441,11 @@ class RaidController extends Controller {
         $raidBoss = RaidBoss::find($id);
 
         if ($imageId && $service->updateRaidBossImage($raidBoss, $data, Auth::user(), RaidBossImage::find($imageId))) {
-            flash('Raid boss image updated successfully.')->success();
+            flash(ucfirst(__('raids.raid')).' '.__('raids.boss').' image updated successfully.')->success();
         } elseif (!$imageId && $service->createRaidBossImage($raidBoss, $data, Auth::user())) {
-            flash('Raid boss image created successfully.')->success();
+            flash(ucfirst(__('raids.raid')).' '.__('raids.boss').' image created successfully.')->success();
 
-            return redirect()->to('admin/data/raid-bosses/edit/'.$raidBoss->id);
+            return redirect()->to('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/edit/'.$raidBoss->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -382,13 +487,13 @@ class RaidController extends Controller {
         $raidBoss = RaidBoss::find($id);
 
         if ($id && $service->deleteRaidBossImage($raidBoss, RaidBossImage::find($imageId))) {
-            flash('Boss image deleted successfully.')->success();
+            flash(ucfirst(__('raids.raid')).' '.__('raids.boss').' image deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
             }
         }
 
-        return redirect()->to('admin/data/raid-bosses/edit/'.$raidBoss->id);
+        return redirect()->to('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/edit/'.$raidBoss->id);
     }
 }

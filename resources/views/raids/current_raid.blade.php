@@ -20,8 +20,16 @@
 
         <div class="card mb-3">
             <div class="card-body">
-                <div class="h5 mb-1 text-center">
-                    Started {!! $currentRaid->start_at ? pretty_date($currentRaid->start_at) : 'at an unknown time' !!} || Ends {!! $currentRaid->end_at ? format_date($currentRaid->end_at) : 'when '.__('raids.boss').' is defeated' !!}
+                <div class="h5 mb-1 text-center row no-gutters">
+                    <div class="col-md">
+                        Started {!! $currentRaid->start_at ? pretty_date($currentRaid->start_at) : 'at an unknown time' !!}
+                    </div>
+                    <div class="d-none d-md-block col-md-auto px-2">
+                        ||
+                    </div>
+                    <div class="col-md">
+                        {{ $currentRaid->end_at && $currentRaid->end_at < Carbon\Carbon::now() ? 'Ended' : 'Ends' }} {!! $currentRaid->end_at ? format_date($currentRaid->end_at) : 'when '.__('raids.boss').' is defeated' !!}
+                    </div>
                 </div>
                 @if (Auth::check())
                     @include('raids._raid_attack', ['raid' => $currentRaid, 'boss' => $currentRaid->currentBoss()])

@@ -14,6 +14,67 @@
         @endif
     </h1>
 
+    @if ($raid->id)
+        @if ($raid->status == 0)
+            <div class="alert alert-success">
+                <div class="mb-1 h3">This {{ __('raids.raid') }} hasn't begun yet.</div>
+                <div>
+                    If a {{ __('raids.raid') }} has no start time, it must be manually started.
+                    @if ($raid->start_at)
+                        This {{ __('raids.raid') }} is set to begin {!! pretty_date($raid->start_at) !!}
+                    @endif
+                    <br>
+                    If you'd like to manually start the {{ __('raids.raid') }}, please click through with the 'Start {{ ucfirst(__('raids.raid')) }}' button.
+                </div>
+                <div class="text-right mt-2">
+                    <a href="#" class="start-raid-button btn btn-primary">
+                        Start {{ ucfirst(__('raids.raid')) }}
+                    </a>
+                </div>
+            </div>
+        @elseif ($raid->status == 1)
+            <div class="alert alert-primary">
+                <div class="mb-1 h3">This {{ __('raids.raid') }} is currently ongoing!</div>
+                <div>
+                    If a {{ __('raids.raid') }} has no end time, is set to continue after the {{ __('raids.boss') }} is defeated, or the {{ __('raids.boss') }} does not have a set health target, it will continue indefinitely.
+                    @if ($raid->end_at)
+                        This {{ __('raids.raid') }} is set to end {!! pretty_date($raid->end_at) !!}
+                    @endif
+                    <br>
+                    If you'd like to manually end the {{ __('raids.raid') }}, please click through with the 'End {{ ucfirst(__('raids.raid')) }}' button.
+                </div>
+                <div class="text-right mt-2">
+                    <a href="#" class="end-raid-button btn btn-primary">
+                        End {{ ucfirst(__('raids.raid')) }}
+                    </a>
+                </div>
+            </div>
+        @elseif ($raid->status == 2)
+            <div class="alert alert-success">
+                <div class="mb-1 h3">This {{ __('raids.raid') }} has been defeated!</div>
+                <div>
+                    This {{ __('raids.raid') }} has been defeated! It ended {!! pretty_date($raid->end_at) !!}. There were a total of {{ $raid->participantCount }} {{ $raid->participantCount == 1 ? 'participant' : 'participants' }}.
+                    <br>
+                    Rewards are not distributed automatically as to give staff time to review participation and adjust rewards as needed. <b>To distribute proper rewards to all participants, please click the button below.</b>
+                </div>
+                <div class="text-right mt-2">
+                    <a href="#" class="reward-raid-button btn btn-primary">
+                        Distribute Rewards
+                    </a>
+                </div>
+            </div>
+        @elseif ($raid->status == 3)
+            <div class="alert alert-success">
+                <div class="mb-1 h3">Concluded {{ ucfirst(__('raids.raid')) }}</div>
+                <div>
+                    This {{ __('raids.raid') }} has concluded and rewards have been distributed.
+                    <br>
+                    Rewards were distributed {!! pretty_date($raid->distributed_at) !!}.
+                </div>
+            </div>
+        @endif
+    @endif
+
     {!! Form::open(['url' => $raid->id ? 'admin/data/'.__('raids.raids').'/edit/' . $raid->id : 'admin/data/'.__('raids.raids').'/create', 'files' => true]) !!}
 
     @if (!$raid->id)
@@ -52,25 +113,45 @@
         {!! Form::textarea('description', $raid->description, ['class' => 'form-control wysiwyg']) !!}
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {!! Form::label('start_at', 'Start Time (Optional)') !!} {!! add_help(ucfirst(__('raids.raids')).' cannot be attacked before the starting time. If the '.__('raids.raid').' currently is set to not be visible, the '.__('raids.raid').' will <b>automatically become visible</b> once past starting time.') !!}
-                {!! Form::text('start_at', $raid->start_at, ['class' => 'form-control datepicker']) !!}
+    @if ($raid->id && $raid->status < 3)
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    {!! Form::label('start_at', 'Start Time (Optional)') !!} {!! add_help(ucfirst(__('raids.raids')).' cannot be attacked before the starting time. If the '.__('raids.raid').' currently is set to not be visible, the '.__('raids.raid').' will <b>automatically become visible</b> once past starting time.') !!}
+                    {!! Form::text('start_at', $raid->start_at, ['class' => 'form-control datepicker']) !!}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    {!! Form::label('end_at', 'End Time (Optional)') !!} {!! add_help(ucfirst(__('raids.raids')).' cannot be attacked after the ending time.') !!}
+                    {!! Form::text('end_at', $raid->end_at, ['class' => 'form-control datepicker']) !!}
+                </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {!! Form::label('end_at', 'End Time (Optional)') !!} {!! add_help(ucfirst(__('raids.raids')).' cannot be attacked after the ending time.') !!}
-                {!! Form::text('end_at', $raid->end_at, ['class' => 'form-control datepicker']) !!}
-            </div>
-        </div>
-    </div>
+    @endif
 
-    @if ($raid->id)
+    @if ($raid->id && $raid->status == 3)
         <div class="form-group">
             {!! Form::checkbox('is_visible', 1, $raid->id ? $raid->is_visible : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-            {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help(ucfirst(__('raids.raids')).' that are not visible will be hidden from the '.__('raids.raid').' list. The start/end time hide settings override this setting, i.e. if this is set to visible, it will still be hidden outside of the start/end times.') !!}
+            {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!}
+        </div>
+    @endif
+
+    @if ($raid->id && $raid->status < 3)
+        <div class="row">
+            <div class="col-md">
+                <div class="form-group">
+                    {!! Form::checkbox('is_visible', 1, $raid->id ? $raid->is_visible : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                    {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help(ucfirst(__('raids.raids')).' that are not visible will be hidden from the '.__('raids.raid').' list. The start time setting overrides this setting, i.e. if this is set to hidden, it will still be visible past the start time.') !!}
+                </div>
+            </div>
+
+            <div class="col-md">
+                <div class="form-group">
+                    {!! Form::checkbox('continue_raid', 1, $raid->id ? $raid->continue_raid : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                    {!! Form::label('continue_raid', 'Continue after health depleted?', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is toggled <b>on</b>, the '.__('raids.raid').' will not end when the '.__('raids.boss').'\'s health is surpassed in damage. When set to <b>off</b>, the '.__('raids.raid').' will automatically conclude.') !!}
+                </div>
+            </div>
         </div>
 
         <h3>{{ ucwords(__('raids.raid').' '.__('raids.boss')) }}</h3>
@@ -141,6 +222,25 @@
                 e.preventDefault();
                 loadModal("{{ url('admin/data/'.__('raids.raids').'/delete') }}/{{ $raid->id }}", "Delete {{ ucfirst(__('raids.raid')) }}");
             });
+
+            @if ($raid->id)
+                @if (!$raid->status)
+                    $('.start-raid-button').on('click', function(e) {
+                        e.preventDefault();
+                        loadModal("{{ url('admin/data/'.__('raids.raids').'/start') }}/{{ $raid->id }}", "Manually Start {{ ucfirst(__('raids.raid')) }}?");
+                    });
+                @elseif ($raid->status == 1)
+                    $('.end-raid-button').on('click', function(e) {
+                        e.preventDefault();
+                        loadModal("{{ url('admin/data/'.__('raids.raids').'/end') }}/{{ $raid->id }}", "Manually End {{ ucfirst(__('raids.raid')) }}?");
+                    });
+                @elseif ($raid->status == 2)
+                    $('.reward-raid-button').on('click', function(e) {
+                        e.preventDefault();
+                        loadModal("{{ url('admin/data/'.__('raids.raids').'/reward') }}/{{ $raid->id }}", "Distribute {{ ucfirst(__('raids.raid')) }} Rewards");
+                    });
+                @endif
+            @endif
 
             $('#damageTableBody .selectize').selectize();
             var $damageItemSelect = $('.damage-data').find('.damage-item-select');

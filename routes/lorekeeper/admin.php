@@ -246,9 +246,16 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::get(__('raids.raids').'/create', 'RaidController@getCreateRaid');
     Route::get(__('raids.raids').'/edit/{id}', 'RaidController@getEditRaid');
     Route::get(__('raids.raids').'/delete/{id}', 'RaidController@getDeleteRaid');
+    Route::get(__('raids.raids').'/start/{id}', 'RaidController@getStartRaid');
+    Route::get(__('raids.raids').'/end/{id}', 'RaidController@getEndRaid');
+    Route::get(__('raids.raids').'/reward/{id}', 'RaidController@getRewardRaid');
+
     Route::post(__('raids.raids').'/create', 'RaidController@postCreateEditRaid');
     Route::post(__('raids.raids').'/edit/{id?}', 'RaidController@postCreateEditRaid');
     Route::post(__('raids.raids').'/delete/{id}', 'RaidController@postDeleteRaid');
+    Route::post(__('raids.raids').'/start/{id}', 'RaidController@postStartRaid');
+    Route::post(__('raids.raids').'/end/{id}', 'RaidController@postEndRaid');
+    Route::post(__('raids.raids').'/reward/{id}', 'RaidController@postRewardRaid');
 
     Route::get(__('raids.raid').'-'.__('raids.bosses'), 'RaidController@getRaidBossIndex');
     Route::get(__('raids.raid').'-'.__('raids.bosses').'/create/{id}', 'RaidController@getCreateRaidBoss');

@@ -34,58 +34,86 @@
         {!! $raids->render() !!}
         <div class="mb-4 logs-table">
             <div class="logs-table-header">
-                <div class="row">
-                    <div class="col-12 col-md-3">
-                        <div class="logs-table-cell">Name</div>
-                    </div>
-                    <div class="col col-md-2">
-                        <div class="logs-table-cell">
-                            Active?
-                            {!! add_help('This is <b>regardless of visibility</b>, whether or not the '.__('raids.raid').' is active based on <b>start time</b> and <b>end time</b>.') !!}
+                <div class="row no-gutters align-items-center">
+                    <div class="col-auto">
+                        <div class="logs-table-cell pl-0">
+                            {!! add_help('<b>Regardless of visibility</b>, whether or not the '.__('raids.raid').' is active based on <b>start time</b> and <b>end time</b>.') !!}
                         </div>
                     </div>
-                    <div class="col col-md-3">
+                    <div class="col-6 col-md-3">
+                        <div class="logs-table-cell">Name</div>
+                    </div>
+                    <div class="col">
+                        <div class="logs-table-cell">{{ ucfirst(__('raids.boss')) }}</div>
+                    </div>
+                    <div class="col-5 col-md-2">
                         <div class="logs-table-cell">Starts</div>
                     </div>
-                    <div class="col col-md-3">
+                    <div class="col-5 col-md-2">
                         <div class="logs-table-cell">Ends</div>
+                    </div>
+                    <!-- This is just here to make the table even. lol -->
+                    <div class="col-auto">
+                        <div class="logs-table-cell">
+                            <span class="btn btn-primary py-0 px-2" style="opacity: 0; pointer-events: none;">
+                                <i class="fas fa-cog" aria-hidden="true"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="logs-table-body">
                 @foreach ($raids as $raid)
                     <div class="logs-table-row">
-                        <div class="row flex-wrap">
-                            <div class="col-12 col-md-3 text-truncate">
-                                <div class="logs-table-cell">
-                                    @if (!$raid->is_visible)
-                                        <i class="fas fa-eye-slash" data-toggle="tooltip" title="This {{ __('raids.raid') }} is currently not visible."></i>
-                                    @endif
-                                    {{ $raid->name }}
-                                </div>
-                            </div>
-                            <div class="col col-md-2">
+                        <div class="row no-gutters align-items-center flex-wrap">
+                            <div class="col-auto">
                                 <div class="logs-table-cell">
                                     @if ($raid->isActive)
-                                        <i class="fas fa-check text-success" data-toggle="tooltip" title="This {{ __('raids.raid') }} is currently active."></i>
+                                        <i class="fas fa-check text-success" data-toggle="tooltip" title="This {{ __('raids.raid') }} is currently <b>active</b>."></i>
                                     @else
-                                        <i class="fas fa-times text-danger" data-toggle="tooltip" title="This {{ __('raids.raid') }} is currently inactive."></i>
+                                        <i class="fas fa-times text-danger" data-toggle="tooltip" title="This {{ __('raids.raid') }} is currently <b>inactive</b>."></i>
                                     @endif
                                 </div>
                             </div>
-                            <div class="col col-md-3">
+                            <div class="col-6 col-md-3 text-truncate">
                                 <div class="logs-table-cell">
-                                    {!! $raid->start_at ? pretty_date($raid->start_at) : '-' !!}
+                                    <span class="ubt-texthide">
+                                        @if (!$raid->is_visible)
+                                            <i class="fas fa-eye-slash" data-toggle="tooltip" title="This {{ __('raids.raid') }} is currently not visible."></i>
+                                        @endif
+                                        @if (($raid->status == 1 || $raid->status == 2) && (!$raid->isDefeated || $raid->continue_raid))
+                                            <i class="fas fa-sync-alt" data-toggle="tooltip" title="This {{ __('raids.raid') }} is currently <b>ongoing</b>."></i>
+                                        @elseif ($raid->status == 2 && !$raid->distributed_at)
+                                            <i class="fas fa-exclamation-triangle text-danger fa-fade" data-toggle="tooltip" title="<b>This {{ __('raids.raid') }} has been defeated!</b> Rewards need to be distributed. Please proceed to the edit page."></i>
+                                        @elseif ($raid->status == 3)
+                                            <i class="fas fa-check-circle text-success" data-toggle="tooltip" title="This {{ __('raids.raid') }} has <b>concluded</b>."></i>
+                                        @endif
+                                        {{ $raid->name }}
+                                    </span>
                                 </div>
                             </div>
-                            <div class="col col-md-3">
+                            <div class="col">
                                 <div class="logs-table-cell">
-                                    {!! $raid->end_at ? pretty_date($raid->end_at) : '-' !!}
+                                    <span class="ubt-texthide">
+                                        {!! $raid->currentBoss() ? $raid->currentBoss()->displayName : '---' !!}
+                                    </span>
                                 </div>
                             </div>
-                            <div class="col text-right">
+                            <div class="col-5 col-md-2">
                                 <div class="logs-table-cell">
-                                    <a href="{{ url('admin/data/'.__('raids.raids').'/edit/' . $raid->id) }}" class="btn btn-primary py-0 px-2">Edit</a>
+                                    {!! $raid->start_at ? pretty_date($raid->start_at) : '---' !!}
+                                </div>
+                            </div>
+                            <div class="col-5 col-md-2">
+                                <div class="logs-table-cell">
+                                    {!! $raid->end_at ? pretty_date($raid->end_at) : '---' !!}
+                                </div>
+                            </div>
+                            <div class="col-2 col-md-auto text-right">
+                                <div class="logs-table-cell">
+                                    <a href="{{ url('admin/data/'.__('raids.raids').'/edit/' . $raid->id) }}" class="btn btn-primary py-0 px-2">
+                                        <i class="fas fa-cog" data-toggle="tooltip" title="Edit"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>

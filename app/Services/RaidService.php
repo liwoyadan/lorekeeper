@@ -2,12 +2,20 @@
 
 namespace App\Services;
 
+use App\Facades\Notifications;
 use App\Models\Raid\Raid;
 use App\Models\Raid\RaidBoss;
 use App\Models\Raid\RaidBossImage;
 use App\Models\Raid\RaidReward;
+use App\Models\Currency\Currency;
+use App\Models\Item\Item;
+use App\Models\Raffle\Raffle;
+use App\Models\Loot\LootTable;
+use App\Models\User\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class RaidService extends Service {
     /*
@@ -50,7 +58,7 @@ class RaidService extends Service {
                 $data['has_background'] = 0;
             }
 
-            $raid = Raid::create(Arr::only($data, ['name', 'description', 'parsed_description', 'is_visible', 'start_at', 'end_at', 'has_background', 'background_hash', 'background_extension']));
+            $raid = Raid::create(Arr::only($data, ['name', 'description', 'parsed_description', 'is_visible', 'start_at', 'end_at', 'has_background', 'background_hash', 'background_extension', 'continue_raid']));
 
             if ($image) {
                 $this->handleImage($image, $raid->imagePath, $raid->imageFileName);
@@ -93,7 +101,11 @@ class RaidService extends Service {
                 unset($data['image']);
             }
 
-            $raid->update(Arr::only($data, ['name', 'description', 'parsed_description', 'is_visible', 'start_at', 'end_at', 'has_background', 'background_hash', 'background_extension']));
+            if ($raid->status == 3) {
+                $raid->update(Arr::only($data, ['name', 'description', 'parsed_description', 'has_background', 'is_visible', 'background_hash', 'background_extension']));
+            } else {
+                $raid->update(Arr::only($data, ['name', 'description', 'parsed_description', 'is_visible', 'start_at', 'end_at', 'has_background', 'background_hash', 'background_extension', 'continue_raid']));
+            }
 
             if ($image) {
                 $this->handleImage($image, $raid->imagePath, $raid->imageFileName);
@@ -121,12 +133,8 @@ class RaidService extends Service {
         DB::beginTransaction();
 
         try {
-            // // Check first if the category is currently in use
-            // if (Submission::where('raid_id', $raid->id)->exists()) {
-            //     throw new \Exception('A submission under this raid exists. Deleting the raid will break the submission page - consider setting the raid to be not active instead.');
-            // }
-
             $raid->rewards()->delete();
+            $raid->bosses()->delete();
             if ($raid->has_background) {
                 $this->deleteImage($raid->imagePath, $raid->imageFileName);
             }
@@ -159,7 +167,7 @@ class RaidService extends Service {
 
         try {
             if (!isset($data['raid_id'])) {
-                throw new \Exception('Raid this boss is associated with could not be found.');
+                throw new \Exception(ucfirst(__('raids.raid')).' this '.__('raids.boss').' is associated with could not be found.');
             }
 
             $data = $this->populateBossData($data);
@@ -189,49 +197,54 @@ class RaidService extends Service {
         try {
             $data = $this->populateBossData($data, $boss);
 
-            $boss->update(Arr::only($data, ['name', 'description', 'parsed_description', 'is_visible', 'health', 'raid_id']));
+            if ($boss->raid->status < 3) {
+                $boss->update(Arr::only($data, ['name', 'description', 'parsed_description', 'is_visible', 'health', 'raid_id']));
 
-            $a = 0;
-            $c = 0;
-            if (isset($data['threshold_type'])) {
-                $bossData = $boss->data;
-                $t = 0;
+                $a = 0;
+                $c = 0;
+                if (isset($data['threshold_type'])) {
+                    $bossData = $boss->data;
+                    $t = 0;
 
-                foreach ($data['threshold_type'] as $key => $value) {
-                    if (!isset($data['threshold_amount'][$key])) {
-                        $a++;
-                        continue;
-                    }
-                    if (!isset($data['threshold_bar_color'][$key]) && !isset($data['threshold_text_color'][$key])) {
-                        $c++;
-                        continue;
+                    foreach ($data['threshold_type'] as $key => $value) {
+                        if (!isset($data['threshold_amount'][$key])) {
+                            $a++;
+                            continue;
+                        }
+                        if (!isset($data['threshold_bar_color'][$key]) && !isset($data['threshold_text_color'][$key])) {
+                            $c++;
+                            continue;
+                        }
+
+                        $bossData['thresholds'][$t]['type'] = $data['threshold_type'][$key];
+                        if ($data['threshold_type'][$key] == 'percent' && $data['threshold_amount'][$key] > 100) {
+                            $bossData['thresholds'][$t]['amount'] = 100;
+                        } else {
+                            $bossData['thresholds'][$t]['amount'] = $data['threshold_amount'][$key];
+                        }
+                        $bossData['thresholds'][$t]['bar_color'] = $data['threshold_bar_color'][$key] ?? null;
+                        $bossData['thresholds'][$t]['text_color'] = $data['threshold_text_color'][$key] ?? null;
+                        $t++;
                     }
 
-                    $bossData['thresholds'][$t]['type'] = $data['threshold_type'][$key];
-                    if ($data['threshold_type'][$key] == 'percent' && $data['threshold_amount'][$key] > 100) {
-                        $bossData['thresholds'][$t]['amount'] = 100;
-                    } else {
-                        $bossData['thresholds'][$t]['amount'] = $data['threshold_amount'][$key];
-                    }
-                    $bossData['thresholds'][$t]['bar_color'] = $data['threshold_bar_color'][$key] ?? null;
-                    $bossData['thresholds'][$t]['text_color'] = $data['threshold_text_color'][$key] ?? null;
-                    $t++;
+                    $boss->data = $bossData;
+                    $boss->save();
+                } else {
+                    $bossData = $boss->data;
+                    $bossData['thresholds'] = null;
+                    $boss->data = $bossData;
+                    $boss->save();
                 }
 
-                $boss->data = $bossData;
-                $boss->save();
-            } else {
-                $bossData = $boss->data;
-                $bossData['thresholds'] = null;
-                $boss->data = $bossData;
-                $boss->save();
-            }
 
-            if ($a > 0) {
-                flash('One or more threshold entries have been skipped due to lacking an amount value.')->error();
-            }
-            if ($c > 0) {
-                flash('One or more threshold entries have been skipped due to lacking both bar and bar text color values.')->error();
+                if ($a > 0) {
+                    flash('One or more threshold entries have been skipped due to lacking an amount value.')->error();
+                }
+                if ($c > 0) {
+                    flash('One or more threshold entries have been skipped due to lacking both bar and bar text color values.')->error();
+                }
+            } else {
+                $boss->update(Arr::only($data, ['name', 'description', 'parsed_description', 'is_visible']));
             }
 
             return $this->commitReturn($boss);
@@ -281,7 +294,7 @@ class RaidService extends Service {
 
         try {
             if (!$boss) {
-                throw new \Exception('The raid boss you are trying to add an image to could not be found.');
+                throw new \Exception('The '.__('raids.raid').' '.__('raids.boss').' you are trying to add an image to could not be found.');
             }
             if (!isset($data['image'])) {
                 throw new \Exception('Image is required.');
@@ -333,7 +346,7 @@ class RaidService extends Service {
 
         try {
             if (!$boss) {
-                throw new \Exception('The raid boss you are trying to editing an image of could not be found.');
+                throw new \Exception('The '.__('raids.raid').' '.__('raids.boss').' you are trying to edit an image of could not be found.');
             }
             if (!$bossImage) {
                 throw new \Exception('Invalid boss image.');
@@ -386,7 +399,7 @@ class RaidService extends Service {
 
         try {
             if ($boss->id != $bossImage->raid_boss_id) {
-                throw new \Exception('The image you are trying to delete is not associated with this raid boss.');
+                throw new \Exception('The image you are trying to delete is not associated with this '.__('raids.raid').' '.__('raids.boss').'.');
             }
 
             if ($bossImage->has_image) {
@@ -426,6 +439,10 @@ class RaidService extends Service {
 
         if (!isset($data['is_visible'])) {
             $data['is_visible'] = 0;
+        }
+
+        if (!isset($data['continue_raid'])) {
+            $data['continue_raid'] = 0;
         }
 
         if (isset($data['remove_image'])) {
@@ -507,6 +524,142 @@ class RaidService extends Service {
     }
 
     /**
+     * Manually begin the specified raid.
+     *
+     * @return bool
+     */
+    public function startRaid($raid) {
+        DB::beginTransaction();
+
+        try {
+            if (!$raid) {
+                throw new \Exception('The specified '.__('raids.raid').' could not be found.');
+            }
+            if ($raid->status == 1) {
+                throw new \Exception('This '.__('raids.raid').' has already begun!');
+            }
+            if (!$raid->bosses->count()) {
+                throw new \Exception('This '.__('raids.raid').' has no '.__('raids.boss').' to attack.');
+            }
+            if ($raid->end_at && $raid->end_at < Carbon::now()) {
+                throw new \Exception('This '.__('raids.raid').'\'s ending time has already passed.');
+            }
+
+            if (isset($raid->start_at) && $raid->start_at < Carbon::now()) {
+                flash('The preset start time has been overidden.')->info();
+            }
+            $raid->start_at = Carbon::now();
+            $raid->is_visible = 1;
+            $raid->status = 1;
+            $raid->save();
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Manually end the specified raid.
+     *
+     * @return bool
+     */
+    public function endRaid($raid) {
+        DB::beginTransaction();
+
+        try {
+            if (!$raid) {
+                throw new \Exception('The specified '.__('raids.raid').' could not be found.');
+            }
+            if ($raid->status == 3) {
+                throw new \Exception('This '.__('raids.raid').' has already concluded!');
+            }
+
+            if (isset($raid->end_at) && $raid->end_at < Carbon::now()) {
+                flash('The preset end time has been overidden.')->info();
+            }
+            $raid->end_at = Carbon::now();
+            $raid->status = 2;
+            $raid->save();
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Distributes the raid rewards..
+     *
+     * @return bool
+     */
+    public function rewardRaid($raid) {
+        DB::beginTransaction();
+
+        try {
+            if (!$raid) {
+                throw new \Exception('The specified '.__('raids.raid').' could not be found.');
+            }
+            if ($raid->status != 2) {
+                throw new \Exception('This '.__('raids.raid').' is currently ongoing. It must be concluded first before distributing rewards.');
+            }
+            if (!$raid->rewards->count()) {
+                throw new \Exception('This '.__('raids.raid').' has no set rewards. Please set rewards first.');
+            }
+
+            $participantArray = $raid->logs()->select('user_id')->distinct()->pluck('user_id')->toArray();
+            $users = User::whereIn('id', $participantArray)->get();
+
+            $logType = ucfirst(__('raids.raid')).' Participation Reward';
+            $raidData = [
+                'data' => 'Received rewards for participating in a '.__('raids.raid').' ('.$raid->displayName.')',
+            ];
+
+            $c = 0;
+            $t = 0;
+            if ($users->count()) {
+                foreach ($users as $user) {
+                    $rewards = $this->processRewards($raid, $raid->userDamage($user));
+                    $filtered = array_filter($rewards);
+
+                    if (!empty($filtered)) {
+                        if (!$rewards = fillUserAssets($rewards, Auth::user(), $user, $logType, $raidData)) {
+                            throw new \Exception('Failed to distribute '.__('raids.raid').' rewards to user.');
+                        }
+
+                        Notifications::create('RAID_PARTICIPANT_REWARDS', $user, [
+                            'raid_name'     => $raid->name,
+                            'raid_word'    => __('raids.raid'),
+                            'damage' => $raid->userDamage($user),
+                        ]);
+                        $c++;
+                    } else {
+                        Notifications::create('RAID_PARTICIPANT_REWARDLESS', $user, [
+                            'raid_name'     => $raid->name,
+                            'raid_word'    => __('raids.raid'),
+                        ]);
+                    }
+                    $t++;
+                }
+            }
+
+            $raid->distributed_at = Carbon::now();
+            $raid->status = 3;
+            $raid->save();
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
      * Updates raids if they should be visible or not.
      *
      * @return bool
@@ -517,9 +670,9 @@ class RaidService extends Service {
             DB::beginTransaction();
 
             try {
-                Raid::shouldBeVisible()->update(['is_visible' => 1]);
+                Raid::shouldBeVisible()->has('bosses')->update(['is_visible' => 1, 'status' => 1]);
                 $bosses = RaidBoss::where('is_visible', 0)->whereHas('raid', function($r) {
-                    $r->where('is_visible', 1);
+                    $r->where('is_visible', 1)->where('status', 1);
                 })->update(['is_visible' => 1]);
 
                 return $this->commitReturn(true);
@@ -529,5 +682,46 @@ class RaidService extends Service {
 
             return $this->rollbackReturn(false);
         }
+    }
+
+    /**
+     * Processes reward data into a format that can be used for distribution.
+     *
+     * @param array $data
+     * @param int  $damage
+     *
+     * @return array
+     */
+    private function processRewards($raid, $damage) {
+        $assets = createAssetsArray(false);
+
+        if ($raid->rewards()->where('damage_required', '<=', $damage)->count()) {
+            foreach ($raid->rewards()->where('damage_required', '<=', $damage)->get() as $raidReward) {
+                $reward = null;
+                switch ($raidReward->rewardable_type) {
+                    case 'Item':
+                        $reward = Item::find($raidReward->rewardable_id);
+                        break;
+                    case 'Currency':
+                        $reward = Currency::find($raidReward->rewardable_id);
+                        if (!$reward->is_user_owned) {
+                            throw new \Exception('Invalid currency selected.');
+                        }
+                        break;
+                    case 'LootTable':
+                        $reward = LootTable::find($raidReward->rewardable_id);
+                        break;
+                    case 'Raffle':
+                        $reward = Raffle::find($raidReward->rewardable_id);
+                        break;
+                }
+                if (!$reward) {
+                    continue;
+                }
+                addAsset($assets, $reward, $raidReward->quantity);
+            }
+        }
+
+        return $assets;
     }
 }

@@ -18,6 +18,7 @@ class Raid extends Model {
     protected $fillable = [
         'name', 'description', 'parsed_description', 'data', 'start_at', 'end_at',
         'has_background', 'background_hash', 'background_extension', 'is_visible',
+        'status', 'distributed_at', 'continue_raid',
     ];
 
     /**
@@ -35,6 +36,7 @@ class Raid extends Model {
     protected $casts = [
         'start_at' => 'datetime',
         'end_at'   => 'datetime',
+        'distributed_at'   => 'datetime',
         'data' => 'array',
     ];
 
@@ -264,6 +266,9 @@ class Raid extends Model {
         if ($this->end_at && ($this->end_at < Carbon::now())) {
             return false;
         }
+        if ($this->status != 1) {
+            return false;
+        }
 
         return true;
     }
@@ -302,6 +307,61 @@ class Raid extends Model {
 
         return $roll;
     }
+
+    /**
+     * Checks if the raid has been defeated
+     * or not.
+     *
+     * @return bool
+     */
+    public function getIsDefeatedAttribute() {
+        if (!$this->bosses || !$this->bosses->count()) {
+            return false;
+        }
+        if (!$this->bosses()->whereNotNull('health')->count()) {
+            return false;
+        }
+        if ($this->status == 0) {
+            return false;
+        }
+        if (!$this->continue_raid) {
+            $c = 0;
+            foreach ($this->bosses()->whereNotNull('health')->get() as $boss) {
+                if ($boss->health < $boss->damage) {
+                    $c++;
+                }
+            }
+            if ($c == $this->bosses->count()) {
+                return true;
+            }
+        }
+
+        if (isset($this->end_at) && $this->end_at < Carbon::now()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Gets the number of unique participants.
+     *
+     * @return int
+     */
+    public function getParticipantCountAttribute() {
+        if (!$this->logs->count()) {
+            return 0;
+        }
+        $logs = $this->logs()->select('user_id')->distinct()->get();
+
+        return $logs->count() ?? 0;
+    }
+
+    /**********************************************************************************************
+
+        OTHER FUNCTIONS
+
+    **********************************************************************************************/
 
     /**
      * Get the required asset to make an attack on this raid.

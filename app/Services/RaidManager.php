@@ -161,6 +161,13 @@ class RaidManager extends Service {
             $boss->damage += $damageDone;
             $boss->save();
 
+            if (!$raid->raid_continue && $boss->damage >= $boss->health) {
+                if ($raid->bosses->count() == 1) {
+                    $raid->status = 2;
+                    $raid->save();
+                }
+            }
+
             $dataString = 'Attacked and dealt '.$damageDone.' damage to '.$boss->displayName.' encountered in '.$raid->displayName;
             if (!$this->createLog($user->id, $raid->id, ucfirst(__('raids.raid')).' Attacked', $dataString, $damageDone)) {
                 throw new \Exception('Failed to create '.__('raids.raid').' log.');

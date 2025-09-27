@@ -1,10 +1,19 @@
-@if ($boss->damage >= $boss->health)
+@if ($raid->status >= 2)
     <div class="text-center">
-        This {{ __('raids.boss') }} has already been defeated!
+        @if ($raid->status == 2)
+            This {{ __('raids.boss') }} has already been defeated!
+        @else
+            This {{ __('raids.boss') }} has concluded.
+        @endif
     </div>
     <div class="alert alert-{{ $raid->logs()->where('user_id', Auth::user()->id)->first() ? 'success' : 'primary' }} text-center mt-2">
         @if ($raid->logs()->where('user_id', Auth::user()->id)->first())
-            <b>You participated in this {{ __('raids.raid') }}!</b> Please wait for rewards to be distributed.
+            <b>You participated in this {{ __('raids.raid') }}!</b>
+            @if ($raid->distributed_at && $raid->distributed_at <= Carbon\Carbon::now())
+                Rewards were distributed {!! pretty_date($raid->distributed_at) !!}.
+            @else
+                Please wait for rewards to be distributed.
+            @endif
             @if ($raid->userDamage(Auth::user() ?? null) && $raid->userDamage(Auth::user() ?? null) >= 0)
                 <br>
                 You have dealt a total of <b>{{ $raid->userDamage(Auth::user() ?? null) }} damage</b> to this {{ __('raids.raid').' '.__('raids.boss') }}.
@@ -13,7 +22,7 @@
             You didn't participate in this {{ __('raids.raid') }}.
         @endif
     </div>
-@else
+@elseif ($raid->status == 1)
     @if ($raid->damage)
         <div class="text-center">
             Requires <b>{{ $raid->attackAsset()['quantity'] }} {!! $raid->attackAsset()['asset']->displayName !!} ({{ $raid->damage['type'] }})</b> to attack.

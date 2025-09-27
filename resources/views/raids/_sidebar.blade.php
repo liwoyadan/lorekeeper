@@ -1,4 +1,4 @@
-<ul>
+<ul class="w-100">
     <li class="sidebar-header"><a href="{{ url(__('raids.raids')) }}" class="card-link">{{ ucfirst(__('raids.raids')) }}</a></li>
 
     @if ($currentRaid)
@@ -15,7 +15,11 @@
                 </div>
             @endif
             <div class="sidebar-item small">
-                Until {!! $currentRaid->end_at ? format_date($currentRaid->end_at) : __('raids.boss').' defeated.' !!}
+                @if ($currentRaid->end_at && $currentRaid->end_at < Carbon\Carbon::now())
+                    Ended {!! format_date($currentRaid->end_at) !!}
+                @else
+                    Until {!! $currentRaid->end_at ? format_date($currentRaid->end_at) : __('raids.boss').' defeated' !!}
+                @endif
             </div>
         </li>
     @endif

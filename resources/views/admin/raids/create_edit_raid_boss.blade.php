@@ -64,15 +64,17 @@
             </div>
         </div>
 
-        <div class="col-md">
-            <div class="form-group">
-                {!! Form::label('health', 'Health', ['class' => 'form-label']) !!} {!! add_help('The total health the '.__('raids.raid').' '.__('raids.boss').' has.') !!}
-                {!! Form::number('health', $raidBoss->id ? $raidBoss->health : null, ['class' => 'form-control', 'placeholder' => 'Enter health...']) !!}
+        @if ($raidBoss->raid->status < 3)
+            <div class="col-md">
+                <div class="form-group">
+                    {!! Form::label('health', 'Health', ['class' => 'form-label']) !!} {!! add_help('The total health the '.__('raids.raid').' '.__('raids.boss').' has.') !!}
+                    {!! Form::number('health', $raidBoss->id ? $raidBoss->health : null, ['class' => 'form-control', 'placeholder' => 'Enter health...']) !!}
+                </div>
             </div>
-        </div>
+        @endif
     </div>
 
-    @if ($raidBoss->id)
+    @if ($raidBoss->id && $raidBoss->raid->status < 3)
         <h3>Health Thresholds</h3>
         <p class="mb-0">
             Here you can indicate if the color of the remaining health bar and text should change based on the {{ __('raids.boss') }}'s current health. <b>You must indicate a color for the bar AND/OR bar's text</b> for the entry to be saved. Type and amount are <b>required</b>.
@@ -175,7 +177,10 @@
             {{ ucfirst(__('raids.boss')) }} Images
         </h3>
         <p>
-            You may create and edit images for this {{ __('raids.boss') }} below. You may set a single image, or instead define multiple images that will display based on the {{ __('raids.boss') }}'s current health. Decimal values for health thresholds are always rounded.
+            You may create and edit images for this {{ __('raids.boss') }} below.
+            @if ($raidBoss->raid->status < 3)
+                You may set a single image, or instead define multiple images that will display based on the {{ __('raids.boss') }}'s current health. Decimal values for health thresholds are always rounded.
+            @endif
         </p>
         <div class="text-right mb-1">
             <a href="#" class="btn btn-sm btn-primary create-boss-image">
@@ -220,56 +225,58 @@
             </div>
         </div>
 
-        <div class="mb-2 threshold-row hide">
-            <div class="card">
-                <div class="card-body">
-                    <div class="text-right">
-                        <a href="#" class="btn btn-danger btn-sm remove-threshold">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </div>
-                    <div class="row mb-1">
-                        <div class="col">
-                            <div class="form-group">
-                                {!! Form::label('threshold_type[]', 'Type') !!} {!! add_help('Is this based on percentage or a specified amount?') !!}
-                                {!! Form::select('threshold_type[]', ['percent' => 'Percentage', 'amount' => 'Specific Amount'], null, ['class' => 'form-control', 'placeholder' => 'Select type...']) !!}
-                            </div>
+        @if ($raidBoss->raid->status < 3)
+            <div class="mb-2 threshold-row hide">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-right">
+                            <a href="#" class="btn btn-danger btn-sm remove-threshold">
+                                <i class="fas fa-times"></i>
+                            </a>
                         </div>
-                        <div class="col">
-                            <div class="form-group">
-                                {!! Form::label('threshold_amount[]', 'Amount') !!}
-                                {!! Form::number('threshold_amount[]', null, ['class' => 'form-control', 'placeholder' => 'Enter a number...', 'steps' => '1']) !!}
+                        <div class="row mb-1">
+                            <div class="col">
+                                <div class="form-group">
+                                    {!! Form::label('threshold_type[]', 'Type') !!} {!! add_help('Is this based on percentage or a specified amount?') !!}
+                                    {!! Form::select('threshold_type[]', ['percent' => 'Percentage', 'amount' => 'Specific Amount'], null, ['class' => 'form-control', 'placeholder' => 'Select type...']) !!}
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                {!! Form::label('threshold_bar_color[]', 'Health Bar Color (Optional)') !!}
-                                <div class="input-group cp">
-                                    {!! Form::text('threshold_bar_color[]', null, ['class' => 'form-control']) !!}
-                                    <span class="input-group-append">
-                                        <span class="input-group-text colorpicker-input-addon"><i></i></span>
-                                    </span>
+                            <div class="col">
+                                <div class="form-group">
+                                    {!! Form::label('threshold_amount[]', 'Amount') !!}
+                                    {!! Form::number('threshold_amount[]', null, ['class' => 'form-control', 'placeholder' => 'Enter a number...', 'steps' => '1']) !!}
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    {!! Form::label('threshold_bar_color[]', 'Health Bar Color (Optional)') !!}
+                                    <div class="input-group cp">
+                                        {!! Form::text('threshold_bar_color[]', null, ['class' => 'form-control']) !!}
+                                        <span class="input-group-append">
+                                            <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <div class="col">
-                            <div class="form-group">
-                                {!! Form::label('threshold_text_color[]', 'Health Bar Text Color (Optional)') !!}
-                                <div class="input-group cp">
-                                    {!! Form::text('threshold_text_color[]', null, ['class' => 'form-control']) !!}
-                                    <span class="input-group-append">
-                                        <span class="input-group-text colorpicker-input-addon"><i></i></span>
-                                    </span>
+                            <div class="col">
+                                <div class="form-group">
+                                    {!! Form::label('threshold_text_color[]', 'Health Bar Text Color (Optional)') !!}
+                                    <div class="input-group cp">
+                                        {!! Form::text('threshold_text_color[]', null, ['class' => 'form-control']) !!}
+                                        <span class="input-group-append">
+                                            <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
     @endif
 @endsection
 
