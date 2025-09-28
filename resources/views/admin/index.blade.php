@@ -24,6 +24,9 @@
                 </h5>
                 <p class="card-text">
                     @if ($activeRaid->count())
+                        @if ($activeRaid->first()->imageUrl)
+                            <div class="mb-2" style="background: transparent url('{{ $activeRaid->first()->imageUrl }}') no-repeat center; background-size: cover; height: 50px;"></div>
+                        @endif
                         @if ($activeRaid->first()->status == 2)
                             The active {{ __('raids.raid') }} {!! $activeRaid->first()->displayName !!} has been <b>defeated</b> and participation has closed! <b>Rewards have yet to be distributed.</b> Please <a href="{{ $activeRaid->first()->adminUrl }}">proceed to the {{ __('raids.raid') }}'s admin panel page</a> to do so.
                         @else
