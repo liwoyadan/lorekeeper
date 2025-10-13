@@ -15,4 +15,10 @@
         <div class="sidebar-item"><a href="{{ url('world/items') }}" class="{{ set_active('world/items*') }}">All Items</a></div>
         <div class="sidebar-item"><a href="{{ url('world/currencies') }}" class="{{ set_active('world/currencies*') }}">Currencies</a></div>
     </li>
+    <li class="sidebar-section">
+        <div class="sidebar-section-header">Weather</div>
+        <div class="sidebar-item"><a href="{{ url('world/seasons') }}" class="{{ set_active('world/seasons*') }}">Seasons</a></div>
+        <div class="sidebar-item"><a href="{{ url('world/weathers') }}" class="{{ set_active('world/weathers*') }}">Weather</a></div>
+        <div class="sidebar-item"><a href="{{ url('world/forecast') }}" class="{{ set_active('world/forecast*') }}">Weather Forecast</a></div>
+    </li>
 </ul>
