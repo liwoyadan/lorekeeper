@@ -13,14 +13,19 @@
         }
     }
 
-    $theme = Auth::user()->theme ?? App\Models\Theme::where('is_default', true)->first() ?? null;
+    $theme = Auth::user()->theme ?? (App\Models\Theme::where('is_default', true)->first() ?? null);
     $conditionalTheme = null;
     if (class_exists('\App\Models\Weather\WeatherSeason')) {
-        $conditionalTheme = App\Models\Theme::where('link_type', 'season')->where('link_id', Settings::get('site_season'))->first() ??
-        App\Models\Theme::where('link_type', 'weather')->where('link_id', Settings::get('site_weather'))->first() ??
-        $theme;
+        $conditionalTheme =
+            App\Models\Theme::where('link_type', 'season')
+                ->where('link_id', Settings::get('site_season'))
+                ->first() ??
+            (App\Models\Theme::where('link_type', 'weather')
+                ->where('link_id', Settings::get('site_weather'))
+                ->first() ??
+                $theme);
     }
-    
+
     $decoratorTheme = Auth::user()->decoratorTheme ?? null;
 @endphp
 
