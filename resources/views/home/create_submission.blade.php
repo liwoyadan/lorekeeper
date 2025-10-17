@@ -97,16 +97,20 @@
                     var $rewards = $('#rewards');
                     var $form = $('#prompt-form');
                     if ($prompt.val() != '') {
-                        $.get('{{url('submissions/new/form') }}/' + $prompt.val(), function(data) {
-                            tinymce.activeEditor.setContent(tinymce.DOM.decode(data), {format: 'html'});
+                        $.get('{{ url('submissions/new/form') }}/' + $prompt.val(), function(data) {
+                            tinymce.activeEditor.setContent(tinymce.DOM.decode(data), {
+                                format: 'html'
+                            });
                         });
                     }
 
                     $prompt.selectize();
                     $prompt.on('change', function(e) {
                         if ($(this).val() != '') {
-                            $.get('{{url('submissions/new/form') }}/' + $(this).val(), function(data) {
-                                tinymce.activeEditor.setContent(tinymce.DOM.decode(data), {format: 'html'});
+                            $.get('{{ url('submissions/new/form') }}/' + $(this).val(), function(data) {
+                                tinymce.activeEditor.setContent(tinymce.DOM.decode(data), {
+                                    format: 'html'
+                                });
                             });
                         }
                         $rewards.load('{{ url('submissions/new/prompt') }}/' + $(this).val());
