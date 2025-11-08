@@ -5,8 +5,8 @@ namespace App\Models;
 use App\Models\Comment\Comment;
 use App\Models\Rank\Rank;
 use App\Traits\Commentable;
-use Auth;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Forum extends Model {
     use Commentable;

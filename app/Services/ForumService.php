@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Forum;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class ForumService extends Service {
     /*
@@ -21,7 +21,7 @@ class ForumService extends Service {
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return \App\Models\Forum|bool
+     * @return bool|Forum
      */
     public function createForum($data, $user) {
         DB::beginTransaction();
@@ -57,11 +57,11 @@ class ForumService extends Service {
     /**
      * Updates a site forum.
      *
-     * @param \App\Models\Forum     $forum
+     * @param Forum                 $forum
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return \App\Models\Forum|bool
+     * @return bool|Forum
      */
     public function updateForum($forum, $data, $user) {
         DB::beginTransaction();
@@ -95,8 +95,8 @@ class ForumService extends Service {
     /**
      * Deletes a site forum.
      *
-     * @param \App\Models\Forum $forum
-     * @param mixed             $data
+     * @param Forum $forum
+     * @param mixed $data
      *
      * @return bool
      */
