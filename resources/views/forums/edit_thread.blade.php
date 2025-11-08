@@ -25,20 +25,20 @@
             @endif
 
             {{ Form::model($thread, ['route' => ['comments.update', $thread->getKey()]]) }}
-                <h4 class="mb-0">Edit Thread</h4>
-                <div>
-                    <div class="form-group">
-                        {!! Form::label('title', 'Title') !!} {!! add_help('Enter a title relevant to your thread.') !!}
-                        {!! Form::text('title', $thread->title, ['class' => 'form-control', 'required']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('message', 'Update your message here:') !!}
-                        {!! Form::textarea('message', $thread->comment, ['class' => 'form-control ' . (config('lorekeeper.settings.wysiwyg_comments') ? 'comment-wysiwyg' : ''), 'rows' => 3, config('lorekeeper.settings.wysiwyg_comments') ? '' : 'required']) !!}
-                    </div>
+            <h4 class="mb-0">Edit Thread</h4>
+            <div>
+                <div class="form-group">
+                    {!! Form::label('title', 'Title') !!} {!! add_help('Enter a title relevant to your thread.') !!}
+                    {!! Form::text('title', $thread->title, ['class' => 'form-control', 'required']) !!}
                 </div>
-                <div class="modal-footer">
-                    {!! Form::submit('Update', ['class' => 'btn btn-sm btn-outline-success text-uppercase']) !!}
+                <div class="form-group">
+                    {!! Form::label('message', 'Update your message here:') !!}
+                    {!! Form::textarea('message', $thread->comment, ['class' => 'form-control ' . (config('lorekeeper.settings.wysiwyg_comments') ? 'comment-wysiwyg' : ''), 'rows' => 3, config('lorekeeper.settings.wysiwyg_comments') ? '' : 'required']) !!}
                 </div>
+            </div>
+            <div class="modal-footer">
+                {!! Form::submit('Update', ['class' => 'btn btn-sm btn-outline-success text-uppercase']) !!}
+            </div>
             </form>
         </div>
     </div>

@@ -5,8 +5,8 @@
 
 @if (isset($reply) && $reply === true)
     <div id="comment-{{ $comment->getKey() }}" class="comment_replies border-left col-12 column mw-100 pr-0 pt-4" style="flex-basis: 100%;">
-@else
-    <div id="comment-{{ $comment->getKey() }}" class="pt-4" style="flex-basis: 100%;">
+    @else
+        <div id="comment-{{ $comment->getKey() }}" class="pt-4" style="flex-basis: 100%;">
 @endif
 <div class="media-body row mw-100 mx-0" style="flex:1;flex-wrap:wrap;">
     @if (isset($compact) && !$compact)

@@ -41,9 +41,9 @@
             <p>
                 @auth
                     <a href="{{ $thread->commenter->url }}/forum">
-                @endauth
-                {!! $thread->commenter->forumCount !!} {{ $thread->commenter->forumCount == 1 ? 'Post' : 'Posts' }}
-                @auth
+                    @endauth
+                    {!! $thread->commenter->forumCount !!} {{ $thread->commenter->forumCount == 1 ? 'Post' : 'Posts' }}
+                    @auth
                     </a>
                 @endauth
             </p>
@@ -99,7 +99,7 @@
     @if (Auth::check() && Auth::user()->hasPower('edit_data'))
         <div class="d-flex mb-2 justify-content-end">
             <div class="my-auto mr-1">
-                <strong>ADMIN:</strong> 
+                <strong>ADMIN:</strong>
             </div>
 
             <button data-toggle="modal" data-target="#lock-modal-{{ $thread->getKey() }}" class="btn btn-sm btn-primary mx-1 text-uppercase">
@@ -137,9 +137,9 @@
                         <p>
                             @auth
                                 <a href="{{ $thread->commenter->url }}/forum">
-                            @endauth
-                            {!! $thread->commenter->forumCount !!} {{ $thread->commenter->forumCount == 1 ? 'Post' : 'Posts' }}
-                            @auth
+                                @endauth
+                                {!! $thread->commenter->forumCount !!} {{ $thread->commenter->forumCount == 1 ? 'Post' : 'Posts' }}
+                                @auth
                                 </a>
                             @endauth
                         </p>
