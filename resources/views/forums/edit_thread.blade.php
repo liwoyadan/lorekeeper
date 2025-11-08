@@ -6,7 +6,10 @@
 
 @section('content')
     {!! breadcrumbs(['Forum' => 'forum', $forum->name => 'forum/' . $forum->id, 'Edit Thread' => 'forum/' . $forum->id . '/~' . $thread->id . '/edit']) !!}
-    <h1>Edit {!! $thread->displayName !!}</h1>
+
+    <h1 class="mb-1">
+        Edit {!! $thread->displayName !!}
+    </h1>
 
     <div class="card">
         <div class="card-body">
@@ -21,34 +24,27 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('comments.update', $thread->getKey()) }}">
-                @method('PUT')
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Comment</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
+            {{ Form::model($thread, ['route' => ['comments.update', $thread->getKey()]]) }}
+                <h4 class="mb-0">Edit Thread</h4>
+                <div>
                     <div class="form-group">
-                        <div class="form-group">
-                            {!! Form::label('title', 'Title') !!} {!! add_help('Enter a title relevant to your thread.') !!}
-                            {!! Form::text('title', $thread->title, ['class' => 'form-control', 'required']) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::label('message', 'Update your message here:') !!}
-                            {!! Form::textarea('message', $thread->comment, ['class' => 'form-control', 'required']) !!}
-                        </div>
-                        <small class="form-text text-muted mb-2">Thread starter posts use HTML.</small>
-
+                        {!! Form::label('title', 'Title') !!} {!! add_help('Enter a title relevant to your thread.') !!}
+                        {!! Form::text('title', $thread->title, ['class' => 'form-control', 'required']) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('message', 'Update your message here:') !!}
+                        {!! Form::textarea('message', $thread->comment, ['class' => 'form-control ' . (config('lorekeeper.settings.wysiwyg_comments') ? 'comment-wysiwyg' : ''), 'rows' => 3, config('lorekeeper.settings.wysiwyg_comments') ? '' : 'required']) !!}
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-outline-success text-uppercase">Update</button>
+                    {!! Form::submit('Update', ['class' => 'btn btn-sm btn-outline-success text-uppercase']) !!}
                 </div>
             </form>
-
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    @parent
+    @include('forums._forum_comment_js')
 @endsection

@@ -1,6 +1,11 @@
 <div class="{{ isset($compact) && !$compact ? 'card' : '' }} mt-3">
     <div class="{{ isset($compact) && !$compact ? 'card-body' : '' }}">
-        {!! Form::open(['url' => 'comments/make/' . base64_encode(urlencode(get_class($model))) . '/' . $model->getKey()]) !!}
+        @if (isset($thread) && $thread)
+            <h3 class="mb-0">Reply to Thread</h5>
+            {!! Form::open(['url' => 'comments/' . $thread->id]) !!}
+        @else
+            {!! Form::open(['url' => 'comments/make/' . base64_encode(urlencode(get_class($model))) . '/' . $model->getKey()]) !!}
+        @endif
         <input type="hidden" name="type" value="{{ isset($type) ? $type : null }}" />
         <div class="form-group">
             {!! Form::label('message', 'Enter your message here:') !!}

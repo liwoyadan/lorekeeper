@@ -151,7 +151,7 @@ class CommentController extends Controller {
             case 'App\Models\Forum':
                 flash('Thread created successfully.')->success();
 
-                return redirect('/forum/'.$comment->commentable_id.'/~'.$comment->id);
+                return redirect('forum/'.$comment->commentable_id.'/~'.$comment->id);
                 break;
             default:
                 throw new \Exception('Comment type not supported.');

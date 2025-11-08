@@ -5,8 +5,8 @@
 
 @if (isset($reply) && $reply === true)
     <div id="comment-{{ $comment->getKey() }}" class="comment_replies border-left col-12 column mw-100 pr-0 pt-4" style="flex-basis: 100%;">
-    @else
-        <div id="comment-{{ $comment->getKey() }}" class="pt-4" style="flex-basis: 100%;">
+@else
+    <div id="comment-{{ $comment->getKey() }}" class="pt-4" style="flex-basis: 100%;">
 @endif
 <div class="media-body row mw-100 mx-0" style="flex:1;flex-wrap:wrap;">
     @if (isset($compact) && !$compact)
@@ -26,7 +26,9 @@
             @endif
         </div>
         <div class="border p-3 rounded {{ $comment->is_featured ? 'border-success bg-light' : '' }} ">
-            <p>{!! nl2br($markdown->line($comment->comment)) !!} </p>
+            <p>
+                {!! config('lorekeeper.settings.wysiwyg_comments') ? nl2br($comment->comment) : nl2br($markdown->line($comment->comment)) !!}
+            </p>
             <p class="border-top pt-1 text-right mb-0">
                 <small class="text-muted">{!! $comment->created_at !!}
                     @if ($comment->created_at != $comment->updated_at)
@@ -166,8 +168,6 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>
 </div>
