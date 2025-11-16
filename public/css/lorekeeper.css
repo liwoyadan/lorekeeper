@@ -763,6 +763,7 @@ tr.accountbound {
     background-size: cover;
     border-radius: 0.5rem;
     padding: 0.75rem;
+    position: relative;
     max-width: 100%;
 
     display: flex;
@@ -777,6 +778,11 @@ tr.accountbound {
 .raid-display .boss-image img {
     max-height: 100%;
     width: auto;
+}
+
+.raid-boss-health {
+    position: absolute;
+    top: 0.75rem;
 }
 
 @media only screen and (max-width: 1100px) {

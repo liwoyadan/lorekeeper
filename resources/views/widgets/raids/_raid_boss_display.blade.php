@@ -10,6 +10,6 @@
                 </div>
             </div>
         @endif
-        @include('widgets.raids._raid_boss_health', ['raidBoss' => $raidBoss])
     </div>
+    @include('widgets.raids._raid_boss_health', ['raidBoss' => $raidBoss])
 </div>

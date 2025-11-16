@@ -101,11 +101,7 @@ class RaidService extends Service {
                 unset($data['image']);
             }
 
-            if ($raid->status == 3) {
-                $raid->update(Arr::only($data, ['name', 'description', 'parsed_description', 'has_background', 'is_visible', 'background_hash', 'background_extension']));
-            } else {
-                $raid->update(Arr::only($data, ['name', 'description', 'parsed_description', 'is_visible', 'start_at', 'end_at', 'has_background', 'background_hash', 'background_extension', 'continue_raid']));
-            }
+            $raid->update(Arr::only($data, ['name', 'description', 'parsed_description', 'is_visible', 'start_at', 'end_at', 'has_background', 'background_hash', 'background_extension', 'continue_raid']));
 
             if ($image) {
                 $this->handleImage($image, $raid->imagePath, $raid->imageFileName);

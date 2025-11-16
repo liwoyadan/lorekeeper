@@ -1,4 +1,4 @@
-<div class="rounded p-2" style="background-color: rgba(255, 255, 255, 0.65);">
+<div class="rounded raid-boss-health p-2" style="background-color: rgba(255, 255, 255, 0.65);">
     <div>
         {!! $raidBoss->name !!} has taken <b>{{ $raidBoss->damage }} points of damage</b> so far.
     </div>

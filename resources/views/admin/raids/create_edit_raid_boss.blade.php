@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        @if ($raidBoss->raid->status < 3)
+        @if (isset($raidBoss->raid->status) && $raidBoss->raid->status < 3)
             <div class="col-md">
                 <div class="form-group">
                     {!! Form::label('health', 'Health', ['class' => 'form-label']) !!} {!! add_help('The total health the '.__('raids.raid').' '.__('raids.boss').' has.') !!}

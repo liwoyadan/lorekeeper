@@ -29,9 +29,9 @@ class RaidController extends Controller {
     public function __construct() {
         $this->middleware(function ($request, $next) {
             $visibleRaids = Raid::where('is_visible', 1)->orderBy('id', 'DESC')->get();
-            $currentRaid = $visibleRaids->sortBy(function ($raid, $key) {
-                return $raid->isActive;
-            });
+            $currentRaid = $visibleRaids->filter(function ($raid) {
+                    return $raid->isActive;
+                });
 
             View::share('currentRaid', $currentRaid->first() ?? null);
             return $next($request);

@@ -84,7 +84,7 @@ class RaidController extends Controller {
         $id ? $request->validate(Raid::$updateRules) : $request->validate(Raid::$createRules);
         $data = $request->only([
             'name', 'description', 'start_at', 'end_at', 'is_visible', 'rewardable_type', 'rewardable_id', 'quantity', 'damage_required',
-            'image', 'remove_image', 'damage_type', 'damage_id', 'damage_quantity', 'damage_base', 'damage_max',
+            'image', 'remove_image', 'damage_type', 'damage_id', 'damage_quantity', 'damage_base', 'damage_max', 'continue_raid',
         ]);
         if ($id && $service->updateRaid(Raid::find($id), $data, Auth::user())) {
             flash(ucfirst(__('raids.raid')).' updated successfully.')->success();

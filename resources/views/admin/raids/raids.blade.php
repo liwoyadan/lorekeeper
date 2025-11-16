@@ -81,7 +81,7 @@
                                         @if (!$raid->is_visible)
                                             <i class="fas fa-eye-slash" data-toggle="tooltip" title="This {{ __('raids.raid') }} is currently not visible."></i>
                                         @endif
-                                        @if (($raid->status == 1 || $raid->status == 2) && (!$raid->isDefeated || $raid->continue_raid))
+                                        @if (($raid->status == 1 || $raid->status == 2) && (!$raid->isDefeated || $raid->isDefeated && $raid->continue_raid))
                                             <i class="fas fa-sync-alt" data-toggle="tooltip" title="This {{ __('raids.raid') }} is currently <b>ongoing</b>."></i>
                                         @elseif ($raid->status == 2 && !$raid->distributed_at)
                                             <i class="fas fa-exclamation-triangle text-danger fa-fade" data-toggle="tooltip" title="<b>This {{ __('raids.raid') }} has been defeated!</b> Rewards need to be distributed. Please proceed to the edit page."></i>

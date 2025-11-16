@@ -260,10 +260,10 @@ class Raid extends Model {
      * @return string
      */
     public function getIsActiveAttribute() {
-        if ($this->start_at && ($this->start_at > Carbon::now())) {
+        if (isset($this->start_at) && ($this->start_at > Carbon::now())) {
             return false;
         }
-        if ($this->end_at && ($this->end_at < Carbon::now())) {
+        if (isset($this->end_at) && ($this->end_at < Carbon::now())) {
             return false;
         }
         if ($this->status != 1) {

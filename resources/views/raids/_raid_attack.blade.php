@@ -45,6 +45,18 @@
             </div>
         @endif
 
+        @if (isset($raid->damage['type']) && $raid->damage['type'] == 'Currency')
+            <div class="mt-2">Your Currencies</div>
+            @foreach (Auth::user()->getCurrencies(1) as $currency)
+                <span class="mx-1">
+                    {!! $currency->display($currency->quantity) !!}
+                </span>
+                @if (!$loop->last)
+                    <span class="mx-1">|</span>
+                @endif
+            @endforeach
+        @endif
+
         @if ($raid->canAttack(Auth::user() ?? null))
             {!! Form::open(['url' => __('raids.raids').'/attack/' . $raid->id .'/'.__('raids.boss').'/' . $boss->id, 'class' => 'mt-2']) !!}
             <div class="text-center">
