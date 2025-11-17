@@ -9,7 +9,6 @@
 @endsection
 
 @section('content')
-
     <h1>
         Comments on
         @if ($comment->commentable_type == 'App\Models\User\UserProfile')
@@ -32,7 +31,6 @@
     <div class="d-flex mw-100 row mx-0" style="overflow:hidden;">
         @include('comments._perma_comments', ['comment' => $comment, 'limit' => 0, 'depth' => 0])
     </div>
-    
 @endsection
 @section('scripts')
     <script>

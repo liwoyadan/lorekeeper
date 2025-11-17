@@ -8,7 +8,7 @@
     {!! breadcrumbs(['Admin Panel' => 'admin', 'Forums' => 'admin/forums', ($forum->id ? 'Edit' : 'Create') . ' Forum' => $forum->id ? 'admin/forums/edit/' . $forum->id : 'admin/forums/create']) !!}
 
     <h1>{{ $forum->id ? 'Edit' : 'Create' }} Forum
-        @if ($forum->id && !Config::get('lorekeeper.text_forums.' . $forum->key))
+        @if ($forum->id && !config('lorekeeper.text_forums.' . $forum->key))
             <a href="#" class="btn btn-danger float-right delete-forum-button">Delete Forum</a>
         @endif
     </h1>
@@ -56,7 +56,10 @@
             </a>
         @endif
         {!! Form::label('Banner Image (Optional)') !!} {!! add_help('This image is visible at the top of the forum.') !!}
-        <div>{!! Form::file('image') !!}</div>
+        <div class="custom-file">
+            {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
+            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
+        </div>
         <div class="text-muted">No recommended size.</div>
         @if ($forum->has_image)
             <div class="form-check">

@@ -30,11 +30,11 @@ class GalleryManager extends Service {
     /**
      * Creates a new gallery submission.
      *
-     * @param array                 $data
-     * @param array                 $currencyFormData
-     * @param \App\Models\User\User $user
+     * @param array $data
+     * @param array $currencyFormData
+     * @param User  $user
      *
-     * @return \App\Models\Gallery\GallerySubmission|bool
+     * @return bool|GallerySubmission
      */
     public function createSubmission($data, $currencyFormData, $user) {
         DB::beginTransaction();
@@ -174,11 +174,11 @@ class GalleryManager extends Service {
     /**
      * Updates a gallery submission.
      *
-     * @param \App\Models\Gallery\GallerySubmission $submission
-     * @param array                                 $data
-     * @param \App\Models\User\User                 $user
+     * @param GallerySubmission $submission
+     * @param array             $data
+     * @param User              $user
      *
-     * @return \App\Models\Gallery\GallerySubmission|bool
+     * @return bool|GallerySubmission
      */
     public function updateSubmission($submission, $data, $user) {
         DB::beginTransaction();
@@ -187,6 +187,10 @@ class GalleryManager extends Service {
             // Check that the user can edit the submission
             if (!$submission->user_id == $user->id && !$user->hasPower('manage_submissions')) {
                 throw new \Exception("You can't edit this submission.");
+            }
+
+            if ($submission->status == 'Rejected') {
+                throw new \Exception('This submission has been rejected and cannot be edited.');
             }
 
             // Check that there is text and/or an image, including if there is an existing image (via the existence of a hash)
@@ -338,11 +342,11 @@ class GalleryManager extends Service {
     /**
      * Processes collaborator edits/approvals on a submission.
      *
-     * @param \App\Models\Gallery\GallerySubmission $submission
-     * @param \App\Models\User\User                 $user
-     * @param mixed                                 $data
+     * @param GallerySubmission $submission
+     * @param User              $user
+     * @param mixed             $data
      *
-     * @return \App\Models\Gallery\GalleryFavorite|bool
+     * @return bool|GalleryFavorite
      */
     public function editCollaborator($submission, $data, $user) {
         DB::beginTransaction();
@@ -368,7 +372,7 @@ class GalleryManager extends Service {
 
                 // Check if all collaborators have approved, and if so send a notification to the
                 // submitting user (unless they are the last to approve-- which shouldn't happen, but)
-                if ($submission->collaboratorApproved) {
+                if ($submission->collaboratorApproval) {
                     if (Settings::get('gallery_submissions_require_approval') && $submission->gallery->votes_required > 0) {
                         if ($submission->user->id != $user->id) {
                             Notifications::create('GALLERY_COLLABORATORS_APPROVED', $submission->user, [
@@ -393,9 +397,9 @@ class GalleryManager extends Service {
     /**
      * Votes on a gallery submission.
      *
-     * @param string                                $action
-     * @param \App\Models\Gallery\GallerySubmission $submission
-     * @param \App\Models\User\User                 $user
+     * @param string            $action
+     * @param GallerySubmission $submission
+     * @param User              $user
      *
      * @return bool
      */
@@ -406,7 +410,7 @@ class GalleryManager extends Service {
             if ($submission->status != 'Pending') {
                 throw new \Exception('This request cannot be processed.');
             }
-            if (!$submission->collaboratorApproved) {
+            if (!$submission->collaboratorApproval) {
                 throw new \Exception("This submission's collaborators have not all approved yet.");
             }
 
@@ -424,30 +428,18 @@ class GalleryManager extends Service {
 
             // Get existing vote data if it exists, remove any existing vote data for the user,
             // add the new vote data, and json encode it
-            $voteData = (isset($submission->vote_data) ? collect(json_decode($submission->vote_data, true)) : collect([]));
+            $voteData = (isset($submission->attributes['vote_data']) ? collect(json_decode($submission->attributes['vote_data'], true)) : collect([]));
             $voteData->get($user->id) ? $voteData->pull($user->id) : null;
             $voteData->put($user->id, $vote);
             $submission->vote_data = $voteData->toJson();
 
             $submission->save();
 
-            // Count up the existing votes to see if the required number has been reached
-            $rejectSum = 0;
-            $approveSum = 0;
-            foreach ($submission->voteData as $voter=> $vote) {
-                if ($vote == 1) {
-                    $rejectSum += 1;
-                }
-                if ($vote == 2) {
-                    $approveSum += 1;
-                }
-            }
-
-            // And if so, process the submission
-            if ($action == 'reject' && $rejectSum >= $submission->gallery->votes_required) {
+            // Process the submission if the required number of votes has been reached
+            if ($action == 'reject' && $submission->getVoteData()['reject'] >= $submission->gallery->votes_required) {
                 $this->rejectSubmission($submission, $user);
             }
-            if ($action == 'accept' && $approveSum >= $submission->gallery->votes_required) {
+            if ($action == 'accept' && $submission->getVoteData()['approve'] >= $submission->gallery->votes_required) {
                 $this->acceptSubmission($submission);
             }
 
@@ -466,11 +458,11 @@ class GalleryManager extends Service {
     /**
      * Processes staff comments for a submission.
      *
-     * @param \App\Models\User\User $user
-     * @param mixed                 $id
-     * @param mixed                 $data
+     * @param User  $user
+     * @param mixed $id
+     * @param mixed $data
      *
-     * @return \App\Models\Gallery\GalleryFavorite|bool
+     * @return bool|GalleryFavorite
      */
     public function postStaffComments($id, $data, $user) {
         DB::beginTransaction();
@@ -516,8 +508,8 @@ class GalleryManager extends Service {
     /**
      * Archives a submission.
      *
-     * @param \App\Models\Gallery\GallerySubmission $submission
-     * @param mixed                                 $user
+     * @param GallerySubmission $submission
+     * @param mixed             $user
      *
      * @return bool
      */
@@ -555,11 +547,11 @@ class GalleryManager extends Service {
     /**
      * Processes group currency evaluation for a submission.
      *
-     * @param \App\Models\User\User $user
-     * @param mixed                 $id
-     * @param mixed                 $data
+     * @param User  $user
+     * @param mixed $id
+     * @param mixed $data
      *
-     * @return \App\Models\Gallery\GalleryFavorite|bool
+     * @return bool|GalleryFavorite
      */
     public function postValueSubmission($id, $data, $user) {
         DB::beginTransaction();
@@ -689,10 +681,10 @@ class GalleryManager extends Service {
     /**
      * Toggles favorite status on a submission for a user.
      *
-     * @param \App\Models\Gallery\GallerySubmission $submission
-     * @param \App\Models\User\User                 $user
+     * @param GallerySubmission $submission
+     * @param User              $user
      *
-     * @return \App\Models\Gallery\GalleryFavorite|bool
+     * @return bool|GalleryFavorite
      */
     public function favoriteSubmission($submission, $user) {
         DB::beginTransaction();
@@ -737,10 +729,10 @@ class GalleryManager extends Service {
     /**
      * Processes rejection for a submission.
      *
-     * @param \App\Models\Gallery\GallerySubmission $submission
-     * @param mixed                                 $user
+     * @param GallerySubmission $submission
+     * @param mixed             $user
      *
-     * @return \App\Models\Gallery\GallerySubmission|bool
+     * @return bool|GallerySubmission
      */
     public function rejectSubmission($submission, $user) {
         DB::beginTransaction();
@@ -795,8 +787,8 @@ class GalleryManager extends Service {
     /**
      * Processes gallery submission images.
      *
-     * @param array                                 $data
-     * @param \App\Models\Gallery\GallerySubmission $submission
+     * @param array             $data
+     * @param GallerySubmission $submission
      *
      * @return array
      */
@@ -856,9 +848,9 @@ class GalleryManager extends Service {
     /**
      * Processes acceptance for a submission.
      *
-     * @param \App\Models\Gallery\GallerySubmission $submission
+     * @param GallerySubmission $submission
      *
-     * @return \App\Models\Gallery\GallerySubmission|bool
+     * @return bool|GallerySubmission
      */
     private function acceptSubmission($submission) {
         DB::beginTransaction();
@@ -886,7 +878,7 @@ class GalleryManager extends Service {
                 // Send a notification to included characters' owners now that the submission is accepted
                 // but not for the submitting user's own characters
                 foreach ($submission->characters as $character) {
-                    if ($character->user && $character->character->user->id != $submission->user->id) {
+                    if ($character->character->user && $character->character->user->id != $submission->user->id) {
                         Notifications::create('GALLERY_SUBMISSION_CHARACTER', $character->character->user, [
                             'sender'        => $submission->user->name,
                             'sender_url'    => $submission->user->url,

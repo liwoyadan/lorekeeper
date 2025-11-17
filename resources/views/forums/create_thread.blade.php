@@ -6,7 +6,10 @@
 
 @section('content')
     {!! breadcrumbs(['Forum' => 'forum', $forum->name => 'forum/' . $forum->id, 'Create New Thread' => 'forum/' . $forum->id . '/new']) !!}
-    <h1>Create Thread in {!! $forum->displayName !!}</h1>
+
+    <h1 class="mb-1">
+        Create Thread in {!! $forum->displayName !!}
+    </h1>
 
     @php
         $model = $forum;
@@ -24,14 +27,12 @@
                 <div class="form-group">
                     {!! Form::label('message', 'Enter your message here:') !!}
                     {!! Form::textarea('message', null, ['class' => 'form-control ' . (config('lorekeeper.settings.wysiwyg_comments') ? 'comment-wysiwyg' : ''), 'rows' => 5, config('lorekeeper.settings.wysiwyg_comments') ? '' : 'required']) !!}
-                    <small class="form-text text-muted"><a target="_blank" href="https://help.github.com/articles/basic-writing-and-formatting-syntax">Markdown</a> cheatsheet.</small>
                 </div>
 
                 {!! Form::submit('Submit', ['class' => 'btn btn-sm btn-outline-success text-uppercase']) !!}
                 {!! Form::close() !!}
             </div>
         </div>
-        <br />
     @else
         <div class="card mt-3">
             <div class="card-body">
@@ -45,26 +46,5 @@
 
 @section('scripts')
     @parent
-    <script>
-        $(document).ready(function() {
-            tinymce.init({
-                selector: '.comment-wysiwyg',
-                height: 250,
-                menubar: false,
-                convert_urls: false,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen spoiler',
-                    'insertdatetime media table paste code help wordcount'
-                ],
-                toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | spoiler-add spoiler-remove | removeformat | code',
-                content_css: [
-                    '{{ asset('css/app.css') }}',
-                    '{{ asset('css/lorekeeper.css') }}'
-                ],
-                spoiler_caption: 'Toggle Spoiler',
-                target_list: false
-            });
-        });
-    </script>
+    @include('forums._forum_comment_js')
 @endsection

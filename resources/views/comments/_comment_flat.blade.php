@@ -26,7 +26,9 @@
             @endif
         </div>
         <div class="border p-3 rounded {{ $comment->is_featured ? 'border-success bg-light' : '' }} ">
-            <p>{!! nl2br($markdown->line($comment->comment)) !!} </p>
+            <p>
+                {!! config('lorekeeper.settings.wysiwyg_comments') ? nl2br($comment->comment) : nl2br($markdown->line($comment->comment)) !!}
+            </p>
             <p class="border-top pt-1 text-right mb-0">
                 <small class="text-muted">{!! $comment->created_at !!}
                     @if ($comment->created_at != $comment->updated_at)
@@ -166,8 +168,6 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>
 </div>
