@@ -64,6 +64,11 @@
                             {!! $raid->parsed_description !!}
                         </div>
                     @endif
+                    <div class="mb-3">
+                        <a href="{{ url('raids/leaderboard/'.$raid->id) }}" class="btn btn-secondary d-block text-center">
+                            Leaderboard
+                        </a>
+                    </div>
 
                     <hr>
 

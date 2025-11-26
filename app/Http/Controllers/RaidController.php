@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use App\Services\RaidManager;
+use Illuminate\Support\Facades\DB;
 
 class RaidController extends Controller {
     /*
@@ -199,5 +200,27 @@ class RaidController extends Controller {
         }
 
         return redirect()->back();
+    }
+
+    /**
+     * Shows the leaderboard of users and their damage dealt
+     * for a specific raid.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserLeaderboard($id) {
+        $raid = Raid::find($id);
+        if (!$raid) {
+            abort(404);
+        }
+        if (!$raid->is_visible && (!Auth::check() || Auth::check() && !Auth::user()->hasPower('manage_raids'))) {
+            abort(404);
+        }
+        $query = $raid->damageLogs()->selectRaw("SUM(damage) as total_damage,user_id")->groupBy('user_id')->get();
+
+        return view('raids.user_leaderboard', [
+            'raid' => $raid,
+            'entries' => $query->sortByDesc('total_damage'),
+        ]);
     }
 }

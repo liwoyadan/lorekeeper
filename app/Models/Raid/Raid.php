@@ -88,6 +88,13 @@ class Raid extends Model {
     }
 
     /**
+     * Get the logs that belong to the raid.
+     */
+    public function damageLogs() {
+        return $this->hasMany(RaidLog::class, 'raid_id')->where('damage', '>', 0);
+    }
+
+    /**
      * Get the rewards attached to this raid.
      */
     public function rewards() {

@@ -230,4 +230,5 @@ Route::group(['prefix' => 'comments', 'namespace' => 'Comments'], function () {
 **************************************************************************************************/
 Route::group(['prefix' => __('raids.raids')], function () {
     Route::post('attack/{id}/'.__('raids.boss').'/{bossId}', 'RaidController@postAttackRaid');
+    Route::get('leaderboard/{id}', 'RaidController@getUserLeaderboard');
 });

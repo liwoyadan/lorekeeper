@@ -63,5 +63,10 @@
                 @endforeach
             @endif
         </div>
+        <div class="mt-2">
+            <a href="{{ url('raids/leaderboard/'.$raid->id) }}" class="btn btn-secondary d-block text-center">
+                Leaderboard
+            </a>
+        </div>
     </div>
 </div>
