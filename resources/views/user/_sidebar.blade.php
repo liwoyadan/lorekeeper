@@ -18,6 +18,15 @@
         <div class="sidebar-item"><a href="{{ $user->url . '/myos' }}" class="{{ set_active('user/' . $user->name . '/myos*') }}">MYO Slots</a></div>
         <div class="sidebar-item"><a href="{{ $user->url . '/inventory' }}" class="{{ set_active('user/' . $user->name . '/inventory*') }}">Inventory</a></div>
         <div class="sidebar-item"><a href="{{ $user->url . '/bank' }}" class="{{ set_active('user/' . $user->name . '/bank*') }}">Bank</a></div>
+        @if ($user->pages->count() && $user->pages()->where('show_on_profile', 1)->exists())
+            @foreach ($user->pages()->where('show_on_profile', 1)->get() as $userPage)
+                <div class="sidebar-item">
+                    <a href="{{ $user->url . '/page/' . $userPage->key }}" class="{{ set_active('user/' . $user->name . '/page/'.$userPage->key.'*') }}">
+                        {!! $userPage->title !!}
+                    </a>
+                </div>
+            @endforeach
+        @endif
     </li>
     <li class="sidebar-section">
         <div class="sidebar-section-header">History</div>
