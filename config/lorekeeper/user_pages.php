@@ -16,7 +16,7 @@ return [
     'user_page_limit' => 1,
 
     // Maximum number of personal pages a staff rank user can create
-    'staff_page_limit' => 3,
+    'staff_page_limit' => 1,
 
     // Allow commenting; this simply allows it as an option,
     // users must *voluntarily* toggle comments on for their page(s)

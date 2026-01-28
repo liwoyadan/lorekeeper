@@ -11,8 +11,9 @@
         Your User Pages
     </h1>
     <p>
-        Here you may create your own personal pages on the site for uses such as written wishlists, on-site commission pricesheets, personal character information, and more. Content of user pages should comply with the website's <a href="{{ url('info/terms') }}">terms of service</a> - violations of TOS may be removed by staff without warning.<br>
-        @if (Auth::user()->isStaff && (config('lorekeeper.user_pages.user_page_limit') != config('lorekeeper.user_pages.staff_page_limit')))
+        Here you may create your own personal pages on the site for uses such as written wishlists, on-site commission pricesheets, personal character information, and more. Content of user pages should comply with the website's <a
+            href="{{ url('info/terms') }}">terms of service</a> - violations of TOS may be removed by staff without warning.<br>
+        @if (Auth::user()->isStaff && config('lorekeeper.user_pages.user_page_limit') != config('lorekeeper.user_pages.staff_page_limit'))
             <b>As a staff member</b>, you may have a maximum of <b>{{ config('lorekeeper.user_pages.staff_page_limit') }} {{ config('lorekeeper.user_pages.staff_page_limit') == 1 ? 'page' : 'pages' }}</b> at any given time.
         @else
             You may have a maximum of <b>{{ config('lorekeeper.user_pages.user_page_limit') }} {{ config('lorekeeper.user_pages.user_page_limit') == 1 ? 'page' : 'pages' }}</b> at any given time.
@@ -20,7 +21,7 @@
     </p>
 
     <div class="text-right mb-2">
-        @if (Auth::user()->pages->count() < config('lorekeeper.user_pages.user_page_limit') || Auth::user()->isStaff && (Auth::user()->pages->count() < config('lorekeeper.user_pages.staff_page_limit')))
+        @if (Auth::user()->pages->count() < config('lorekeeper.user_pages.user_page_limit') || (Auth::user()->isStaff && Auth::user()->pages->count() < config('lorekeeper.user_pages.staff_page_limit')))
             <a href="{{ url('account/user-pages/create') }}" class="btn btn-primary">
                 <i class="fas fa-plus" aria-hidden="true"></i>
                 Create Page

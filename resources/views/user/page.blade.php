@@ -13,7 +13,7 @@
             </a>
         </div>
     @endif
-        
+
     <h1 class="mb-0">
         @if (!$userPage->is_visible)
             <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden from other users."></i>

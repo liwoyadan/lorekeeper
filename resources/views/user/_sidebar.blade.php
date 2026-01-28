@@ -19,11 +19,13 @@
         <div class="sidebar-item"><a href="{{ $user->url . '/inventory' }}" class="{{ set_active('user/' . $user->name . '/inventory*') }}">Inventory</a></div>
         <div class="sidebar-item"><a href="{{ $user->url . '/bank' }}" class="{{ set_active('user/' . $user->name . '/bank*') }}">Bank</a></div>
     </li>
-    @if ($user->pages->count() && $user->pages()->where('show_on_profile', 1)->exists())
+    @if (
+        $user->pages->count() &&
+            $user->pages()->where('show_on_profile', 1)->exists())
         <li class="sidebar-section">
             @if ($user->pages()->where('show_on_profile', 1)->count() == 1)
                 <div class="sidebar-item">
-                    <a href="{{ $user->pages()->where('show_on_profile', 1)->first()->url }}" class="{{ set_active('user/' . $user->name . '/page/'.$user->pages()->where('show_on_profile', 1)->first()->key.'*') }}">
+                    <a href="{{ $user->pages()->where('show_on_profile', 1)->first()->url }}" class="{{ set_active('user/' .$user->name .'/page/' .$user->pages()->where('show_on_profile', 1)->first()->key .'*') }}">
                         {!! $user->pages()->where('show_on_profile', 1)->first()->title !!}
                     </a>
                 </div>
@@ -31,7 +33,7 @@
                 <div class="sidebar-section-header">User Pages</div>
                 @foreach ($user->pages()->where('show_on_profile', 1)->get() as $userPage)
                     <div class="sidebar-item">
-                        <a href="{{ $user->url . '/page/' . $userPage->key }}" class="{{ set_active('user/' . $user->name . '/page/'.$userPage->key.'*') }}">
+                        <a href="{{ $user->url . '/page/' . $userPage->key }}" class="{{ set_active('user/' . $user->name . '/page/' . $userPage->key . '*') }}">
                             {!! $userPage->title !!}
                         </a>
                     </div>
