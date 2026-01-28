@@ -3,7 +3,10 @@
 namespace App\Services;
 
 use App\Models\Forum\Forum;
+use App\Models\Forum\ForumDecor;
+use App\Models\Forum\ForumFlair;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ForumService extends Service {
     /*
@@ -128,6 +131,210 @@ class ForumService extends Service {
     }
 
     /**
+     * Creates a forum flair.
+     *
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
+     * @return bool|ForumFlair
+     */
+    public function createForumFlair($data, $user) {
+        DB::beginTransaction();
+
+        try {
+            $data = $this->populateFlairData($data);
+
+            $image = null;
+            if (isset($data['image']) && $data['image']) {
+                $data['has_image'] = 1;
+                $data['hash'] = randomString(10);
+                $data['extension'] = $data['image']->getClientOriginalExtension();
+                $image = $data['image'];
+                unset($data['image']);
+            } else {
+                $data['has_image'] = 0;
+            }
+
+            $flair = ForumFlair::create($data);
+
+            if ($image) {
+                $this->handleImage($image, $flair->imagePath, $flair->imageFileName);
+            }
+
+            return $this->commitReturn($flair);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Updates a forum flair.
+     *
+     * @param ForumFlair            $flair
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
+     * @return bool|ForumFlair
+     */
+    public function updateForumFlair($flair, $data, $user) {
+        DB::beginTransaction();
+
+        try {
+            $data = $this->populateFlairData($data, $flair);
+
+            $image = null;
+            if (isset($data['image']) && $data['image']) {
+                $data['has_image'] = 1;
+                $data['hash'] = randomString(10);
+                $data['extension'] = $data['image']->getClientOriginalExtension();
+                $image = $data['image'];
+                unset($data['image']);
+            }
+
+            $flair->update($data);
+
+            if ($image) {
+                $this->handleImage($image, $flair->imagePath, $flair->imageFileName);
+            }
+
+            return $this->commitReturn($flair);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Deletes a forum flair.
+     *
+     * @param ForumFlair $flair
+     *
+     * @return bool
+     */
+    public function deleteForumFlair($flair) {
+        DB::beginTransaction();
+
+        try {
+            if ($flair->has_image && isset($flair->extension)) {
+                $this->deleteImage($flair->imagePath, $flair->imageFileName);
+            }
+
+            $flair->delete();
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Creates a forum decor.
+     *
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
+     * @return bool|ForumDecor
+     */
+    public function createForumDecor($data, $user) {
+        DB::beginTransaction();
+
+        try {
+            $data = $this->populateDecorData($data);
+
+            $image = null;
+            if (isset($data['image']) && $data['image']) {
+                $data['has_image'] = 1;
+                $data['hash'] = randomString(10);
+                $data['extension'] = $data['image']->getClientOriginalExtension();
+                $image = $data['image'];
+                unset($data['image']);
+            } else {
+                $data['has_image'] = 0;
+            }
+
+            $decor = ForumDecor::create($data);
+
+            if ($image) {
+                $this->handleImage($image, $decor->imagePath, $decor->imageFileName);
+            }
+
+            return $this->commitReturn($decor);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Updates a forum decor.
+     *
+     * @param ForumDecor            $decor
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
+     * @return bool|ForumDecor
+     */
+    public function updateForumDecor($decor, $data, $user) {
+        DB::beginTransaction();
+
+        try {
+            $data = $this->populateDecorData($data, $decor);
+
+            $image = null;
+            if (isset($data['image']) && $data['image']) {
+                $data['has_image'] = 1;
+                $data['hash'] = randomString(10);
+                $data['extension'] = $data['image']->getClientOriginalExtension();
+                $image = $data['image'];
+                unset($data['image']);
+            }
+
+            $decor->update($data);
+
+            if ($image) {
+                $this->handleImage($image, $decor->imagePath, $decor->imageFileName);
+            }
+
+            return $this->commitReturn($decor);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Deletes a forum decor.
+     *
+     * @param ForumDecor $decor
+     *
+     * @return bool
+     */
+    public function deleteForumDecor($decor) {
+        DB::beginTransaction();
+
+        try {
+            if ($decor->has_image && isset($decor->extension)) {
+                $this->deleteImage($decor->imagePath, $decor->imageFileName);
+            }
+
+            $decor->delete();
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
      * Processes user input for creating/updating a forum.
      *
      * @param array                 $data
@@ -204,5 +411,88 @@ class ForumService extends Service {
         }
 
         return false;
+    }
+
+    /**
+     * Processes user input for creating/updating a forum flair.
+     *
+     * @param array           $data
+     * @param ForumFlair|null $flair
+     *
+     * @return array
+     */
+    private function populateFlairData($data, $flair = null) {
+        if (isset($data['description']) && $data['description']) {
+            $data['parsed_description'] = parse($data['description']);
+        } else {
+            $data['description'] = null;
+            $data['parsed_description'] = null;
+        }
+
+        if (!isset($data['post_requirement']) || !$data['post_requirement']) {
+            $data['post_requirement'] = null;
+        }
+        if (!isset($data['color'])) {
+            $data['color'] = null;
+        }
+
+        if (!isset($data['staff_only'])) {
+            $data['staff_only'] = 0;
+        }
+        if (!isset($data['is_default'])) {
+            $data['is_default'] = 0;
+        }
+        if (!isset($data['is_visible'])) {
+            $data['is_visible'] = 1;
+        }
+
+        // Handle image removal
+        if (isset($data['remove_image']) && $data['remove_image']) {
+            if ($flair && $flair->has_image) {
+                $data['has_image'] = 0;
+                $this->deleteImage($flair->imagePath, $flair->imageFileName);
+            }
+            unset($data['remove_image']);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Processes user input for creating/updating a forum decor.
+     *
+     * @param array           $data
+     * @param ForumDecor|null $decor
+     *
+     * @return array
+     */
+    private function populateDecorData($data, $decor = null) {
+        if (isset($data['description']) && $data['description']) {
+            $data['parsed_description'] = parse($data['description']);
+        } else {
+            $data['description'] = null;
+            $data['parsed_description'] = null;
+        }
+
+        if (!isset($data['staff_only'])) {
+            $data['staff_only'] = 0;
+        }
+        if (!isset($data['is_default'])) {
+            $data['is_default'] = 0;
+        }
+        if (!isset($data['is_visible'])) {
+            $data['is_visible'] = 1;
+        }
+
+        // Handle image removal
+        if (isset($data['remove_image']) && $data['remove_image']) {
+            if ($decor && $decor->has_image) {
+                $data['has_image'] = 0;
+                $this->deleteImage($decor->imagePath, $decor->imageFileName);
+            }
+            unset($data['remove_image']);
+        }
+
+        return $data;
     }
 }
