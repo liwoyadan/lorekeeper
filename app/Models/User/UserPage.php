@@ -31,7 +31,7 @@ class UserPage extends Model {
      * @var string
      */
     public $timestamps = true;
-    
+
     /**
      * Validation rules for creation.
      *
@@ -39,7 +39,7 @@ class UserPage extends Model {
      */
     public static $createRules = [
         'title' => 'required|between:2,100',
-        'key' => 'required|between:2,100',
+        'key'   => 'required|between:2,100',
         'text'  => 'nullable',
     ];
 
@@ -50,7 +50,7 @@ class UserPage extends Model {
      */
     public static $updateRules = [
         'title' => 'required|between:2,100',
-        'key' => 'required|between:2,100',
+        'key'   => 'required|between:2,100',
         'text'  => 'nullable',
     ];
 
@@ -66,7 +66,7 @@ class UserPage extends Model {
     public function user() {
         return $this->belongsTo(User::class, 'user_id');
     }
-        
+
     /**********************************************************************************************
 
         ACCESSORS
@@ -86,7 +86,7 @@ class UserPage extends Model {
     public function getUrlAttribute() {
         return url('user/'.$this->user->name.'/page/'.$this->key);
     }
-    
+
     /**
      * Gets the edit URL.
      *

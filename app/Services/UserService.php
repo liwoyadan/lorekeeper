@@ -650,6 +650,7 @@ class UserService extends Service {
      *
      * @param array                 $data
      * @param \App\Models\User\User $user
+     * @param mixed                 $isStaff
      *
      * @return \App\Models\UserPage|bool
      */
@@ -663,14 +664,14 @@ class UserService extends Service {
             } elseif ($isStaff && $user->pages->count() >= config('lorekeeper.user_pages.staff_page_limit')) {
                 throw new \Exception('You have already created the maximum amount of user pages.');
             }
-            if (trim($data['key']) == '' || str_replace(' ', '-', trim($data['key']))  == '') {
+            if (trim($data['key']) == '' || str_replace(' ', '-', trim($data['key'])) == '') {
                 throw new \Exception('Key cannot be an empty string.');
             }
             $data['key'] = str_replace(' ', '-', trim($data['key']));
             if (UserPage::where([['key', '=', $data['key']], ['user_id', '=', $user->id]])->exists()) {
                 throw new \Exception('You are already using this key for a user page.');
             }
-            
+
             if (isset($data['text']) && $data['text']) {
                 $data['parsed_text'] = parse($data['text']);
             } else {
@@ -714,14 +715,14 @@ class UserService extends Service {
         DB::beginTransaction();
 
         try {
-            if (trim($data['key']) == '' || str_replace(' ', '-', trim($data['key']))  == '') {
+            if (trim($data['key']) == '' || str_replace(' ', '-', trim($data['key'])) == '') {
                 throw new \Exception('Key cannot be an empty string.');
             }
             $data['key'] = str_replace(' ', '-', trim($data['key']));
             if (UserPage::where([['key', '=', $data['key']], ['id', '!=', $page->id], ['user_id', '=', $user->id]])->exists()) {
                 throw new \Exception('You are already using this key for a user page.');
             }
-            
+
             if (isset($data['text']) && $data['text']) {
                 $data['parsed_text'] = parse($data['text']);
             } else {
@@ -756,6 +757,8 @@ class UserService extends Service {
      * Deletes a user page.
      *
      * @param mixed $page
+     * @param mixed $user
+     * @param mixed $isStaff
      *
      * @return bool
      */
@@ -775,7 +778,7 @@ class UserService extends Service {
             } else {
                 $page->forceDelete();
             }
-            
+
             return $this->commitReturn(true);
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());

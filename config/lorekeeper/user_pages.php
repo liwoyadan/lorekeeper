@@ -22,14 +22,14 @@ return [
     // users must *voluntarily* toggle comments on for their page(s)
     'allow_comments' => [
         'enabled'     => 1,
-        'can_delete' => 1, // Can users delete comments off their own user pages?
+        'can_delete'  => 1, // Can users delete comments off their own user pages?
     ],
 
     // Ability to delete entire page; note these use softDeletes by
     // default in case of accidents, but you can toggle forceDelete here
     'allow_deletion' => [
-        'enabled'     => 1,
+        'enabled'      => 1,
         'force_delete' => 0, // Use forceDelete? This fully deletes the page from the DB
     ],
-    
+
 ];
