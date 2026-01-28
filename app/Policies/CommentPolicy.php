@@ -35,10 +35,10 @@ class CommentPolicy {
      */
     public function update($user, Comment $comment): bool {
         $canEdit = config('lorekeeper.extensions.forum_author_edit');
-        if ($comment->topComment->is_locked || $comment->commentable_type == 'App\Models\Forum' && $comment->commentable->canUsersPost()) {
+        if ($comment->topComment->is_locked || $comment->commentable_type == 'App\Models\Forum\Forum' && $comment->commentable->canUsersPost()) {
             if ($user->isStaff) {
                 return $user->getKey() == $comment->commenter_id;
-            } elseif ($comment->commentable_type == 'App\Models\Forum' && $canEdit) {
+            } elseif ($comment->commentable_type == 'App\Models\Forum\Forum' && $canEdit) {
                 return $user->getKey() == $comment->commenter_id;
             } else {
                 return false;
@@ -54,7 +54,7 @@ class CommentPolicy {
      * @param mixed $user
      */
     public function reply($user, Comment $comment): bool {
-        if ($comment->topComment->is_locked || $comment->commentable_type == 'App\Models\Forum' && !$comment->commentable->canUsersPost()) {
+        if ($comment->topComment->is_locked || $comment->commentable_type == 'App\Models\Forum\Forum' && !$comment->commentable->canUsersPost()) {
             if ($user->isStaff) {
                 return $user->getKey() == $user->getKey();
             } else {

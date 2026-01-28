@@ -24,4 +24,16 @@ return [
         'text_color'       => '#ffffff',
         'background_color' => '#1fd1a7',
     ],
+
+    'forum_flair' => [
+        'name'             => 'Forum Flair',
+        'text_color'       => '#ffffff',
+        'background_color' => '#802e47',
+    ],
+    
+    'forum_decor' => [
+        'name'             => 'Forum Decor',
+        'text_color'       => '#ffffff',
+        'background_color' => '#484e80',
+    ],
 ];

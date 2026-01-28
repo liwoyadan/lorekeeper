@@ -72,7 +72,7 @@ function calculateGroupCurrency($data) {
  */
 function getAssetKeys($isCharacter = false) {
     if (!$isCharacter) {
-        return ['items', 'currencies', 'raffle_tickets', 'loot_tables', 'user_items', 'characters'];
+        return ['items', 'currencies', 'raffle_tickets', 'loot_tables', 'user_items', 'characters', 'forum_flairs', 'forum_decors'];
     } else {
         return ['currencies', 'items', 'character_items', 'loot_tables'];
     }
@@ -142,6 +142,22 @@ function getAssetModelString($type, $namespaced = true) {
                 return '\App\Models\Character\CharacterItem';
             } else {
                 return 'CharacterItem';
+            }
+            break;
+
+        case 'forum_flairs':
+            if ($namespaced) {
+                return '\App\Models\Forum\ForumFlair';
+            } else {
+                return 'ForumFlair';
+            }
+            break;
+
+        case 'forum_decors':
+            if ($namespaced) {
+                return '\App\Models\Forum\ForumDecor';
+            } else {
+                return 'ForumDecor';
             }
             break;
     }
@@ -327,6 +343,28 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data) {
             $service = new App\Services\CharacterManager;
             foreach ($contents as $asset) {
                 if (!$service->moveCharacter($asset['asset'], $recipient, $data, $asset['quantity'], $logType)) {
+                    return false;
+                }
+            }
+        } elseif ($key == 'forum_flairs' && count($contents)) {
+            $service = new App\Services\ForumService;
+            foreach ($contents as $asset) {
+                if (!$service->creditFlair($sender, $recipient, null, $logType, $data, $asset['asset'])) {
+                    foreach ($service->errors()->getMessages()['error'] as $error) {
+                        flash($error)->error();
+                    }
+
+                    return false;
+                }
+            }
+        } elseif ($key == 'forum_decors' && count($contents)) {
+            $service = new App\Services\ForumService;
+            foreach ($contents as $asset) {
+                if (!$service->creditDecor($sender, $recipient, null, $logType, $data, $asset['asset'])) {
+                    foreach ($service->errors()->getMessages()['error'] as $error) {
+                        flash($error)->error();
+                    }
+
                     return false;
                 }
             }

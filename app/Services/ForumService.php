@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Forum;
+use App\Models\Forum\Forum;
 use Illuminate\Support\Facades\DB;
 
 class ForumService extends Service {

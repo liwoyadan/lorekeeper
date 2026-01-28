@@ -1,5 +1,5 @@
 @php
-    $forums = \App\Models\Forum::all();
+    $forums = \App\Models\Forum\Forum::all();
     $public = [];
     $posts = collect();
 
@@ -10,7 +10,7 @@
             }
         }
         $posts = \App\Models\Comment::with('parent')
-            ->where('commentable_type', 'App\Models\Forum')
+            ->where('commentable_type', 'App\Models\Forum\Forum')
             ->orderBy('created_at', 'DESC')
             ->get()
             ->whereIn('commentable_id', $public)

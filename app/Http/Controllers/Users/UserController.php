@@ -8,7 +8,7 @@ use App\Models\Character\CharacterImage;
 use App\Models\Character\Sublist;
 use App\Models\Comment\Comment;
 use App\Models\Currency\Currency;
-use App\Models\Forum;
+use App\Models\Forum\Forum;
 use App\Models\Gallery\Gallery;
 use App\Models\Gallery\GalleryCharacter;
 use App\Models\Gallery\GallerySubmission;
@@ -372,7 +372,7 @@ class UserController extends Controller {
                 $public[] = $forum->id;
             }
         }
-        $posts = Comment::with('parent')->where('commentable_type', 'App\Models\Forum')->where('commenter_id', $user->id)->orderBy('created_at', 'DESC')->get()->whereIn('commentable_id', $public);
+        $posts = Comment::with('parent')->where('commentable_type', 'App\Models\Forum\Forum')->where('commenter_id', $user->id)->orderBy('created_at', 'DESC')->get()->whereIn('commentable_id', $public);
 
         return view('user.forum_posts', [
             'user'     => $this->user,

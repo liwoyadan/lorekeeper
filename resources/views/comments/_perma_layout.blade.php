@@ -13,7 +13,7 @@
         Comments on
         @if ($comment->commentable_type == 'App\Models\User\UserProfile')
             {!! $comment->commentable->user->displayName !!}
-        @elseif($comment->commentable_type == 'App\Models\Forum')
+        @elseif($comment->commentable_type == 'App\Models\Forum\Forum')
             {!! $comment->topComment->displayName !!} in {!! $comment->commentable->displayName !!}
         @else
             {!! $comment->commentable->displayName !!}

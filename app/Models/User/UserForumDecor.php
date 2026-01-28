@@ -2,19 +2,17 @@
 
 namespace App\Models\User;
 
+use App\Models\Forum\ForumDecor;
 use App\Models\Model;
-use App\Traits\Commentable;
 
-class UserProfile extends Model {
-    use Commentable;
-
+class UserForumDecor extends Model {
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'text', 'parsed_text', 'forum_signature', 'parsed_forum_signature', 'forum_flair_id', 'forum_decor_id', 'forum_decor_hash', 'forum_decor_extension',
+        'user_id', 'forum_decor_id',
     ];
 
     /**
@@ -22,14 +20,7 @@ class UserProfile extends Model {
      *
      * @var string
      */
-    protected $table = 'user_profiles';
-
-    /**
-     * The primary key of the model.
-     *
-     * @var string
-     */
-    public $primaryKey = 'user_id';
+    protected $table = 'user_forum_decors';
 
     /**********************************************************************************************
 
@@ -38,9 +29,16 @@ class UserProfile extends Model {
     **********************************************************************************************/
 
     /**
-     * Get the user this profile belongs to.
+     * Get the user who owns the currency.
      */
     public function user() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Get the forum flair associated with this record.
+     */
+    public function flair() {
+        return $this->belongsTo(ForumDecor::class, 'forum_decor_id');
     }
 }

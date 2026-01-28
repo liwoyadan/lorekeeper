@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment\Comment;
-use App\Models\Forum;
+use App\Models\Forum\Forum;
 use Auth;
 use Illuminate\Support\Facades\Gate;
 use Log;
@@ -78,7 +78,7 @@ class ForumController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getThread($board_id, $id) {
-        $thread = Comment::where('id', $id)->where('commentable_type', 'App\Models\Forum')->first();
+        $thread = Comment::where('id', $id)->where('commentable_type', 'App\Models\Forum\Forum')->first();
         if (!$thread) {
             abort(404);
         }

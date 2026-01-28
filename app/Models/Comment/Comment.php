@@ -124,7 +124,7 @@ class Comment extends Model {
      * If this is the start of a forum topic, uses the Title attribute and leads to a forum.
      */
     public function getDisplayNameAttribute() {
-        if ($this->commentable_type == 'App\Models\Forum') {
+        if ($this->commentable_type == 'App\Models\Forum\Forum') {
             if (isset($this->title)) {
                 return '<a href="'.$this->threadUrl.'">'.$this->title.'</a>';
             } else {

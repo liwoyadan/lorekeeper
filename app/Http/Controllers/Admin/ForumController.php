@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Forum;
+use App\Models\Forum\Forum;
 use App\Models\Rank\Rank;
 use App\Services\ForumService;
 use Auth;

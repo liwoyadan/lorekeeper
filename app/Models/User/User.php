@@ -9,7 +9,7 @@ use App\Models\Comment\Comment;
 use App\Models\Comment\CommentLike;
 use App\Models\Currency\Currency;
 use App\Models\Currency\CurrencyLog;
-use App\Models\Forum;
+use App\Models\Forum\Forum;
 use App\Models\Gallery\GalleryCollaborator;
 use App\Models\Gallery\GalleryFavorite;
 use App\Models\Gallery\GallerySubmission;
@@ -205,6 +205,20 @@ class User extends Authenticatable implements MustVerifyEmail {
      */
     public function commentLikes() {
         return $this->hasMany(CommentLike::class);
+    }
+    
+    /**
+     * Gets all of a user's obtained forum flairs.
+     */
+    public function forumFlairs() {
+        return $this->hasMany(UserForumFlair::class, 'user_id');
+    }
+    
+    /**
+     * Gets all of a user's obtained forum decors.
+     */
+    public function forumDecors() {
+        return $this->hasMany(UserForumDecor::class, 'user_id');
     }
 
     /**********************************************************************************************
@@ -427,7 +441,7 @@ class User extends Authenticatable implements MustVerifyEmail {
      * @return string
      */
     public function getForumCountAttribute() {
-        return Comment::where('commentable_type', 'App\Models\Forum')->where('commenter_id', $this->id)->count();
+        return Comment::where('commentable_type', 'App\Models\Forum\Forum')->where('commenter_id', $this->id)->count();
     }
 
     /**

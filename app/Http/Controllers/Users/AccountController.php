@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
+use App\Models\Forum\ForumDecor;
+use App\Models\Forum\ForumFlair;
 use App\Models\Notification;
 use App\Models\User\User;
 use App\Models\User\UserAlias;
@@ -62,7 +64,20 @@ class AccountController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getSettings() {
-        return view('account.settings');
+        $user = Auth::user();
+
+        $staffFlairs = ForumFlair::isStaff($user)->sortAlphabetical()->pluck('name', 'id')->toArray();
+        $defaultFlairs = ForumFlair::visible($user)->default()->sortAlphabetical()->pluck('name', 'id')->toArray();
+        $obtainedFlairs = ForumFlair::visible($user)->default(0)->whereIn('id', $user->forumFlairs()->pluck('forum_flair_id')->toArray())->sortAlphabetical()->pluck('name', 'id')->toArray();
+
+        $staffDecors = ForumDecor::isStaff($user)->sortAlphabetical()->get()->pluck('fullName', 'id')->toArray();
+        $defaultDecors = ForumDecor::visible($user)->default()->sortAlphabetical()->get()->pluck('fullName', 'id')->toArray();
+        $obtainedDecors = ForumDecor::visible($user)->default(0)->whereIn('id', $user->forumDecors()->pluck('forum_decor_id')->toArray())->sortAlphabetical()->get()->pluck('fullName', 'id')->toArray();
+
+        return view('account.settings', [
+            'flairOptions' => ($user->isStaff ? ['Staff Flairs' => $staffFlairs] : []) + ['Default Flairs' => $defaultFlairs, 'Obtained Flairs' => $obtainedFlairs],
+            'decorOptions' => ($user->isStaff ? ['Staff Decors' => $staffDecors] : []) + ['Default Decors' => $defaultDecors, 'Obtained Decors' => $obtainedDecors],
+        ]);
     }
 
     /**

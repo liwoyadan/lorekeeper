@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Forum;
 
 use App\Models\Comment\Comment;
 use App\Models\Rank\Rank;
@@ -239,7 +239,7 @@ class Forum extends Model {
      * @return string
      */
     public function getCommentsAttribute() {
-        return Comment::where('commentable_type', 'App\Models\Forum')->where('commentable_id', $this->id)->get();
+        return Comment::where('commentable_type', 'App\Models\Forum\Forum')->where('commentable_id', $this->id)->get();
     }
 
     /**********************************************************************************************

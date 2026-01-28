@@ -148,7 +148,7 @@ class CommentController extends Controller {
                 $post = (($type != 'User-User') ? 'your gallery submission\'s staff comments' : 'your gallery submission');
                 $link = (($type != 'User-User') ? $submission->queueUrl.'/#comment-'.$comment->getKey() : $submission->url.'/#comment-'.$comment->getKey());
                 break;
-            case 'App\Models\Forum':
+            case 'App\Models\Forum\Forum':
                 flash('Thread created successfully.')->success();
 
                 return redirect('forum/'.$comment->commentable_id.'/~'.$comment->id);
@@ -207,7 +207,7 @@ class CommentController extends Controller {
         Gate::authorize('delete-comment', $comment);
 
         $forum = null;
-        if ($comment->commentable_type == 'App\Models\Forum' && $comment->children) {
+        if ($comment->commentable_type == 'App\Models\Forum\Forum' && $comment->children) {
             if (isset($comment->child_id)) {
                 foreach ($comment->children as $child) {
                     $child->child_id = $comment->child_id;
@@ -220,7 +220,7 @@ class CommentController extends Controller {
             }
         } // You may want to remove the inner if statement and move the isset into the container if statement if you don't want comments deleted when their threads are deleted.
 
-        if ($comment->commentable_type == 'App\Models\Forum') {
+        if ($comment->commentable_type == 'App\Models\Forum\Forum') {
             if ($comment->parent) {
                 $forum = $comment->parent->threadUrl;
                 flash('Reply deleted successfully.')->success();
@@ -267,7 +267,7 @@ class CommentController extends Controller {
         $sender = User::find($reply->commenter_id);
         $recipient = User::find($comment->commenter_id);
 
-        if ($reply->commentable_type == 'App\Models\Forum' && $recipient != $sender) {
+        if ($reply->commentable_type == 'App\Models\Forum\Forum' && $recipient != $sender) {
             Notifications::create('THREAD_REPLY', $recipient, [
                 'sender_url'   => $sender->url,
                 'sender'       => $sender->name,
