@@ -351,7 +351,7 @@ class UserController extends Controller {
             'favorites'  => $this->user->characters->count() ? GallerySubmission::whereIn('id', $userFavorites)->whereIn('id', GalleryCharacter::whereIn('character_id', $userCharacters)->pluck('gallery_submission_id')->toArray())->visible(Auth::check() ? Auth::user() : null)->orderBy('created_at', 'DESC')->paginate(20)->appends($request->query()) : null,
         ]);
     }
-    
+
     /**
      * Shows a user's created user page.
      *
@@ -368,6 +368,7 @@ class UserController extends Controller {
         }
         if (!Auth::check() && $userPage->logged_in_only) {
             flash('You must be logged in to view this user page!')->error();
+
             return redirect('/login');
         }
         if (!$userPage->is_visible) {
@@ -378,7 +379,7 @@ class UserController extends Controller {
 
         return view('user.page', [
             'user'       => $this->user,
-            'userPage' => $userPage,
+            'userPage'   => $userPage,
         ]);
     }
 }

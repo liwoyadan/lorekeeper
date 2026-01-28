@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Comment\Comment;
 use App\Models\Gallery\GallerySubmission;
 use App\Models\Report\Report;
-use App\Models\User\UserPage;
 use Illuminate\Support\Facades\Auth;
 
 class PermalinkController extends Controller {
@@ -18,7 +17,7 @@ class PermalinkController extends Controller {
      */
     public function getComment($id) {
         $comments = Comment::withTrashed();
-        //$comments = $comments->sortByDesc('created_at');
+        // $comments = $comments->sortByDesc('created_at');
         $comment = $comments->find($id);
 
         if (!$comment) {

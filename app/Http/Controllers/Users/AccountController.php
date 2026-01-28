@@ -299,6 +299,8 @@ class AccountController extends Controller {
     /**
      * Shows the edit user page page.
      *
+     * @param mixed $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditUserPage($id) {
@@ -316,7 +318,7 @@ class AccountController extends Controller {
      * Creates or edits a user page.
      *
      * @param App\Services\UserService $service
-     * @param int                         $id
+     * @param int                      $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -361,7 +363,7 @@ class AccountController extends Controller {
      * Deletes a user page.
      *
      * @param App\Services\UserService $service
-     * @param int                         $id
+     * @param int                      $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
