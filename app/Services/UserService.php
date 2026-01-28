@@ -648,9 +648,9 @@ class UserService extends Service {
     /**
      * Creates a user page.
      *
-     * @param array $data
-     * @param User  $user
-     * @param mixed $isStaff
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     * @param mixed                 $isStaff
      *
      * @return \App\Models\UserPage|bool
      */
