@@ -13,7 +13,7 @@
             <a href="#" class="btn btn-danger float-right delete-user-page-button">Delete Page</a>
         @endif
         @if ($userPage->id)
-            <a href="{{ $userPage->url }}" class="btn btn-info float-right mr-md-2">View Page</a>
+            <a href="{{ $userPage->url }}" class="btn btn-primary float-right mr-md-2">View Page</a>
         @endif
     </h1>
 
@@ -31,7 +31,7 @@
 
         <div class="col-md-6">
             <div class="form-group">
-                {!! Form::label('Key') !!} {!! add_help('This is a unique name used to form the URL of the page. Only alphanumeric characters, dash and underscore (no spaces) can be used. <b>If no key is set, a random string of 5 characters will be generated.</b>') !!}
+                {!! Form::label('Key') !!} {!! add_help('This is a unique name used to form the URL of the page (i.e. site.com/user/username/page/<b>KEY</b>). Alphanumeric characters, dash, and underscore (no spaces) can be used.') !!}
                 {!! Form::text('key', $userPage->key, ['class' => 'form-control']) !!}
             </div>
         </div>
@@ -54,6 +54,13 @@
             <div class="form-group">
                 {!! Form::checkbox('show_on_profile', 1, $userPage->id ? $userPage->show_on_profile : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
                 {!! Form::label('show_on_profile', 'Show on Profile?', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, a link to this page will display at the bottom of the User section on your profile\'s sidebar.') !!}
+            </div>
+        </div>
+
+        <div class="col-md">
+            <div class="form-group">
+                {!! Form::checkbox('logged_in_only', 1, $userPage->id ? $userPage->logged_in_only : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                {!! Form::label('logged_in_only', 'Logged In Only?', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, this page will only be accessible to users who are logged in.') !!}
             </div>
         </div>
 

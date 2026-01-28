@@ -15,7 +15,7 @@ class UserPage extends Model {
      * @var array
      */
     protected $fillable = [
-        'user_id', 'title', 'key', 'text', 'parsed_text', 'is_visible', 'show_on_profile', 'can_comment',
+        'user_id', 'title', 'key', 'text', 'parsed_text', 'is_visible', 'show_on_profile', 'can_comment', 'logged_in_only',
     ];
 
     /**
@@ -74,9 +74,25 @@ class UserPage extends Model {
     **********************************************************************************************/
 
     /**
+     * Display this page's title as a link.
+     */
+    public function getDisplayNameAttribute() {
+        return '<a href="'.$this->url.'">'.$this->title.'</a>';
+    }
+
+    /**
      * Get the URL of this page.
      */
     public function getUrlAttribute() {
         return url('user/'.$this->user->name.'/page/'.$this->key);
+    }
+    
+    /**
+     * Gets the edit URL.
+     *
+     * @return string
+     */
+    public function getEditUrlAttribute() {
+        return url('account/user-pages/edit/'.$this->id);
     }
 }

@@ -322,11 +322,11 @@ class AccountController extends Controller {
      */
     public function postCreateEditUserPage(Request $request, UserService $service, $id = null) {
         $id ? $request->validate(UserPage::$updateRules) : $request->validate(UserPage::$createRules);
-        $data = $request->only(['title', 'key', 'text', 'is_visible', 'show_on_profile', 'can_comment']);
+        $data = $request->only(['title', 'key', 'text', 'is_visible', 'show_on_profile', 'can_comment', 'logged_in_only']);
 
         if ($id && $service->updateUserPage(UserPage::find($id), $data, Auth::user())) {
             flash('User page updated successfully.')->success();
-        } elseif (!$id && $userPage = $service->createUserPage($data, Auth::user())) {
+        } elseif (!$id && $userPage = $service->createUserPage($data, Auth::user(), Auth::user()->isStaff)) {
             flash('User page created successfully.')->success();
 
             return redirect()->to('account/user-pages/edit/'.$userPage->id);
@@ -352,7 +352,7 @@ class AccountController extends Controller {
             abort(404);
         }
 
-        return view('account._delete_uesr_page', [
+        return view('account._delete_user_page', [
             'userPage' => $userPage,
         ]);
     }
@@ -366,7 +366,12 @@ class AccountController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeleteUserPage(Request $request, UserService $service, $id) {
-        if ($id && $service->deleteUserPage(UserPage::find($id), Auth::user())) {
+        $userPage = UserPage::find($id);
+        if (!$userPage) {
+            abort(404);
+        }
+
+        if ($id && $service->deleteUserPage($userPage, Auth::user(), Auth::user()->isStaff)) {
             flash('User page deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {

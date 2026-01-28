@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment\Comment;
 use App\Models\Gallery\GallerySubmission;
 use App\Models\Report\Report;
+use App\Models\User\UserPage;
 use Illuminate\Support\Facades\Auth;
 
 class PermalinkController extends Controller {
@@ -82,6 +83,8 @@ class PermalinkController extends Controller {
 
         if ($comment->commentable_type == 'App\Models\User\UserProfile') {
             $comment->location = $comment->commentable->user->url;
+        } elseif ($comment->commentable_type == 'App\Models\User\UserPage') {
+            $comment->location = $comment->commentable->url;
         } else {
             $comment->location = $comment->commentable->url;
         }
