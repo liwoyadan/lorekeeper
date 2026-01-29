@@ -2,6 +2,7 @@
 
 namespace App\Models\Forum;
 
+use App\Models\Model;
 use Illuminate\Support\Facades\Auth;
 
 class ForumDecor extends Model {
@@ -37,6 +38,28 @@ class ForumDecor extends Model {
      */
     protected $casts = [
         'data' => 'array',
+    ];
+
+    /**
+     * Validation rules for creation.
+     *
+     * @var array
+     */
+    public static $createRules = [
+        'name'              => 'required|unique:forum_decors|between:2,100',
+        'description'       => 'nullable',
+        'image'             => 'nullable|mimes:png,gif,webp|max:2048',
+    ];
+
+    /**
+     * Validation rules for updating.
+     *
+     * @var array
+     */
+    public static $updateRules = [
+        'name'              => 'required|between:2,100',
+        'description'       => 'nullable',
+        'image'             => 'mimes:png,gif,webp|max:2048',
     ];
 
     /**********************************************************************************************

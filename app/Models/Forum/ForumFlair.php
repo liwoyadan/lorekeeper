@@ -6,6 +6,7 @@ use App\Models\Comment\Comment;
 use App\Models\Rank\Rank;
 use App\Traits\Commentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Model;
 use Illuminate\Support\Facades\Auth;
 
 class ForumFlair extends Model {
@@ -16,8 +17,8 @@ class ForumFlair extends Model {
      * @var array
      */
     protected $fillable = [
-        'name', 'post_requirement', 'description', 'parsed_description', 'color', 'data',
-        'has_image', 'extension', 'hash', 'staff_only', 'is_default', 'is_visible',
+        'name', 'post_requirement', 'description', 'parsed_description', 'color', 'bg_color',
+        'data', 'has_image', 'extension', 'hash', 'staff_only', 'is_default', 'is_visible',
     ];
 
     /**
@@ -41,6 +42,28 @@ class ForumFlair extends Model {
      */
     protected $casts = [
         'data' => 'array',
+    ];
+
+    /**
+     * Validation rules for creation.
+     *
+     * @var array
+     */
+    public static $createRules = [
+        'name'              => 'required|unique:forum_flairs|between:2,100',
+        'description'       => 'nullable',
+        'image'             => 'nullable|mimes:png,gif,webp|max:2048',
+    ];
+
+    /**
+     * Validation rules for updating.
+     *
+     * @var array
+     */
+    public static $updateRules = [
+        'name'              => 'required|between:2,100',
+        'description'       => 'nullable',
+        'image'             => 'mimes:png,gif,webp|max:2048',
     ];
 
     /**********************************************************************************************
@@ -115,6 +138,21 @@ class ForumFlair extends Model {
     **********************************************************************************************/
 
     /**
+     * Displays the flair itself.
+     *
+     * @return string
+     */
+    public function getDisplayFlairAttribute() {
+        $html = '<a href="'.$this->url.'" class="display-flair"';
+        if ($this->inlineStyles && ($this->inlineStyles != '')) {
+            $html .= ' style="'.$this->inlineStyles.'"';
+        }
+        $html .= '>'.$this->name.'</a>';
+
+        return $html;
+    }
+
+    /**
      * Gets the file directory containing the model's image.
      *
      * @return string
@@ -161,6 +199,50 @@ class ForumFlair extends Model {
      */
     public function getAssetTypeAttribute() {
         return 'forum_flairs';
+    }
+
+    /**
+     * Gets the formatted inline color and bg color CSS.
+     *
+     * @return string|null
+     */
+    public function getInlineStylesAttribute() {
+        $css = '';
+
+        if ($this->bg_color) {
+            $css .= 'background-color: '.$this->bg_color.'!important; ';
+        }
+        if ($this->color) {
+            $css .= 'color: '.$this->color.'!important; ';
+        }
+        if ($this->textShadowInline) {
+            $css .= 'text-shadow: '.$this->textShadowInline.';';
+        }
+
+        return $css;
+    }
+
+    /**
+     * Gets the formatted CSS inline text-shadow values from the data array.
+     *
+     * @return string|null
+     */
+    public function getTextShadowInlineAttribute() {
+        if (!isset($this->data['text_shadow']) || !is_array($this->data['text_shadow']) || empty($this->data['text_shadow'])) {
+            return null;
+        }
+
+        $shadows = [];
+        foreach ($this->data['text_shadow'] as $shadow) {
+            $offsetX = $shadow['offset_x'] ?? '0px';
+            $offsetY = $shadow['offset_y'] ?? '0px';
+            $blurRadius = $shadow['blur_radius'] ?? '0px';
+            $color = $shadow['color'] ?? 'transparent';
+
+            $shadows[] = trim("{$offsetX} {$offsetY} {$blurRadius} {$color}");
+        }
+
+        return !empty($shadows) ? implode(', ', $shadows) : null;
     }
 
     /**********************************************************************************************

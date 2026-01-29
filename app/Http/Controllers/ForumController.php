@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment\Comment;
 use App\Models\Forum\Forum;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class ForumController extends Controller {
     /**
@@ -15,24 +15,24 @@ class ForumController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getIndex() {
-        $forums = Forum::with('children')->has('children')->visible()->category()->orderBy('sort', 'DESC')->staff()->get();
-        $customforums = collect();
-
-        Log::info($forums);
+        $forums = Forum::visible()->category()->hasChildren()->staff(Auth::user() ?? null)->with('children')->orderBy('sort', 'DESC')->get();
+        $customForums = collect();
+        $recentPosts = Comment::where('commentable_type', 'App\Models\Forum\Forum')->whereNotNull('title')->orderBy('updated_at', 'DESC')->take(5)->get();
 
         foreach ($forums as $key => $forum) {
             foreach ($forum->children as $child) {
                 if ($forum->hasRestrictions && !Auth::check()) {
                     break;
                 } elseif (!$child->hasRestrictions || Auth::check() && Auth::user()->canVisitForum($forum->id)) {
-                    $customforums->push($forum);
+                    $customForums->push($forum);
                     break;
                 }
             }
         }
 
         return view('forums.index', [
-            'forums' => $customforums,
+            'forums' => $customForums,
+            'recentPosts' => $recentPosts,
         ]);
     }
 
@@ -44,23 +44,20 @@ class ForumController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getForum($id) {
-        $board = Forum::where('id', $id)->visible()->first();
+        $board = Forum::where('id', $id)->visible(Auth::user() ?? null)->first();
         if (!$board) {
             abort(404);
         }
 
         if ($board->hasRestrictions && (!Auth::check() || Auth::check() && !Auth::user()->canVisitForum($id))) {
             flash('You do not have permission to access this forum.')->error();
-
-            return redirect(url('/'));
+            return redirect(url('/forum'));
         } elseif ($board->parent ? (($board->parent->hasRestrictions && !Auth::check()) || Auth::check() && !Auth::user()->canVisitForum($board->parent->id)) : false) {
             flash('You do not have permission to access this forum.')->error();
-
-            return redirect(url('/'));
+            return redirect(url('/forum'));
         } elseif ($board->parent && $board->parent->parent ? (($board->parent->parent->hasRestrictions && !Auth::check()) || Auth::check() && !Auth::user()->canVisitForum($board->parent->parent->id)) : false) {
             flash('You do not have permission to access this forum.')->error();
-
-            return redirect(url('/'));
+            return redirect(url('/forum'));
         }
 
         return view('forums.forum', [

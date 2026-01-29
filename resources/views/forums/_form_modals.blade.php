@@ -221,20 +221,20 @@
                                         <div class="row flex-wrap">
                                             <div class="col-4 col-md-3">
                                                 <div class="logs-table-cell">
-                                                    {!! format_date($edit->created_at) !!}
+                                                    {!! pretty_date($edit->created_at) !!}
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <div class="logs-table-cell">
-                                                    <span data-toggle="tooltip" title="{{ $edit->data['old_comment'] }}">
-                                                        {{ Str::limit($edit->data['old_comment'], 50) }}
+                                                    <span data-toggle="tooltip" title="{{ strip_tags($edit->data['old_comment']) }}">
+                                                        {!! strip_tags($edit->data['old_comment']) !!}
                                                     </span>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <div class="logs-table-cell">
-                                                    <span data-toggle="tooltip" title="{{ $edit->data['new_comment'] }}">
-                                                        {{ Str::limit($edit->data['new_comment'], 50) }}
+                                                    <span data-toggle="tooltip" title="{{ strip_tags($edit->data['new_comment']) }}">
+                                                        {{ Str::limit(strip_tags($edit->data['new_comment']), 50) }}
                                                     </span>
                                                 </div>
                                             </div>

@@ -6,6 +6,7 @@ use App\Models\Forum\Forum;
 use App\Models\Forum\ForumDecor;
 use App\Models\Forum\ForumFlair;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class ForumService extends Service {
@@ -17,6 +18,12 @@ class ForumService extends Service {
     | Handles the creation and editing of site forums.
     |
     */
+
+    /**********************************************************************************************
+
+        FORUMS
+
+    **********************************************************************************************/
 
     /**
      * Creates a site forum.
@@ -35,18 +42,31 @@ class ForumService extends Service {
             $image = null;
             if (isset($data['image']) && $data['image']) {
                 $data['has_image'] = 1;
+                $data['hash'] = randomString(10);
+                $data['extension'] = $data['image']->getClientOriginalExtension();
                 $image = $data['image'];
                 unset($data['image']);
             } else {
                 $data['has_image'] = 0;
             }
+            $icon = null;
+            if (isset($data['icon']) && $data['icon']) {
+                $data['has_icon'] = 1;
+                $data['icon_hash'] = randomString(10);
+                $data['icon_extension'] = $data['icon']->getClientOriginalExtension();
+                $icon = $data['icon'];
+                unset($data['icon']);
+            } else {
+                $data['has_icon'] = 0;
+            }
 
             $forum = Forum::create($data);
 
             if ($image) {
-                $forum->extension = $image->getClientOriginalExtension();
-                $forum->update();
-                $this->handleImage($image, $forum->imagePath, $forum->imageFileName, null);
+                $this->handleImage($image, $forum->imagePath, $forum->imageFileName);
+            }
+            if ($icon) {
+                $this->handleImage($icon, $forum->imagePath, $forum->iconFileName);
             }
 
             return $this->commitReturn($forum);
@@ -70,21 +90,33 @@ class ForumService extends Service {
         DB::beginTransaction();
 
         try {
+            $data = $this->populateData($data, $forum);
+
             $image = null;
             if (isset($data['image']) && $data['image']) {
                 $data['has_image'] = 1;
+                $data['hash'] = randomString(10);
+                $data['extension'] = $data['image']->getClientOriginalExtension();
                 $image = $data['image'];
                 unset($data['image']);
             }
 
-            $data = $this->populateData($data, $forum);
-
+            $icon = null;
+            if (isset($data['icon']) && $data['icon']) {
+                $data['has_icon'] = 1;
+                $data['icon_hash'] = randomString(10);
+                $data['icon_extension'] = $data['icon']->getClientOriginalExtension();
+                $icon = $data['icon'];
+                unset($data['icon']);
+            }
             $forum->update($data);
 
             if ($image) {
-                $forum->extension = $image->getClientOriginalExtension();
-                $forum->update();
-                $this->handleImage($image, $forum->imagePath, $forum->imageFileName, null);
+                $this->handleImage($image, $forum->imagePath, $forum->imageFileName);
+            }
+            if ($icon) {
+
+                $this->handleImage($icon, $forum->imagePath, $forum->iconFileName);
             }
 
             return $this->commitReturn($forum);
@@ -130,6 +162,12 @@ class ForumService extends Service {
         return $this->rollbackReturn(false);
     }
 
+    /**********************************************************************************************
+
+        FORUM FLAIRS
+
+    **********************************************************************************************/
+
     /**
      * Creates a forum flair.
      *
@@ -155,7 +193,14 @@ class ForumService extends Service {
                 $data['has_image'] = 0;
             }
 
-            $flair = ForumFlair::create($data);
+            $flair = ForumFlair::create(Arr::only($data, ['name', 'post_requirement', 'description', 'parsed_description', 'color', 'bg_color', 'has_image', 'extension', 'hash', 'staff_only', 'is_default', 'is_visible']));
+            
+            if (isset($data['text_shadow_color'])) {
+                $flairData = $flair->data;
+                $flairData['text_shadow'] = $this->populateTextShadows(Arr::only($data, ['text_shadow_x', 'text_shadow_y', 'text_shadow_blur', 'text_shadow_color']));
+                $flair->data = $flairData;
+                $flair->save();
+            }
 
             if ($image) {
                 $this->handleImage($image, $flair->imagePath, $flair->imageFileName);
@@ -193,7 +238,14 @@ class ForumService extends Service {
                 unset($data['image']);
             }
 
-            $flair->update($data);
+            $flair->update(Arr::only($data, ['name', 'post_requirement', 'description', 'parsed_description', 'color', 'bg_color', 'has_image', 'extension', 'hash', 'staff_only', 'is_default', 'is_visible']));
+            
+            if (isset($data['text_shadow_color'])) {
+                $flairData = $flair->data;
+                $flairData['text_shadow'] = $this->populateTextShadows(Arr::only($data, ['text_shadow_x', 'text_shadow_y', 'text_shadow_blur', 'text_shadow_color']));
+                $flair->data = $flairData;
+                $flair->save();
+            }
 
             if ($image) {
                 $this->handleImage($image, $flair->imagePath, $flair->imageFileName);
@@ -231,6 +283,12 @@ class ForumService extends Service {
 
         return $this->rollbackReturn(false);
     }
+
+    /**********************************************************************************************
+
+        FORUM DECORS
+
+    **********************************************************************************************/
 
     /**
      * Creates a forum decor.
@@ -334,6 +392,12 @@ class ForumService extends Service {
         return $this->rollbackReturn(false);
     }
 
+    /**********************************************************************************************
+
+        OTHER FUNCTIONS
+
+    **********************************************************************************************/
+
     /**
      * Processes user input for creating/updating a forum.
      *
@@ -350,6 +414,9 @@ class ForumService extends Service {
             $data['parsed_description'] = null;
         }
 
+        if (!isset($data['color'])) {
+            $data['color'] = null;
+        }
         if (!isset($data['is_active'])) {
             $data['is_active'] = 0;
         }
@@ -374,8 +441,18 @@ class ForumService extends Service {
                 $data['has_image'] = 0;
                 $this->deleteImage($forum->imagePath, $forum->imageFileName);
             }
+            $data['hash'] = null;
             $data['extension'] = null;
             unset($data['remove_image']);
+        }
+        if (isset($data['remove_icon']) && $data['remove_icon']) {
+            if ($forum && $forum->has_icon && $data['remove_icon']) {
+                $data['has_icon'] = 0;
+                $this->deleteImage($forum->imagePath, $forum->iconFileName);
+            }
+            $data['icon_hash'] = null;
+            $data['icon_extension'] = null;
+            unset($data['remove_icon']);
         }
 
         return $data;
@@ -435,6 +512,9 @@ class ForumService extends Service {
         if (!isset($data['color'])) {
             $data['color'] = null;
         }
+        if (!isset($data['bg_color'])) {
+            $data['bg_color'] = null;
+        }
 
         if (!isset($data['staff_only'])) {
             $data['staff_only'] = 0;
@@ -456,6 +536,52 @@ class ForumService extends Service {
         }
 
         return $data;
+    }
+
+    /**
+     * Processes user input for forum flair text shadows.
+     *
+     * @param array           $data
+     * @param ForumFlair|null $flair
+     *
+     * @return array
+     */
+    private function populateTextShadows($data) {
+        $units = ['px', 'em', 'rem', '%'];
+        $unitCheck = '/^[-+]?[0-9]*\.?[0-9]+(' . implode('|', $units) . ')$/i';
+
+        $shadowData = [];
+        $c = 0;
+        foreach ($data['text_shadow_color'] as $key => $shadow) {
+            if (!isset($data['text_shadow_x'][$key])) {
+                $shadowData[$c]['offset_x'] = '0px';
+            } elseif (!preg_match($unitCheck, $data['text_shadow_x'][$key])) {
+                $shadowData[$c]['offset_x'] = filter_var($data['text_shadow_x'][$key], FILTER_SANITIZE_NUMBER_INT).'px';
+            } else {
+                $shadowData[$c]['offset_x'] = $data['text_shadow_x'][$key];
+            }
+
+            if (!isset($data['text_shadow_y'][$key])) {
+                $shadowData[$c]['offset_y'] = '0px';
+            } elseif (!preg_match($unitCheck, $data['text_shadow_y'][$key])) {
+                $shadowData[$c]['offset_y'] = filter_var($data['text_shadow_y'][$key], FILTER_SANITIZE_NUMBER_INT).'px';
+            } else {
+                $shadowData[$c]['offset_y'] = $data['text_shadow_y'][$key];
+            }
+
+            if (!isset($data['text_shadow_blur'][$key])) {
+                $shadowData[$c]['blur_radius'] = '0px';
+            } elseif (!preg_match($unitCheck, $data['text_shadow_blur'][$key])) {
+                $shadowData[$c]['blur_radius'] = filter_var($data['text_shadow_blur'][$key], FILTER_SANITIZE_NUMBER_INT).'px';
+            } else {
+                $shadowData[$c]['blur_radius'] = $data['text_shadow_blur'][$key];
+            }
+
+            $shadowData[$c]['color'] = $data['text_shadow_color'][$key] ?? 'rgba(0, 0, 0,)';
+            $c++;
+        }
+
+        return $shadowData;
     }
 
     /**

@@ -67,4 +67,8 @@ return [
         'name'        => 'Comment on Sales',
         'description' => 'Allow rank to comment on sales in preview mode.',
     ],
+    'manage_forums' => [
+        'name'        => 'Manage Forums',
+        'description' => 'Allow rank to create/edit forums and moderate them.',
+    ],
 ];

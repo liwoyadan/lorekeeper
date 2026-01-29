@@ -34,7 +34,7 @@ class CommentPolicy {
      * @param mixed $user
      */
     public function update($user, Comment $comment): bool {
-        $canEdit = config('lorekeeper.extensions.forum_author_edit');
+        $canEdit = config('lorekeeper.forums.forum_author_edit');
         if ($comment->topComment->is_locked || $comment->commentable_type == 'App\Models\Forum\Forum' && $comment->commentable->canUsersPost()) {
             if ($user->isStaff) {
                 return $user->getKey() == $comment->commenter_id;

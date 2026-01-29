@@ -2,6 +2,7 @@
 
 namespace App\Models\Forum;
 
+use App\Models\Model;
 use App\Models\Comment\Comment;
 use App\Models\Rank\Rank;
 use App\Traits\Commentable;
@@ -9,8 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
 class Forum extends Model {
-    use Commentable;
-    use SoftDeletes;
+    use Commentable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -18,7 +18,8 @@ class Forum extends Model {
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'parsed_description', 'is_locked', 'staff_only', 'role_limit', 'parent_id', 'has_image', 'extension', 'sort', 'is_active',
+        'name', 'description', 'parsed_description', 'is_locked', 'staff_only', 'role_limit', 'parent_id', 'sort', 'is_active',
+        'has_image', 'hash', 'extension', 'has_icon', 'icon_hash', 'icon_extension', 'color',
     ];
 
     /**
@@ -34,6 +35,30 @@ class Forum extends Model {
      * @var string
      */
     public $timestamps = true;
+
+    /**
+     * Validation rules for creation.
+     *
+     * @var array
+     */
+    public static $createRules = [
+        'name'              => 'required|unique:forums|between:2,100',
+        'description'       => 'nullable',
+        'image'             => 'nullable|mimes:png,gif,webp|max:2048',
+        'icon'             => 'nullable|mimes:png,gif,webp|max:2048',
+    ];
+
+    /**
+     * Validation rules for updating.
+     *
+     * @var array
+     */
+    public static $updateRules = [
+        'name'              => 'required|between:2,100',
+        'description'       => 'nullable',
+        'image'             => 'mimes:png,gif,webp|max:2048',
+        'icon'             => 'nullable|mimes:png,gif,webp|max:2048',
+    ];
 
     /**********************************************************************************************
 
@@ -83,20 +108,12 @@ class Forum extends Model {
      * @param mixed $query
      * @param mixed $only
      */
-    public function scopeStaff($query, $only = false) {
-        if ($only) {
-            if (Auth::check() && Auth::user()->isStaff) {
-                return $query->where('staff_only', 1);
-            }
-
-            return $query->where('staff_only', 0);
-        } else {
-            if (Auth::check() && Auth::user()->isStaff) {
-                return $query;
-            }
-
-            return $query->where('staff_only', 0);
+    public function scopeStaff($query, $user = null) {
+        if ($user && $user->isStaff) {
+            return $query;
         }
+
+        return $query->where('staff_only', 0);
     }
 
     /**
@@ -115,11 +132,39 @@ class Forum extends Model {
      * @param mixed $query
      * @param mixed $state
      */
-    public function scopeVisible($query, $state = 1) {
-        if (!Auth::check() || !(Auth::check() && Auth::user()->isStaff)) {
-            return $query->where('is_active', $state)->where('staff_only', 0);
+    public function scopeVisible($query, $user = null) {
+        if ($user && $user->hasPower('manage_forums')) {
+            return $query;
         } else {
-            return $query->where('is_active', $state);
+            return $query->where('is_active', 1);
+        }
+    }
+
+    /**
+     * Scope forums that have children.
+     *
+     * @param mixed $query
+     * @param boolean $children
+     */
+    public function scopeHasChildren($query, $children = true) {
+        if ($children) {
+            return $query->has('children');
+        } else {
+            return $query;
+        }
+    }
+
+    /**
+     * Scope forums that have children.
+     *
+     * @param mixed $query
+     * @param boolean $children
+     */
+    public function scopeCanAccess($query, $user = null) {
+        if ($user && $user->hasPower('manage_forums')) {
+            return $query;
+        } else {
+            return $query->whereNull('role_limit')->orWhere('role_limit', $user->rank_id);
         }
     }
 
@@ -146,7 +191,14 @@ class Forum extends Model {
     public function getDisplayNameAttribute() {
         $icon = [];
         if ($this->is_locked) {
-            $icon[] = '<i class="fas fa-lock mr-1" data-toggle="tooltip" title="This forum is locked."></i>';
+            $lockIcon = '<i class="fas fa-lock mr-1" data-toggle="tooltip" title="This forum is locked.';
+            if (Auth::check() && Auth::user()->hasPower('manage_forums')) {
+                $lockIcon .= ' You may access it as a staff member able to manage forums."></i>';
+            } else {
+                $lockIcon .= '"></i>';
+            }
+
+            $icon[] = $lockIcon;
         }
         if ($this->staff_only) {
             $icon[] = '<i class="fas fa-crown mr-1" data-toggle="tooltip" title="Staff-only Forum."></i>';
@@ -157,11 +209,7 @@ class Forum extends Model {
         $icon = (isset($icon) ? implode('', $icon) : '');
 
         if ($this->is_locked) {
-            if (Auth::check() && Auth::user()->isStaff) {
-                return '<a href="'.$this->url.'" >'.$icon.$this->name.'</a>';
-            } else {
-                return '<span>'.$icon.$this->name.'</span>';
-            }
+            return '<a href="'.$this->url.'" class="display-forum text-muted">'.$icon.$this->name.'</a>';
         } else {
             return '<a href="'.$this->url.'" class="display-forum">'.$icon.$this->name.'</a>';
         }
@@ -208,7 +256,7 @@ class Forum extends Model {
      * @return string
      */
     public function getImageFileNameAttribute() {
-        return $this->id.'-image.'.$this->extension;
+        return $this->id.$this->hash.'-image.'.$this->extension;
     }
 
     /**
@@ -231,6 +279,42 @@ class Forum extends Model {
         }
 
         return asset($this->imageDirectory.'/'.$this->imageFileName);
+    }
+
+    /**
+     * Gets the file name of the model's icon.
+     *
+     * @return string
+     */
+    public function getIconFileNameAttribute() {
+        return $this->id.$this->icon_hash.'-icon.'.$this->icon_extension;
+    }
+
+    /**
+     * Gets the URL of the model's icon.
+     *
+     * @return string
+     */
+    public function getIconUrlAttribute() {
+        if (!$this->has_icon) {
+            return null;
+        }
+
+        return asset($this->imageDirectory.'/'.$this->iconFileName);
+    }
+
+    /**
+     * Display's the forum's icon.
+     *
+     * @return string
+     */
+    public function displayIcon($sizeLimit = null) {
+        if (!$this->iconUrl) {
+            return null;
+        }
+        $styleString = $sizeLimit ? ' style="max-width: '.$sizeLimit.'px;"' : '';
+
+        return '<img src="'.$this->iconUrl.'" alt="'.$this->name.'\'s Icon" class="forum-icon"'.$styleString.'>';
     }
 
     /**

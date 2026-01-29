@@ -20,4 +20,6 @@ return [
     // Allow users to upload their own custom forum post background
     'user_forum_bg_upload' => 0,
 
+    // Forum Posts Editable by Author - Wych
+    'forum_author_edit' => 1,
 ];

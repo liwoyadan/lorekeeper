@@ -18,14 +18,26 @@
     <h3>Basic Information</h3>
 
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-7">
             <div class="form-group">
                 {!! Form::label('Name') !!}
                 {!! Form::text('name', $forum->name, ['class' => 'form-control']) !!}
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md">
+            <div class="form-group">
+                {!! Form::label('Color (Hex code; optional)') !!}
+                <div class="input-group cp">
+                    {!! Form::text('color', $forum->color, ['class' => 'form-control']) !!}
+                    <span class="input-group-append">
+                        <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md">
             <div class="form-group">
                 {!! Form::label('Sort (Optional)') !!} {!! add_help('Forums are organized by their container (category or board) and then ordered by sort and then by id.') !!}
                 {!! Form::number('sort', $forum->sort, ['class' => 'form-control']) !!}
@@ -49,24 +61,50 @@
         </div>
     </div>
 
-    <div class="form-group">
-        @if ($forum->has_image)
-            <a href="{!! $forum->imageUrl !!}" data-lightbox="entry" data-title="{!! $forum->name !!}">
-                <img src="{!! $forum->imageUrl !!}" class="float-md-left mr-md-5" style="max-with:200px;" />
-            </a>
-        @endif
-        {!! Form::label('Banner Image (Optional)') !!} {!! add_help('This image is visible at the top of the forum.') !!}
-        <div class="custom-file">
-            {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
-            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
-        </div>
-        <div class="text-muted">No recommended size.</div>
-        @if ($forum->has_image)
-            <div class="form-check">
-                {!! Form::checkbox('remove_image', 1, false, ['class' => 'form-check-input']) !!}
-                {!! Form::label('remove_image', 'Remove current image', ['class' => 'form-check-label']) !!}
+    <div class="row">
+        <div class="col-md">
+            <div class="form-group">
+                {!! Form::label('Banner Image (Optional)') !!} {!! add_help('This image is visible at the top of the forum.') !!}
+                <div class="custom-file">
+                    {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
+                    {!! Form::file('image', ['class' => 'custom-file-input']) !!}
+                </div>
+                <div class="text-muted">
+                    PNG, GIF, or WebP format. No recommended size.
+                    @if ($forum->has_image)
+                        (<a href="{{ $forum->imageUrl }}">View Current Banner Image</a>)
+                    @endif
+                </div>
+                @if ($forum->has_image)
+                    <div class="form-check">
+                        {!! Form::checkbox('remove_image', 1, false, ['class' => 'form-check-input']) !!}
+                        {!! Form::label('remove_image', 'Remove current image', ['class' => 'form-check-label']) !!}
+                    </div>
+                @endif
             </div>
-        @endif
+        </div>
+
+        <div class="col-md">
+            <div class="form-group">
+                {!! Form::label('Forum Icon (Optional)') !!} {!! add_help('This icon next to the forum\'s name.') !!}
+                <div class="custom-file">
+                    {!! Form::label('icon', 'Choose file...', ['class' => 'custom-file-label']) !!}
+                    {!! Form::file('icon', ['class' => 'custom-file-input']) !!}
+                </div>
+                <div class="text-muted">
+                    PNG, GIF, or WebP format. Square aspect ratio (1:1), recommended 50x50.
+                    @if ($forum->has_icon)
+                        (<a href="{{ $forum->iconUrl }}">View Current Icon</a>)
+                    @endif
+                </div>
+                @if ($forum->has_icon)
+                    <div class="form-check">
+                        {!! Form::checkbox('remove_icon', 1, false, ['class' => 'form-check-input']) !!}
+                        {!! Form::label('remove_icon', 'Remove current icon', ['class' => 'form-check-label']) !!}
+                    </div>
+                @endif
+            </div>
+        </div>
     </div>
 
     <div class="form-group">
@@ -75,21 +113,21 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4 text-center">
+        <div class="col-md">
             <div class="form-group">
                 {!! Form::checkbox('is_active', 1, $forum->id ? $forum->is_active : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
                 {!! Form::label('is_active', 'Is Active', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned off, users will not be able to view the forum even if they have the link to it, unless they are staff.') !!}
             </div>
         </div>
 
-        <div class="col-md-4 text-center">
+        <div class="col-md">
             <div class="form-group">
                 {!! Form::checkbox('is_locked', 1, $forum->id ? $forum->is_locked : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
                 {!! Form::label('is_locked', 'Locked', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned off, users will be able to create new threads and reply to them.') !!}
             </div>
         </div>
 
-        <div class="col-md-4 text-center">
+        <div class="col-md">
             <div class="form-group">
                 {!! Form::checkbox('staff_only', 1, $forum->id ? $forum->staff_only : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
                 {!! Form::label('staff_only', 'Staff Only', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, only staff members will see this forum.') !!}

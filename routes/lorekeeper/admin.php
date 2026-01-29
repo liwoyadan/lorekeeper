@@ -444,7 +444,7 @@ Route::group(['prefix' => 'designs', 'middleware' => 'power:manage_characters'],
 Route::get('{type}/{status}', 'DesignController@getDesignIndex')->where('type', 'myo-approvals|design-approvals')->where('status', 'pending|approved|rejected');
 
 // FORUMS
-Route::group(['prefix' => 'forums', 'middleware' => 'power:edit_data'], function () {
+Route::group(['prefix' => 'forums', 'middleware' => 'power:manage_forums'], function () {
     Route::get('/', 'ForumController@getIndex');
     Route::get('create', 'ForumController@getCreateForum');
     Route::get('edit/{id}', 'ForumController@getEditForum');
@@ -452,4 +452,26 @@ Route::group(['prefix' => 'forums', 'middleware' => 'power:edit_data'], function
     Route::post('create', 'ForumController@postCreateEditForum');
     Route::post('edit/{id?}', 'ForumController@postCreateEditForum');
     Route::post('delete/{id}', 'ForumController@postDeleteForum');
+});
+
+// FORUM FLAIRS
+Route::group(['prefix' => 'forum-flairs', 'middleware' => 'power:manage_forums'], function () {
+    Route::get('/', 'ForumController@getFlairIndex');
+    Route::get('create', 'ForumController@getCreateFlair');
+    Route::get('edit/{id}', 'ForumController@getEditFlair');
+    Route::get('delete/{id}', 'ForumController@getDeleteFlair');
+    Route::post('create', 'ForumController@postCreateEditFlair');
+    Route::post('edit/{id?}', 'ForumController@postCreateEditFlair');
+    Route::post('delete/{id}', 'ForumController@postDeleteFlair');
+});
+
+// FORUM DECORS
+Route::group(['prefix' => 'forum-decors', 'middleware' => 'power:manage_forums'], function () {
+    Route::get('/', 'ForumController@getDecorIndex');
+    Route::get('create', 'ForumController@getCreateDecor');
+    Route::get('edit/{id}', 'ForumController@getEditDecor');
+    Route::get('delete/{id}', 'ForumController@getDeleteDecor');
+    Route::post('create', 'ForumController@postCreateEditDecor');
+    Route::post('edit/{id?}', 'ForumController@postCreateEditDecor');
+    Route::post('delete/{id}', 'ForumController@postDeleteDecor');
 });

@@ -514,9 +514,9 @@ class User extends Authenticatable implements MustVerifyEmail {
      */
     public function canVisitForum($id) {
         $forum = Forum::find($id);
-        if ($this->isStaff) {
+        if ($this->hasPower('manage_forums')) {
             return true;
-        } elseif (isset($forum->role_limit) && $this->rank_id == $forum->role_limit) {
+        } elseif ((isset($forum->role_limit) && $forum->role_limit) && ($this->rank_id == $forum->role_limit)) {
             return true;
         } elseif (!isset($forum->role_limit) && !$forum->staff_only) {
             return true;

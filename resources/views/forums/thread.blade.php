@@ -29,8 +29,8 @@
         @endauth
     </div>
 
-    <div class="border rounded mb-2 row no-gutters" style="clear: both;">
-        <div class="col-md-2 text-center border-md-right border-bottom border-md-bottom-0 py-2">
+    <div class="border rounded mb-2 row no-gutters">
+        <div class="col-md-2 text-center border-md-right border-bottom border-md-bottom-0 py-3">
             <div class="comment-avatar">
                 <img class="mw-100" src="{{ $thread->commenter->avatarUrl }}" style="max-width:100px; max-height:100px; border-radius:50%;" alt="{{ $thread->commenter->name }} Avatar">
             </div>
@@ -38,15 +38,15 @@
             <h5 class="mb-1">
                 {!! $thread->commenter->displayName !!}
             </h5>
-            <p>
+            <div class="small">
                 @auth
-                    <a href="{{ $thread->commenter->url }}/forum">
-                    @endauth
+                    <a href="{{ $thread->commenter->url.'/forum' }}">
+                @endauth
                     {!! $thread->commenter->forumCount !!} {{ $thread->commenter->forumCount == 1 ? 'Post' : 'Posts' }}
-                    @auth
+                @auth
                     </a>
                 @endauth
-            </p>
+            </div>
         </div>
 
         <div class="col-md">
@@ -122,73 +122,12 @@
 
     @if ($replies->count())
         {!! $replies->render() !!}
-
         @foreach ($replies as $comment)
-            @if (!isset($comment->deleted_at))
-                <div class="border rounded mb-2 row no-gutters">
-                    <div class="col-md-2 text-center border-md-right border-bottom border-md-bottom-0 py-2">
-                        <div class="comment-avatar">
-                            <img class="mw-100" src="{{ $thread->commenter->avatarUrl }}" style="max-width:100px; max-height:100px; border-radius:50%;" alt="{{ $thread->commenter->name }} Avatar">
-                        </div>
-
-                        <h5 class="mb-1">
-                            {!! $comment->commenter->displayName !!}
-                        </h5>
-                        <p>
-                            @auth
-                                <a href="{{ $thread->commenter->url }}/forum">
-                                @endauth
-                                {!! $thread->commenter->forumCount !!} {{ $thread->commenter->forumCount == 1 ? 'Post' : 'Posts' }}
-                                @auth
-                                </a>
-                            @endauth
-                        </p>
-                    </div>
-
-                    <div class="col-md">
-                        <div class="mb-2 border-bottom p-2">
-                            <div class="row no-gutters justify-content-between">
-                                <div class="col">
-                                    @if ($comment->type == 'User-User')
-                                        <a href="{{ url('comment/') . '/' . $comment->id }}"><i class="fas fa-link ml-1" style="opacity: 50%;"></i></a>
-                                    @endif
-                                    {!! $comment->created_at->calendar() !!}
-                                    @if ($comment->created_at != $comment->updated_at)
-                                        <small><span class="text-muted border-left mx-1 px-1">Edited {!! $comment->updated_at->calendar() !!}</span></small>
-                                    @endif
-                                </div>
-                                <div class="col text-right">
-                                    @if (Auth::check())
-                                        @can('reply-to-comment', $comment)
-                                            <a role="button" data-toggle="modal" data-target="#reply-modal-{{ $comment->getKey() }}" class="px-2 py-2 px-sm-2 py-sm-1 text-uppercase" style="cursor: pointer;"><i class="fas fa-comment"></i><span
-                                                    class="ml-2 d-none d-sm-inline-block">Reply</span></a>
-                                        @endcan
-                                        @can('edit-comment', $comment)
-                                            <a role="button" data-toggle="modal" data-target="#comment-modal-{{ $comment->getKey() }}" class="px-2 py-2 px-sm-2 py-sm-1 text-uppercase" style="cursor: pointer;"><i class="fas fa-edit"></i><span
-                                                    class="ml-2 d-none d-sm-inline-block">Edit</span></a>
-                                        @endcan
-                                        @can('delete-comment', $comment)
-                                            <a role="button" data-toggle="modal" data-target="#delete-modal-{{ $comment->getKey() }}" class="px-2 py-2 px-sm-2 py-sm-1 text-danger text-uppercase" style="cursor: pointer;"><i
-                                                    class="fas fa-minus-circle"></i><span class="ml-2 d-none d-sm-inline-block">Delete</span></a>
-                                        @endcan
-                                        <a href="{{ url('reports/new?url=') . $comment->url }}"><i class="fas fa-exclamation-triangle mr-2" data-toggle="tooltip" title="Click here to report this comment." style="opacity: 50%;"></i></a>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-2">
-                            {!! config('lorekeeper.settings.wysiwyg_comments') ? nl2br($comment->comment) : nl2br($markdown->line($comment->comment)) !!}
-                        </div>
-
-                        @include('forums._form_modals', ['comment' => $comment])
-                    </div>
-                </div>
-            @endif
+            @include('forums._forum_comment', ['comment' => $comment, 'thread' => $thread])
         @endforeach
-
         {!! $replies->render() !!}
     @else
-        <div class="text-center text-muted mb-2">
+        <div class="text-center text-muted my-2">
             No replies yet.
         </div>
     @endif
@@ -201,7 +140,7 @@
                 'thread' => $thread,
             ])
         @else
-            <div class="card p-3">
+            <div class="card">
                 <div class="card-body text-center text-muted">
                     You cannot reply to this thread.
                 </div>

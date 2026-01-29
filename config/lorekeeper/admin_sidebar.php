@@ -67,6 +67,23 @@ return [
             ],
         ],
     ],
+    'Forums'       => [
+        'power' => 'manage_forums',
+        'links' => [
+            [
+                'name' => 'Forums',
+                'url'  => 'admin/forums',
+            ],
+            [
+                'name' => 'Forum Flairs',
+                'url'  => 'admin/forum-flairs',
+            ],
+            [
+                'name' => 'Forum Decors',
+                'url'  => 'admin/forum-decors',
+            ],
+        ],
+    ],
     'Users'      => [
         'power' => 'edit_user_info',
         'links' => [
@@ -193,10 +210,6 @@ return [
             [
                 'name' => 'Items',
                 'url'  => 'admin/data/items',
-            ],
-            [
-                'name' => 'Forums',
-                'url'  => 'admin/forums',
             ],
         ],
     ],
