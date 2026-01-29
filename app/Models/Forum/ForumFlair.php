@@ -144,10 +144,13 @@ class ForumFlair extends Model {
      */
     public function getDisplayFlairAttribute() {
         $html = '<a href="'.$this->url.'" class="display-flair"';
+        if ($this->imageUrl) {
+            $icon = '<img src="'.$this->imageUrl.'" alt="'.$this->name.' Icon" class="display-flair-icon">';
+        }
         if ($this->inlineStyles && ($this->inlineStyles != '')) {
             $html .= ' style="'.$this->inlineStyles.'"';
         }
-        $html .= '>'.$this->name.'</a>';
+        $html .= '>'.($icon ?? '').$this->name.'</a>';
 
         return $html;
     }

@@ -9,7 +9,9 @@
 
     <h1>Forum Decors</h1>
 
-    <p>Forum decors are cosmetic decorations that can be displayed on a user's forum profile or posts. They can be unlocked through achievements, granted by staff, or set as defaults.</p>
+    <p>
+        Forum decors are cosmetic decorations that can be displayed on a user's forum posts. Forum decor can either be set as default selectable by any user or can be granted as rewards.
+    </p>
 
     <div class="text-right mb-3">
         <a class="btn btn-primary" href="{{ url('admin/forum-decors/create') }}"><i class="fas fa-plus"></i> Create New Decor</a>

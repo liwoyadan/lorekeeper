@@ -9,7 +9,9 @@
 
     <h1>Forum Flairs</h1>
 
-    <p>Forum flairs are cosmetic badges that can be displayed next to a user's name in forum posts. They can be unlocked through post requirements, granted by staff, or set as defaults.</p>
+    <p>
+        Forum flairs are cosmetic badges and styling applied to a given user's username on their forum posts, as well as displaying the flair itself underneath. Forum flairs can either be set as default selectable by any user, can be granted as rewards, or unlocked through forum post count requirements.
+    </p>
 
     <div class="text-right mb-3">
         <a class="btn btn-primary" href="{{ url('admin/forum-flairs/create') }}"><i class="fas fa-plus"></i> Create New Flair</a>
@@ -47,7 +49,7 @@
             <div class="logs-table-body">
                 @foreach ($flairs as $flair)
                     <div class="logs-table-row">
-                        <div class="row flex-wrap">
+                        <div class="row flex-wrap align-items-center">
                             <div class="col-6 col-md-4">
                                 <div class="logs-table-cell">
                                     {{ $flair->name }}

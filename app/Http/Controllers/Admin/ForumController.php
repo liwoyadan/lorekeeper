@@ -211,7 +211,7 @@ class ForumController extends Controller {
         } elseif (!$id && $flair = $service->createForumFlair($data, Auth::user())) {
             flash('Forum flair created successfully.')->success();
 
-            return redirect()->to('admin/forums/flairs/edit/'.$flair->id);
+            return redirect()->to('admin/forum-flairs/edit/'.$flair->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -253,7 +253,7 @@ class ForumController extends Controller {
             }
         }
 
-        return redirect()->to('admin/forums/flairs');
+        return redirect()->to('admin/forum-flairs');
     }
 
     /**********************************************************************************************
@@ -333,7 +333,7 @@ class ForumController extends Controller {
         } elseif (!$id && $decor = $service->createForumDecor($data, Auth::user())) {
             flash('Forum decor created successfully.')->success();
 
-            return redirect()->to('admin/forums/decors/edit/'.$decor->id);
+            return redirect()->to('admin/forum-decors/edit/'.$decor->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -375,6 +375,6 @@ class ForumController extends Controller {
             }
         }
 
-        return redirect()->to('admin/forums/decors');
+        return redirect()->to('admin/forum-decors');
     }
 }

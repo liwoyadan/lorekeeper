@@ -994,6 +994,12 @@ tr.accountbound {
 }
 
 .display-flair {
+    align-items: center;
     border-radius: 0.25rem;
-    padding: 0.1rem 0.25rem;
+    display: inline-flex;
+    padding: 0.25rem 0.35rem;
+}
+
+.display-flair-icon {
+    margin-right: 2px;
 }
