@@ -263,7 +263,7 @@ class ThemeManager extends Service {
         $names = (isset($data['creator_name']) && $data['creator_name']) ? User::whereIn('id', $data['creator_name'])->get() : [];
         if ($names->count()) {
             foreach ($names as $name) {
-                $creators['name'] = $name->id ?? $name->name;
+                $creators['name'][] = $name->id ?? $name->name;
             }
         }
         if (isset($data['creator_url'])) {
@@ -272,7 +272,7 @@ class ThemeManager extends Service {
             if (count($urls)) {
                 foreach ($urls as $key => $creator) {
                     if (isset($urls[$key]) && (trim($urls[$key]) != '')) {
-                        $creators['url'] = trim($urls[$key]);
+                        $creators['url'][] = trim($urls[$key]);
                     }
                 }
             }

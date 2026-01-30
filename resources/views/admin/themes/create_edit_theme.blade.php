@@ -26,7 +26,7 @@
             <a href="#" class="btn btn-danger float-right delete-theme-button">Delete Theme</a>
         @endif
     </h1>
-    @if ($theme->creators)
+    @if ($theme->creators && count($theme->creatorData))
         <h5 class="mb-1">
             by {!! $theme->creatorDisplayName !!}
         </h5>
@@ -115,7 +115,7 @@
                     {!! Form::label('creator_name[]', 'Creator(s) Name', ['class' => 'mb-md-0']) !!}{!! add_help('On-site users you would like to credit for this theme.') !!}
                 </div>
                 <div class="col-md">
-                    {!! Form::select('creator_name[]', $userOptions, $theme->creators ?? null, ['class' => 'form-control creator-select', 'multiple']) !!}
+                    {!! Form::select('creator_name[]', $userOptions, ($theme->creatorData['name'] ?? null) ?? null, ['class' => 'form-control creator-select', 'multiple']) !!}
                 </div>
             </div>
         </div>
@@ -126,7 +126,7 @@
                     {!! Form::label('creator_url', 'Creator Url(s)', ['class' => 'mb-md-0']) !!}{!! add_help('Separate multiples via comma.') !!}
                 </div>
                 <div class="col-md">
-                    {!! Form::text('creator_url', $theme->creators ? $theme->creatorData['url'] : null, ['class' => 'form-control']) !!}
+                    {!! Form::text('creator_url', $theme->creators ? ($theme->creatorData['url'] ?? null) : null, ['class' => 'form-control']) !!}
                 </div>
             </div>
         </div>

@@ -12,7 +12,7 @@ class Theme extends Model {
      * @var array
      */
     protected $fillable = [
-        'name', 'hash', 'is_default', 'is_active', 'has_css', 'has_header', 'has_background', 'extension', 'extension_background', 'creators', 'prioritize_css', 'link_id', 'link_type', 'is_user_selectable', 'theme_type',
+        'name', 'hash', 'is_default', 'is_active', 'has_css', 'has_header', 'has_background', 'extension', 'extension_background', 'creators', 'prioritize_css', 'link_id', 'link_type', 'is_user_selectable', 'theme_type', 'theme_bootstrap_id',
     ];
 
     /**
@@ -66,6 +66,13 @@ class Theme extends Model {
      */
     public function themeEditor() {
         return $this->hasOne(ThemeEditor::class, 'theme_id');
+    }
+
+    /**
+     * Get the Bootstrap attached to this theme.
+     */
+    public function bootstrap() {
+        return $this->belongsTo(ThemeBootstrap::class, 'theme_bootstrap_id');
     }
 
     /**********************************************************************************************
@@ -130,7 +137,7 @@ class Theme extends Model {
             return '<s>'.$this->name.'</a>';
         }
         if ($this->is_default) {
-            return $this->name.' (default)';
+            return $this->name.' (Default)';
         } else {
             return $this->name;
         }
@@ -142,12 +149,14 @@ class Theme extends Model {
      * @return string
      */
     public function getCreatorDataAttribute() {
-        $creators = json_decode($this->creators, true);
+        $creatorDecode = json_decode($this->creators, true);
 
-        $names = implode(', ', array_keys($creators));
-        $urls = implode(', ', array_values($creators));
+        $userCreators = $creatorDecode['name'] ?? [];
+        $urlCreators = $creatorDecode['url'] ?? [];
+        $userIds = array_filter($userCreators);
+        $urls = array_filter($urlCreators);
 
-        return ['name' => $names, 'url' => $urls];
+        return ['name' => $userIds, 'url' => implode(', ', array_values($urls))];
     }
 
     /**
@@ -157,8 +166,22 @@ class Theme extends Model {
      */
     public function getCreatorDisplayNameAttribute() {
         $names = [];
-        foreach (json_decode($this->creators, true) as $name => $url) {
-            $names[] = '<a href="'.$url.'">'.$name.'</a>';
+        $creatorDecode = json_decode($this->creators, true);
+        $userCreators = $creatorDecode['name'] ?? [];
+        $urlCreators = $creatorDecode['url'] ?? [];
+
+        if (count($userCreators)) {
+            foreach ($userCreators as $userKey => $userId) {
+                $user = User::find($userId);
+                if ($user) {
+                    $names[] = $user->displayName;
+                }
+            }
+        }
+        if (count($urlCreators)) {
+            foreach ($urlCreators as $urlKey => $urlLink) {
+                $names[] = prettyProfileLink($urlLink);
+            }
         }
 
         return implode(', ', $names);
