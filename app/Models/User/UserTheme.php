@@ -3,7 +3,7 @@
 namespace App\Models\User;
 
 use App\Models\Model;
-use App\Models\Theme;
+use App\Models\Theme\Theme;
 
 class UserTheme extends Model {
     /**
@@ -31,14 +31,14 @@ class UserTheme extends Model {
      * Get the user who owns the theme.
      */
     public function user() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
      * Get the theme associated with this user.
      */
     public function theme() {
-        return $this->belongsTo(Theme::class);
+        return $this->belongsTo(Theme::class, 'theme_id');
     }
 
     /**********************************************************************************************

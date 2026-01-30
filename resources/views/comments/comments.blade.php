@@ -13,14 +13,14 @@
         }
     }
 
-    $theme = Auth::user()->theme ?? (App\Models\Theme::where('is_default', true)->first() ?? null);
+    $theme = Auth::user()->theme ?? (App\Models\Theme\Theme::where('is_default', true)->first() ?? null);
     $conditionalTheme = null;
     if (class_exists('\App\Models\Weather\WeatherSeason')) {
         $conditionalTheme =
-            App\Models\Theme::where('link_type', 'season')
+            App\Models\Theme\Theme::where('link_type', 'season')
                 ->where('link_id', Settings::get('site_season'))
                 ->first() ??
-            (App\Models\Theme::where('link_type', 'weather')
+            (App\Models\Theme\Theme::where('link_type', 'weather')
                 ->where('link_id', Settings::get('site_weather'))
                 ->first() ??
                 $theme);
@@ -112,15 +112,16 @@
                 ],
                 toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | spoiler-add spoiler-remove | removeformat | code',
                 content_css: [
-                    '{{ asset('css/app.css') }}',
-                    '{{ asset('css/lorekeeper.css?v=' . filemtime(public_path('css/lorekeeper.css'))) }}',
-                    {!! file_exists(public_path() . '/css/custom.css') ? "'" . asset('css/custom.css?v=') . filemtime(public_path('css/custom.css')) . "'," : '' !!}
-                    {!! $theme?->cssUrl ? "'" . asset($theme?->cssUrl) . "'," : '' !!}
-                    {!! $conditionalTheme?->cssUrl ? "'" . asset($conditionalTheme?->cssUrl) . "'," : '' !!}
-                    {!! $decoratorTheme?->cssUrl ? "'" . asset($decoratorTheme?->cssUrl) . "'," : '' !!} '{{ asset('css/all.min.css') }}' //fontawesome
+                    '{{ asset("css/app.css?v=" . filemtime(public_path("css/app.css"))) }}',
+                    '{{ asset("css/lorekeeper.css?v=" . filemtime(public_path("css/lorekeeper.css"))) }}',
+                    '{{ asset("css/all.min.css") }}', //fontawesome
+                    {{ file_exists(public_path("/css/custom.css")) ? "'".asset("css/custom.css?v=".filemtime(public_path("css/custom.css")))."'," : "" }}
+                    {!! $theme?->cssUrl ? "'".asset($theme?->cssUrl)."'," : "" !!}
+                    {!! $conditionalTheme?->cssUrl ? "'".asset($conditionalTheme?->cssUrl)."'," : "" !!}
+                    {!! $decoratorTheme?->cssUrl ? "'".asset($decoratorTheme?->cssUrl)."'," : "" !!}
                 ],
                 content_style: `
-                    {!! str_replace(['<style>', '</style>'], '', view('layouts.editable_theme', ['theme' => $theme])) !!}
+                    {!! isset($theme) && $theme ? str_replace(['<style>', '</style>'], '', view('layouts.editable_theme', ['theme' => $theme])) : '' !!}
                     {!! isset($conditionalTheme) && $conditionalTheme ? str_replace(['<style>', '</style>'], '', view('layouts.editable_theme', ['theme' => $conditionalTheme])) : '' !!}
                     {!! isset($decoratorTheme) && $decoratorTheme ? str_replace(['<style>', '</style>'], '', view('layouts.editable_theme', ['theme' => $decoratorTheme])) : '' !!}
                 `,

@@ -205,6 +205,15 @@ return [
             ],
         ],
     ],
+    'Themes'     => [
+        'power' => 'edit_site_settings',
+        'links' => [
+            [
+                'name' => 'Theme Manager',
+                'url'  => 'admin/themes',
+            ],
+        ],
+    ],
     'Settings'   => [
         'power' => 'edit_site_settings',
         'links' => [
@@ -219,10 +228,6 @@ return [
             [
                 'name' => 'File Manager',
                 'url'  => 'admin/files',
-            ],
-            [
-                'name' => 'Theme Manager',
-                'url'  => 'admin/themes',
             ],
         ],
     ],

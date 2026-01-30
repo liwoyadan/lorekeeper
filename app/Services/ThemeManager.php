@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Theme;
+use App\Models\Theme\Theme;
 use App\Models\User\User;
 use App\Models\User\UserTheme;
 use Illuminate\Support\Facades\DB;
@@ -35,21 +35,21 @@ class ThemeManager extends Service {
             $header = null;
             if (isset($data['header']) && $data['header']) {
                 $data['has_header'] = 1;
+                $data['extension'] = $data['header']->getClientOriginalExtension();
                 $header = $data['header'];
                 unset($data['header']);
             } else {
                 $data['has_header'] = 0;
             }
-
             $background = null;
             if (isset($data['background']) && $data['background']) {
                 $data['has_background'] = 1;
+                $data['extension_background'] = $data['background']->getClientOriginalExtension();
                 $background = $data['background'];
                 unset($data['background']);
             } else {
                 $data['has_background'] = 0;
             }
-
             $css = null;
             if (isset($data['css']) && $data['css']) {
                 $data['has_css'] = 1;
@@ -60,23 +60,19 @@ class ThemeManager extends Service {
             }
 
             $theme = Theme::create($data);
-            if (!$themeEditor = (new ThemeEditorManager)->createTheme($data, $user)) {
+            $themeEditorManager = new ThemeEditorManager;
+            if (!$themeEditor = $themeEditorManager->createTheme($data, $user)) {
                 throw new \Exception('Failed to create Theme Editor');
             }
             $themeEditor->theme_id = $theme->id;
             $themeEditor->save();
 
             if ($header) {
-                $theme->extension = $header->getClientOriginalExtension();
-                $theme->update();
                 $this->handleImage($header, $theme->imagePath, $theme->headerImageFileName, null);
             }
             if ($background) {
-                $theme->extension_background = $background->getClientOriginalExtension();
-                $theme->update();
                 $this->handleImage($background, $theme->imagePath, $theme->backgroundImageFileName, null);
             }
-
             if ($css) {
                 $this->handleImage($css, $theme->imagePath, $theme->cssFileName, null);
             }
@@ -113,37 +109,41 @@ class ThemeManager extends Service {
             $header = null;
             if (isset($data['header']) && $data['header']) {
                 if (isset($theme->extension)) {
-                    $old = $theme->headerImageFileName;
+                    $oldHeader = $theme->headerImageFileName;
                 } else {
-                    $old = null;
+                    $oldHeader = null;
                 }
                 $data['has_header'] = 1;
+                $data['extension'] = $data['header']->getClientOriginalExtension();
                 $header = $data['header'];
                 unset($data['header']);
             }
             $background = null;
             if (isset($data['background']) && $data['background']) {
                 if (isset($theme->extension_background)) {
-                    $old = $theme->backgroundImageFileName;
+                    $oldBackground = $theme->backgroundImageFileName;
                 } else {
-                    $old = null;
+                    $oldBackground = null;
                 }
                 $data['has_background'] = 1;
+                $data['extension_background'] = $data['background']->getClientOriginalExtension();
                 $background = $data['background'];
                 unset($data['background']);
             }
-
             $css = null;
             if (isset($data['css']) && $data['css']) {
                 $data['has_css'] = 1;
                 $css = $data['css'];
                 unset($data['css']);
             }
+
             $theme->update($data);
+
+            $themeEditorManager = new ThemeEditorManager;
             if ($theme->themeEditor) {
-                $themeEditor = (new ThemeEditorManager)->updateTheme($theme->themeEditor, $data, $user);
+                $themeEditor = $themeEditorManager->updateTheme($theme->themeEditor, $data, $user);
             } else {
-                if (!$themeEditor = (new ThemeEditorManager)->createTheme($data, $user)) {
+                if (!$themeEditor = $themeEditorManager->createTheme($data, $user)) {
                     throw new \Exception('Failed to create Theme Editor');
                 }
                 $themeEditor->theme_id = $theme->id;
@@ -151,16 +151,11 @@ class ThemeManager extends Service {
             }
 
             if ($header) {
-                $theme->extension = $header->getClientOriginalExtension();
-                $theme->update();
-                $this->handleImage($header, $theme->imagePath, $theme->headerImageFileName, $old);
+                $this->handleImage($header, $theme->imagePath, $theme->headerImageFileName, $oldHeader);
             }
             if ($background) {
-                $theme->extension_background = $background->getClientOriginalExtension();
-                $theme->update();
-                $this->handleImage($background, $theme->imagePath, $theme->backgroundImageFileName, $old);
+                $this->handleImage($background, $theme->imagePath, $theme->backgroundImageFileName, $oldBackground);
             }
-
             if ($css) {
                 $this->handleImage($css, $theme->imagePath, $theme->cssFileName);
             }
@@ -261,21 +256,27 @@ class ThemeManager extends Service {
             $data['parsed_description'] = null;
         }
 
-        $data['prioritize_css'] = (isset($data['prioritize_css'])) ? 1 : 0;
-
+        $data['prioritize_css'] = (isset($data['prioritize_css']) && $data['prioritize_css']) ? 1 : 0;
         $data['hash'] = randomString(10);
 
-        $names = explode(',', $data['creator_name']);
-        $urls = explode(',', $data['creator_url']);
         $creators = [];
-
-        if (count($names) != count($urls)) {
-            throw new \Exception('Creator name to creator url count mismatch.');
+        $names = (isset($data['creator_name']) && $data['creator_name']) ? User::whereIn('id', $data['creator_name'])->get() : [];
+        if ($names->count()) {
+            foreach ($names as $name) {
+                $creators['name'] = $name->id ?? $name->name;
+            }
         }
-        foreach ($names as $key => $creator) {
-            $creators[trim($creator)] = trim($urls[$key]);
-        }
+        if (isset($data['creator_url'])) {
+            $urls = explode(',', $data['creator_url']);
 
+            if (count($urls)) {
+                foreach ($urls as $key => $creator) {
+                    if (isset($urls[$key]) && (trim($urls[$key]) != '')) {
+                        $creators['url'] = trim($urls[$key]);
+                    }
+                }
+            }
+        }
         unset($data['creator_name']);
         unset($data['creator_url']);
         $data['creators'] = json_encode($creators);
@@ -283,15 +284,13 @@ class ThemeManager extends Service {
         if (!isset($data['is_active'])) {
             $data['is_active'] = 0;
         }
-
         if (!isset($data['is_user_selectable'])) {
             $data['is_user_selectable'] = 0;
         }
 
         // Unset Default
-        if (isset($data['is_default'])) {
-            DB::table('themes')
-                ->where('id', '!=', $data['id'])
+        if (isset($data['is_default']) && Theme::where('id', '!=', $data['id'])->where('is_default', 1)->exists()) {
+            Theme::where('id', '!=', $data['id'])
                 ->where('is_default', 1)
                 ->update(['is_default' => 0]);
         } else {
@@ -305,7 +304,6 @@ class ThemeManager extends Service {
             unset($data['remove_image']);
             $data['has_header'] = 0;
         }
-
         // Remove Background
         if (isset($data['remove_background']) && isset($theme->extension_background) && $data['remove_background']) {
             $data['extension_background'] = null;
@@ -313,7 +311,6 @@ class ThemeManager extends Service {
             unset($data['remove_image']);
             $data['has_background'] = 0;
         }
-
         // Remove Css
         if (isset($data['remove_css']) && $data['remove_css']) {
             $this->deleteImage($theme->imagePath, $theme->cssFileName);

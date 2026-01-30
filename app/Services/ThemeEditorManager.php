@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\ThemeEditor;
+use App\Models\Theme\ThemeEditor;
 use Illuminate\Support\Facades\DB;
 
 class ThemeEditorManager extends Service {

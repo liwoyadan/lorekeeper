@@ -19,7 +19,7 @@
             ->pluck('name', 'id');
     }
     if (isset($showThemes) && $showThemes) {
-        $themes = \App\Models\Theme::orderBy('name')
+        $themes = \App\Models\Theme\Theme::orderBy('name')
             ->where('is_user_selectable', 0)
             ->pluck('name', 'id');
     }

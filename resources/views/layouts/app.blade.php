@@ -124,6 +124,7 @@
         @include('layouts.editable_theme', ['theme' => $decoratorTheme])
     @endif
 
+    @stack('head')
     @include('feed::links')
 </head>
 
@@ -212,16 +213,13 @@
                             this.colorpicker.inputHandler.input[0].addEventListener('blur', onBlur(this.colorpicker));
                         }
                     }
-
                     onInvalid(e) {
                         const color = this.colorpicker.colorHandler.getFallbackColor();
                         if (color._original.valid)
                             this.colorpicker.blurFallback = color;
                     }
                 }
-
                 $.colorpicker.extensions.blurvalid = BlurValid;
-                console.log($['colorpicker'].extensions);
 
                 $('.cp').colorpicker({
                     'autoInputFallback': false,
@@ -245,15 +243,16 @@
                     ],
                     toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | spoiler-add spoiler-remove | removeformat | code',
                     content_css: [
-                        '{{ asset('css/app.css') }}',
-                        '{{ asset('css/lorekeeper.css?v=' . filemtime(public_path('css/lorekeeper.css'))) }}',
-                        {!! file_exists(public_path() . '/css/custom.css') ? "'" . asset('css/custom.css?v=') . filemtime(public_path('css/custom.css')) . "'," : '' !!}
-                        {!! $theme?->cssUrl ? "'" . asset($theme?->cssUrl) . "'," : '' !!}
-                        {!! $conditionalTheme?->cssUrl ? "'" . asset($conditionalTheme?->cssUrl) . "'," : '' !!}
-                        {!! $decoratorTheme?->cssUrl ? "'" . asset($decoratorTheme?->cssUrl) . "'," : '' !!} '{{ asset('css/all.min.css') }}' //fontawesome
+                        '{{ asset("css/app.css?v=" . filemtime(public_path("css/app.css"))) }}',
+                        '{{ asset("css/lorekeeper.css?v=" . filemtime(public_path("css/lorekeeper.css"))) }}',
+                        '{{ asset("css/all.min.css") }}', //fontawesome
+                        {{ file_exists(public_path("/css/custom.css")) ? "'".asset("css/custom.css?v=".filemtime(public_path("css/custom.css")))."'," : "" }}
+                        {!! $theme?->cssUrl ? "'".asset($theme?->cssUrl)."'," : "" !!}
+                        {!! $conditionalTheme?->cssUrl ? "'".asset($conditionalTheme?->cssUrl)."'," : "" !!}
+                        {!! $decoratorTheme?->cssUrl ? "'".asset($decoratorTheme?->cssUrl)."'," : "" !!}
                     ],
                     content_style: `
-                        {!! str_replace(['<style>', '</style>'], '', view('layouts.editable_theme', ['theme' => $theme])) !!}
+                        {!! isset($theme) && $theme ? str_replace(['<style>', '</style>'], '', view('layouts.editable_theme', ['theme' => $theme])) : '' !!}
                         {!! isset($conditionalTheme) && $conditionalTheme ? str_replace(['<style>', '</style>'], '', view('layouts.editable_theme', ['theme' => $conditionalTheme])) : '' !!}
                         {!! isset($decoratorTheme) && $decoratorTheme ? str_replace(['<style>', '</style>'], '', view('layouts.editable_theme', ['theme' => $decoratorTheme])) : '' !!}
                     `,

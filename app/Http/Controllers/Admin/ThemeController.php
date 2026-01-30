@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Theme;
+use App\Models\Theme\Theme;
+use App\Models\User\User;
 use App\Services\ThemeManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,18 +32,20 @@ class ThemeController extends Controller {
         if (isset($data['sort'])) {
             switch ($data['sort']) {
                 case 'newest':
-                    $submissions->sortNewest();
+                    $query->sortNewest();
                     break;
                 case 'oldest':
-                    $submissions->sortOldest();
+                    $query->sortNewest(1);
                     break;
-                case 'name_desc':
-                    $submissions->sortAlphabetical(true);
+                case 'alpha-reverse':
+                    $query->sortAlphabetical(1);
                     break;
-                case 'name_asc':
-                    $submissions->sortAlphabetical();
+                case 'alpha':
+                    $query->sortAlphabetical();
                     break;
             }
+        } else {
+            $query->sortNewest(1);
         }
 
         if (isset($data['name'])) {
@@ -50,7 +53,7 @@ class ThemeController extends Controller {
         }
 
         return view('admin.themes.themes', [
-            'themes' => $query->paginate(20)->appends($request->query()),
+            'indexThemes' => $query->paginate(20)->appends($request->query()),
         ]);
     }
 
@@ -67,8 +70,9 @@ class ThemeController extends Controller {
         }
 
         return view('admin.themes.create_edit_theme', [
-            'theme'      => new Theme,
-            'conditions' => $conditions,
+            'theme'       => new Theme,
+            'conditions'  => $conditions,
+            'userOptions' => User::orderBy('name', 'ASC')->pluck('name', 'id')->toArray(),
         ]);
     }
 
@@ -92,8 +96,9 @@ class ThemeController extends Controller {
         }
 
         return view('admin.themes.create_edit_theme', [
-            'theme'      => $theme,
-            'conditions' => $conditions,
+            'theme'       => $theme,
+            'conditions'  => $conditions,
+            'userOptions' => User::orderBy('name', 'ASC')->pluck('name', 'id')->toArray(),
         ]);
     }
 

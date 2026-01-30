@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Theme;
 
+use App\Models\Model;
 use App\Traits\Commentable;
 
 class ThemeEditor extends Model {
@@ -37,9 +38,9 @@ class ThemeEditor extends Model {
      * @var array
      */
     public static $createRules = [
-        'name'                 => ['required'],
-        'header_image_url'     => ['nullable', 'regex:/(https?):\/\/(www\.)?[\w.-]+\.[a-zA-Z]+\/((([\w\/-]+)\/)?[\w.-]+\.(png|gif|jpe?g)$)/'],
-        'background_image_url' => ['nullable', 'regex:/(https?):\/\/(www\.)?[\w.-]+\.[a-zA-Z]+\/((([\w\/-]+)\/)?[\w.-]+\.(png|gif|jpe?g)$)/'],
+        'name'                 => 'required',
+        'header_image_url'     => 'nullable|url',
+        'background_image_url' => 'nullable|url',
     ];
 
     /**
@@ -48,10 +49,16 @@ class ThemeEditor extends Model {
      * @var array
      */
     public static $updateRules = [
-        'name'                 => ['required'],
-        'header_image_url'     => ['nullable', 'regex:/(https?):\/\/(www\.)?[\w.-]+\.[a-zA-Z]+\/((([\w\/-]+)\/)?[\w.-]+\.(png|gif|jpe?g)$)/'],
-        'background_image_url' => ['nullable', 'regex:/(https?):\/\/(www\.)?[\w.-]+\.[a-zA-Z]+\/((([\w\/-]+)\/)?[\w.-]+\.(png|gif|jpe?g)$)/'],
+        'name'                 => 'required',
+        'header_image_url'     => 'nullable|url',
+        'background_image_url' => 'nullable|url',
     ];
+
+    /**********************************************************************************************
+
+        SCOPES
+
+    **********************************************************************************************/
 
     public function scopeReleased($query) {
         return $query->where('is_released', 1);

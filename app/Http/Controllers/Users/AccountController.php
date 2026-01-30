@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
-use App\Models\Theme;
+use App\Models\Theme\Theme;
 use App\Models\User\User;
 use App\Models\User\UserAlias;
 use App\Services\LinkService;

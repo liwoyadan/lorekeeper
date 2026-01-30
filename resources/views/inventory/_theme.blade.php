@@ -13,10 +13,10 @@
         <div class="row mb-2">
             @if (is_array($tag->getData()) && count($tag->getData()))
                 @foreach ($tag->getData() as $loot)
-                    <div class="col-md-3" style="{{ Auth::user()->hasTheme($loot->rewardable_id) ? 'text-decoration: line-through; opacity:0.5;' : '' }}">{!! App\Models\Theme::find($loot->rewardable_id)->displayName !!}</div>
+                    <div class="col-md-3" style="{{ Auth::user()->hasTheme($loot->rewardable_id) ? 'text-decoration: line-through; opacity:0.5;' : '' }}">{!! App\Models\Theme\Theme::find($loot->rewardable_id)->displayName !!}</div>
                 @endforeach
             @else
-                @foreach (App\Models\Theme::orderBy('name')->where('is_user_selectable', 0)->get() as $loot)
+                @foreach (App\Models\Theme\Theme::orderBy('name')->where('is_user_selectable', 0)->get() as $loot)
                     <div class="col-md-3" style="{{ Auth::user()->hasTheme($loot->id) ? 'text-decoration: line-through; opacity:0.5;' : '' }}">{!! $loot->displayName !!}</div>
                 @endforeach
             @endif

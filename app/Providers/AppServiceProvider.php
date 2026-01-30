@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Facades\Settings;
-use App\Models\Theme;
+use App\Models\Theme\Theme;
 use App\Providers\Socialite\ToyhouseProvider;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;

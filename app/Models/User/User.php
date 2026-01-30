@@ -18,7 +18,7 @@ use App\Models\Rank\Rank;
 use App\Models\Rank\RankPower;
 use App\Models\Shop\ShopLog;
 use App\Models\Submission\Submission;
-use App\Models\Theme;
+use App\Models\Theme\Theme;
 use App\Traits\Commenter;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;

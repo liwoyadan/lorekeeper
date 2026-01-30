@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Theme;
 
+use App\Models\Model;
 use App\Models\User\User;
 
 class Theme extends Model {
@@ -28,8 +29,8 @@ class Theme extends Model {
      */
     public static $createRules = [
         'name'       => 'required|unique:themes|between:3,100',
-        'header'     => 'mimes:png,jpg,jpeg,gif,svg',
-        'background' => 'mimes:png,jpg,jpeg',
+        'header'     => 'mimes:png,jpg,jpeg,gif,svg,webp',
+        'background' => 'mimes:png,jpg,jpeg,webp',
         'active'     => 'nullable|boolean',
         'default'    => 'nullable|boolean',
     ];
@@ -41,8 +42,8 @@ class Theme extends Model {
      */
     public static $updateRules = [
         'name'       => 'required|between:3,100',
-        'header'     => 'mimes:png,jpg,jpeg,gif,svg',
-        'background' => 'mimes:png,jpg,jpeg',
+        'header'     => 'mimes:png,jpg,jpeg,gif,svg,webp',
+        'background' => 'mimes:png,jpg,jpeg,webp',
         'active'     => 'nullable|boolean',
         'default'    => 'nullable|boolean',
     ];
@@ -89,32 +90,27 @@ class Theme extends Model {
      * Scope a query to sort themes by newest first.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed                                 $reverse
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeSortNewest($query) {
-        return $query->orderBy('id', 'DESC');
-    }
-
-    /**
-     * Scope a query to sort features oldest first.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeSortOldest($query) {
-        return $query->orderBy('id');
+    public function scopeSortNewest($query, $reverse = false) {
+        return $query->orderBy('id', $reverse ? 'ASC' : 'DESC');
     }
 
     /**
      * Scope a query to show only released or "released" (at least one user-owned stack has ever existed) themes.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed|null                            $user
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeVisible($query) {
+    public function scopeVisible($query, $user = null) {
+        if ($user && $user->hasPower('edit_site_settings')) {
+            return $query;
+        }
+
         return $query->where('is_active', 1);
     }
 
