@@ -1,0 +1,401 @@
+// Breakpoints
+@function breakpoint-min($name, $breakpoints: $grid-breakpoints) {
+    $min: map-get($breakpoints, $name);
+    @return if($min != 0, $min, null);
+}
+@function breakpoint-infix($name, $breakpoints: $grid-breakpoints) { @return if(breakpoint-min($name, $breakpoints) == null, "", "-#{$name}"); }
+@mixin media-breakpoint-up($name, $breakpoints: $grid-breakpoints) {
+    $min: breakpoint-min($name, $breakpoints);
+    @if $min {
+        @media (min-width: $min) {
+            @content;
+        }
+    } @else {
+        @content;
+    }
+}
+// Hover
+@mixin hover() {
+    &:hover { @content; }
+}
+@mixin hover-focus() {
+    &:hover, &:focus { @content; }
+}
+@mixin plain-hover-focus() {
+    &, &:hover, &:focus { @content; }
+}
+@mixin hover-focus-active() {
+    &:hover, &:focus, &:active { @content; }
+}
+// Size TODO:
+@mixin size($width, $height: $width) {
+    width: $width;
+    height: $height;
+}
+// Typography
+@mixin text-emphasis-variant($parent, $color, $ignore-warning: false) {
+    #{$parent} { color: $color !important; }
+    @if $emphasized-link-hover-darken-percentage != 0 {
+        a#{$parent} {
+            @include hover-focus() { color: darken($color, $emphasized-link-hover-darken-percentage) !important; }
+        }
+    }
+}
+
+// COMPONENT MIXINS BELOW
+
+// Badge Variants
+@mixin badge-variant($bg) {
+    color: color-yiq($bg);
+    background-color: $bg;
+    @at-root a#{&} {
+        @include hover-focus() {
+            color: color-yiq($bg);
+            background-color: darken($bg, 10%);
+        }
+        &:focus, &.focus { box-shadow: 0 0 0 $badge-focus-width rgba($bg, .5); }
+    }
+}
+// Alert Variants
+@mixin alert-variant($background, $border, $color) {
+    color: $color;
+    @include gradient-bg($background);
+    border-color: $border;
+    hr { border-top-color: darken($border, 5%); }
+    .alert-link, a { color: darken($color, 10%); }
+}
+// Button Variants
+@mixin button-variant($background, $border, $hover-background: darken($background, 7.5%), $hover-border: darken($border, 10%), $active-background: darken($background, 10%), $active-border: darken($border, 12.5%)) {
+    color: color-yiq($background);
+    @include gradient-bg($background);
+    border-color: $border;
+    @include box-shadow($btn-box-shadow);
+
+    @include hover() {
+        color: color-yiq($hover-background);
+        @include gradient-bg($hover-background);
+        border-color: $hover-border;
+    }
+    &:focus, &.focus {
+        color: color-yiq($hover-background);
+        @include gradient-bg($hover-background);
+        border-color: $hover-border;
+        @if $enable-shadows {
+            @include box-shadow($btn-box-shadow, 0 0 0 $btn-focus-width rgba(mix(color-yiq($background), $border, 15%), .5));
+        } @else { box-shadow: 0 0 0 $btn-focus-width rgba(mix(color-yiq($background), $border, 15%), .5); }
+    }
+    &.disabled, &:disabled {
+        color: color-yiq($background);
+        background-color: $background;
+        border-color: $border;
+        @if $enable-gradients { background-image: none; }
+    }
+    &:not(:disabled):not(.disabled):active, &:not(:disabled):not(.disabled).active, .show>&.dropdown-toggle {
+        color: color-yiq($active-background);
+        background-color: $active-background;
+        @if $enable-gradients { background-image: none; }
+        border-color: $active-border;
+        &:focus {
+            @if $enable-shadows and $btn-active-box-shadow !=none {
+                @include box-shadow($btn-active-box-shadow, 0 0 0 $btn-focus-width rgba(mix(color-yiq($background), $border, 15%), .5));
+            } @else { box-shadow: 0 0 0 $btn-focus-width rgba(mix(color-yiq($background), $border, 15%), .5); }
+        }
+    }
+}
+@mixin button-outline-variant($color, $color-hover: color-yiq($color), $active-background: $color, $active-border: $color) {
+    color: $color;
+    border-color: $color;
+    @include hover() {
+        color: $color-hover;
+        background-color: $active-background;
+        border-color: $active-border;
+    }
+    &:focus, &.focus { box-shadow: 0 0 0 $btn-focus-width rgba($color, .5); }
+    &.disabled, &:disabled { color: $color; }
+    &:not(:disabled):not(.disabled):active, &:not(:disabled):not(.disabled).active, .show>&.dropdown-toggle {
+        color: color-yiq($active-background);
+        background-color: $active-background;
+        border-color: $active-border;
+        &:focus {
+            @if $enable-shadows and $btn-active-box-shadow != none {
+                @include box-shadow($btn-active-box-shadow, 0 0 0 $btn-focus-width rgba($color, .5));
+            } @else { box-shadow: 0 0 0 $btn-focus-width rgba($color, .5); }
+        }
+    }
+}
+@mixin button-size($padding-y, $padding-x, $font-size, $line-height, $border-radius) {
+    padding: $padding-y $padding-x;
+    @include font-size($font-size);
+    line-height: $line-height;
+    @include border-radius($border-radius, 0);
+}
+// Pagination
+@mixin pagination-size($padding-y, $padding-x, $font-size, $line-height, $border-radius) {
+    .page-link {
+        padding: $padding-y $padding-x;
+        @include font-size($font-size);
+        line-height: $line-height;
+    }
+    .page-item:first-child .page-link { @include border-left-radius($border-radius); }
+    .page-item:last-child .page-link { @include border-right-radius($border-radius); }
+}
+// List Groups
+@mixin list-group-item-variant($state, $background, $color) {
+    .list-group-item-#{$state} {
+        color: $color;
+        background-color: $background;
+
+        &.list-group-item-action {
+            @include hover-focus() {
+                color: $color;
+                background-color: darken($background, 5%);
+            }
+            &.active {
+                color: $white;
+                background-color: $color;
+                border-color: $color;
+            }
+        }
+    }
+}
+// Nav Divider
+@mixin nav-divider($color: $nav-divider-color, $margin-y: $nav-divider-margin-y, $ignore-warning: false) {
+    margin: $margin-y 0;
+    border-top: 1px solid $color;
+}
+// Forms
+@mixin form-control-focus($ignore-warning: false) {
+    &:focus {
+        color: $input-focus-color;
+        background-color: $input-focus-bg;
+        border-color: $input-focus-border-color;
+        @if $enable-shadows {
+            @include box-shadow($input-box-shadow, $input-focus-box-shadow);
+        } @else { box-shadow: $input-focus-box-shadow; }
+    }
+}
+@mixin form-validation-state-selector($state) {
+    @if ($state == "valid" or $state == "invalid") {
+        .was-validated #{if(&, "&", "")}:#{$state}, #{if(&, "&", "")}.is-#{$state} { @content; }
+    } @else {
+        #{if(&, "&", "")}.is-#{$state} { @content; }
+    }
+}
+@mixin form-validation-state($state, $color, $icon) {
+    .#{$state}-feedback {
+        margin-top: $form-feedback-margin-top;
+        @include font-size($form-feedback-font-size);
+        color: $color;
+    }
+    .#{$state}-tooltip {
+        padding: $form-feedback-tooltip-padding-y $form-feedback-tooltip-padding-x;
+        @include font-size($form-feedback-tooltip-font-size);
+        line-height: $form-feedback-tooltip-line-height;
+        color: color-yiq($color);
+        background-color: rgba($color, $form-feedback-tooltip-opacity);
+        @include border-radius($form-feedback-tooltip-border-radius);
+        .form-row > .col > &, .form-row > [class*="col-"] > & { left: $form-grid-gutter-width * .5; }
+    }
+    .form-control {
+        @include form-validation-state-selector($state) {
+            border-color: $color;
+            @if $enable-validation-icons {
+                padding-right: $input-height-inner !important;
+                background-position: right $input-height-inner-quarter center;
+                background-size: $input-height-inner-half $input-height-inner-half;
+            }
+            &:focus {
+                border-color: $color;
+                box-shadow: 0 0 0 $input-focus-width rgba($color, .25);
+            }
+        }
+    }
+    select.form-control {
+        @include form-validation-state-selector($state) {
+            @if $enable-validation-icons {
+                padding-right: $input-padding-x * 4 !important;
+                background-position: right $input-padding-x * 2 center;
+            }
+        }
+    }
+    textarea.form-control {
+        @include form-validation-state-selector($state) {
+            @if $enable-validation-icons {
+                padding-right: $input-height-inner;
+                background-position: top $input-height-inner-quarter right $input-height-inner-quarter;
+            }
+        }
+    }
+    .custom-select {
+        @include form-validation-state-selector($state) {
+            border-color: $color;
+            @if $enable-validation-icons {
+                padding-right: $custom-select-feedback-icon-padding-right !important;
+                background: $custom-select-background, $custom-select-bg escape-svg($icon) $custom-select-feedback-icon-position / $custom-select-feedback-icon-size no-repeat;
+            }
+            &:focus {
+                border-color: $color;
+                box-shadow: 0 0 0 $input-focus-width rgba($color, .25);
+            }
+        }
+    }
+    .form-check-input {
+        @include form-validation-state-selector($state) {  ~ .form-check-label { color: $color; } }
+    }
+    .custom-control-input {
+        @include form-validation-state-selector($state) {
+            ~ .custom-control-label {
+                color: $color;
+                &::before { border-color: $color; }
+            }
+            &:checked {
+                ~ .custom-control-label::before {
+                    border-color: lighten($color, 10%);
+                    @include gradient-bg(lighten($color, 10%));
+                }
+            }
+            &:focus {
+                ~ .custom-control-label::before { box-shadow: 0 0 0 $input-focus-width rgba($color, .25); }
+                &:not(:checked) ~ .custom-control-label::before { border-color: $color; }
+            }
+        }
+    }
+    .custom-file-input {
+        @include form-validation-state-selector($state) {
+            ~ .custom-file-label { border-color: $color; }
+            &:focus ~ .custom-file-label {
+                border-color: $color;
+                box-shadow: 0 0 0 $input-focus-width rgba($color, .25);
+            }
+        }
+    }
+}
+// Table Rows
+@mixin table-row-variant($state, $background, $border: null) {
+    .table-#{$state} {
+        &, > th, > td { background-color: $background; }
+        @if $border != null { th, td, thead th, tbody + tbody { border-color: $border; } }
+    }
+    .table-hover {
+        $hover-background: darken($background, 5%);
+        .table-#{$state} {
+            @include hover() {
+                background-color: $hover-background;
+                > td, > th { background-color: $hover-background; }
+            }
+        }
+    }
+}
+
+// SKIN MIXINS BELOW
+
+// Background Variants
+@mixin bg-variant($parent, $color, $ignore-warning: false) {
+    #{$parent} { background-color: $color !important; }
+    a#{$parent}, button#{$parent} {
+        @include hover-focus() { background-color: darken($color, 10%) !important; }
+    }
+}
+@mixin bg-gradient-variant($parent, $color, $ignore-warning: false) {
+    #{$parent} { background: $color linear-gradient(180deg, mix($body-bg, $color, 15%), $color) repeat-x !important; }
+}
+// Border Radiuses
+@function valid-radius($radius) {
+    $return: ();
+    @each $value in $radius {
+        @if type-of($value) == number { $return: append($return, max($value, 0)); } @else { $return: append($return, $value); }
+    }
+    @return $return;
+}
+@mixin border-radius($radius: $border-radius, $fallback-border-radius: false) {
+    @if $enable-rounded { border-radius: valid-radius($radius); } @else if $fallback-border-radius != false { border-radius: $fallback-border-radius; }
+}
+@mixin border-top-radius($radius) {
+    @if $enable-rounded {
+        border-top-left-radius: valid-radius($radius);
+        border-top-right-radius: valid-radius($radius);
+    }
+}
+@mixin border-right-radius($radius) {
+    @if $enable-rounded {
+        border-top-right-radius: valid-radius($radius);
+        border-bottom-right-radius: valid-radius($radius);
+    }
+}
+@mixin border-bottom-radius($radius) {
+    @if $enable-rounded {
+        border-bottom-right-radius: valid-radius($radius);
+        border-bottom-left-radius: valid-radius($radius);
+    }
+}
+@mixin border-left-radius($radius) {
+    @if $enable-rounded {
+        border-top-left-radius: valid-radius($radius);
+        border-bottom-left-radius: valid-radius($radius);
+    }
+}
+@mixin border-top-left-radius($radius) {
+    @if $enable-rounded { border-top-left-radius: valid-radius($radius); }
+}
+@mixin border-top-right-radius($radius) {
+    @if $enable-rounded { border-top-right-radius: valid-radius($radius); }
+}
+@mixin border-bottom-right-radius($radius) {
+    @if $enable-rounded { border-bottom-right-radius: valid-radius($radius); }
+}
+@mixin border-bottom-left-radius($radius) {
+    @if $enable-rounded { border-bottom-left-radius: valid-radius($radius); }
+}
+// Box Shadows
+@mixin box-shadow($shadow...) {
+    @if $enable-shadows {
+        $result: ();
+        @if (length($shadow) == 1) {
+            $result: $shadow;
+        } @else {
+            @for $i from 1 through length($shadow) {
+                @if nth($shadow, $i) != "none" { $result: append($result, nth($shadow, $i), "comma"); }
+            }
+        }
+        @if (length($result) > 0) { box-shadow: $result; }
+    }
+}
+// Gradients
+@mixin gradient-bg($color) {
+    @if $enable-gradients { background: $color linear-gradient(180deg, mix($body-bg, $color, 15%), $color) repeat-x; } @else { background-color: $color; }
+}
+@mixin gradient-x($start-color: $gray-700, $end-color: $gray-800, $start-percent: 0%, $end-percent: 100%) {
+    background-image: linear-gradient(to right, $start-color $start-percent, $end-color $end-percent);
+    background-repeat: repeat-x;
+}
+@mixin gradient-y($start-color: $gray-700, $end-color: $gray-800, $start-percent: 0%, $end-percent: 100%) {
+    background-image: linear-gradient(to bottom, $start-color $start-percent, $end-color $end-percent);
+    background-repeat: repeat-x;
+}
+@mixin gradient-directional($start-color: $gray-700, $end-color: $gray-800, $deg: 45deg) {
+    background-image: linear-gradient($deg, $start-color, $end-color);
+    background-repeat: repeat-x;
+}
+@mixin gradient-x-three-colors($start-color: $blue, $mid-color: $purple, $color-stop: 50%, $end-color: $red) {
+    background-image: linear-gradient(to right, $start-color, $mid-color $color-stop, $end-color);
+    background-repeat: no-repeat;
+}
+@mixin gradient-y-three-colors($start-color: $blue, $mid-color: $purple, $color-stop: 50%, $end-color: $red) {
+    background-image: linear-gradient($start-color, $mid-color $color-stop, $end-color);
+    background-repeat: no-repeat;
+}
+@mixin gradient-radial($inner-color: $gray-700, $outer-color: $gray-800) {
+    background-image: radial-gradient(circle, $inner-color, $outer-color);
+    background-repeat: no-repeat;
+}
+@mixin gradient-striped($color: rgba($white, .15), $angle: 45deg) { background-image: linear-gradient($angle, $color 25%, transparent 25%, transparent 50%, $color 50%, $color 75%, transparent 75%, transparent); }
+// Transition
+@mixin transition($transition...) {
+    @if length($transition) == 0 { $transition: $transition-base; }
+    @if $enable-transitions {
+        @if nth($transition, 1) != null { transition: $transition; }
+        @if $enable-prefers-reduced-motion-media-query and nth($transition, 1) != null and nth($transition, 1) != none {
+            @media (prefers-reduced-motion: reduce) { transition: none; }
+        }
+    }
+}
