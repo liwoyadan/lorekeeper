@@ -6,6 +6,7 @@ use App\Events\CommentCreated;
 use App\Events\CommentDeleted;
 use App\Events\CommentUpdated;
 use App\Models\Model;
+use App\Models\Character\Character;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model {
@@ -26,7 +27,7 @@ class Comment extends Model {
      * @var array
      */
     protected $fillable = [
-        'comment', 'approved', 'guest_name', 'guest_email', 'is_featured', 'type', 'title', 'is_locked',
+        'comment', 'approved', 'guest_name', 'guest_email', 'is_featured', 'type', 'title', 'is_locked', 'character_id',
     ];
 
     /**
@@ -102,6 +103,13 @@ class Comment extends Model {
      */
     public function edits() {
         return $this->hasMany(CommentEdit::class)->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Get the character this comment was posted as.
+     */
+    public function character() {
+        return $this->belongsTo(Character::class, 'character_id');
     }
 
     /**********************************************************************************************

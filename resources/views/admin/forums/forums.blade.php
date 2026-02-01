@@ -23,31 +23,38 @@
     @else
         {!! $forums->render() !!}
         <div class="row no-gutters flex-wrap font-weight-bold pb-1 ubt-bottom">
-            <div class="col-7 col-md-5">Name</div>
-            <div class="col-5 col-md-4">Children</div>
-            <div class="col-12 col-md-3">Last Edited</div>
+            <div class="col-6 col-md-4">Name</div>
+            <div class="col-6 col-md-2">Parent</div>
+            <div class="col-5 col-md">Children</div>
+            <div class="col-6 col-md-3">Last Edited</div>
         </div>
         @foreach ($forums as $forum)
             <div class="row no-gutters flex-wrap align-items-center py-1 {{ !$loop->first ? 'ubt-top' : '' }}">
-                <div class="col-7 col-md-5 font-weight-bold">
+                <div class="col-6 col-md-4 font-weight-bold">
                     <div class="logs-table-cell ubt-texthide">
                         {!! $forum->displayIcon(25) !!}
+                        @if (!$forum->parent_id)
+                            <i class="fas fa-layer-group" data-toggle="tooltip" title="This forum is not assigned to any parent and thus functions as an overall category."></i>
+                        @endif
                         {!! $forum->displayName !!}
                         @if ($forum->color)
                             <span class="rounded-circle d-inline-block" style="background-color: {{ $forum->color }}; height: 10px; width: 10px;" data-toggle="tooltip" title="{{ $forum->color }}"></span>
                         @endif
                     </div>
                 </div>
-                <div class="col-5 col-md-4">
-                    <div class="logs-table-cell">
+                <div class="col-6 col-md-2">
+                    <div class="logs-table-cell small">
+                        {!! $forum->parent->displayName ?? '---' !!}
+                    </div>
+                </div>
+                <div class="col-5 col-md">
+                    <div class="logs-table-cell small">
                         @if ($forum->children->count())
-                            <small>
-                                @foreach ($forum->children as $child)
-                                    {!! $child->displayName !!} {!! $loop->last ? '' : ',' !!}
-                                @endforeach
-                            </small>
+                            @foreach ($forum->children as $child)
+                                {!! $child->displayName !!}{!! $loop->last ? '' : ', ' !!}
+                            @endforeach
                         @else
-                            <small>N/A</small>
+                            ---
                         @endif
                     </div>
                 </div>

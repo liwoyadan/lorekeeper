@@ -7,6 +7,9 @@
 
             <h5 class="mb-1">
                 {!! $comment->commenter->displayName !!}
+                @if ($comment->character_id && $comment->character)
+                    <br><small class="text-muted">as {!! $comment->character->displayName !!}</small>
+                @endif
             </h5>
             <div class="small">
                 @auth

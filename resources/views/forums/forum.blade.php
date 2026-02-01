@@ -27,15 +27,13 @@
             </div>
         @endif
     </div>
-    
 
     @if (isset($forum->parent))
         @include('forums._forum_page', ['forum' => $forum, 'posts' => $posts])
     @else
         @include('forums._forum_topper', ['forum' => $forum])
-
         <hr class="w-75 mx-auto">
-
+        
         <h5 class="text-center mb-3">
             Boards in {!! $forum->name !!}
         </h5>
