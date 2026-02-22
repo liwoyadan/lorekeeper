@@ -22,20 +22,19 @@
             You are editing this character as a staff member.
         </div>
     @endif
-    <div class="alert alert-info">This creates a one-to-one relation with all requested characters!</div>
 
-    <strong>
-        <p>Characters you own will auto-link and not require approval.</p>
-    </strong>
+    <div class="alert alert-info">
+        Requesting a relationship will create a one-to-one link between both characters. <b>If you own both characters it will auto-link</b> and not require approval.
+    </div>
 
     {!! Form::open(['url' => $character->url . '/links/edit']) !!}
     <div class="text-right mb-3">
         <a href="#" class="btn btn-outline-info" id="addCharacter">Add Character</a>
     </div>
-    <div id="characters" class="mb-3">
+    <div id="characters">
     </div>
 
-    <div class="text-right mb-3">
+    <div class="text-right mt-3">
         {!! Form::submit('Request Links', ['class' => 'btn btn-primary']) !!}
     </div>
 
@@ -43,6 +42,7 @@
 
     @include('widgets._link_select', ['character' => $character])
 @endsection
+
 @section('scripts')
     @parent
     @include('js._character_select_js')

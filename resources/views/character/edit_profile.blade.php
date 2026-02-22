@@ -47,21 +47,21 @@
 
     @if ($character->user_id == Auth::user()->id)
         @if (!$character->is_myo_slot)
-            <div class="row">
+            <div class="row align-items-end">
                 <div class="col-md form-group">
-                    {!! Form::label('is_gift_art_allowed', 'Allow Gift Art', ['class' => 'form-check-label mb-3']) !!} {!! add_help('This will place the character on the list of characters that can be drawn for gift art. This does not have any other functionality, but allow users looking for characters to draw to find your character easily.') !!}
+                    {!! Form::label('is_gift_art_allowed', 'Allow Gift Art', ['class' => 'form-check-label mb-1']) !!} {!! add_help('This will place the character on the list of characters that can be drawn for gift art. This does not have any other functionality, but allow users looking for characters to draw to find your character easily.') !!}
                     {!! Form::select('is_gift_art_allowed', [0 => 'No', 1 => 'Yes', 2 => 'Ask First'], $character->is_gift_art_allowed, ['class' => 'form-control user-select']) !!}
                 </div>
                 <div class="col-md form-group">
-                    {!! Form::label('is_gift_writing_allowed', 'Allow Gift Writing', ['class' => 'form-check-label mb-3']) !!} {!! add_help(
+                    {!! Form::label('is_gift_writing_allowed', 'Allow Gift Writing', ['class' => 'form-check-label mb-1']) !!} {!! add_help(
                         'This will place the character on the list of characters that can be written about for gift writing. This does not have any other functionality, but allow users looking for characters to write about to find your character easily.',
                     ) !!}
                     {!! Form::select('is_gift_writing_allowed', [0 => 'No', 1 => 'Yes', 2 => 'Ask First'], $character->is_gift_writing_allowed, ['class' => 'form-control user-select']) !!}
                 </div>
-            </div>
-            <div class="col-md form-group">
-                {!! Form::label('is_links_open', 'Allow Link Requests?', ['class' => 'form-check-label mb-3']) !!} {!! add_help('This will allow users to request links with your character.') !!}
-                {!! Form::checkbox('is_links_open', 1, $character->is_links_open, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                <div class="col-md form-group">
+                    {!! Form::label('is_links_open', 'Allow Link Requests?', ['class' => 'form-check-label']) !!} {!! add_help('This will allow users to request links with your character.') !!}
+                    {!! Form::checkbox('is_links_open', 1, $character->is_links_open, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                </div>
             </div>
         @endif
         @if ($character->is_tradeable || $character->is_sellable)
