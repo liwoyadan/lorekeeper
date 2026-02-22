@@ -142,6 +142,7 @@ class Notification extends Model {
     public const CLAIM_CANCELLED = 109;
     public const LINK_REQUESTED = 200;
     public const LINK_ACCEPTED = 201;
+    public const LINK_REJECTED = 202;
     public const REPORT_ASSIGNED = 220;
     public const REPORT_CLOSED = 221;
     public const COMMENT_MADE = 239;

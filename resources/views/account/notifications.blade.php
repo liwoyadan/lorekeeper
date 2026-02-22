@@ -86,7 +86,6 @@
     @parent
     <script>
         $(document).ready(function() {
-
             var $confirmationModal = $('#confirmationModal');
             var $clearButton = $('#clearButton');
             var $clearSubmit = $('#clearSubmit');

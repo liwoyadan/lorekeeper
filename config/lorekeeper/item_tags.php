@@ -24,4 +24,10 @@ return [
         'text_color'       => '#ffffff',
         'background_color' => '#1fd1a7',
     ],
+
+    'link' => [
+        'name'             => 'Character Link',
+        'text_color'       => '#ffffff',
+        'background_color' => '#7a354c',
+    ],
 ];

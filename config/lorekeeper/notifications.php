@@ -322,17 +322,21 @@ return [
     // LINK_REQUESTED
     200 => [
         'name'    => 'Link Requested',
-        'message' => '<a href="{link}">{user}</a> has requested to link your character {requested} to {character}.'
-            .'<div class="btn btn-sm btn-success m-1 accept-link" data-link-id="{id}">Accept</div>'
-            .'<div class="btn btn-sm btn-danger m-1 reject-link" data-link-id="{id}">Reject</div>',
-        'url'  => '',
-        'view' => 'links',
+        'message' => '{user} has requested to establish a link between your character {requested} with {character}. (<a href="{url}">View Link Requests</a>)',
+        'url'  => 'character/{character_slug}/links/edit',
     ],
 
     // LINK_ACCEPTED
     201 => [
         'name'    => 'Link Accepted',
-        'message' => '<a href="{link}">{user}</a> has accepted your link request to {requested}. (<a href="{character}/links">View Character Links.</a>)',
+        'message' => '<a href="{link}">{user}</a> has accepted your link request to {requested}. (<a href="{character}/links">View Character Relationships</a>)',
+        'url'     => '',
+    ],
+
+    // LINK_REJECTED
+    202 => [
+        'name'    => 'Link Rejected',
+        'message' => '<a href="{link}">{user}</a> has rejected your link request to {requested}; the item you used has been refunded. (<a href="{character}/links">View Character Relationships</a>)',
         'url'     => '',
     ],
 

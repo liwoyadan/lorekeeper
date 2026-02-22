@@ -17,33 +17,40 @@
 
     @include('character._header', ['character' => $character])
 
-    @if ($character->user_id != Auth::user()->id)
-        <div class="alert alert-warning">
-            You are editing this character as a staff member.
-        </div>
+    <div class="alert alert-info">
+        Initiating a request will create a one-to-one link between both characters that requires the other character owner's approval. <b>If you own both characters it will auto-link</b> and not require approval.
+    </div>
+
+    <h3>
+        Pending Requests
+    </h3>
+    @if ($character->pendingLinks->count())
+        @foreach ($character->pendingLinks as $pendingLink)
+            @include('character._pending_link', ['character' => $character, 'link' => $pendingLink, 'otherCharacter' => $pendingLink->getOtherCharacter($character->id), 'recipient' => $pendingLink->initialLog()->recipient])
+        @endforeach
+    @else
+        <p class="text-muted text-center mb-0">
+            {{ $character->fullName }} currently has no pending link requests.
+        </p>
     @endif
 
-    <div class="alert alert-info">
-        Requesting a relationship will create a one-to-one link between both characters. <b>If you own both characters it will auto-link</b> and not require approval.
-    </div>
+    <hr>
 
+    <h3>
+        Establish Link
+    </h3>
     {!! Form::open(['url' => $character->url . '/links/edit']) !!}
-    <div class="text-right mb-3">
-        <a href="#" class="btn btn-outline-info" id="addCharacter">Add Character</a>
-    </div>
-    <div id="characters">
-    </div>
+
+    @include('widgets._link_select', ['character' => $character, 'linkItems' => $linkItems])
 
     <div class="text-right mt-3">
-        {!! Form::submit('Request Links', ['class' => 'btn btn-primary']) !!}
+        {!! Form::submit('Request Link', ['class' => 'btn btn-primary']) !!}
     </div>
 
     {!! Form::close() !!}
-
-    @include('widgets._link_select', ['character' => $character])
 @endsection
 
 @section('scripts')
     @parent
-    @include('js._character_select_js')
+    @include('js._link_select_js')
 @endsection

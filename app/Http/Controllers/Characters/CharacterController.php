@@ -14,6 +14,7 @@ use App\Models\Currency\Currency;
 use App\Models\Gallery\GallerySubmission;
 use App\Models\Item\Item;
 use App\Models\Item\ItemCategory;
+use App\Models\Item\ItemTag;
 use App\Models\User\User;
 use App\Models\User\UserCurrency;
 use App\Models\User\UserItem;
@@ -589,8 +590,12 @@ class CharacterController extends Controller {
             abort(404);
         }
 
+        $tags = ItemTag::where('tag', 'link')->where('is_active', 1)->get()->pluck('item_id');
+        $linkItems = UserItem::where('user_id', $this->character->user_id)->whereIn('item_id', $tags)->where('count', '>', 0)->with('item')->get()->pluck('item.name', 'id');
+
         return view('character.edit_links', [
             'character' => $this->character,
+            'linkItems' => $linkItems,
         ]);
     }
 
@@ -607,14 +612,15 @@ class CharacterController extends Controller {
             abort(404);
         }
 
-        $isMod = Auth::user()->hasPower('manage_characters');
+        $isStaff = Auth::user()->hasPower('manage_characters') && ($this->character->user_id != Auth::user()->id);
         $isOwner = ($this->character->user_id == Auth::user()->id);
-        if (!$isMod && !$isOwner) {
+        if (!$isStaff && !$isOwner) {
             abort(404);
         }
+        $data = $request->only(['slug', 'link_item_id']);
 
-        if ($service->createCharacterRelationLinks($this->character, $request->only(['slug']), Auth::user())) {
-            flash('Links requested successfully.')->success();
+        if ($service->createCharacterRelationLinks($this->character, $data, Auth::user(), $isStaff)) {
+            flash('Link requested successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -636,7 +642,7 @@ class CharacterController extends Controller {
     public function postEditCharacterLinkInfo(Request $request, CharacterLinkService $service, $slug, $id) {
         $data = $request->only(['info', 'type']);
         if ($service->updateCharacterRelationLinkInfo($data + ['slug' => $slug], $id, Auth::user())) {
-            flash('Info updated successfully!')->success();
+            flash('Link info updated successfully!')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -654,7 +660,6 @@ class CharacterController extends Controller {
      */
     public function getDeleteCharacterLink($slug, $id) {
         $link = CharacterRelation::find($id);
-
         if (!$link) {
             abort(404);
         }

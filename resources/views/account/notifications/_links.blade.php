@@ -2,57 +2,39 @@
     $(document).ready(function() {
         $('.accept-link').on('click', function(e) {
             e.preventDefault();
-            let $row = $(this).parent().parent().parent();
             let id = $(this).data('link-id');
-            let notificationId = $row.find('.clear-notification').data('id');
 
-            console.log(notificationId);
+            console.log(id);
 
             $.ajax({
-                url: '{{ url('links/accept') }}/' + id,
+                url: '{{ url('relationships/accept') }}/' + id,
+                method: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}'
                 },
-                method: 'POST',
-                success: function(data) {
-                    $.ajax({
-                        url: "{{ url('notifications/delete') }}/" + notificationId,
-                        method: 'GET',
-                        success: function(data) {
-                            location.reload();
-                        }
-                    });
-                },
-                error: function(data) {
-                    location.reload();
-                }
+            }).done(function(res) {
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                alert("AJAX call failed: " + textStatus + ", " + errorThrown);
             });
         });
 
-        $('.delete-link').on('click', function(e) {
+        $('.reject-link').on('click', function(e) {
             e.preventDefault();
-            let $row = $(this).parent().parent().parent();
             let id = $(this).data('link-id');
-            let notificationId = $row.find('.clear-notification').data('id');
+
+            console.log(id);
+            console.log('{{ url('relationships/reject') }}/' + id);
 
             $.ajax({
-                url: '{{ url('links/delete') }}/' + id,
+                url: '{{ url('relationships/reject') }}/' + id,
+                method: 'POST',
+                type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}'
                 },
-                method: 'POST',
-                success: function(data) {
-                    $.ajax({
-                        url: "{{ url('notifications/delete') }}/" + notificationId,
-                        method: 'GET',
-                        success: function(data) {
-                            location.reload();
-                        }
-                    });
-                },
-                error: function(data) {
-                    location.reload();
-                }
+            }).done(function(res) {
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                alert("AJAX call failed: " + textStatus + ", " + errorThrown);
             });
         });
     });

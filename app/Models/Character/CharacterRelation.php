@@ -3,6 +3,7 @@
 namespace App\Models\Character;
 
 use App\Models\Model;
+use App\Models\User\UserItem;
 
 class CharacterRelation extends Model {
     /**
@@ -11,7 +12,7 @@ class CharacterRelation extends Model {
      * @var array
      */
     protected $fillable = [
-        'character_1_id', 'character_2_id', 'info', 'type', 'status',
+        'character_1_id', 'character_2_id', 'info', 'character_1_type', 'character_2_type', 'status', 'deleted_at', 'user_item_id',
     ];
 
     /**
@@ -28,6 +29,7 @@ class CharacterRelation extends Model {
      */
     protected $casts = [
         'info' => 'array',
+        'deleted_at' => 'datetime',
     ];
 
     /**
@@ -57,6 +59,20 @@ class CharacterRelation extends Model {
         return $this->belongsTo(Character::class, 'character_2_id');
     }
 
+    /**
+     * Get the associated logs.
+     */
+    public function logs() {
+        return $this->hasMany(RelationsLog::class, 'relation_id');
+    }
+
+    /**
+     * Get the associated user item, if any.
+     */
+    public function userItem() {
+        return $this->belongsTo(UserItem::class, 'user_item_id');
+    }
+
     /**********************************************************************************************
 
         OTHER FUNCTIONS
@@ -78,7 +94,7 @@ class CharacterRelation extends Model {
      * @param mixed $id
      */
     public function getRelationshipInfo($id) {
-        return $this->info ? $this->info[$id == $this->character_1_id ? 0 : 1] : null;
+        return (isset($this->info) && $this->info) ? ($this->info[$id == $this->character_1_id ? 0 : 1] ?? null) : null;
     }
 
     /**
@@ -88,5 +104,31 @@ class CharacterRelation extends Model {
      */
     public function getCharacterForUser($id) {
         return $this->characterOne->user_id == $id ? $this->characterOne : ($this->characterTwo->user_id == $id ? $this->characterTwo : null);
+    }
+
+    /**
+     * Get the type of relation based on the given character id.
+     *
+     * @param mixed $id
+     */
+    public function getRelationType($id) {
+        if (!$id) {
+            return '???';
+        }
+
+        if ($this->character_1_id == $id) {
+            return $this->character_1_type;
+        } else {
+            return $this->character_2_type;
+        }
+    }
+
+    /**
+     * Get the first log of this relation, which is the initial request.
+     *
+     * @param mixed $id
+     */
+    public function initialLog() {
+        return $this->logs()->where('log_type', 'Link Requested')->orderBy('created_at', 'ASC')->first() ?? null;
     }
 }

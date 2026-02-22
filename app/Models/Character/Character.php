@@ -198,7 +198,16 @@ class Character extends Model {
     */
     public function links() {
         // character id can be in either column
-        return $this->hasMany(CharacterRelation::class, 'character_1_id')->orWhere('character_2_id', $this->id);
+        $first = ($this->hasMany(CharacterRelation::class, 'character_1_id')->where('status', 'Approved')->whereNull('deleted_at'));
+        return $this->hasMany(CharacterRelation::class, 'character_2_id')->where('status', 'Approved')->whereNull('deleted_at')->union($first)->orderBy('created_at', 'DESC');
+    }
+
+    /*
+    * Get the pending links for this character
+    */
+    public function pendingLinks() {
+        $first = ($this->hasMany(CharacterRelation::class, 'character_1_id')->where('status', 'Pending')->whereNull('deleted_at'));
+        return $this->hasMany(CharacterRelation::class, 'character_2_id')->where('status', 'Pending')->whereNull('deleted_at')->union($first)->orderBy('created_at', 'DESC');
     }
 
     /**********************************************************************************************
