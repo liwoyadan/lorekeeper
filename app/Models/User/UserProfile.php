@@ -3,6 +3,7 @@
 namespace App\Models\User;
 
 use App\Models\Model;
+use App\Models\Forum\ForumFlair;
 use App\Traits\Commentable;
 
 class UserProfile extends Model {
@@ -42,5 +43,12 @@ class UserProfile extends Model {
      */
     public function user() {
         return $this->belongsTo(User::class);
+    }
+    
+    /**
+     * Get the user's set forum flair.
+     */
+    public function forumFlair() {
+        return $this->belongsTo(ForumFlair::class, 'forum_flair_id');
     }
 }

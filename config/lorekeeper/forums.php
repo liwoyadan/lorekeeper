@@ -14,7 +14,7 @@ return [
     // If enabled, users can set a custom forum signature
     'allow_signatures' => [
         'enabled'     => 1,
-        'max_height'  => 125, // maximum height for signatures in a comment (px), will scroll
+        'max_height'  => 55, // maximum height for signatures in a comment (px), will scroll
     ],
 
     // Allow users to upload their own custom forum post background

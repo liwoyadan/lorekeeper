@@ -9,7 +9,6 @@
 
     <h1>Settings</h1>
 
-
     <div class="card p-3 mb-2">
         <h3>Avatar</h3>
         @if (Auth::user()->isStaff)
@@ -68,6 +67,58 @@
         </div>
         <div class="text-right">
             {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+        </div>
+        {!! Form::close() !!}
+    </div>
+
+    <div class="card p-3 mb-2">
+        <h3>Forum Settings</h3>
+        <p>
+            You can customize your forum appearance (optional, flair & decor) as well as your publicly displayed forum signature here.<br>
+            @if (config('lorekeeper.forums.allow_signatures.enabled'))
+                Forum signatures are currently <b>enabled</b> and have a maximum height of <b>{{ config('lorekeeper.forums.allow_signatures.max_height') ?? '???'}}px</b> (not inclusive of surrounding padding) before beginning to scroll.
+            @else
+                Forum signatures are currently <b>disabled</b>.
+            @endif
+        </p>
+
+        {!! Form::open(['url' => 'account/forum-settings']) !!}
+        @if (config('lorekeeper.forums.allow_signatures.enabled'))
+            @if (isset(Auth::user()->profile->forum_signature) && Auth::user()->profile->forum_signature)
+                <h5 class="mb-0">
+                    Signature Preview
+                </h5>
+                <div class="card p-2 mb-2">
+                    <div class="forum-signature" style="overflow: auto; max-height: {{ config('lorekeeper.forums.allow_signatures.max_height') ?? ''}}px;">
+                        {!! Auth::user()->profile->parsed_forum_signature !!}
+                    </div>
+                </div>
+                <hr class="w-75 mx-auto mb-2">
+            @endif
+            <div class="form-group">
+                {!! Form::label('forum_signature', 'Forum Signature') !!} {!! add_help('This signature will appear at the bottom of your forum posts.') !!}
+                {!! Form::textarea('forum_signature', Auth::user()->profile->forum_signature, ['class' => 'form-control wysiwyg', 'rows' => 3]) !!}
+            </div>
+        @endif
+
+        <div class="row">
+            <div class="col-md">
+                <div class="form-group">
+                    {!! Form::label('forum_flair_id', 'Forum Flair') !!} {!! add_help('Select a flair to display an icon next to (if applicable) and your spruce up your username in forum posts.') !!}
+                    {!! Form::select('forum_flair_id', $flairOptions, Auth::user()->profile->forum_flair_id ?? null, ['class' => 'form-control forum-dropdown', 'placeholder' => 'Select Flair']) !!}
+                </div>
+            </div>
+
+            {{-- <div class="col-md">
+                <div class="form-group">
+                    {!! Form::label('forum_decor_id', 'Forum Post Decor') !!} {!! add_help('Depending on the type of decoration, this will decorate or modify your posts on the forum in a certain way.') !!}
+                    {!! Form::select('forum_decor_id', $decorOptions, Auth::user()->profile->forum_decor_id ?? null, ['class' => 'form-control forum-dropdown', 'placeholder' => 'Select Decor']) !!}
+                </div>
+            </div> --}}
+        </div>
+
+        <div class="text-right">
+            {!! Form::submit('Edit Forum Settings', ['class' => 'btn btn-primary']) !!}
         </div>
         {!! Form::close() !!}
     </div>
@@ -171,4 +222,10 @@
             {!! Form::close() !!}
         @endif
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $('.forum-dropdown').selectize();
+    </script>
 @endsection

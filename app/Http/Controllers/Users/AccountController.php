@@ -66,11 +66,11 @@ class AccountController extends Controller {
     public function getSettings() {
         $user = Auth::user();
 
-        $staffFlairs = ForumFlair::isStaff($user)->sortAlphabetical()->pluck('name', 'id')->toArray();
+        $staffFlairs = ForumFlair::isStaff()->default(0)->sortAlphabetical()->pluck('name', 'id')->toArray();
         $defaultFlairs = ForumFlair::visible($user)->default()->sortAlphabetical()->pluck('name', 'id')->toArray();
         $obtainedFlairs = ForumFlair::visible($user)->default(0)->whereIn('id', $user->forumFlairs()->pluck('forum_flair_id')->toArray())->sortAlphabetical()->pluck('name', 'id')->toArray();
 
-        $staffDecors = ForumDecor::isStaff($user)->sortAlphabetical()->get()->pluck('fullName', 'id')->toArray();
+        $staffDecors = ForumDecor::isStaff()->default(0)->sortAlphabetical()->get()->pluck('fullName', 'id')->toArray();
         $defaultDecors = ForumDecor::visible($user)->default()->sortAlphabetical()->get()->pluck('fullName', 'id')->toArray();
         $obtainedDecors = ForumDecor::visible($user)->default(0)->whereIn('id', $user->forumDecors()->pluck('forum_decor_id')->toArray())->sortAlphabetical()->get()->pluck('fullName', 'id')->toArray();
 
@@ -91,6 +91,67 @@ class AccountController extends Controller {
             'parsed_text' => parse($request->get('text')),
         ]);
         flash('Profile updated successfully.')->success();
+
+        return redirect()->back();
+    }
+
+    /**
+     * Edits the user's forum settings.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postForumSettings(Request $request) {
+        $user = Auth::user();
+        $data = $request->validate([
+            'forum_signature' => 'nullable|string|max:1000',
+            'forum_flair_id' => 'nullable|exists:forum_flairs,id',
+            'forum_decor_id' => 'nullable|exists:forum_decors,id',
+        ]);
+
+        if ($data['forum_flair_id']) {
+            $flair = ForumFlair::find($data['forum_flair_id']);
+            $canAccessFlair = false;
+            if ($flair) {
+                if ($flair->is_staff && $user->isStaff) {
+                    $canAccessFlair = true;
+                } elseif ($flair->is_default) {
+                    $canAccessFlair = true;
+                } elseif ($user->forumFlairs()->where('forum_flair_id', $flair->id)->exists()) {
+                    $canAccessFlair = true;
+                }
+            }
+
+            if (!$canAccessFlair) {
+                flash('You do not have access to the selected forum flair.')->error();
+            }
+        }
+
+        if ($data['forum_decor_id']) {
+            $decor = ForumDecor::find($data['forum_decor_id']);
+            $canAccessDecor = false;
+            if ($decor) {
+                if ($decor->is_staff && $user->isStaff) {
+                    $canAccessDecor = true;
+                } elseif ($decor->is_default) {
+                    $canAccessDecor = true;
+                } elseif ($user->forumDecors()->where('forum_decor_id', $decor->id)->exists()) {
+                    $canAccessDecor = true;
+                }
+            }
+
+            if (!$canAccessDecor) {
+                flash('You do not have access to the selected forum decoration.')->error();
+            }
+        }
+
+        $user->profile->update([
+            'forum_signature' => $data['forum_signature'] ?? null,
+            'parsed_forum_signature' => (isset($data['forum_signature']) && $data['forum_signature']) ? parse($data['forum_signature']) : null,
+            'forum_flair_id' => (isset($canAccessFlair) && $canAccessFlair) ? $data['forum_flair_id'] : null,
+            'forum_decor_id' => (isset($canAccessDecor) && $canAccessDecor) ? $data['forum_decor_id'] : null,
+        ]);
+
+        flash('Forum settings updated successfully.')->success();
 
         return redirect()->back();
     }

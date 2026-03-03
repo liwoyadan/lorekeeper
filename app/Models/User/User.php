@@ -356,6 +356,43 @@ class User extends Authenticatable implements MustVerifyEmail {
     }
 
     /**
+     * Displays the user's name, linked to profile,
+     * but formatted for forums.
+     *
+     * @return string
+     */
+    public function getForumNameAttribute() {
+        $banned = $this->is_banned;
+        $userRank = $this->rank;
+        $flair = $this->profile->forumFlair ?? null;
+        if ($flair) {
+            if ($flair->imageUrl) {
+                $flairIcon = '<img src="'.$flair->imageUrl.'" alt="'.$flair->name.' Icon" class="display-flair-icon">';
+            }
+            if ($flair->inlineStyles && ($flair->inlineStyles != '')) {
+                $flairStyles = $flair->inlineStyles;
+            }
+        }
+
+        $string = '';
+        if ($banned) {
+            $string .= '<strike>';
+        }
+        $string .= '<a href="'.$this->url.'" class="display-flair" style="'.($flairStyles ?? ($userRank->color ? 'color: #'.$this->rank->color.';' : ''));
+        if ($this->is_deactivated) {
+            $string .= 'opacity: 0.5;';
+        }
+        $string .= '">'.($flairIcon ?? '');
+        // $string .= '<i class="mr-1 '.($userRank->icon ? $this->rank->icon : 'fas fa-user').'" style="opacity: 50%;"></i>'; // Comment in if you want rank icon too
+        $string .= $this->name.'</a>';
+        if ($banned) {
+            $string .= '</strike>';
+        }
+
+        return $string;
+    }
+
+    /**
      * Gets the user's last username change.
      *
      * @return string

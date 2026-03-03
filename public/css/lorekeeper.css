@@ -993,6 +993,10 @@ tr.accountbound {
     height: auto;
 }
 
+.forum-signature p:last-child {
+    margin-bottom: 0;
+}
+
 .forum-heading-bg {
     background-repeat: none;
     background-size: cover;

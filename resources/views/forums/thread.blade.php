@@ -35,20 +35,22 @@
     </div>
 
     <div class="border rounded mb-2 row no-gutters">
-        <div class="col-md-2 text-center border-md-right border-bottom border-md-bottom-0 py-3">
+        <div class="col-md-2 text-center border-md-right border-bottom border-md-bottom-0 py-2">
             <h5 class="mb-1">
-                {!! $thread->commenter->displayName !!}
+                {!! $thread->commenter->forumName !!}
             </h5>
-
             <div class="comment-avatar">
                 <img class="mw-100 rounded-circle" src="{{ $thread->character->image->thumbnailUrl ?? $thread->commenter->avatarUrl }}" style="aspect-ratio: 1/1; max-height: 100px;" alt="{{ $thread->character->name ?? $thread->commenter->name }} Avatar">
             </div>
 
-            <h5 class="text-muted my-1">
+            <h5 class="text-muted mt-1 mb-0">
                 @if ($thread->character_id && $thread->character)
                     <span class="small">as {!! $thread->character->displayName !!}</span>
                 @endif
             </h5>
+            <div>
+                {!! $thread->commenter->profile->forumFlair->displayFlair ?? '<span class="small text-muted">(No Forum Flair)</span>' !!}
+            </div>
             <div class="small">
                 @auth
                     <a href="{{ $thread->commenter->url.'/forum' }}">
@@ -60,7 +62,7 @@
             </div>
         </div>
 
-        <div class="col-md">
+        <div class="col-md d-flex flex-column">
             <div class="mb-2 border-bottom p-2">
                 <div class="row no-gutters justify-content-between">
                     <div class="col">
@@ -101,9 +103,19 @@
                     </div>
                 </div>
             </div>
-            <div class="p-2">
-                {!! config('lorekeeper.settings.wysiwyg_comments') ? nl2br($thread->comment) : nl2br($markdown->line($thread->comment)) !!}
+            <div class="p-2 flex-grow-1 d-flex flex-column">
+                <div>
+                    {!! config('lorekeeper.settings.wysiwyg_comments') ? nl2br($thread->comment) : nl2br($markdown->line($thread->comment)) !!}
+                </div>
             </div>
+            @if (config('lorekeeper.forums.allow_signatures.enabled') && (isset($thread->commenter->profile->forum_signature) && $thread->commenter->profile->forum_signature))
+                <div class="px-2 pb-2">
+                    <hr class="mx-auto my-1" style="width: 90%;">
+                    <div class="forum-signature" style="overflow: auto; max-height: {{ config('lorekeeper.forums.allow_signatures.max_height') ?? ''}}px;">
+                        {!! $thread->commenter->profile->parsed_forum_signature !!}
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 

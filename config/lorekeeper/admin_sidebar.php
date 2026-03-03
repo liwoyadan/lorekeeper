@@ -78,10 +78,10 @@ return [
                 'name' => 'Forum Flairs',
                 'url'  => 'admin/forum-flairs',
             ],
-            [
-                'name' => 'Forum Decors',
-                'url'  => 'admin/forum-decors',
-            ],
+            // [
+            //     'name' => 'Forum Decors',
+            //     'url'  => 'admin/forum-decors',
+            // ],
         ],
     ],
     'Users'      => [

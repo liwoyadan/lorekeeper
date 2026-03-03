@@ -45,7 +45,7 @@
                             <hr class="mx-auto w-75 my-1">
                         @endif
                         <div class="font-weight-bold" style="font-size: 1.25em;">
-                            & Rules Inherited From:
+                            Rules Inherited From:
                         </div>
                         @foreach ($forum->allRules['parents'] as $parentKey => $parentForumSet)
                             <a class="collapse-toggle collapsed ml-2 mb-1" href="#forumRuleSet{!! $parentKey ?? '_' !!}" data-toggle="collapse" aria-expanded="false">

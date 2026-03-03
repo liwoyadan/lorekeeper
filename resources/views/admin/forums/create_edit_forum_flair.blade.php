@@ -180,7 +180,7 @@
             </div>
         </div>
     
-        <h3>Preview</h3>
+        {{-- <h3>Preview</h3> --}}
     @endif
 
 @endsection
