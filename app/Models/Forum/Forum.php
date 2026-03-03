@@ -19,7 +19,18 @@ class Forum extends Model {
      */
     protected $fillable = [
         'name', 'description', 'parsed_description', 'is_locked', 'staff_only', 'role_limit', 'parent_id', 'sort', 'is_active',
-        'has_image', 'hash', 'extension', 'has_icon', 'icon_hash', 'icon_extension', 'color',
+        'has_image', 'hash', 'extension', 'has_icon', 'icon_hash', 'icon_extension', 'color', 'characters_enabled',
+        'forum_rules', 'forum_styles',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'forum_rules' => 'array',
+        'forum_styles' => 'array',
     ];
 
     /**
@@ -70,7 +81,7 @@ class Forum extends Model {
      * Get the parent of this forum.
      */
     public function parent() {
-        return $this->belongsTo(self::class);
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     /**
@@ -304,17 +315,34 @@ class Forum extends Model {
     }
 
     /**
-     * Display's the forum's icon.
+     * Gets all forum rules for the given forum,
+     * including any rules parents have.
      *
-     * @return string
+     * @return array
      */
-    public function displayIcon($sizeLimit = null) {
-        if (!$this->iconUrl) {
-            return null;
+    public function getAllRulesAttribute() {
+        if ((!$this->parent || $this->parent && (isset($this->parent->forum_rules) && !count($this->parent->forum_rules))) && !isset($this->forum_rules)) {
+            return [];
         }
-        $styleString = $sizeLimit ? ' style="max-width: '.$sizeLimit.'px;"' : '';
 
-        return '<img src="'.$this->iconUrl.'" alt="'.$this->name.'\'s Icon" class="forum-icon"'.$styleString.'>';
+        $ruleSets = [];
+        if ($this->parent && (isset($this->parent->forum_rules) && count($this->parent->forum_rules))) {
+            $parentForum = $this->parent;
+            if ($parentForum->parent && (isset($parentForum->parent->forum_rules) && $parentForum->parent->forum_rules)) {
+                $parentParentForum = $parentForum->parent;
+                $ruleSets['parents'][$parentParentForum->id]['name'] = $parentParentForum->name;
+                $ruleSets['parents'][$parentParentForum->id]['rules'] = $parentParentForum->forum_rules;
+            }
+
+            $ruleSets['parents'][$parentForum->id]['name'] = $parentForum->name;
+            $ruleSets['parents'][$parentForum->id]['rules'] = $parentForum->forum_rules;
+        }
+
+        if (isset($this->forum_rules) && count($this->forum_rules)) {
+            $ruleSets['current'] = $this->forum_rules;
+        }
+
+        return $ruleSets;
     }
 
     /**
@@ -350,5 +378,19 @@ class Forum extends Model {
         }
 
         return true;
+    }
+    
+    /**
+     * Display's the forum's icon.
+     *
+     * @return string
+     */
+    public function displayIcon($sizeLimit = null) {
+        if (!$this->iconUrl) {
+            return null;
+        }
+        $styleString = $sizeLimit ? ' style="max-width: '.$sizeLimit.'px;"' : '';
+
+        return '<img src="'.$this->iconUrl.'" alt="'.$this->name.'\'s Icon" class="forum-icon"'.$styleString.'>';
     }
 }

@@ -82,11 +82,11 @@ class ForumController extends Controller {
      */
     public function postCreateEditForum(Request $request, ForumService $service, $id = null) {
         $id ? $request->validate(Forum::$updateRules) : $request->validate(Forum::$createRules);
-
         $data = $request->only([
             'name', 'description', 'layout', 'is_active', 'is_locked', 'staff_only', 'sort', 'role_limit', 'parent_id', 'image', 'remove_image',
-            'color', 'icon', 'remove_icon',
+            'color', 'icon', 'remove_icon', 'characters_enabled', 'forum_rules', 'forum_styles',
         ]);
+        
         if ($id && $service->updateForum(Forum::find($id), $data, Auth::user())) {
             flash('Forum updated successfully.')->success();
         } elseif (!$id && $forum = $service->createForum($data, Auth::user())) {

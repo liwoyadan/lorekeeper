@@ -7,11 +7,16 @@
 @section('content')
     {!! breadcrumbs(['Forum' => 'forum', $thread->commentable->name => 'forum/' . $thread->commentable->id, $thread->title => 'forum/' . $thread->commentable->id . '/' . $thread->id]) !!}
 
+    @if ($thread->commentable->allRules)
+        <div class="text-right mb-2">
+            @include('forums._rules_modal', ['forum' => $thread->commentable, 'ruleSets' => $thread->commentable->allRules])
+        </div>
+    @endif
     <div class="row no-gutters align-items-center mb-1">
         <h1 class="col-md mb-1">
             {!! $thread->displayName !!}
             <a href="{{ url('reports/new?url=') . $thread->threadUrl }}">
-                <i class="fas fa-exclamation-triangle faded" data-toggle="tooltip" title="Click here to report this thread." style="font-size: 0.5em;"></i>
+                <i class="fas fa-exclamation-triangle text-danger" data-toggle="tooltip" title="Click here to report this thread." style="font-size: 0.5em; opacity: 0.5;"></i>
             </a>
         </h1>
 
@@ -31,12 +36,18 @@
 
     <div class="border rounded mb-2 row no-gutters">
         <div class="col-md-2 text-center border-md-right border-bottom border-md-bottom-0 py-3">
-            <div class="comment-avatar">
-                <img class="mw-100" src="{{ $thread->commenter->avatarUrl }}" style="max-width:100px; max-height:100px; border-radius:50%;" alt="{{ $thread->commenter->name }} Avatar">
-            </div>
-
             <h5 class="mb-1">
                 {!! $thread->commenter->displayName !!}
+            </h5>
+
+            <div class="comment-avatar">
+                <img class="mw-100 rounded-circle" src="{{ $thread->character->image->thumbnailUrl ?? $thread->commenter->avatarUrl }}" style="aspect-ratio: 1/1; max-height: 100px;" alt="{{ $thread->character->name ?? $thread->commenter->name }} Avatar">
+            </div>
+
+            <h5 class="text-muted my-1">
+                @if ($thread->character_id && $thread->character)
+                    <span class="small">as {!! $thread->character->displayName !!}</span>
+                @endif
             </h5>
             <div class="small">
                 @auth
@@ -108,7 +119,6 @@
                     {{ $thread->is_locked ? 'Unlock' : 'Lock' }} Thread
                 </span>
             </button>
-
             <button data-toggle="modal" data-target="#pin-modal-{{ $thread->getKey() }}" class="btn btn-sm btn-primary mx-1 text-uppercase">
                 <i class="fas fa-thumbtack"></i>
                 <span class="ml-2 d-none d-sm-inline-block">
@@ -118,12 +128,12 @@
         </div>
     @endif
 
-    @include('forums._form_modals', ['comment' => $thread])
+    @include('forums._form_modals', ['comment' => $thread, 'forum' => $thread->commentable])
 
     @if ($replies->count())
         {!! $replies->render() !!}
         @foreach ($replies as $comment)
-            @include('forums._forum_comment', ['comment' => $comment, 'thread' => $thread])
+            @include('forums._forum_comment', ['comment' => $comment, 'thread' => $thread, 'forum' => $thread->commentable])
         @endforeach
         {!! $replies->render() !!}
     @else

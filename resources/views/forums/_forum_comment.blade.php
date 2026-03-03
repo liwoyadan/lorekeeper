@@ -1,16 +1,22 @@
 @if (!isset($comment->deleted_at))
     <div class="border rounded mb-3 row no-gutters">
         <div class="col-md-2 text-center border-md-right border-bottom border-md-bottom-0 py-3">
-            <div class="comment-avatar">
-                <img class="mw-100" src="{{ $thread->commenter->avatarUrl }}" style="max-width:100px; max-height:100px; border-radius:50%;" alt="{{ $thread->commenter->name }} Avatar">
-            </div>
-
             <h5 class="mb-1">
                 {!! $comment->commenter->displayName !!}
+            </h5>
+            <div class="comment-avatar">
+                <img class="mx-100 rounded-circle" src="{{ $comment->character->image->thumbnailUrl ?? $comment->commenter->avatarUrl }}" style="aspect-ratio: 1/1; max-height: 100px;" alt="{{ $comment->character->name ?? $comment->commenter->name }} Avatar">
+            </div>
+            <h5 class="my-1">
                 @if ($comment->character_id && $comment->character)
-                    <br><small class="text-muted">as {!! $comment->character->displayName !!}</small>
+                    
                 @endif
             </h5>
+            @if ($comment->character_id && $comment->character)
+                <h5 class="my-1 text-muted">
+                    <span class="small">as {!! $comment->character->displayName !!}</span>
+                </h5>
+            @endif
             <div class="small">
                 @auth
                     <a href="{{ $thread->commenter->url.'/forum' }}">
@@ -70,7 +76,7 @@
                 {!! config('lorekeeper.settings.wysiwyg_comments') ? nl2br($comment->comment) : nl2br($markdown->line($comment->comment)) !!}
             </div>
 
-            @include('forums._form_modals', ['comment' => $comment])
+            @include('forums._form_modals', ['comment' => $comment, 'forum' => $forum])
         </div>
     </div>
 @endif

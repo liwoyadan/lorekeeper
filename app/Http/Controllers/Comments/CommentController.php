@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Comments;
 
 use App\Facades\Notifications;
 use App\Facades\Settings;
+use App\Models\Character\Character;
 use App\Models\Comment\Comment;
 use App\Models\Gallery\GallerySubmission;
 use App\Models\News;
@@ -67,7 +68,8 @@ class CommentController extends Controller {
 
         // Merge guest rules, if any, with normal validation rules.
         Validator::make($request->all(), array_merge($guest_rules ?? [], [
-            'message'          => 'required|string',
+            'message'      => 'required|string',
+            'comment_character_id' => 'nullable|integer|exists:characters,id',
         ]))->validate();
 
         $base = $model::findOrFail($id);
@@ -94,6 +96,18 @@ class CommentController extends Controller {
 
         $comment->type = isset($request['type']) && $request['type'] ? $request['type'] : 'User-User';
         $comment->title = isset($request['title']) && $request['title'] ? $request['title'] : null;
+
+        // Set character if passed in request
+        if (($model == 'App\Models\Forum\Forum') && Auth::check()) {
+            if ((isset($request['comment_character_id']) && $request['comment_character_id'])) {
+                $character = Character::find($request['comment_character_id']);
+
+                if ($character && ($character->user_id == Auth::user()->id) && $base->characters_enabled) {
+                    $comment->character_id = $character->id;
+                }
+            }
+        }
+        
         $comment->save();
 
         $recipient = null;
@@ -181,6 +195,25 @@ class CommentController extends Controller {
             'title'   => 'nullable|string',
         ])->validate();
 
+        $isForum = $comment->commentable_type == 'App\Models\Forum\Forum';
+        $characterAllowed = $comment->commentable->characters_enabled ?? false;
+
+        // Set character if passed in request
+        if ($isForum && Auth::check()) {
+            if ((isset($request['comment_character_id']) && $request['comment_character_id'])) {
+                $character = Character::find($request['comment_character_id']);
+                
+                if ($character && ($character->user_id == Auth::user()->id) && $characterAllowed) {
+                    $characterChange = $comment->character_id != $character->id;
+                    $oldCharacterId = $comment->character_id;
+                    $newCharacterId = $character->id;
+
+                    $comment->character_id = $character->id;
+                    $comment->save();
+                }
+            }
+        }
+
         // add history
         $comment->edits()->create([
             'user_id'    => Auth::user()->id,
@@ -188,8 +221,11 @@ class CommentController extends Controller {
             'data'       => json_encode([
                 'action'      => 'edit',
                 'old_comment' => config('lorekeeper.settings.wysiwyg_comments') ? parse($comment->comment) : $comment->comment,
-                'new_comment' => config('lorekeeper.settings.wysiwyg_comments') ? parse($request->message) : $request->message,
-            ]),
+                'new_comment' => config('lorekeeper.settings.wysiwyg_comments') ? parse($request->message) : $request->message, 
+            ] + ((isset($characterChange) && $characterChange) ? [
+                'old_character' => $oldCharacterId ?? null,
+                'new_character' => $newCharacterId ?? null,
+            ] : [])),
         ]);
 
         $comment->update([
@@ -249,7 +285,8 @@ class CommentController extends Controller {
         Gate::authorize('reply-to-comment', $comment);
 
         Validator::make($request->all(), [
-            'message' => 'required|string',
+            'message'      => 'required|string',
+            'comment_character_id' => 'nullable|integer|exists:characters,id',
         ])->validate();
 
         $commentClass = config('comments.model');
@@ -260,6 +297,18 @@ class CommentController extends Controller {
         $reply->comment = config('lorekeeper.settings.wysiwyg_comments') ? parse($request->message) : $request->message;
         $reply->type = $comment->type;
         $reply->approved = !config('comments.approval_required');
+
+        // Set character if passed in request
+        if (($reply->commentable_type == 'App\Models\Forum\Forum') && Auth::check()) {
+            if ((isset($request['comment_character_id']) && $request['comment_character_id'])) {
+                $character = Character::find($request['comment_character_id']);
+
+                if ($character && ($character->user_id == Auth::user()->id) && $reply->commentable->characters_enabled) {
+                    $reply->character_id = $character->id;
+                }
+            }
+        }
+
         $reply->save();
 
         // url = url('comments/32')

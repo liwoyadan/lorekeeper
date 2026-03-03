@@ -993,6 +993,38 @@ tr.accountbound {
     height: auto;
 }
 
+.forum-heading-bg {
+    background-repeat: none;
+    background-size: cover;
+    pointer-events: none;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 0;
+}
+
+.forum-heading-content {
+    pointer-events: auto;
+
+    position: relative;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+}
+
+.toggle-category i {
+    transition: all 175ms linear;
+}
+
+.toggle-category.collapsed i {
+    transform: rotate(-180deg);
+}
+
 .display-flair {
     align-items: center;
     border-radius: 0.25rem;

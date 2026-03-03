@@ -36,6 +36,9 @@
                         @if (!$forum->parent_id)
                             <i class="fas fa-layer-group" data-toggle="tooltip" title="This forum is not assigned to any parent and thus functions as an overall category."></i>
                         @endif
+                        @if ($forum->characters_enabled)
+                            <i class="fas fa-paw" data-toggle="tooltip" title="This forum has characters enabled, allowing users to post as their characters."></i>
+                        @endif
                         {!! $forum->displayName !!}
                         @if ($forum->color)
                             <span class="rounded-circle d-inline-block" style="background-color: {{ $forum->color }}; height: 10px; width: 10px;" data-toggle="tooltip" title="{{ $forum->color }}"></span>

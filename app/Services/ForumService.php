@@ -111,11 +111,17 @@ class ForumService extends Service {
             }
             $forum->update($data);
 
+            if (!$forum->parent_id && $forum->characters_enabled) {
+                $forum->characters_enabled = 0;
+                $forum->save();
+
+                flash('Forum categories cannot have characters enabled for posts, you must toggle it on the child forums themselves!')->warning();
+            }
+
             if ($image) {
                 $this->handleImage($image, $forum->imagePath, $forum->imageFileName);
             }
             if ($icon) {
-
                 $this->handleImage($icon, $forum->imagePath, $forum->iconFileName);
             }
 
@@ -435,6 +441,20 @@ class ForumService extends Service {
         if (!isset($data['parent_id'])) {
             $data['parent_id'] = null;
         }
+        if (!isset($data['forum_rules'])) {
+            $data['forum_rules'] = null;
+        }
+        if (!isset($data['forum_styles'])) {
+            $data['forum_styles'] = null;
+        } else {
+            if (!isset($data['forum_styles']['use_board_bg'])) {
+                $data['forum_styles']['use_board_bg'] = 0;
+            } else {
+                if (!isset($data['forum_styles']['board_bg_opacity'])) {
+                    $data['forum_styles']['board_bg_opacity'] = 15;
+                }
+            }
+        }
 
         if (isset($data['remove_image']) && $data['remove_image']) {
             if ($forum && $forum->has_image && $data['remove_image']) {
@@ -524,6 +544,9 @@ class ForumService extends Service {
         }
         if (!isset($data['is_visible'])) {
             $data['is_visible'] = 1;
+        }
+        if (!isset($data['characters_enabled'])) {
+            $data['characters_enabled'] = 0;
         }
 
         // Handle image removal

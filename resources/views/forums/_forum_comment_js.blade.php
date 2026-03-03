@@ -29,5 +29,9 @@
             spoiler_caption: 'Toggle Spoiler',
             target_list: false
         });
+
+        @if (isset($forum->characters_enabled) && $forum->characters_enabled)
+            $('.comment-character-select').selectize();
+        @endif
     });
 </script>

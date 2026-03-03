@@ -8,27 +8,38 @@
     <div class="row no-gutters mb-2">
         @foreach ($forum->accessibleSubforums as $board)
             <div class="{{ $loop->even ? 'px-md-2' : '' }} py-1 col-md-4">
-                <div class="card px-3 py-2 h-100">
-                    <div class="row no-gutters">
-                        <div class="col font-weight-bold d-flex align-items-center">
-                            {!! $board->displayIcon(16) !!}
-                            <span class="mx-1">
-                                {!! $board->displayName !!}
-                            </span>
-                            @if (isset($board->description) && $board->description)
-                                {!! add_help(strip_tags($board->parsed_description)) !!}
-                            @endif
-                        </div>
-                        <div class="col-auto">
-                            {!! $board->comments->whereNull('child_id')->count() !!} Topics
-                        </div>
-                    </div>
-                    @if ($board->accessibleSubforums->count())
-                        <div class="small">
-                            <b>Sub-Forums:</b>
-                            {!! implode(', ', $board->accessibleSubforums->pluck('displayName', 'id')->toArray()) !!}
-                        </div>
+                <div class="card px-3 py-2 h-100 position-relative">
+                    @if (isset($board->forum_styles['use_board_bg']) && $board->forum_styles['use_board_bg'])
+                        <div class="forum-heading-bg rounded" style="background-image: url('{{ $board->imageUrl }}'); opacity: {{ $board->forum_styles['board_bg_opacity'] ?? '15' }}%;"></div>
                     @endif
+
+                    <div class="forum-heading-content">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col font-weight-bold d-flex align-items-center">
+                                {!! $board->displayIcon(16) !!}
+                                <span class="mx-1">
+                                    {!! $board->displayName !!}
+                                </span>
+                                @if (isset($board->description) && $board->description)
+                                    {!! add_help(strip_tags($board->parsed_description)) !!}
+                                @endif
+                            </div>
+                            <div class="col-auto small">
+                                <b>{!! $board->comments->whereNull('child_id')->count() !!}</b> Topics
+                            </div>
+                        </div>
+                        @if ($board->accessibleSubforums->count())
+                            <div class="small">
+                                <b>Sub-Forums:</b>
+                                {!! implode(', ', $board->accessibleSubforums->pluck('displayName', 'id')->toArray()) !!}
+                            </div>
+                        @endif
+                        @if ($board->characters_enabled)
+                            <div class="small text-right">
+                                <i class="fas fa-paw" aria-hidden="true"></i> You can post as a character on this board!
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         @endforeach

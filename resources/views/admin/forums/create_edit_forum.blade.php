@@ -133,13 +133,73 @@
                 {!! Form::label('staff_only', 'Staff Only', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, only staff members will see this forum.') !!}
             </div>
         </div>
+
+        @if ($forum->id && $forum->parent_id)
+            <div class="col-md">
+                <div class="form-group">
+                    {!! Form::checkbox('characters_enabled', 1, $forum->id ? $forum->characters_enabled : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                    {!! Form::label('characters_enabled', 'Characters Enabled?', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, users will be able to post on threads in this forum as characters they own.') !!}
+                </div>
+            </div>
+        @endif
+    </div>
+    
+    @if ($forum->id && $forum->has_image)
+        <div class="row align-items-end">
+            <div class="col-md">
+                <div class="form-group">
+                    {!! Form::checkbox('forum_styles[use_board_bg]', 1, isset($forum->forum_styles['use_board_bg']) ? $forum->forum_styles['use_board_bg'] : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                    {!! Form::label('forum_styles[use_board_bg]', 'Banner as Board BG?', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Turning this on will use the set banner image as a background for the board\'s entry on the forum index page.') !!}
+                </div>
+            </div>
+
+            <div class="col-md">
+                <div class="form-group">
+                    {!! Form::label('forum_styles[board_bg_opacity]', 'Board BG Opacity? (Percentage)') !!} {!! add_help('This is the <b>percentage</b> of opacity that the board background will be set to. 15 is a recommended default as to note obscure text.') !!}
+                    {!! Form::number('forum_styles[board_bg_opacity]', isset($forum->forum_styles['board_bg_opacity']) ? $forum->forum_styles['board_bg_opacity'] : 15, ['class' => 'form-control']) !!}
+                </div>
+            </div>
+        </div>
+    @endif
+    
+    <hr>
+    <h3>
+        Forum Rules
+    </h3>
+    <p class="mb-0">
+        Optional. Here you can add and specific rules pertaining to this forum. Note that rules applied to <b>forum categories</b> (aka parent forums) will also be shown in all of its forum/subforums within it, while rules applied to regular forum boards are specific to that board.
+    </p>
+    <div class="text-right mb-2">
+        <a class="btn btn-primary" id="addRule" href="#">Add Rule</a>
+    </div>
+    <div id="rulesBody">
+        @if ($forum->id && $forum->forum_rules)
+            @foreach ($forum->forum_rules as $rule)
+                <div class="row mb-2">
+                    <div class="col">
+                        {!! Form::text('forum_rules[]', $rule, ['class' => 'form-control']) !!}
+                    </div>
+                    <div class="col-auto text-right">
+                        <a href="#" class="btn btn-danger remove-rule"><i class="fas fa-times"></i></a>
+                    </div>
+                </div>
+            @endforeach
+        @endif
     </div>
 
-    <div class="text-right">
+    <div class="text-right mt-3">
         {!! Form::submit($forum->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
     </div>
-
     {!! Form::close() !!}
+
+    <div class="row mb-2 rule-row hide">
+        <div class="col">
+            {!! Form::text('forum_rules[]', null, ['class' => 'form-control']) !!}
+        </div>
+        <div class="col-auto text-right">
+            <a href="#" class="btn btn-danger remove-rule"><i class="fas fa-times"></i></a>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
@@ -150,6 +210,26 @@
                 e.preventDefault();
                 loadModal("{{ url('admin/forums/delete') }}/{{ $forum->id }}", 'Delete Forum');
             });
+
+            var $rules = $('#rulesBody');
+            var $ruleRow = $('.rule-row');
+
+            attachRuleRemoveListener($('#rulesBody .remove-rule'));
+
+            $('#addRule').on('click', function(e) {
+                e.preventDefault();
+                var $clone = $ruleRow.clone();
+                $rules.append($clone);
+                $clone.removeClass('rule-row hide');
+                attachRuleRemoveListener($clone.find('.remove-rule'));
+            });
+
+            function attachRuleRemoveListener(node) {
+                node.on('click', function(e) {
+                    e.preventDefault();
+                    $(this).parent().parent().remove();
+                });
+            }
         });
     </script>
 @endsection
