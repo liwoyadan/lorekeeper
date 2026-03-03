@@ -108,7 +108,7 @@ class AccountController extends Controller {
             'forum_decor_id' => 'nullable|exists:forum_decors,id',
         ]);
 
-        if ($data['forum_flair_id']) {
+        if (isset($data['forum_flair_id']) && $data['forum_flair_id']) {
             $flair = ForumFlair::find($data['forum_flair_id']);
             $canAccessFlair = false;
             if ($flair) {
@@ -126,7 +126,7 @@ class AccountController extends Controller {
             }
         }
 
-        if ($data['forum_decor_id']) {
+        if (isset($data['forum_decor_id']) && $data['forum_decor_id']) {
             $decor = ForumDecor::find($data['forum_decor_id']);
             $canAccessDecor = false;
             if ($decor) {
