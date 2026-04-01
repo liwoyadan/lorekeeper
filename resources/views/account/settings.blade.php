@@ -109,12 +109,14 @@
                 </div>
             </div>
 
-            {{-- <div class="col-md">
-                <div class="form-group">
-                    {!! Form::label('forum_decor_id', 'Forum Post Decor') !!} {!! add_help('Depending on the type of decoration, this will decorate or modify your posts on the forum in a certain way.') !!}
-                    {!! Form::select('forum_decor_id', $decorOptions, Auth::user()->profile->forum_decor_id ?? null, ['class' => 'form-control forum-dropdown', 'placeholder' => 'Select Decor']) !!}
+            @foreach (config('lorekeeper.forums.decor_types', []) as $decorType => $decorLabel)
+                <div class="col-md">
+                    <div class="form-group">
+                        {!! Form::label("forum_decor[{$decorType}]", "Forum {$decorLabel}") !!} {!! add_help("Select a {$decorLabel} decoration to apply to your forum posts.") !!}
+                        {!! Form::select("forum_decor[{$decorType}]", $decorOptionsByType[$decorType], Auth::user()->profile->forum_decor[$decorType] ?? null, ['class' => 'form-control forum-dropdown', 'placeholder' => 'Select Decor']) !!}
+                    </div>
                 </div>
-            </div> --}}
+            @endforeach
         </div>
 
         <div class="text-right">
@@ -122,6 +124,40 @@
         </div>
         {!! Form::close() !!}
     </div>
+
+    @if (config('lorekeeper.forums.user_uploads.background.enabled'))
+        <div class="card p-3 mb-2">
+            <h3>Forum Post Background</h3>
+            <p>
+                Upload a custom background image for your forum posts. Maximum dimension: <b>{{ config('lorekeeper.forums.user_uploads.background.max_dimension') }}px</b> on either side.
+                Opacity can be set between <b>0</b> and <b>{{ config('lorekeeper.forums.user_uploads.background.max_opacity') }}%</b>. Defaults to <b>{{ config('lorekeeper.forums.user_uploads.background.default_opacity') }}%</b> if left blank.
+            </p>
+            @if (Auth::user()->profile->forumBgUrl)
+                <div class="mb-2">
+                    <img src="{{ Auth::user()->profile->forumBgUrl }}" alt="Current Forum Background" style="max-height: 100px;" class="d-block mb-1">
+                </div>
+            @endif
+            {!! Form::open(['url' => 'account/forum-background', 'files' => true]) !!}
+            <div class="custom-file mb-2">
+                {!! Form::label('forum_bg', 'Upload Background Image', ['class' => 'custom-file-label']) !!}
+                {!! Form::file('forum_bg', ['class' => 'custom-file-input', 'accept' => 'image/png,image/jpeg,image/gif,image/webp']) !!}
+            </div>
+            <div class="form-group">
+                {!! Form::label('forum_bg_opacity', 'Opacity (%)') !!}
+                {!! Form::number('forum_bg_opacity', Auth::user()->profile->forum_bg_opacity, ['class' => 'form-control', 'min' => 0, 'max' => config('lorekeeper.forums.user_uploads.background.max_opacity'), 'placeholder' => config('lorekeeper.forums.user_uploads.background.default_opacity')]) !!}
+            </div>
+            @if (Auth::user()->profile->forumBgUrl)
+                <div class="form-check mb-2">
+                    {!! Form::checkbox('remove_forum_bg', 1, false, ['class' => 'form-check-input']) !!}
+                    {!! Form::label('remove_forum_bg', 'Remove current background', ['class' => 'form-check-label']) !!}
+                </div>
+            @endif
+            <div class="text-right">
+                {!! Form::submit('Save Background', ['class' => 'btn btn-primary']) !!}
+            </div>
+            {!! Form::close() !!}
+        </div>
+    @endif
 
     <div class="card p-3 mb-2">
         <h3>Birthday Publicity</h3>

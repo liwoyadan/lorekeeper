@@ -326,6 +326,8 @@ class ForumController extends Controller {
         $data = $request->only([
             'name', 'type', 'description', 'image', 'remove_image',
             'staff_only', 'is_default', 'is_visible',
+            'opacity', 'background_size', 'background_repeat',
+            'border_image_slice', 'border_image_width', 'border_image_outset', 'border_image_repeat',
         ]);
 
         if ($id && $service->updateForumDecor(ForumDecor::find($id), $data, Auth::user())) {

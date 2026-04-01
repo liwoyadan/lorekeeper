@@ -9,7 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::table('forums', function (Blueprint $table) {
             $table->text('forum_rules')->nullable()->default(null);
@@ -20,7 +20,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down()
     {
         Schema::table('forums', function (Blueprint $table) {
             $table->dropColumn('forum_rules');

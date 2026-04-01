@@ -8,6 +8,7 @@ use App\Models\Forum\ForumFlair;
 use App\Models\Notification;
 use App\Models\User\User;
 use App\Models\User\UserAlias;
+use App\Services\ForumService;
 use App\Services\LinkService;
 use App\Services\UserService;
 use BaconQrCode\Renderer\Color\Rgb;
@@ -70,13 +71,18 @@ class AccountController extends Controller {
         $defaultFlairs = ForumFlair::visible($user)->default()->sortAlphabetical()->pluck('name', 'id')->toArray();
         $obtainedFlairs = ForumFlair::visible($user)->default(0)->whereIn('id', $user->forumFlairs()->pluck('forum_flair_id')->toArray())->sortAlphabetical()->pluck('name', 'id')->toArray();
 
-        $staffDecors = ForumDecor::isStaff()->default(0)->sortAlphabetical()->get()->pluck('fullName', 'id')->toArray();
-        $defaultDecors = ForumDecor::visible($user)->default()->sortAlphabetical()->get()->pluck('fullName', 'id')->toArray();
-        $obtainedDecors = ForumDecor::visible($user)->default(0)->whereIn('id', $user->forumDecors()->pluck('forum_decor_id')->toArray())->sortAlphabetical()->get()->pluck('fullName', 'id')->toArray();
+        $obtainedDecorIds = $user->forumDecors()->pluck('forum_decor_id')->toArray();
+        $decorOptionsByType = [];
+        foreach (array_keys(config('lorekeeper.forums.decor_types', [])) as $typeKey) {
+            $staffDecors = ForumDecor::isStaff()->default(0)->where('type', $typeKey)->sortAlphabetical()->get()->pluck('fullName', 'id')->toArray();
+            $defaultDecors = ForumDecor::visible($user)->default()->where('type', $typeKey)->sortAlphabetical()->get()->pluck('fullName', 'id')->toArray();
+            $obtainedDecors = ForumDecor::visible($user)->default(0)->where('type', $typeKey)->whereIn('id', $obtainedDecorIds)->sortAlphabetical()->get()->pluck('fullName', 'id')->toArray();
+            $decorOptionsByType[$typeKey] = ($user->isStaff ? ['Staff Decors' => $staffDecors] : []) + ['Default Decors' => $defaultDecors, 'Obtained Decors' => $obtainedDecors];
+        }
 
         return view('account.settings', [
             'flairOptions' => ($user->isStaff ? ['Staff Flairs' => $staffFlairs] : []) + ['Default Flairs' => $defaultFlairs, 'Obtained Flairs' => $obtainedFlairs],
-            'decorOptions' => ($user->isStaff ? ['Staff Decors' => $staffDecors] : []) + ['Default Decors' => $defaultDecors, 'Obtained Decors' => $obtainedDecors],
+            'decorOptionsByType' => $decorOptionsByType,
         ]);
     }
 
@@ -104,8 +110,9 @@ class AccountController extends Controller {
         $user = Auth::user();
         $data = $request->validate([
             'forum_signature' => 'nullable|string|max:1000',
-            'forum_flair_id' => 'nullable|exists:forum_flairs,id',
-            'forum_decor_id' => 'nullable|exists:forum_decors,id',
+            'forum_flair_id'  => 'nullable|exists:forum_flairs,id',
+            'forum_decor'     => 'nullable|array',
+            'forum_decor.*'   => 'nullable|exists:forum_decors,id',
         ]);
 
         if (isset($data['forum_flair_id']) && $data['forum_flair_id']) {
@@ -126,32 +133,63 @@ class AccountController extends Controller {
             }
         }
 
-        if (isset($data['forum_decor_id']) && $data['forum_decor_id']) {
-            $decor = ForumDecor::find($data['forum_decor_id']);
-            $canAccessDecor = false;
+        $forumDecor = [];
+        $decorTypes = config('lorekeeper.forums.decor_types', []);
+        foreach ($decorTypes as $typeKey => $typeLabel) {
+            $decorId = $data['forum_decor'][$typeKey] ?? null;
+            if (!$decorId) {
+                continue;
+            }
+
+            $decor = ForumDecor::find($decorId);
+            $canAccess = false;
             if ($decor) {
-                if ($decor->is_staff && $user->isStaff) {
-                    $canAccessDecor = true;
+                if ($decor->staff_only && $user->isStaff) {
+                    $canAccess = true;
                 } elseif ($decor->is_default) {
-                    $canAccessDecor = true;
+                    $canAccess = true;
                 } elseif ($user->forumDecors()->where('forum_decor_id', $decor->id)->exists()) {
-                    $canAccessDecor = true;
+                    $canAccess = true;
                 }
             }
 
-            if (!$canAccessDecor) {
-                flash('You do not have access to the selected forum decoration.')->error();
+            if (!$canAccess) {
+                flash("You do not have access to the selected {$typeLabel} decoration.")->error();
+            } else {
+                $forumDecor[$typeKey] = $decorId;
             }
         }
 
         $user->profile->update([
-            'forum_signature' => $data['forum_signature'] ?? null,
+            'forum_signature'        => $data['forum_signature'] ?? null,
             'parsed_forum_signature' => (isset($data['forum_signature']) && $data['forum_signature']) ? parse($data['forum_signature']) : null,
-            'forum_flair_id' => (isset($canAccessFlair) && $canAccessFlair) ? $data['forum_flair_id'] : null,
-            'forum_decor_id' => (isset($canAccessDecor) && $canAccessDecor) ? $data['forum_decor_id'] : null,
+            'forum_flair_id'         => (isset($canAccessFlair) && $canAccessFlair) ? $data['forum_flair_id'] : null,
+            'forum_decor'            => $forumDecor ?: null,
         ]);
 
         flash('Forum settings updated successfully.')->success();
+
+        return redirect()->back();
+    }
+
+    /**
+     * Uploads or removes the user's custom forum post background.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postForumBackground(Request $request, ForumService $service) {
+        $request->validate([
+            'forum_bg'         => 'nullable|image|mimes:png,jpg,jpeg,gif,webp',
+            'forum_bg_opacity' => 'nullable|integer|min:0|max:100',
+        ]);
+
+        if ($service->updateForumBackground($request->file('forum_bg'), $request->boolean('remove_forum_bg'), Auth::user(), $request->input('forum_bg_opacity'))) {
+            flash('Forum background updated successfully.')->success();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
 
         return redirect()->back();
     }

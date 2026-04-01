@@ -143,14 +143,32 @@ class ForumFlair extends Model {
      * @return string
      */
     public function getDisplayFlairAttribute() {
-        $html = '<a href="'.$this->url.'" class="display-flair"';
+        $html = '<span class="display-flair"';
         if ($this->imageUrl) {
             $icon = '<img src="'.$this->imageUrl.'" alt="'.$this->name.' Icon" class="display-flair-icon">';
         }
         if ($this->inlineStyles && ($this->inlineStyles != '')) {
             $html .= ' style="'.$this->inlineStyles.'"';
         }
-        $html .= '>'.($icon ?? '').$this->name.'</a>';
+        $html .= '>'.($icon ?? '').$this->name.'</span>';
+
+        return $html;
+    }
+
+    /**
+     * Previews the flair with a given string.
+     *
+     * @return string
+     */
+    public function previewFlair($name = 'Username') {
+        $html = '<span class="display-flair"';
+        if ($this->imageUrl) {
+            $icon = '<img src="'.$this->imageUrl.'" alt="'.$this->name.' Icon" class="display-flair-icon">';
+        }
+        if ($this->inlineStyles && ($this->inlineStyles != '')) {
+            $html .= ' style="'.$this->inlineStyles.'"';
+        }
+        $html .= '>'.($icon ?? '').$name.'</span>';
 
         return $html;
     }

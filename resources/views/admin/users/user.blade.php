@@ -109,6 +109,15 @@
     </div>
 
     <div class="card p-3 mb-2">
+        <h3>Forum Settings</h3>
+        @include('admin.forums._preview_post', [
+            'flair' => $user->profile->forumFlair,
+            'decor' => $user->profile->forumDecorOf('background'),
+            'borderDecor' => $user->profile->forumDecorOf('border'),
+        ])
+    </div>
+
+    <div class="card p-3 mb-2">
         <h3>Aliases</h3>
         <p>As users are supposed to verify that they own their account(s) themselves, aliases cannot be edited directly. If a user wants to change their alias, clear it here and ask them to go through the verification process again while logged into
             their new account. If the alias is the user's primary alias, their remaining aliases will be checked to see if they have a valid primary alias. If they do, it will become their new primary alias.</p>

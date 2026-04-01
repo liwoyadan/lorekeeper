@@ -24,6 +24,7 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function () {
     Route::get('settings', 'AccountController@getSettings');
     Route::post('profile', 'AccountController@postProfile');
     Route::post('forum-settings', 'AccountController@postForumSettings');
+    Route::post('forum-background', 'AccountController@postForumBackground');
     Route::post('password', 'AccountController@postPassword');
     Route::post('email', 'AccountController@postEmail');
     Route::post('avatar', 'AccountController@postAvatar');

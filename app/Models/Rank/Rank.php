@@ -66,6 +66,23 @@ class Rank extends Model {
     }
 
     /**
+     * Display the rank with its associated colour.
+     *
+     * @return string
+     */
+    public function getDisplayNameIconAttribute() {
+        $string = '<span>';
+        $string .= '<i class="'.($this->icon ?? 'fas fa-user').' mr-1" style="opacity: 50%;"></i>';
+        if ($this->color) {
+            $string .= '<strong style="color: #'.$this->color.'">'.$this->name.'</strong>';
+        } else {
+            $string .= '<strong>'.$this->name.'</strong>';
+        }
+
+        return $string.'</span>';
+    }
+
+    /**
      * Check if the rank is the admin rank.
      *
      * @return bool

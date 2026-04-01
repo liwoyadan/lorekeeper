@@ -9,7 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::table('comments', function (Blueprint $table) {
             $table->integer('character_id')->unsigned()->nullable()->default(null);
@@ -23,7 +23,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down()
     {
         Schema::table('comments', function (Blueprint $table) {
             $table->dropColumn('character_id');

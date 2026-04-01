@@ -34,24 +34,29 @@
         @endauth
     </div>
 
-    <div class="border rounded mb-2 row no-gutters">
+    <div class="{{ $thread->commenter->profile->forumDecorOf('border') ? '' : 'border' }} rounded mb-2 row no-gutters position-relative" {!! $thread->commenter->profile->forumDecorOf('border') ? 'style="'.($thread->commenter->profile->forumDecorOf('border')->cssStyle ?? '').'"' : '' !!}>
+        @if ($thread->commenter->profile->forumDecorOf('background') || $thread->commenter->profile->forumBgCssStyle)
+            <div class="forum-heading-bg" style="{{ $thread->commenter->profile->forumDecorOf('background')->cssStyle ?? $thread->commenter->profile->forumBgCssStyle }}"></div>
+        @endif
         <div class="col-md-2 text-center border-md-right border-bottom border-md-bottom-0 py-2">
             <h5 class="mb-1">
                 {!! $thread->commenter->forumName !!}
             </h5>
-            <div class="comment-avatar">
+            <div class="comment-avatar mb-1">
                 <img class="mw-100 rounded-circle" src="{{ $thread->character->image->thumbnailUrl ?? $thread->commenter->avatarUrl }}" style="aspect-ratio: 1/1; max-height: 100px;" alt="{{ $thread->character->name ?? $thread->commenter->name }} Avatar">
             </div>
-
-            <h5 class="text-muted mt-1 mb-0">
-                @if ($thread->character_id && $thread->character)
+            @if ($thread->character_id && $thread->character)
+                <h5 class="text-muted mb-0">
                     <span class="small">as {!! $thread->character->displayName !!}</span>
-                @endif
-            </h5>
+                </h5>
+            @endif
             <div>
                 {!! $thread->commenter->profile->forumFlair->displayFlair ?? '<span class="small text-muted">(No Forum Flair)</span>' !!}
             </div>
-            <div class="small">
+            <div>
+                {!! $thread->commenter->rank->displayNameIcon ?? '---' !!}
+            </div>
+            <div class="small mt-1">
                 @auth
                     <a href="{{ $thread->commenter->url.'/forum' }}">
                 @endauth
@@ -63,7 +68,7 @@
         </div>
 
         <div class="col-md d-flex flex-column">
-            <div class="mb-2 border-bottom p-2">
+            <div class="border-bottom p-2">
                 <div class="row no-gutters justify-content-between">
                     <div class="col">
                         @if ($thread->type == 'User-User')
@@ -105,7 +110,7 @@
             </div>
             <div class="p-2 flex-grow-1 d-flex flex-column">
                 <div>
-                    {!! config('lorekeeper.settings.wysiwyg_comments') ? nl2br($thread->comment) : nl2br($markdown->line($thread->comment)) !!}
+                    {!! config('lorekeeper.settings.wysiwyg_comments') ? $thread->comment : nl2br($markdown->line($thread->comment)) !!}
                 </div>
             </div>
             @if (config('lorekeeper.forums.allow_signatures.enabled') && (isset($thread->commenter->profile->forum_signature) && $thread->commenter->profile->forum_signature))
@@ -145,7 +150,10 @@
     @if ($replies->count())
         {!! $replies->render() !!}
         @foreach ($replies as $comment)
-            @include('forums._forum_comment', ['comment' => $comment, 'thread' => $thread, 'forum' => $thread->commentable])
+            @php
+                $profile = $comment->commenter->profile;
+            @endphp
+            @include('forums._forum_comment', ['comment' => $comment, 'thread' => $thread, 'forum' => $thread->commentable, 'postBgStyle' => $profile->forumDecorOf('background')?->cssStyle ?? ($profile->forumBgCssStyle ?? null), 'postBorderDecor' => $profile->forumDecorOf('border')])
         @endforeach
         {!! $replies->render() !!}
     @else

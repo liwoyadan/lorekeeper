@@ -5,9 +5,12 @@ namespace App\Services;
 use App\Models\Forum\Forum;
 use App\Models\Forum\ForumDecor;
 use App\Models\Forum\ForumFlair;
+use App\Models\User\UserForumDecor;
+use App\Models\User\UserForumFlair;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
 class ForumService extends Service {
     /*
@@ -608,6 +611,157 @@ class ForumService extends Service {
     }
 
     /**
+     * Uploads or removes a user's custom forum post background image.
+     *
+     * @param \Illuminate\Http\UploadedFile|null $image
+     * @param bool                               $remove
+     * @param \App\Models\User\User              $user
+     *
+     * @return bool
+     */
+    public function updateForumBackground($image, $remove, $user, $opacity = null) {
+        DB::beginTransaction();
+
+        try {
+            $config = config('lorekeeper.forums.user_uploads.background');
+
+            if (!$config['enabled']) {
+                throw new \Exception('User forum background uploads are not enabled.');
+            }
+
+            $profile = $user->profile;
+
+            if ($remove) {
+                if ($profile->forum_bg_hash) {
+                    $this->deleteImage(public_path($profile->forumBgDirectory), $profile->forumBgFileName);
+                }
+                $forumDecor = $profile->forum_decor ?? [];
+                unset($forumDecor['background']);
+                $profile->update([
+                    'forum_bg_hash'      => null,
+                    'forum_bg_extension' => null,
+                    'forum_bg_opacity'   => null,
+                    'forum_decor'        => $forumDecor ?: null,
+                ]);
+
+                return $this->commitReturn(true);
+            }
+
+            if (!$image) {
+                throw new \Exception('Please upload a file.');
+            }
+
+            $img = Image::make($image);
+            $maxDimension = $config['max_dimension'] ?? 1000;
+
+            if ($img->width() > $maxDimension || $img->height() > $maxDimension) {
+                throw new \Exception("Image dimensions must not exceed {$maxDimension}px on either side.");
+            }
+
+            if ($profile->forum_bg_hash) {
+                $this->deleteImage(public_path($profile->forumBgDirectory), $profile->forumBgFileName);
+            }
+
+            $hash = randomString(10);
+            $extension = $image->getClientOriginalExtension();
+            $directory = public_path($profile->forumBgDirectory);
+
+            if (!file_exists($directory)) {
+                mkdir($directory, 0755, true);
+            }
+
+            $img->save($directory . '/' . $user->id . $hash . '.' . $extension);
+
+            $maxOpacity = $config['max_opacity'] ?? 100;
+            $defaultOpacity = $config['default_opacity'] ?? 15;
+            $resolvedOpacity = $opacity !== null ? min($maxOpacity, max(0, (int) $opacity)) : $defaultOpacity;
+
+            $forumDecor = $profile->forum_decor ?? [];
+            $forumDecor['background'] = 'custom';
+            $profile->update([
+                'forum_bg_hash'      => $hash,
+                'forum_bg_extension' => $extension,
+                'forum_bg_opacity'   => $resolvedOpacity,
+                'forum_decor'        => $forumDecor,
+            ]);
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Credits a forum flair to a user.
+     *
+     * @param mixed  $sender
+     * @param mixed  $recipient
+     * @param mixed  $forumFlair
+     *
+     * @return bool
+     */
+    public function creditFlair($sender, $recipient, $logType = null, $data = null, $forumFlair = null) {
+        DB::beginTransaction();
+
+        try {
+            if (!$forumFlair) {
+                throw new \Exception('Invalid forum flair.');
+            }
+
+            if ($recipient->forumFlairs()->where('forum_flair_id', $forumFlair->id)->exists()) {
+                throw new \Exception('User already owns this forum flair.');
+            }
+
+            UserForumFlair::create([
+                'user_id'        => $recipient->id,
+                'forum_flair_id' => $forumFlair->id,
+            ]);
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Credits a forum decor to a user.
+     *
+     * @param mixed  $sender
+     * @param mixed  $recipient
+     * @param mixed  $forumDecor
+     *
+     * @return bool
+     */
+    public function creditDecor($sender, $recipient, $logType = null, $data = null, $forumDecor = null) {
+        DB::beginTransaction();
+
+        try {
+            if (!$forumDecor) {
+                throw new \Exception('Invalid forum decor.');
+            }
+
+            if ($recipient->forumDecors()->where('forum_decor_id', $forumDecor->id)->exists()) {
+                throw new \Exception('User already owns this forum decor.');
+            }
+
+            UserForumDecor::create([
+                'user_id'        => $recipient->id,
+                'forum_decor_id' => $forumDecor->id,
+            ]);
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
      * Processes user input for creating/updating a forum decor.
      *
      * @param array           $data
@@ -632,6 +786,21 @@ class ForumService extends Service {
         if (!isset($data['is_visible'])) {
             $data['is_visible'] = 1;
         }
+
+        // Handle type-specific data fields
+        $typeData = [];
+        if (isset($data['type']) && ($data['type'] == 'background')) {
+            $typeData['opacity'] = isset($data['opacity']) ? max(0, min(100, (int) $data['opacity'])) : 15;
+            $typeData['background_repeat'] =  isset($data['background_repeat']);
+            $typeData['background_size'] = $data['background_size'] ?? 'cover';
+        } elseif (isset($data['type']) && ($data['type'] == 'border')) {
+            $typeData['border_image_slice'] = $data['border_image_slice'] ?? null;
+            $typeData['border_image_width'] = $data['border_image_width'] ?? null;
+            $typeData['border_image_outset'] = $data['border_image_outset'] ?? null;
+            $typeData['border_image_repeat'] = $data['border_image_repeat'] ?? null;
+        }
+        $data['data'] = $typeData ?: null;
+        unset($data['opacity'], $data['background_repeat'], $data['background_size'], $data['border_image_slice'], $data['border_image_width'], $data['border_image_outset'], $data['border_image_repeat']);
 
         // Handle image removal
         if (isset($data['remove_image']) && $data['remove_image']) {

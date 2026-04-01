@@ -18,6 +18,8 @@
             ->orderBy('name')
             ->pluck('name', 'id');
     }
+    $forumFlairs = \App\Models\Forum\ForumFlair::visible()->default(0)->sortAlphabetical()->pluck('name', 'id');
+    $forumDecors = \App\Models\Forum\ForumDecor::visible()->default(0)->sortAlphabetical()->get()->pluck('fullName', 'id');
 @endphp
 
 <div class="text-right mb-3">
@@ -36,7 +38,7 @@
         @if ($loots)
             @foreach ($loots as $loot)
                 <tr class="loot-row">
-                    <td>{!! Form::select('rewardable_type[]', ['Item' => 'Item', 'Currency' => 'Currency'] + ($showLootTables ? ['LootTable' => 'Loot Table'] : []) + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : []), $loot->rewardable_type, [
+                    <td>{!! Form::select('rewardable_type[]', ['Item' => 'Item', 'Currency' => 'Currency', 'ForumFlair' => 'Forum Flair', 'ForumDecor' => 'Forum Decor'] + ($showLootTables ? ['LootTable' => 'Loot Table'] : []) + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : []), $loot->rewardable_type, [
                         'class' => 'form-control reward-type',
                         'placeholder' => 'Select Reward Type',
                     ]) !!}</td>
@@ -49,6 +51,10 @@
                             {!! Form::select('rewardable_id[]', $tables, $loot->rewardable_id, ['class' => 'form-control table-select selectize', 'placeholder' => 'Select Loot Table']) !!}
                         @elseif($showRaffles && $loot->rewardable_type == 'Raffle')
                             {!! Form::select('rewardable_id[]', $raffles, $loot->rewardable_id, ['class' => 'form-control raffle-select selectize', 'placeholder' => 'Select Raffle']) !!}
+                        @elseif($loot->rewardable_type == 'ForumFlair')
+                            {!! Form::select('rewardable_id[]', $forumFlairs, $loot->rewardable_id, ['class' => 'form-control forum-flair-select selectize', 'placeholder' => 'Select Forum Flair']) !!}
+                        @elseif($loot->rewardable_type == 'ForumDecor')
+                            {!! Form::select('rewardable_id[]', $forumDecors, $loot->rewardable_id, ['class' => 'form-control forum-decor-select selectize', 'placeholder' => 'Select Forum Decor']) !!}
                         @endif
                     </td>
                     <td>{!! Form::text('quantity[]', $loot->quantity, ['class' => 'form-control']) !!}</td>

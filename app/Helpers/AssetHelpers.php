@@ -349,7 +349,7 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data) {
         } elseif ($key == 'forum_flairs' && count($contents)) {
             $service = new App\Services\ForumService;
             foreach ($contents as $asset) {
-                if (!$service->creditFlair($sender, $recipient, null, $logType, $data, $asset['asset'])) {
+                if (!$service->creditFlair($sender, $recipient, $logType, $data, $asset['asset'])) {
                     foreach ($service->errors()->getMessages()['error'] as $error) {
                         flash($error)->error();
                     }
@@ -360,7 +360,7 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data) {
         } elseif ($key == 'forum_decors' && count($contents)) {
             $service = new App\Services\ForumService;
             foreach ($contents as $asset) {
-                if (!$service->creditDecor($sender, $recipient, null, $logType, $data, $asset['asset'])) {
+                if (!$service->creditDecor($sender, $recipient, $logType, $data, $asset['asset'])) {
                     foreach ($service->errors()->getMessages()['error'] as $error) {
                         flash($error)->error();
                     }

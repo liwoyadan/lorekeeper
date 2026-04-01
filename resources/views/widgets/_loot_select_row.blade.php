@@ -18,13 +18,15 @@
             ->orderBy('name')
             ->pluck('name', 'id');
     }
+    $forumFlairs = \App\Models\Forum\ForumFlair::visible()->default(0)->sortAlphabetical()->pluck('name', 'id');
+    $forumDecors = \App\Models\Forum\ForumDecor::visible()->default(0)->sortAlphabetical()->get()->pluck('fullName', 'id');
 @endphp
 
 <div id="lootRowData" class="hide">
     <table class="table table-sm">
         <tbody id="lootRow">
             <tr class="loot-row">
-                <td>{!! Form::select('rewardable_type[]', ['Item' => 'Item', 'Currency' => 'Currency'] + ($showLootTables ? ['LootTable' => 'Loot Table'] : []) + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : []), null, [
+                <td>{!! Form::select('rewardable_type[]', ['Item' => 'Item', 'Currency' => 'Currency', 'ForumFlair' => 'Forum Flair', 'ForumDecor' => 'Forum Decor'] + ($showLootTables ? ['LootTable' => 'Loot Table'] : []) + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : []), null, [
                     'class' => 'form-control reward-type',
                     'placeholder' => 'Select Reward Type',
                 ]) !!}</td>
@@ -42,4 +44,6 @@
     @if ($showRaffles)
         {!! Form::select('rewardable_id[]', $raffles, null, ['class' => 'form-control raffle-select', 'placeholder' => 'Select Raffle']) !!}
     @endif
+    {!! Form::select('rewardable_id[]', $forumFlairs, null, ['class' => 'form-control forum-flair-select', 'placeholder' => 'Select Forum Flair']) !!}
+    {!! Form::select('rewardable_id[]', $forumDecors, null, ['class' => 'form-control forum-decor-select', 'placeholder' => 'Select Forum Decor']) !!}
 </div>

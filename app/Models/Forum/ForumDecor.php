@@ -48,7 +48,7 @@ class ForumDecor extends Model {
     public static $createRules = [
         'name'              => 'required|unique:forum_decors|between:2,100',
         'description'       => 'nullable',
-        'image'             => 'nullable|mimes:png,gif,webp|max:2048',
+        'image'             => 'nullable|mimes:png,gif,jpeg,jpg,webp|max:2048',
     ];
 
     /**
@@ -59,7 +59,7 @@ class ForumDecor extends Model {
     public static $updateRules = [
         'name'              => 'required|between:2,100',
         'description'       => 'nullable',
-        'image'             => 'mimes:png,gif,webp|max:2048',
+        'image'             => 'mimes:png,gif,jpeg,jpg,webp|max:2048',
     ];
 
     /**********************************************************************************************
@@ -174,12 +174,56 @@ class ForumDecor extends Model {
     }
 
     /**
+     * Gets the name and type of the decor.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute() {
+        return $this->name.' ('.ucwords($this->type).')';
+    }
+
+    /**
      * Gets the decor's asset type for asset management.
      *
      * @return string
      */
     public function getAssetTypeAttribute() {
         return 'forum_decors';
+    }
+
+    /**
+     * Gets the inline CSS style string for this decor's data properties.
+     *
+     * @return string|null
+     */
+    public function getCssStyleAttribute() {
+        if (!$this->imageUrl) {
+            return null;
+        }
+
+        $imageUrl = 'url('.$this->imageUrl.')';
+    
+        if ($this->type == 'border') {
+            $styles = ['border-image-source' => $imageUrl];
+            foreach ($this->data ?? [] as $key => $value) {
+                if ($value != null) {
+                    $styles[str_replace('_', '-', $key)] = $value;
+                }
+            }
+        } elseif ($this->type == 'background') {
+            $styles = ['background-image' => $imageUrl];
+            foreach ($this->data ?? [] as $key => $value) {
+                if ($key == 'opacity') {
+                    $styles[str_replace('_', '-', $key)] = $value.'%';
+                } elseif ($key == 'background_repeat') {
+                    $styles[str_replace('_', '-', $key)] = $value ? 'repeat' : 'no-repeat';
+                } else {
+                    $styles[str_replace('_', '-', $key)] = $value;
+                }
+            }
+        }
+
+        return implode('; ', array_map(fn($property, $value) => $property.': '.$value, array_keys($styles), $styles));
     }
 
     /**********************************************************************************************

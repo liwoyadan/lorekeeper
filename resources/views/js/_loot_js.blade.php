@@ -10,6 +10,8 @@
         @if ($showRaffles)
             var $raffleSelect = $('#lootRowData').find('.raffle-select');
         @endif
+        var $forumFlairSelect = $('#lootRowData').find('.forum-flair-select');
+        var $forumDecorSelect = $('#lootRowData').find('.forum-decor-select');
 
         $('#lootTableBody .selectize').selectize();
         attachRemoveListener($('#lootTableBody .remove-loot-button'));
@@ -35,6 +37,8 @@
             @if ($showRaffles)
                 else if (val == 'Raffle') $clone = $raffleSelect.clone();
             @endif
+            else if (val == 'ForumFlair') $clone = $forumFlairSelect.clone();
+            else if (val == 'ForumDecor') $clone = $forumDecorSelect.clone();
 
             $cell.html('');
             $cell.append($clone);
@@ -54,6 +58,8 @@
                 @if ($showRaffles)
                     else if (val == 'Raffle') $clone = $raffleSelect.clone();
                 @endif
+                else if (val == 'ForumFlair') $clone = $forumFlairSelect.clone();
+                else if (val == 'ForumDecor') $clone = $forumDecorSelect.clone();
 
                 $cell.html('');
                 $cell.append($clone);

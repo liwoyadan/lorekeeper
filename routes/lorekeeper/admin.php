@@ -467,14 +467,13 @@ Route::group(['middleware' => 'power:manage_forums'], function () {
     });
 
     // FORUM DECORS
-    // Commented out until I finish it...
-    // Route::group(['prefix' => 'forum-decors'], function () {
-    //     Route::get('/', 'ForumController@getDecorIndex');
-    //     Route::get('create', 'ForumController@getCreateDecor');
-    //     Route::get('edit/{id}', 'ForumController@getEditDecor');
-    //     Route::get('delete/{id}', 'ForumController@getDeleteDecor');
-    //     Route::post('create', 'ForumController@postCreateEditDecor');
-    //     Route::post('edit/{id?}', 'ForumController@postCreateEditDecor');
-    //     Route::post('delete/{id}', 'ForumController@postDeleteDecor');
-    // });
+    Route::group(['prefix' => 'forum-decors'], function () {
+        Route::get('/', 'ForumController@getDecorIndex');
+        Route::get('create', 'ForumController@getCreateDecor');
+        Route::get('edit/{id}', 'ForumController@getEditDecor');
+        Route::get('delete/{id}', 'ForumController@getDeleteDecor');
+        Route::post('create', 'ForumController@postCreateEditDecor');
+        Route::post('edit/{id?}', 'ForumController@postCreateEditDecor');
+        Route::post('delete/{id}', 'ForumController@postDeleteDecor');
+    });
 });

@@ -1,21 +1,27 @@
 @if (!isset($comment->deleted_at))
-    <div class="border rounded mb-3 row no-gutters">
+    <div class="{!! isset($postBorderDecor) && $postBorderDecor?->cssStyle ? '' : 'border' !!} rounded mb-3 row no-gutters position-relative" {!! isset($postBorderDecor) && $postBorderDecor?->cssStyle ? 'style="'.$postBorderDecor->cssStyle.'"' : '' !!}>
+        @isset($postBgStyle)
+            <div class="forum-heading-bg" style="{{ $postBgStyle }}"></div>
+        @endisset
         <div class="col-md-2 text-center border-md-right border-bottom border-md-bottom-0 py-2">
             <h5 class="mb-1">
                 {!! $comment->commenter->forumName !!}
             </h5>
-            <div class="comment-avatar">
+            <div class="comment-avatar mb-1">
                 <img class="mx-100 rounded-circle" src="{{ $comment->character->image->thumbnailUrl ?? $comment->commenter->avatarUrl }}" style="aspect-ratio: 1/1; max-height: 100px;" alt="{{ $comment->character->name ?? $comment->commenter->name }} Avatar">
             </div>
             @if ($comment->character_id && $comment->character)
-                <h5 class="mt-1 mb-0 text-muted">
+                <h5 class="mb-0 text-muted">
                     <span class="small">as {!! $comment->character->displayName !!}</span>
                 </h5>
             @endif
             <div>
                 {!! $comment->commenter->profile->forumFlair->displayFlair ?? '<span class="small text-muted">(No Forum Flair)</span>' !!}
             </div>
-            <div class="small">
+            <div>
+                {!! $comment->commenter->rank->displayNameIcon ?? '---' !!}
+            </div>
+            <div class="small mt-1">
                 @auth
                     <a href="{{ $comment->commenter->url.'/forum' }}">
                 @endauth
@@ -27,7 +33,7 @@
         </div>
 
         <div class="col-md d-flex flex-column">
-            <div class="mb-2 border-bottom p-2">
+            <div class="border-bottom p-2">
                 <div class="row no-gutters justify-content-between">
                     <div class="col d-flex flex-wrap align-items-center">
                         @if ($comment->type == 'User-User')
@@ -72,7 +78,7 @@
             </div>
             <div class="p-2 flex-grow-1 d-flex flex-column">
                 <div>
-                    {!! config('lorekeeper.settings.wysiwyg_comments') ? nl2br($comment->comment) : nl2br($markdown->line($comment->comment)) !!}
+                    {!! config('lorekeeper.settings.wysiwyg_comments') ? $comment->comment : nl2br($markdown->line($comment->comment)) !!}
                 </div>
             </div>
             @if (config('lorekeeper.forums.allow_signatures.enabled') && (isset($comment->commenter->profile->forum_signature) && $comment->commenter->profile->forum_signature))
