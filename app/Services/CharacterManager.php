@@ -1809,6 +1809,10 @@ class CharacterManager extends Service {
         }
         $character->save();
 
+        // Null any relations that are currently active
+        $relationService = new CharacterLinkService;
+        $relationService->clearRelations($character);
+
         // Notify bookmarkers
         $character->notifyBookmarkers('BOOKMARK_OWNER');
 

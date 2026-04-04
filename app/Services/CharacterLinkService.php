@@ -269,6 +269,43 @@ class CharacterLinkService extends Service {
     }
 
     /**
+     * Nulls all active relationships when a character is transferred.
+     *
+     * @param mixed $character
+     *
+     * @return bool
+     */
+    public function clearRelations($character) {
+        DB::beginTransaction();
+
+        try {
+            if (!$character) {
+                throw new \Exception('Character not found.');
+            }
+
+            $firstRelations = CharacterRelation::where('character_1_id', $character->id)->whereNull('deleted_at');
+            $relations = CharacterRelation::where('character_2_id', $character->id)->whereNull('deleted_at')->union($firstRelations)->get();
+            if ($relations->count() > 0) {
+                foreach ($relations as $link) {
+                    $link->deleted_at = Carbon::now();
+                    $link->save();
+
+                    $data = 'Relationship between '.$link->characterOne->fullName.' and '.$link->characterTwo->fullName.' nulled in the process of character transfer.';
+                    if (!$this->createLog($link->character_1_id, $link->character_2_id, Auth::user()->id, null, $link->id, null, 'Relationship Nulled', $data)) {
+                        throw new \Exception('Failed to create relation log.');
+                    }
+                }
+            }
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
      * Creates a link log.
      *
      * @param int    $characterOneId

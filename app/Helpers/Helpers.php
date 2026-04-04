@@ -416,7 +416,7 @@ function prettyProfileLink($url) {
 
     // Return formatted link if possible; failing that, an unformatted link
     if (isset($name) && isset($site) && isset($link)) {
-        return '<a href="https://'.$link.'">'.$name.'@'.(config('lorekeeper.sites.'.$site.'.display_name') != null ? config('lorekeeper.sites.'.$site.'.display_name') : $site).'</a>';
+        return '<a href="https://'.$link.'">'.(config('lorekeeper.sites.'.$site.'.icon') != null ? ('<i class="'.config('lorekeeper.sites.'.$site.'.icon').'" aria-hidden="true" style="margin-right: 2px;"></i>') : '').$name.'@'.(config('lorekeeper.sites.'.$site.'.display_name') != null ? config('lorekeeper.sites.'.$site.'.display_name') : $site).'</a>';
     } else {
         return '<a href="'.$url.'">'.$url.'</a>';
     }

@@ -9,6 +9,7 @@ use App\Models\Character\CharacterCurrency;
 use App\Models\Character\CharacterItem;
 use App\Models\Character\CharacterProfile;
 use App\Models\Character\CharacterRelation;
+use App\Models\Character\RelationsLog;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Currency\Currency;
 use App\Models\Gallery\GallerySubmission;
@@ -688,6 +689,71 @@ class CharacterController extends Controller {
         }
 
         return redirect()->back();
+    }
+
+    /**
+     * Shows a character's relationship logs.
+     *
+     * @param string $slug
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCharacterRelationLogs($slug) {
+        return view('character.relation_logs', [
+            'character'             => $this->character,
+            'extPrevAndNextBtnsUrl' => '/relationship-logs',
+            'logs'                  => $this->character->getRelationLogs(0),
+        ]);
+    }
+
+    /**
+     * Shows the edit relationship info modal.
+     *
+     * @param string $slug
+     * @param int    $id
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getEditCharacterLinkInfo(Request $request, $slug, $id) {
+        if (!Auth::check()) {
+            abort(404);
+        }
+        if (!Auth::user()->id == $this->character->user_id && !Auth::user()->hasPower('manage_characters')) {
+            abort(404);
+        }
+
+        $link = CharacterRelation::find($id);
+        if (!$link) {
+            abort(404);
+        }
+
+        $otherCharacter = $link->getOtherCharacter($this->character->id);
+        $item = $link->userItem->item ?? null;
+        $types = null;
+        if ($item) {
+            $tag = ItemTag::where('item_id', $item->id)->where('tag', 'link')->first();
+            if ($tag) {
+                $tagData = $tag->getData()['flat'];
+                $types = [];
+                $c = 0;
+                if ($tagData) {
+                    foreach ($tagData as $key => $title) {
+                        $types[$title] = $title;
+                        $c++;
+                    }
+                }
+                if ($c == 0) {
+                    $types = null;
+                }
+            }
+        }
+
+        return view('character._edit_link_modal', [
+            'character'      => $this->character,
+            'link'           => $link,
+            'otherCharacter' => $otherCharacter,
+            'types'          => $types ?? null,
+        ]);
     }
 
     /**

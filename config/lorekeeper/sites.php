@@ -126,6 +126,7 @@ return [
         'display_name' => 'artstation',
         'regex'        => '/artstation\.com\/([A-Za-z0-9_-]+)/',
         'link'         => 'artstation.com',
+        'icon'         => 'fab fa-artstation',
     ],
 
     'picarto'    => [
@@ -133,5 +134,14 @@ return [
         'display_name' => 'picarto',
         'regex'        => '/picarto\.tv\/([A-Za-z0-9_-]+)/',
         'link'         => 'picarto.tv',
+        'icon'         => 'fas fa-tv-retro',
+    ],
+
+    'furaffinity'    => [
+        'full_name'    => 'Furaffinity',
+        'display_name' => 'FA',
+        'regex'        => '/furaffinity\.net\/user\/([A-Za-z0-9_-]+)/',
+        'link'         => 'furaffinity.net',
+        'icon'         => 'fas fa-paw',
     ],
 ];

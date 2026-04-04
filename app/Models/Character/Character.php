@@ -512,6 +512,29 @@ class Character extends Model {
     }
 
     /**
+     * Get the character's relationship logs.
+     *
+     * @param int $limit
+     *
+     * @return \Illuminate\Pagination\LengthAwarePaginator|\Illuminate\Support\Collection
+     */
+    public function getRelationLogs($limit = 10) {
+        $character = $this;
+
+        $query = RelationsLog::with('characterOne', 'characterTwo')->where(function ($query) use ($character) {
+            $query->where('character_1_id', $character->id);
+        })->orWhere(function ($query) use ($character) {
+            $query->where('character_2_id', $character->id);
+        })->orderBy('id', 'DESC');
+
+        if ($limit) {
+            return $query->take($limit)->get();
+        } else {
+            return $query->paginate(10);
+        }
+    }
+
+    /**
      * Get submissions that the character has been included in.
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
