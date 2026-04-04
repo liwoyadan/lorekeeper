@@ -249,16 +249,19 @@ class CharacterLinkService extends Service {
             }
 
             if ($character->id == $link->character_1_id) {
-                $link->info = [$data['info'], $link->info ? $link->info[1] : ''];
+                $link->character_1_type = $data['type'] ?? '???';
+                $link->info = [$data['info'] ?? null, $link->info ? $link->info[1] : null];
             } else {
-                $link->info = [$link->info ? $link->info[0] : '', $data['info']];
-            }
-
-            if (isset($data['type'])) {
-                $link->type = $data['type'];
+                $link->character_2_type = $data['type'] ?? '???';
+                $link->info = [$link->info ? $link->info[0] : null, $data['info'] ?? null];
             }
 
             $link->save();
+
+            $logData = $character->fullName.'\'s link thoughts towards '.$link->getOtherCharacter($character->id)->fullName.' updated.';
+            if (!$this->createLog($link->character_1_id, $link->character_2_id, $user->id, $link->getOtherCharacter($character->id)->user_id, $link->id, $link->user_item_id, 'Link Updated', $logData)) {
+                throw new \Exception('Failed to create relation log.');
+            }
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {

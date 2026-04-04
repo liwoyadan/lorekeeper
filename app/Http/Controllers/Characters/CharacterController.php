@@ -728,12 +728,12 @@ class CharacterController extends Controller {
         }
 
         $otherCharacter = $link->getOtherCharacter($this->character->id);
-        $item = $link->userItem->item ?? null;
+        $item = $link->userItem?->item;
         $types = null;
         if ($item) {
             $tag = ItemTag::where('item_id', $item->id)->where('tag', 'link')->first();
             if ($tag) {
-                $tagData = $tag->getData()['flat'];
+                $tagData = $tag->getData()['links'];
                 $types = [];
                 $c = 0;
                 if ($tagData) {

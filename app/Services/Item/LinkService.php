@@ -25,9 +25,7 @@ class LinkService extends Service {
      * @return array
      */
     public function getEditData() {
-        return [
-            'links' => $tag->data['links'] ?? [],
-        ];
+        return [];
     }
 
     /**
@@ -55,7 +53,7 @@ class LinkService extends Service {
         DB::beginTransaction();
 
         try {
-            $tag->update(['data' => $data['links']]);
+            $tag->update(['data' => json_encode(['links' => $data['links'] ?? []])]);
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {
