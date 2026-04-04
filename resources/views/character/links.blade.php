@@ -17,37 +17,72 @@
 
     @include('character._header', ['character' => $character])
 
-    <div class="row no-gutters justify-content-between">
+    <div class="row no-gutters justify-content-between mb-3">
         <div class="col-auto">
-            <h3>
-                {{ $character->fullName }}'s Links
-            </h3>
+            <h3 class="mb-0">{{ $character->fullName }}'s Links</h3>
         </div>
-
-        <div class="col-auto">
-            <div class="text-right">
-                <a class="small" href="{{ url('reports/new?url=') . $character->url . '/links' }}">
-                    <i class="fas fa-exclamation-triangle text-danger" data-toggle="tooltip" title="Click here to report this character's links." style="opacity: 50%;"></i>
+        <div class="col-auto d-flex align-items-center">
+            @if (Auth::check() && Auth::user()->id == $character->user_id && count($links) > 1)
+                <a href="#" id="toggle-sort-btn" class="btn btn-outline-secondary btn-sm mr-2">
+                    <i class="fas fa-sort mr-1"></i>Sort
                 </a>
-            </div>
+            @endif
+            <a href="{{ url('reports/new?url=') . $character->url . '/links' }}">
+                <i class="fas fa-exclamation-triangle text-danger" data-toggle="tooltip" title="Report this character's links." style="opacity: 50%;"></i>
+            </a>
         </div>
     </div>
 
-    @if (count($character->links))
-        @foreach ($character->links as $link)
-            <div class="row no-gutters align-items-center mb-2 position-relative character-link-row mt-4">
-                @include('character._link_character', ['character' => $link->characterOne, 'direction' => 'left', 'link' => $link])
-
-                @include('character._link_character', ['character' => $link->characterTwo, 'direction' => 'right', 'link' => $link])
+    {{-- Normal view --}}
+    <div id="links-view">
+        @if (count($links))
+            @foreach ($links as $link)
+                <div class="row no-gutters {{ $loop->last ? 'mb-2' : 'mb-5' }}">
+                    @include('character._link_character', ['character' => $link->characterOne, 'link' => $link])
+                    @include('character._link_character', ['character' => $link->characterTwo, 'link' => $link])
+                </div>
+            @endforeach
+        @else
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> This character currently has no established links.
             </div>
+        @endif
+    </div>
 
-            @if (!$loop->last)
-                <hr style="border-style: dashed;">
-            @endif
-        @endforeach
-    @else
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i> This character currently has no established links.
+    {{-- Sort mode (owner only, shown when toggled) --}}
+    @if (Auth::check() && Auth::user()->id == $character->user_id && count($links) > 1)
+        <div id="links-sort" class="d-none">
+            <p class="text-muted small mb-2">
+                <i class="fas fa-info-circle mr-1"></i>
+                Drag to reorder. This only changes <strong>{{ $character->name ?? $character->slug }}</strong>'s sort order — the other character's order is unaffected.
+            </p>
+
+            <table class="table table-sm">
+                <tbody id="linksSortable" class="sortable">
+                    @foreach ($links as $link)
+                        @php $other = $link->getOtherCharacter($character->id); @endphp
+                        <tr class="sort-item" data-id="{{ $link->id }}">
+                            <td class="align-middle" style="width: 1px;">
+                                <a class="fas fa-arrows-alt-v handle text-muted px-2" href="#"></a>
+                            </td>
+                            <td class="align-middle" style="width: 40px;">
+                                <img src="{{ $other->image->thumbnailUrl }}" class="img-thumbnail" style="width: 36px; height: 36px; object-fit: cover;" alt="{{ $other->fullName }}" />
+                            </td>
+                            <td class="align-middle">
+                                <span class="font-weight-bold">{{ $other->fullName }}</span>
+                                <span class="badge badge-secondary ml-1">{{ $link->getRelationType($character->id) }}</span>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+            {!! Form::open(['url' => 'character/' . $character->slug . '/links/sort']) !!}
+            {!! Form::hidden('sort', '', ['id' => 'linksSortOrder']) !!}
+            <div class="d-flex justify-content-end">
+                {!! Form::submit('Save Order', ['class' => 'btn btn-primary btn-sm']) !!}
+            </div>
+            {!! Form::close() !!}
         </div>
     @endif
 
@@ -57,7 +92,7 @@
                 <i class="fas fa-envelope mr-1" aria-hidden="true"></i>Create Links For {!! $character->name ?? $character->slug !!}
             </a>
         @endif
-        <a href="{{ $character->url . '/relationship-logs' }}" class="btn btn-outline-info btn-sm">
+        <a href="{{ $character->url . '/relationship-logs' }}" class="btn btn-outline-info btn-sm mb-1">
             <i class="fas fa-book mr-1" aria-hidden="true"></i>View Logs
         </a>
     </div>
@@ -66,10 +101,61 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
+            // Edit link modal
             $('.edit-link-btn').on('click', function(e) {
                 e.preventDefault();
                 loadModal("{{ url('character') }}/" + $(this).data('slug') + "/links/info/" + $(this).data('id'), 'Edit Link');
             });
+
+            // Feature toggle
+            $('.feature-link-btn').on('click', function(e) {
+                e.preventDefault();
+                var btn = $(this);
+                var icon = btn.find('i');
+                $.post(
+                    "{{ url('character') }}/" + btn.data('slug') + "/links/feature/" + btn.data('id'),
+                    { _token: "{{ csrf_token() }}" },
+                    function(data) {
+                        if (data.featured) {
+                            icon.removeClass('far').addClass('fas');
+                            btn.attr('title', 'Unfeature this link');
+                        } else {
+                            icon.removeClass('fas').addClass('far');
+                            btn.attr('title', 'Feature this link');
+                        }
+                        btn.tooltip('dispose').tooltip();
+                    }
+                ).fail(function(xhr) {
+                    var msg = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'An error occurred.';
+                    alert(msg);
+                });
+            });
+
+            // Sort mode toggle
+            $('#toggle-sort-btn').on('click', function(e) {
+                e.preventDefault();
+                var inSort = $('#links-sort').hasClass('d-none');
+                $('#links-view').toggleClass('d-none', inSort);
+                $('#links-sort').toggleClass('d-none', !inSort);
+                $(this).text(inSort ? ' Done' : ' Sort')
+                       .find('i').attr('class', inSort ? 'fas fa-times mr-1' : 'fas fa-sort mr-1');
+            });
+
+            // Sortable list
+            $('#linksSortable').sortable({
+                items: '.sort-item',
+                handle: '.handle',
+                placeholder: 'sortable-placeholder',
+                stop: function() {
+                    $('#linksSortOrder').val($(this).sortable('toArray', { attribute: 'data-id' }));
+                },
+                create: function() {
+                    $('#linksSortOrder').val($(this).sortable('toArray', { attribute: 'data-id' }));
+                }
+            });
+            $('#linksSortable').disableSelection();
+
+            $('.handle').on('click', function(e) { e.preventDefault(); });
         });
     </script>
 @endsection

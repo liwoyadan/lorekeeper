@@ -32,7 +32,7 @@
 
 <hr class="my-2" style="border-style: dashed;">
 
-<a class="btn btn-primary btn-sm" data-toggle="collapse" href="#deleteLink" role="button" aria-expanded="false" aria-controls="deleteLink">
+<a class="btn btn-danger btn-sm" data-toggle="collapse" href="#deleteLink" role="button" aria-expanded="false" aria-controls="deleteLink">
     <i class="fas fa-trash"></i>
     Delete Link
 </a>

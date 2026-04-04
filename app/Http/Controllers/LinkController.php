@@ -19,9 +19,10 @@ class LinkController extends Controller {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
             }
+        } else {
+            flash('Link request '.$action.'ed successfully.')->success();
         }
 
-        flash('Link request '.$action.'ed successfully.')->success();
         return redirect()->back();
     }
 }

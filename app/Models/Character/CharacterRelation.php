@@ -12,7 +12,7 @@ class CharacterRelation extends Model {
      * @var array
      */
     protected $fillable = [
-        'character_1_id', 'character_2_id', 'info', 'character_1_type', 'character_2_type', 'status', 'deleted_at', 'user_item_id',
+        'character_1_id', 'character_2_id', 'info', 'character_1_type', 'character_2_type', 'character_1_featured', 'character_2_featured', 'character_1_sort', 'character_2_sort', 'status', 'deleted_at', 'user_item_id',
     ];
 
     /**
@@ -28,8 +28,10 @@ class CharacterRelation extends Model {
      * @var array
      */
     protected $casts = [
-        'info' => 'array',
-        'deleted_at' => 'datetime',
+        'info'                => 'array',
+        'deleted_at'          => 'datetime',
+        'character_1_featured' => 'boolean',
+        'character_2_featured' => 'boolean',
     ];
 
     /**
@@ -124,11 +126,20 @@ class CharacterRelation extends Model {
     }
 
     /**
+     * Returns whether this link is featured for the given character ID.
+     *
+     * @param int $id
+     */
+    public function isFeaturedForCharacter($id) {
+        return $this->character_1_id == $id ? $this->character_1_featured : $this->character_2_featured;
+    }
+
+    /**
      * Get the first log of this relation, which is the initial request.
      *
      * @param mixed $id
      */
     public function initialLog() {
-        return $this->logs()->where('log_type', 'Link Requested')->orderBy('created_at', 'ASC')->first() ?? null;
+        return $this->logs()->where('log_type', 'Link Requested')->orderBy('created_at', 'ASC')->first();
     }
 }

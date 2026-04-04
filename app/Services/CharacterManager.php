@@ -1809,7 +1809,7 @@ class CharacterManager extends Service {
         }
         $character->save();
 
-        // Null any relations that are currently active
+        // Soft-delete any active relations on transfer
         $relationService = new CharacterLinkService;
         $relationService->clearRelations($character);
 

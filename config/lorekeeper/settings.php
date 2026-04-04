@@ -341,4 +341,15 @@ return [
     |
     */
     'wysiwyg_comments'                                  => 1,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Max Featured Relationships Per Character
+    |--------------------------------------------------------------------------
+    |
+    | Maximum number of relationships a character owner can feature on their
+    | character's profile page.
+    |
+    */
+    'max_featured_relations'                            => 3,
 ];

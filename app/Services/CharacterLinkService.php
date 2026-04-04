@@ -5,8 +5,6 @@ namespace App\Services;
 use App\Facades\Notifications;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterRelation;
-use App\Models\Item\Item;
-use App\Models\User\User;
 use App\Models\User\UserItem;
 use App\Services\InventoryManager;
 use Illuminate\Support\Facades\Auth;
@@ -50,7 +48,7 @@ class CharacterLinkService extends Service {
             // check if there is an existing link, the lower id is always character_1_id
             $lowerId = $character->id < $otherCharacter->id ? $character->id : $otherCharacter->id;
             $higherId = $character->id < $otherCharacter->id ? $otherCharacter->id : $character->id;
-            if (CharacterRelation::where('character_1_id', $lowerId)->where('character_2_id', $higherId)->exists()) {
+            if (CharacterRelation::where('character_1_id', $lowerId)->where('character_2_id', $higherId)->whereNull('deleted_at')->exists()) {
                 throw new \Exception('A relation already exists between one or more of these characters.');
             }
 
@@ -91,7 +89,6 @@ class CharacterLinkService extends Service {
                         throw new \Exception('Failed to create relation log.');
                     }
 
-                    // notify the other user
                     Notifications::create('LINK_REQUESTED', $otherCharacter->user, [
                         'character' => $character->displayName,
                         'requested' => $otherCharacter->displayName,
@@ -158,8 +155,8 @@ class CharacterLinkService extends Service {
                 Notifications::create('LINK_ACCEPTED', $otherCharacter->user, [
                     'link'      => $user->url,
                     'user'      => $user->name,
-                    'requested' => $otherCharacter->displayName,
-                    'character' => $otherCharacter->url,
+                    'requested' => $character->displayName,
+                    'character' => $character->url,
                 ]);
 
                 $type = 'Link Established';
@@ -176,13 +173,12 @@ class CharacterLinkService extends Service {
                 Notifications::create('LINK_REJECTED', $otherCharacter->user, [
                     'link'      => $user->url,
                     'user'      => $user->name,
-                    'requested' => $otherCharacter->displayName,
-                    'character' => $otherCharacter->url,
+                    'requested' => $character->displayName,
+                    'character' => $character->url,
                 ]);
 
                 $invManager = new InventoryManager;
-                $item = Item::where('id', $link->userItem->item_id)->first();
-                if (!$invManager->creditItem($character->user, $otherCharacter->user, 'Link Rejection Refund', ['data' => 'Refunded from a rejected link request.'], $item, 1)) {
+                if (!$invManager->creditItem($character->user, $otherCharacter->user, 'Link Rejection Refund', ['data' => 'Refunded from a rejected link request.'], $link->userItem->item, 1)) {
                     throw new \Exception('Failed to refund the link item back to the user.');
                 }
 
@@ -258,8 +254,9 @@ class CharacterLinkService extends Service {
 
             $link->save();
 
-            $logData = $character->fullName.'\'s link thoughts towards '.$link->getOtherCharacter($character->id)->fullName.' updated.';
-            if (!$this->createLog($link->character_1_id, $link->character_2_id, $user->id, $link->getOtherCharacter($character->id)->user_id, $link->id, $link->user_item_id, 'Link Updated', $logData)) {
+            $otherCharacter = $link->getOtherCharacter($character->id);
+            $logData = $character->fullName.'\'s link thoughts towards '.$otherCharacter->fullName.' updated.';
+            if (!$this->createLog($link->character_1_id, $link->character_2_id, $user->id, $otherCharacter->user_id, $link->id, $link->user_item_id, 'Link Updated', $logData)) {
                 throw new \Exception('Failed to create relation log.');
             }
 
@@ -286,8 +283,13 @@ class CharacterLinkService extends Service {
                 throw new \Exception('Character not found.');
             }
 
-            $firstRelations = CharacterRelation::where('character_1_id', $character->id)->whereNull('deleted_at');
-            $relations = CharacterRelation::where('character_2_id', $character->id)->whereNull('deleted_at')->union($firstRelations)->get();
+            $relations = CharacterRelation::with('characterOne', 'characterTwo')
+                ->whereNull('deleted_at')
+                ->where(function ($q) use ($character) {
+                    $q->where('character_1_id', $character->id)
+                      ->orWhere('character_2_id', $character->id);
+                })
+                ->get();
             if ($relations->count() > 0) {
                 foreach ($relations as $link) {
                     $link->deleted_at = Carbon::now();
@@ -301,6 +303,88 @@ class CharacterLinkService extends Service {
             }
 
             return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Saves the link sort order for a specific character.
+     * Each character updates only their own sort column.
+     *
+     * @param mixed  $character
+     * @param string $sortData  Comma-separated relation IDs in display order
+     *
+     * @return bool
+     */
+    public function sortCharacterLinks($character, $sortData) {
+        DB::beginTransaction();
+
+        try {
+            $ids = array_filter(explode(',', $sortData));
+
+            $links = CharacterRelation::whereIn('id', $ids)
+                ->where(function ($q) use ($character) {
+                    $q->where('character_1_id', $character->id)
+                      ->orWhere('character_2_id', $character->id);
+                })
+                ->get()
+                ->keyBy('id');
+
+            foreach ($ids as $index => $id) {
+                $link = $links->get($id);
+
+                if (!$link) {
+                    continue;
+                }
+
+                $column = $link->character_1_id == $character->id ? 'character_1_sort' : 'character_2_sort';
+                $link->$column = $index;
+                $link->save();
+            }
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Toggles the featured status of a relation for a specific character.
+     * Returns the new featured state (true/false) on success, or false on failure.
+     *
+     * @param mixed $link
+     * @param mixed $character
+     *
+     * @return bool|null
+     */
+    public function toggleFeaturedRelation($link, $character) {
+        DB::beginTransaction();
+
+        try {
+            if (!$link || $link->status !== 'Approved') {
+                throw new \Exception('Link not found or not approved.');
+            }
+
+            $isChar1 = ($link->character_1_id == $character->id);
+            $featuredColumn = $isChar1 ? 'character_1_featured' : 'character_2_featured';
+            $currentlyFeatured = $link->$featuredColumn;
+
+            if (!$currentlyFeatured) {
+                $max = config('lorekeeper.settings.max_featured_relations', 3);
+                if ($character->featuredLinks()->count() >= $max) {
+                    throw new \Exception('You have reached the maximum number of featured links ('.$max.') for this character.');
+                }
+            }
+
+            $link->$featuredColumn = !$currentlyFeatured;
+            $link->save();
+
+            return $this->commitReturn(!$currentlyFeatured);
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }

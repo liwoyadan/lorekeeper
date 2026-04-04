@@ -193,6 +193,46 @@ class Character extends Model {
         return $this->belongsToMany(Item::class, 'character_items')->withPivot('count', 'data', 'updated_at', 'id', 'stack_name')->whereNull('character_items.deleted_at');
     }
 
+    /**
+     * Get featured links for this character's profile.
+     */
+    public function featuredLinks() {
+        return CharacterRelation::where('status', 'Approved')
+            ->whereNull('deleted_at')
+            ->where(function ($q) {
+                $q->where(function ($q) {
+                    $q->where('character_1_id', $this->id)->where('character_1_featured', true);
+                })->orWhere(function ($q) {
+                    $q->where('character_2_id', $this->id)->where('character_2_featured', true);
+                });
+            });
+    }
+
+    /**
+     * Get approved links for this character, ordered by the character's own sort column.
+     * Unsorted links (null sort) appear after sorted ones, then by creation date.
+     * Returns an eager-loaded Collection. Not an Eloquent relation — call as a method.
+     */
+    public function sortedLinks() {
+        return CharacterRelation::where('status', 'Approved')
+            ->whereNull('deleted_at')
+            ->where(function ($q) {
+                $q->where('character_1_id', $this->id)
+                  ->orWhere('character_2_id', $this->id);
+            })
+            ->orderByRaw(
+                'ISNULL(CASE WHEN character_1_id = ? THEN character_1_sort ELSE character_2_sort END)',
+                [$this->id]
+            )
+            ->orderByRaw(
+                'CASE WHEN character_1_id = ? THEN character_1_sort ELSE character_2_sort END ASC',
+                [$this->id]
+            )
+            ->orderBy('created_at', 'DESC')
+            ->with('characterOne', 'characterTwo')
+            ->get();
+    }
+
     /*
     * Get the links for this character
     */
@@ -519,13 +559,12 @@ class Character extends Model {
      * @return \Illuminate\Pagination\LengthAwarePaginator|\Illuminate\Support\Collection
      */
     public function getRelationLogs($limit = 10) {
-        $character = $this;
-
-        $query = RelationsLog::with('characterOne', 'characterTwo')->where(function ($query) use ($character) {
-            $query->where('character_1_id', $character->id);
-        })->orWhere(function ($query) use ($character) {
-            $query->where('character_2_id', $character->id);
-        })->orderBy('id', 'DESC');
+        $query = RelationsLog::with('characterOne', 'characterTwo')
+            ->where(function ($q) {
+                $q->where('character_1_id', $this->id)
+                  ->orWhere('character_2_id', $this->id);
+            })
+            ->orderBy('id', 'DESC');
 
         if ($limit) {
             return $query->take($limit)->get();

@@ -137,6 +137,7 @@ class CharacterController extends Controller {
         return view('character.profile', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/profile',
+            'featuredLinks'         => $this->character->featuredLinks()->with('characterOne', 'characterTwo')->get(),
         ]);
     }
 
@@ -572,6 +573,7 @@ class CharacterController extends Controller {
         return view('character.links', [
             'character' => $this->character,
             'types'     => config('lorekeeper.character_relationships'),
+            'links'     => $this->character->sortedLinks(),
         ]);
     }
 
@@ -587,7 +589,7 @@ class CharacterController extends Controller {
             abort(404);
         }
 
-        if (!Auth::user()->id == $this->character->user_id && !Auth::user()->hasPower('manage_characters')) {
+        if (Auth::user()->id != $this->character->user_id && !Auth::user()->hasPower('manage_characters')) {
             abort(404);
         }
 
@@ -641,6 +643,10 @@ class CharacterController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postEditCharacterLinkInfo(Request $request, CharacterLinkService $service, $slug, $id) {
+        if (Auth::user()->id != $this->character->user_id && !Auth::user()->hasPower('manage_characters')) {
+            abort(404);
+        }
+
         $data = $request->only(['info', 'type']);
         if ($service->updateCharacterRelationLinkInfo($data + ['slug' => $slug], $id, Auth::user())) {
             flash('Link info updated successfully!')->success();
@@ -660,6 +666,10 @@ class CharacterController extends Controller {
      * @param mixed $id
      */
     public function getDeleteCharacterLink($slug, $id) {
+        if (Auth::user()->id != $this->character->user_id && !Auth::user()->hasPower('manage_characters')) {
+            abort(404);
+        }
+
         $link = CharacterRelation::find($id);
         if (!$link) {
             abort(404);
@@ -680,8 +690,35 @@ class CharacterController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function postDeleteCharacterLink(Request $request, CharacterLinkService $service, $slug, $id) {
+        if (Auth::user()->id != $this->character->user_id && !Auth::user()->hasPower('manage_characters')) {
+            abort(404);
+        }
+
         if ($service->deleteCharacterRelationLink($id)) {
             flash('Link deleted successfully!')->success();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Saves the link sort order for the character.
+     *
+     * @param string $slug
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postSortCharacterLinks(Request $request, CharacterLinkService $service, $slug) {
+        if (Auth::user()->id != $this->character->user_id && !Auth::user()->hasPower('manage_characters')) {
+            abort(404);
+        }
+
+        if ($service->sortCharacterLinks($this->character, $request->get('sort'))) {
+            flash('Link order saved.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -718,7 +755,7 @@ class CharacterController extends Controller {
         if (!Auth::check()) {
             abort(404);
         }
-        if (!Auth::user()->id == $this->character->user_id && !Auth::user()->hasPower('manage_characters')) {
+        if (Auth::user()->id != $this->character->user_id && !Auth::user()->hasPower('manage_characters')) {
             abort(404);
         }
 
@@ -728,22 +765,14 @@ class CharacterController extends Controller {
         }
 
         $otherCharacter = $link->getOtherCharacter($this->character->id);
-        $item = $link->userItem?->item;
+        $itemId = $link->userItem?->item_id;
         $types = null;
-        if ($item) {
-            $tag = ItemTag::where('item_id', $item->id)->where('tag', 'link')->first();
+        if ($itemId) {
+            $tag = ItemTag::where('item_id', $itemId)->where('tag', 'link')->first();
             if ($tag) {
                 $tagData = $tag->getData()['links'];
-                $types = [];
-                $c = 0;
                 if ($tagData) {
-                    foreach ($tagData as $key => $title) {
-                        $types[$title] = $title;
-                        $c++;
-                    }
-                }
-                if ($c == 0) {
-                    $types = null;
+                    $types = array_combine($tagData, $tagData) ?: null;
                 }
             }
         }
@@ -752,8 +781,34 @@ class CharacterController extends Controller {
             'character'      => $this->character,
             'link'           => $link,
             'otherCharacter' => $otherCharacter,
-            'types'          => $types ?? null,
+            'types'          => $types,
         ]);
+    }
+
+    /**
+     * Toggles the featured state of a link for a character.
+     *
+     * @param string $slug
+     * @param int    $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postToggleFeaturedCharacterLink(Request $request, CharacterLinkService $service, $slug, $id) {
+        if (Auth::user()->id != $this->character->user_id) {
+            return response()->json(['error' => 'Unauthorized.'], 403);
+        }
+
+        $link = CharacterRelation::find($id);
+        if (!$link || ($link->character_1_id != $this->character->id && $link->character_2_id != $this->character->id)) {
+            return response()->json(['error' => 'Link not found.'], 404);
+        }
+
+        $result = $service->toggleFeaturedRelation($link, $this->character);
+        if ($result !== false) {
+            return response()->json(['featured' => (bool) $result]);
+        }
+
+        return response()->json(['error' => $service->errors()->getMessages()['error'][0] ?? 'An error occurred.'], 422);
     }
 
     /**

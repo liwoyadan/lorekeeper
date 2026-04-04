@@ -77,4 +77,45 @@
             </ul>
         </div>
     @endif
+
+    @if (isset($featuredLinks) && $featuredLinks->count())
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-star text-warning mr-2"></i> Featured Relationships</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    @foreach ($featuredLinks as $link)
+                        @php $other = $link->getOtherCharacter($character->id); @endphp
+                        <div class="col-sm-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body p-2">
+                                    <div class="d-flex align-items-center">
+                                        <a href="{{ $other->url }}" class="mr-2 flex-shrink-0">
+                                            <img src="{{ $other->image->thumbnailUrl }}" class="img-thumbnail" style="width: 56px; height: 56px; object-fit: cover;" alt="{{ $other->fullName }}" />
+                                        </a>
+                                        <div class="min-width-0">
+                                            <a href="{{ $other->url }}" class="d-block font-weight-bold small text-truncate">
+                                                @if (!$other->is_visible)<i class="fas fa-eye-slash"></i>@endif
+                                                {{ $other->fullName }}
+                                            </a>
+                                            <div class="x-small">
+                                                <span class="badge badge-secondary">{{ $link->getRelationType($character->id) }}</span>
+                                            </div>
+                                            @if ($link->getRelationshipInfo($character->id))
+                                                <div class="x-small mt-1 text-truncate">{!! strip_tags($link->getRelationshipInfo($character->id)) !!}</div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="text-right">
+                    <a href="{{ $character->url }}/links" class="small">View all links &rarr;</a>
+                </div>
+            </div>
+        </div>
+    @endif
 @endsection
