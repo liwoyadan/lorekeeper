@@ -20,7 +20,7 @@ return [
     // Allow users to upload their own custom forum decors
     'user_uploads' => [
         'background' => [
-            'enabled'         => 1,
+            'enabled'         => 0,
             'max_dimension'   => 1000, // This is in px, either side
             'default_opacity' => 15,   // Default opacity applied to user-uploaded backgrounds (0–100)
             'max_opacity'     => 50,   // Maximum opacity a user can set for their uploaded background (0–100)
