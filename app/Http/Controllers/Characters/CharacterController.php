@@ -572,7 +572,6 @@ class CharacterController extends Controller {
     public function getCharacterLinks($slug) {
         return view('character.links', [
             'character' => $this->character,
-            'types'     => config('lorekeeper.character_relationships'),
             'links'     => $this->character->sortedLinks(),
         ]);
     }
@@ -735,11 +734,11 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterRelationLogs($slug) {
-        return view('character.relation_logs', [
+    public function getCharacterLinkLogs($slug) {
+        return view('character.link_logs', [
             'character'             => $this->character,
-            'extPrevAndNextBtnsUrl' => '/relationship-logs',
-            'logs'                  => $this->character->getRelationLogs(0),
+            'extPrevAndNextBtnsUrl' => '/'.__('links.links').'-logs',
+            'logs'                  => $this->character->getLinkLogs(0),
         ]);
     }
 

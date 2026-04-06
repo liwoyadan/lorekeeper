@@ -17,24 +17,24 @@
             </div>
 
             <div class="col-md-9 pl-md-1 text-center text-md-left">
-                <span class="faded">Link request created {!! pretty_date($link->created_at) !!} by {!! $link->initialLog()->sender->displayName !!}.</span>
+                <span class="faded">{{ ucfirst(__('links.link')) }} request created {!! pretty_date($link->created_at) !!} by {!! $link->initialLog()->sender->displayName !!}.</span>
 
                 @if (Auth::user()->id != $recipient->id)
                     <div class="mt-3">
-                        <span class="font-weight-bold text-info">This link request is still pending approval by the recipient.</span> If the request is rejected, the item you used to send the request will be refunded back to you.
+                        <span class="font-weight-bold text-info">This {{ __('links.link') }} request is still pending approval by the recipient.</span> If the request is rejected, the item you used to send the request will be refunded back to you.
                     </div>
                 @else
                     <div class="mt-3">
-                        <span class="font-weight-bold text-info">You may choose to accept or reject this link request.</span> Rejecting the request will refund the item used to establish the link back to the sender.
+                        <span class="font-weight-bold text-info">You may choose to accept or reject this {{ __('links.link') }} request.</span> Rejecting the request will refund the item used to establish the {{ __('links.link') }} back to the sender.
                         <div class="row no-gutters mt-2">
                             <div class="col-md-6 pb-2 pb-md-0 pr-md-1">
-                                {!! Form::open(['url' => '/links/accept/'.$link->id]) !!}
+                                {!! Form::open(['url' => '/' . __('links.links') . '/accept/'.$link->id]) !!}
                                 {!! Form::submit('Accept', ['class' => 'btn btn-success w-100']) !!}
                                 {!! Form::close() !!}
                             </div>
 
                             <div class="col-md-6 pl-md-1">
-                                {!! Form::open(['url' => '/links/reject/'.$link->id]) !!}
+                                {!! Form::open(['url' => '/' . __('links.links') . '/reject/'.$link->id]) !!}
                                 {!! Form::submit('Reject', ['class' => 'btn btn-danger w-100']) !!}
                                 {!! Form::close() !!}
                             </div>

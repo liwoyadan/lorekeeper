@@ -1,7 +1,7 @@
 @extends('character.layout', ['isMyo' => $character->is_myo_slot])
 
 @section('profile-title')
-    {{ $character->fullName }}'s Links
+    {{ $character->fullName }}'s {{ ucfirst(__('links.links')) }}
 @endsection
 
 @section('meta-img')
@@ -12,14 +12,14 @@
     {!! breadcrumbs([
         $character->category->masterlist_sub_id ? $character->category->sublist->name . ' Masterlist' : 'Character masterlist' => $character->category->masterlist_sub_id ? 'sublist/' . $character->category->sublist->key : 'masterlist',
         $character->fullName => $character->url,
-        'Links' => $character->url . '/links',
+        ucfirst(__('links.links')) => $character->url . '/' . __('links.links'),
     ]) !!}
 
     @include('character._header', ['character' => $character])
 
     <div class="row no-gutters justify-content-between mb-3">
         <div class="col-auto">
-            <h3 class="mb-0">{{ $character->fullName }}'s Links</h3>
+            <h3 class="mb-0">{{ $character->fullName }}'s {{ ucfirst(__('links.links')) }}</h3>
         </div>
         <div class="col-auto d-flex align-items-center">
             @if (Auth::check() && Auth::user()->id == $character->user_id && count($links) > 1)
@@ -27,8 +27,8 @@
                     <i class="fas fa-sort mr-1"></i>Sort
                 </a>
             @endif
-            <a href="{{ url('reports/new?url=') . $character->url . '/links' }}">
-                <i class="fas fa-exclamation-triangle text-danger" data-toggle="tooltip" title="Report this character's links." style="opacity: 50%;"></i>
+            <a href="{{ url('reports/new?url=') . $character->url . '/' . __('links.links') }}">
+                <i class="fas fa-exclamation-triangle text-danger" data-toggle="tooltip" title="Report this character's {{ __('links.links') }}." style="opacity: 50%;"></i>
             </a>
         </div>
     </div>
@@ -44,7 +44,7 @@
             @endforeach
         @else
             <div class="alert alert-info">
-                <i class="fas fa-info-circle"></i> This character currently has no established links.
+                <i class="fas fa-info-circle"></i> This character currently has no established {{ __('links.links') }}.
             </div>
         @endif
     </div>
@@ -77,7 +77,7 @@
                 </tbody>
             </table>
 
-            {!! Form::open(['url' => 'character/' . $character->slug . '/links/sort']) !!}
+            {!! Form::open(['url' => 'character/' . $character->slug . '/' . __('links.links') . '/sort']) !!}
             {!! Form::hidden('sort', '', ['id' => 'linksSortOrder']) !!}
             <div class="d-flex justify-content-end">
                 {!! Form::submit('Save Order', ['class' => 'btn btn-primary btn-sm']) !!}
@@ -88,11 +88,11 @@
 
     <div class="text-right mt-3">
         @if (Auth::check() && ($character->user_id == Auth::user()->id || Auth::user()->hasPower('manage_characters')))
-            <a href="{{ $character->url . '/links/edit' }}" class="btn btn-outline-info btn-sm mb-1">
-                <i class="fas fa-envelope mr-1" aria-hidden="true"></i>Create Links For {!! $character->name ?? $character->slug !!}
+            <a href="{{ $character->url . '/' . __('links.links') . '/edit' }}" class="btn btn-outline-info btn-sm mb-1">
+                <i class="fas fa-envelope mr-1" aria-hidden="true"></i>Create {{ ucfirst(__('links.links')) }} For {!! $character->name ?? $character->slug !!}
             </a>
         @endif
-        <a href="{{ $character->url . '/relationship-logs' }}" class="btn btn-outline-info btn-sm mb-1">
+        <a href="{{ $character->url . '/' . __('links.links') . '-logs' }}" class="btn btn-outline-info btn-sm mb-1">
             <i class="fas fa-book mr-1" aria-hidden="true"></i>View Logs
         </a>
     </div>
@@ -104,7 +104,7 @@
             // Edit link modal
             $('.edit-link-btn').on('click', function(e) {
                 e.preventDefault();
-                loadModal("{{ url('character') }}/" + $(this).data('slug') + "/links/info/" + $(this).data('id'), 'Edit Link');
+                loadModal("{{ url('character') }}/" + $(this).data('slug') + "/{{ __('links.links') }}/info/" + $(this).data('id'), 'Edit {{ ucfirst(__('links.link')) }}');
             });
 
             // Feature toggle
@@ -113,15 +113,15 @@
                 var btn = $(this);
                 var icon = btn.find('i');
                 $.post(
-                    "{{ url('character') }}/" + btn.data('slug') + "/links/feature/" + btn.data('id'),
+                    "{{ url('character') }}/" + btn.data('slug') + "/{{ __('links.links') }}/feature/" + btn.data('id'),
                     { _token: "{{ csrf_token() }}" },
                     function(data) {
                         if (data.featured) {
                             icon.removeClass('far').addClass('fas');
-                            btn.attr('title', 'Unfeature this link');
+                            btn.attr('title', 'Unfeature this {{ __('links.link') }}');
                         } else {
                             icon.removeClass('fas').addClass('far');
-                            btn.attr('title', 'Feature this link');
+                            btn.attr('title', 'Feature this {{ __('links.link') }}');
                         }
                         btn.tooltip('dispose').tooltip();
                     }

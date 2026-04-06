@@ -195,6 +195,7 @@ class Character extends Model {
 
     /**
      * Get featured links for this character's profile.
+     * (For ease of doing stuff like displaying only featured links on a character's main page, etc)
      */
     public function featuredLinks() {
         return CharacterRelation::where('status', 'Approved')
@@ -210,16 +211,19 @@ class Character extends Model {
 
     /**
      * Get approved links for this character, ordered by the character's own sort column.
-     * Unsorted links (null sort) appear after sorted ones, then by creation date.
-     * Returns an eager-loaded Collection. Not an Eloquent relation — call as a method.
+     * Unsorted links (null/0 sort) appear after sorted ones, then by creation date.
+     * Returns an eager-loaded Collection. NOT a relation!
      */
     public function sortedLinks() {
         return CharacterRelation::where('status', 'Approved')
             ->whereNull('deleted_at')
             ->where(function ($q) {
-                $q->where('character_1_id', $this->id)
-                  ->orWhere('character_2_id', $this->id);
+                $q->where('character_1_id', $this->id)->orWhere('character_2_id', $this->id);
             })
+            ->orderByRaw(
+                'CASE WHEN (character_1_id = ? AND character_1_featured = 1) OR (character_2_id = ? AND character_2_featured = 1) THEN 0 ELSE 1 END ASC',
+                [$this->id, $this->id]
+            )
             ->orderByRaw(
                 'ISNULL(CASE WHEN character_1_id = ? THEN character_1_sort ELSE character_2_sort END)',
                 [$this->id]
@@ -558,18 +562,17 @@ class Character extends Model {
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator|\Illuminate\Support\Collection
      */
-    public function getRelationLogs($limit = 10) {
+    public function getLinkLogs($limit = 10) {
         $query = RelationsLog::with('characterOne', 'characterTwo')
             ->where(function ($q) {
-                $q->where('character_1_id', $this->id)
-                  ->orWhere('character_2_id', $this->id);
+                $q->where('character_1_id', $this->id)->orWhere('character_2_id', $this->id);
             })
             ->orderBy('id', 'DESC');
 
         if ($limit) {
             return $query->take($limit)->get();
         } else {
-            return $query->paginate(10);
+            return $query->paginate(30);
         }
     }
 

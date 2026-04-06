@@ -22,9 +22,12 @@ class CharacterLinkService extends Service {
     */
 
     /**
+     * Creates a link, pending if different owners, auto-approved if same owner.
+     * 
      * @param mixed $character
      * @param mixed $slugs
      * @param mixed $user
+     * 
      */
     public function createCharacterRelationLinks($character, $data, $user, $isStaff = false) {
         DB::beginTransaction();
@@ -198,7 +201,7 @@ class CharacterLinkService extends Service {
     }
 
     /**
-     * Deletes a link link.
+     * Deletes a link.
      *
      * @param mixed $id
      */
@@ -223,7 +226,7 @@ class CharacterLinkService extends Service {
     }
 
     /**
-     *  this is when a user changes the link type.
+     *  This is when a user changes the link type.
      *
      * @param mixed $data
      * @param mixed $id
@@ -286,8 +289,7 @@ class CharacterLinkService extends Service {
             $relations = CharacterRelation::with('characterOne', 'characterTwo')
                 ->whereNull('deleted_at')
                 ->where(function ($q) use ($character) {
-                    $q->where('character_1_id', $character->id)
-                      ->orWhere('character_2_id', $character->id);
+                    $q->where('character_1_id', $character->id)->orWhere('character_2_id', $character->id);
                 })
                 ->get();
             if ($relations->count() > 0) {
@@ -315,7 +317,7 @@ class CharacterLinkService extends Service {
      * Each character updates only their own sort column.
      *
      * @param mixed  $character
-     * @param string $sortData  Comma-separated relation IDs in display order
+     * @param string $sortData
      *
      * @return bool
      */
@@ -327,8 +329,7 @@ class CharacterLinkService extends Service {
 
             $links = CharacterRelation::whereIn('id', $ids)
                 ->where(function ($q) use ($character) {
-                    $q->where('character_1_id', $character->id)
-                      ->orWhere('character_2_id', $character->id);
+                    $q->where('character_1_id', $character->id)->orWhere('character_2_id', $character->id);
                 })
                 ->get()
                 ->keyBy('id');
@@ -375,7 +376,7 @@ class CharacterLinkService extends Service {
             $currentlyFeatured = $link->$featuredColumn;
 
             if (!$currentlyFeatured) {
-                $max = config('lorekeeper.settings.max_featured_relations', 3);
+                $max = config('lorekeeper.scharacter_relationships.max_featured_relations', 3);
                 if ($character->featuredLinks()->count() >= $max) {
                     throw new \Exception('You have reached the maximum number of featured links ('.$max.') for this character.');
                 }

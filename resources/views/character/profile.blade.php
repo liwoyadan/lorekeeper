@@ -71,7 +71,7 @@
                 @endif
                 @if ($character->is_links_open)
                     <li class="list-group-item">
-                        <h5 class="mb-0"><i class="text-success far fa-circle fa-fw mr-2"></i> Open for link requests</h5>
+                        <h5 class="mb-0"><i class="text-success far fa-circle fa-fw mr-2"></i> Open for {{ __('links.link') }} requests</h5>
                     </li>
                 @endif
             </ul>
@@ -81,7 +81,7 @@
     @if (isset($featuredLinks) && $featuredLinks->count())
         <div class="card mb-3">
             <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-star text-warning mr-2"></i> Featured Relationships</h5>
+                <h5 class="mb-0"><i class="fas fa-star text-warning mr-2"></i> Featured {{ ucfirst(__('links.links')) }}</h5>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -113,7 +113,7 @@
                     @endforeach
                 </div>
                 <div class="text-right">
-                    <a href="{{ $character->url }}/links" class="small">View all links &rarr;</a>
+                    <a href="{{ $character->url }}/{{ __('links.links') }}" class="small">View all {{ __('links.links') }} &rarr;</a>
                 </div>
             </div>
         </div>

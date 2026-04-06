@@ -1,7 +1,7 @@
 @extends('character.layout', ['isMyo' => $character->is_myo_slot])
 
 @section('profile-title')
-    {{ $character->fullName }}'s Relationship Logs
+    {{ $character->fullName }}'s {{ ucfirst(__('links.links')) }} Logs
 @endsection
 
 @section('meta-img')
@@ -12,13 +12,13 @@
     {!! breadcrumbs([
         $character->category->masterlist_sub_id ? $character->category->sublist->name . ' Masterlist' : 'Character masterlist' => $character->category->masterlist_sub_id ? 'sublist/' . $character->category->sublist->key : 'masterlist',
         $character->fullName => $character->url,
-        'Links' => $character->url . '/links',
-        'Logs' => $character->url . '/relationship-logs',
+        ucfirst(__('links.links')) => $character->url . '/' . __('links.links'),
+        'Logs' => $character->url . '/' . __('links.links') . '-logs',
     ]) !!}
 
     @include('character._header', ['character' => $character])
 
-    <h3>Relationship Logs</h3>
+    <h3>{{ ucfirst(__('links.links')) }} Logs</h3>
 
     {!! $logs->render() !!}
     <div class="mb-4 logs-table">
@@ -32,12 +32,12 @@
                 </div>
                 <div class="col-6 col-md-1">
                     <div class="logs-table-cell">
-                        <span data-toggle="tooltip" title="Character One"><i class="fa-solid fa-user"></i> #1</span>
+                        <span data-toggle="tooltip" title="Character One"><i class="fas fa-user"></i> #1</span>
                     </div>
                 </div>
                 <div class="col-6 col-md-1">
                     <div class="logs-table-cell">
-                        <span data-toggle="tooltip" title="Character Two"><i class="fa-solid fa-user"></i> #2</span>
+                        <span data-toggle="tooltip" title="Character Two"><i class="fas fa-user"></i> #2</span>
                     </div>
                 </div>
                 <div class="col-6 col-md-4">
@@ -51,7 +51,7 @@
         <div class="logs-table-body">
             @foreach ($logs as $log)
                 <div class="logs-table-row">
-                    @include('character._relation_log_row', ['log' => $log])
+                    @include('character._link_log_row', ['log' => $log])
                 </div>
             @endforeach
         </div>

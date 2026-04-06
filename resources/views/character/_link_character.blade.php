@@ -38,10 +38,10 @@
                 @if (Auth::check() && Auth::user()->id == $character->user_id)
                     <span class="ml-1">
                         <a href="#" class="text-primary feature-link-btn" data-id="{{ $link->id }}" data-slug="{{ $character->slug }}" data-toggle="tooltip"
-                            title="{{ $link->isFeaturedForCharacter($character->id) ? 'Unfeature this link' : 'Feature this link' }}">
+                            title="{{ $link->isFeaturedForCharacter($character->id) ? 'Unfeature this ' . __('links.link') : 'Feature this ' . __('links.link') }}">
                             <i class="{{ $link->isFeaturedForCharacter($character->id) ? 'fas' : 'far' }} fa-star"></i>
                         </a>
-                        <a href="#" class="text-muted edit-link-btn" data-id="{{ $link->id }}" data-slug="{{ $character->slug }}" data-toggle="tooltip" title="Edit Link">
+                        <a href="#" class="text-muted edit-link-btn" data-id="{{ $link->id }}" data-slug="{{ $character->slug }}" data-toggle="tooltip" title="Edit {{ ucfirst(__('links.link')) }}">
                             <i class="fas fa-edit"></i>
                         </a>
                     </span>
