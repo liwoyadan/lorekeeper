@@ -1,5 +1,5 @@
 @php $other = $link->getOtherCharacter($character->id); @endphp
-<div class="col-12 col-sm-6 mb-4 mb-sm-0 p-1 d-flex flex-column">
+<div class="col-12 col-sm-6 mb-3 mb-sm-0 p-1 d-flex flex-column">
     <div class="text-center mb-2">
         <a href="{{ $character->url }}">
             <img src="{{ $character->image->thumbnailUrl }}" class="rounded border" style="width: 110px; height: 110px; object-fit: cover;" alt="{{ $character->fullName }}" />

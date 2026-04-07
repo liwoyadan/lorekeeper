@@ -37,10 +37,11 @@
     <div id="links-view">
         @if (count($links))
             @foreach ($links as $link)
-                <div class="row no-gutters {{ $loop->last ? 'mb-2' : 'mb-5' }}">
+                <div class="row no-gutters {{ $loop->last ? 'mb-3' : 'mb-2' }}">
                     @include('character._link_character', ['character' => $link->characterOne, 'link' => $link])
                     @include('character._link_character', ['character' => $link->characterTwo, 'link' => $link])
                 </div>
+                {!! !$loop->last ? '<hr>' : '' !!}
             @endforeach
         @else
             <div class="alert alert-info">
