@@ -114,8 +114,9 @@
                 var btn = $(this);
                 var icon = btn.find('i');
                 $.post(
-                    "{{ url('character') }}/" + btn.data('slug') + "/{{ __('links.links') }}/feature/" + btn.data('id'),
-                    { _token: "{{ csrf_token() }}" },
+                    "{{ url('character') }}/" + btn.data('slug') + "/{{ __('links.links') }}/feature/" + btn.data('id'), {
+                        _token: "{{ csrf_token() }}"
+                    },
                     function(data) {
                         if (data.featured) {
                             icon.removeClass('far').addClass('fas');
@@ -139,7 +140,7 @@
                 $('#links-view').toggleClass('d-none', inSort);
                 $('#links-sort').toggleClass('d-none', !inSort);
                 $(this).text(inSort ? ' Done' : ' Sort')
-                       .find('i').attr('class', inSort ? 'fas fa-times mr-1' : 'fas fa-sort mr-1');
+                    .find('i').attr('class', inSort ? 'fas fa-times mr-1' : 'fas fa-sort mr-1');
             });
 
             // Sortable list
@@ -148,15 +149,21 @@
                 handle: '.handle',
                 placeholder: 'sortable-placeholder',
                 stop: function() {
-                    $('#linksSortOrder').val($(this).sortable('toArray', { attribute: 'data-id' }));
+                    $('#linksSortOrder').val($(this).sortable('toArray', {
+                        attribute: 'data-id'
+                    }));
                 },
                 create: function() {
-                    $('#linksSortOrder').val($(this).sortable('toArray', { attribute: 'data-id' }));
+                    $('#linksSortOrder').val($(this).sortable('toArray', {
+                        attribute: 'data-id'
+                    }));
                 }
             });
             $('#linksSortable').disableSelection();
 
-            $('.handle').on('click', function(e) { e.preventDefault(); });
+            $('.handle').on('click', function(e) {
+                e.preventDefault();
+            });
         });
     </script>
 @endsection

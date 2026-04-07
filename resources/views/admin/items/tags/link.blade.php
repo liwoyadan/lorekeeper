@@ -1,6 +1,7 @@
 <h3>Character Links</h3>
 <p>
-    <b>Users may use this item to establish a link request between one of their characters and another.</b> Here you may assign a list of link statuses/titles a user can set their character to feel here. Both characters in a given link link may only have a single status/title designated to feel about the other.
+    <b>Users may use this item to establish a link request between one of their characters and another.</b> Here you may assign a list of link statuses/titles a user can set their character to feel here. Both characters in a given link link may only
+    have a single status/title designated to feel about the other.
 </p>
 
 <div class="text-right mb-3">
@@ -48,4 +49,3 @@
         }
     });
 </script>
-

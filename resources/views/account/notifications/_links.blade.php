@@ -12,8 +12,7 @@
                 data: {
                     _token: '{{ csrf_token() }}'
                 },
-            }).done(function(res) {
-            }).fail(function(jqXHR, textStatus, errorThrown) {
+            }).done(function(res) {}).fail(function(jqXHR, textStatus, errorThrown) {
                 alert("AJAX call failed: " + textStatus + ", " + errorThrown);
             });
         });
@@ -32,8 +31,7 @@
                 data: {
                     _token: '{{ csrf_token() }}'
                 },
-            }).done(function(res) {
-            }).fail(function(jqXHR, textStatus, errorThrown) {
+            }).done(function(res) {}).fail(function(jqXHR, textStatus, errorThrown) {
                 alert("AJAX call failed: " + textStatus + ", " + errorThrown);
             });
         });

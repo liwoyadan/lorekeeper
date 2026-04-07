@@ -1,6 +1,7 @@
 {!! Form::open(['url' => 'character/' . $character->slug . '/' . __('links.links') . '/info/' . $link->id]) !!}
 <p>
-    You are editing the {{ __('links.link') }} information for {!! $character->displayName !!} in their {{ __('links.link') }} with {!! $otherCharacter->displayName !!}. Here you may choose a title that your character feels about the other, as well as elaborate on their feelings in the text box below.
+    You are editing the {{ __('links.link') }} information for {!! $character->displayName !!} in their {{ __('links.link') }} with {!! $otherCharacter->displayName !!}. Here you may choose a title that your character feels about the other, as well as elaborate on their
+    feelings in the text box below.
 </p>
 
 <div class="form-group">
@@ -9,7 +10,8 @@
         {!! Form::select('type', $types, $link->getRelationType($character->id), ['class' => 'form-control', 'placeholder' => 'Select a relationship title...']) !!}
     @elseif (Auth::user()->hasPower('manage_characters'))
         <div class="alert alert-warning">
-            <i class="fas fa-exclamation" aria-hidden="true"></i> You are editing this {{ __('links.link') }} as a staff member but no specific {{ __('links.link') }} types are associated with this established {{ __('links.link') }}. Therefore, you may type a custom {{ __('links.link') }} title below.
+            <i class="fas fa-exclamation" aria-hidden="true"></i> You are editing this {{ __('links.link') }} as a staff member but no specific {{ __('links.link') }} types are associated with this established {{ __('links.link') }}. Therefore, you may
+            type a custom {{ __('links.link') }} title below.
         </div>
         {!! Form::label(ucfirst(__('links.link')) . ' Title') !!}
         {!! Form::text('type', $link->getRelationType($character->id), ['class' => 'form-control', 'placeholder' => 'Type a relationship title...']) !!}

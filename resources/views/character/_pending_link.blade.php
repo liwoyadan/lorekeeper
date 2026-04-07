@@ -25,16 +25,17 @@
                     </div>
                 @else
                     <div class="mt-3">
-                        <span class="font-weight-bold text-info">You may choose to accept or reject this {{ __('links.link') }} request.</span> Rejecting the request will refund the item used to establish the {{ __('links.link') }} back to the sender.
+                        <span class="font-weight-bold text-info">You may choose to accept or reject this {{ __('links.link') }} request.</span> Rejecting the request will refund the item used to establish the {{ __('links.link') }} back to the
+                        sender.
                         <div class="row no-gutters mt-2">
                             <div class="col-md-6 pb-2 pb-md-0 pr-md-1">
-                                {!! Form::open(['url' => '/' . __('links.links') . '/accept/'.$link->id]) !!}
+                                {!! Form::open(['url' => '/' . __('links.links') . '/accept/' . $link->id]) !!}
                                 {!! Form::submit('Accept', ['class' => 'btn btn-success w-100']) !!}
                                 {!! Form::close() !!}
                             </div>
 
                             <div class="col-md-6 pl-md-1">
-                                {!! Form::open(['url' => '/' . __('links.links') . '/reject/'.$link->id]) !!}
+                                {!! Form::open(['url' => '/' . __('links.links') . '/reject/' . $link->id]) !!}
                                 {!! Form::submit('Reject', ['class' => 'btn btn-danger w-100']) !!}
                                 {!! Form::close() !!}
                             </div>
