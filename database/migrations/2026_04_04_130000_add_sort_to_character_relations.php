@@ -12,7 +12,7 @@ return new class extends Migration {
         Schema::table('character_relations', function (Blueprint $table) {
             $table->integer('character_1_sort')->nullable()->default(null);
             $table->integer('character_2_sort')->nullable()->default(null);
-            
+
             $table->text('info')->nullable()->default(null)->change();
         });
     }

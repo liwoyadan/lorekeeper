@@ -28,8 +28,8 @@ class CharacterRelation extends Model {
      * @var array
      */
     protected $casts = [
-        'info'                => 'array',
-        'deleted_at'          => 'datetime',
+        'info'                 => 'array',
+        'deleted_at'           => 'datetime',
         'character_1_featured' => 'boolean',
         'character_2_featured' => 'boolean',
     ];
@@ -136,8 +136,6 @@ class CharacterRelation extends Model {
 
     /**
      * Get the first log of this relation, which is the initial request.
-     *
-     * @param mixed $id
      */
     public function initialLog() {
         return $this->logs()->where('log_type', 'Link Requested')->orderBy('created_at', 'ASC')->first();

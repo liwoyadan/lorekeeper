@@ -9,7 +9,6 @@ use App\Models\Character\CharacterCurrency;
 use App\Models\Character\CharacterItem;
 use App\Models\Character\CharacterProfile;
 use App\Models\Character\CharacterRelation;
-use App\Models\Character\RelationsLog;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Currency\Currency;
 use App\Models\Gallery\GallerySubmission;
@@ -123,6 +122,7 @@ class CharacterController extends Controller {
             'character'             => $this->character,
             'showMention'           => true,
             'extPrevAndNextBtnsUrl' => '',
+            'featuredLinks'         => $this->character->featuredLinks()->with('characterOne', 'characterTwo')->get(),
         ]);
     }
 
@@ -137,7 +137,6 @@ class CharacterController extends Controller {
         return view('character.profile', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/profile',
-            'featuredLinks'         => $this->character->featuredLinks()->with('characterOne', 'characterTwo')->get(),
         ]);
     }
 

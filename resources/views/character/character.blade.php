@@ -37,6 +37,26 @@
         @include('character._image_info', ['image' => $character->image])
     </div>
 
+    @if (isset($featuredLinks) && $featuredLinks->count())
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-star text-primary mr-1"></i> Featured {{ ucfirst(__('links.links')) }}</h5>
+            </div>
+            <div class="card-body p-2">
+                <div class="row no-gutters">
+                    @foreach ($featuredLinks as $link)
+                        <div class="col-sm-6 col-lg-4 p-1">
+                            @include('character._featured_link_character', ['other' => $link->getOtherCharacter($character->id), 'character' => $character])
+                        </div>
+                    @endforeach
+                </div>
+                <div class="text-right">
+                    <a href="{{ $character->url }}/{{ __('links.links') }}" class="btn btn-outline-primary btn-sm">View all {{ __('links.links') }}</a>
+                </div>
+            </div>
+        </div>
+    @endif
+
     {{-- Info --}}
     <div class="card character-bio">
         <div class="card-header">

@@ -6,10 +6,9 @@ use App\Facades\Notifications;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterRelation;
 use App\Models\User\UserItem;
-use App\Services\InventoryManager;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class CharacterLinkService extends Service {
     /*
@@ -23,11 +22,11 @@ class CharacterLinkService extends Service {
 
     /**
      * Creates a link, pending if different owners, auto-approved if same owner.
-     * 
+     *
      * @param mixed $character
-     * @param mixed $slugs
      * @param mixed $user
-     * 
+     * @param mixed $data
+     * @param mixed $isStaff
      */
     public function createCharacterRelationLinks($character, $data, $user, $isStaff = false) {
         DB::beginTransaction();
@@ -93,11 +92,11 @@ class CharacterLinkService extends Service {
                     }
 
                     Notifications::create('LINK_REQUESTED', $otherCharacter->user, [
-                        'character' => $character->displayName,
-                        'requested' => $otherCharacter->displayName,
+                        'character'      => $character->displayName,
+                        'requested'      => $otherCharacter->displayName,
                         'character_slug' => $otherCharacter->slug,
-                        'user'      => $user->displayName,
-                        'id'        => $relation->id,
+                        'user'           => $user->displayName,
+                        'id'             => $relation->id,
                     ]);
                 }
             } else {
@@ -128,6 +127,7 @@ class CharacterLinkService extends Service {
      *
      * @param mixed $id
      * @param mixed $action
+     * @param mixed $user
      */
     public function handleCharacterRelationLink($id, $action, $user) {
         DB::beginTransaction();
@@ -411,16 +411,16 @@ class CharacterLinkService extends Service {
         return DB::table('relations_log')->insert(
             [
                 'character_1_id'      => $characterOneId,
-                'character_2_id'    => $characterTwoId,
-                'sender_id'   => $senderId,
-                'recipient_id'   => $recipientId ?? null,
-                'relation_id' => $relationId,
-                'stack_id'       => $stackId ?? null,
-                'log'            => $type.($data ? ' ('.$data.')' : ''),
-                'log_type'       => $type,
-                'data'           => $data,
-                'created_at'     => Carbon::now(),
-                'updated_at'     => Carbon::now(),
+                'character_2_id'      => $characterTwoId,
+                'sender_id'           => $senderId,
+                'recipient_id'        => $recipientId ?? null,
+                'relation_id'         => $relationId,
+                'stack_id'            => $stackId ?? null,
+                'log'                 => $type.($data ? ' ('.$data.')' : ''),
+                'log_type'            => $type,
+                'data'                => $data,
+                'created_at'          => Carbon::now(),
+                'updated_at'          => Carbon::now(),
             ]
         );
     }

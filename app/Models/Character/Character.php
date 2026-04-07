@@ -195,7 +195,7 @@ class Character extends Model {
 
     /**
      * Get featured links for this character's profile.
-     * (For ease of doing stuff like displaying only featured links on a character's main page, etc)
+     * (For ease of doing stuff like displaying only featured links on a character's main page, etc).
      */
     public function featuredLinks() {
         return CharacterRelation::where('status', 'Approved')
@@ -243,6 +243,7 @@ class Character extends Model {
     public function links() {
         // character id can be in either column
         $first = ($this->hasMany(CharacterRelation::class, 'character_1_id')->where('status', 'Approved')->whereNull('deleted_at'));
+
         return $this->hasMany(CharacterRelation::class, 'character_2_id')->where('status', 'Approved')->whereNull('deleted_at')->union($first)->orderBy('created_at', 'DESC');
     }
 
@@ -251,6 +252,7 @@ class Character extends Model {
     */
     public function pendingLinks() {
         $first = ($this->hasMany(CharacterRelation::class, 'character_1_id')->where('status', 'Pending')->whereNull('deleted_at'));
+
         return $this->hasMany(CharacterRelation::class, 'character_2_id')->where('status', 'Pending')->whereNull('deleted_at')->union($first)->orderBy('created_at', 'DESC');
     }
 
@@ -585,14 +587,14 @@ class Character extends Model {
         return Submission::with('user.rank')->with('prompt')->where('status', 'Approved')->whereIn('id', SubmissionCharacter::where('character_id', $this->id)->pluck('submission_id')->toArray())->paginate(30);
 
         // Untested
-        //$character = $this;
-        //return Submission::where('status', 'Approved')->with(['characters' => function($query) use ($character) {
+        // $character = $this;
+        // return Submission::where('status', 'Approved')->with(['characters' => function($query) use ($character) {
         //    $query->where('submission_characters.character_id', 1);
-        //}])
-        //->whereHas('characters', function($query) use ($character) {
+        // }])
+        // ->whereHas('characters', function($query) use ($character) {
         //    $query->where('submission_characters.character_id', 1);
-        //});
-        //return Submission::where('status', 'Approved')->where('user_id', $this->id)->orderBy('id', 'DESC')->paginate(30);
+        // });
+        // return Submission::where('status', 'Approved')->where('user_id', $this->id)->orderBy('id', 'DESC')->paginate(30);
     }
 
     /**

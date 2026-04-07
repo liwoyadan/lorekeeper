@@ -114,18 +114,18 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function ()
     Route::get('{slug}/approval', 'CharacterController@getCharacterApproval');
 
     // LINKS
-    Route::get('{slug}/' . __('links.links') . '/edit', 'CharacterController@getCreateEditCharacterLinks');
-    Route::post('{slug}/' . __('links.links') . '/edit', 'CharacterController@postCreateEditCharacterLinks');
-    Route::get('{slug}/' . __('links.links') . '/info/{id}', 'CharacterController@getEditCharacterLinkInfo');
-    Route::post('{slug}/' . __('links.links') . '/info/{id}', 'CharacterController@postEditCharacterLinkInfo');
-    Route::get('{slug}/' . __('links.links') . '/delete/{id}', 'CharacterController@getDeleteCharacterLink');
-    Route::post('{slug}/' . __('links.links') . '/delete/{id}', 'CharacterController@postDeleteCharacterLink');
-    Route::post('{slug}/' . __('links.links') . '/feature/{id}', 'CharacterController@postToggleFeaturedCharacterLink');
-    Route::post('{slug}/' . __('links.links') . '/sort', 'CharacterController@postSortCharacterLinks');
+    Route::get('{slug}/'.__('links.links').'/edit', 'CharacterController@getCreateEditCharacterLinks');
+    Route::post('{slug}/'.__('links.links').'/edit', 'CharacterController@postCreateEditCharacterLinks');
+    Route::get('{slug}/'.__('links.links').'/info/{id}', 'CharacterController@getEditCharacterLinkInfo');
+    Route::post('{slug}/'.__('links.links').'/info/{id}', 'CharacterController@postEditCharacterLinkInfo');
+    Route::get('{slug}/'.__('links.links').'/delete/{id}', 'CharacterController@getDeleteCharacterLink');
+    Route::post('{slug}/'.__('links.links').'/delete/{id}', 'CharacterController@postDeleteCharacterLink');
+    Route::post('{slug}/'.__('links.links').'/feature/{id}', 'CharacterController@postToggleFeaturedCharacterLink');
+    Route::post('{slug}/'.__('links.links').'/sort', 'CharacterController@postSortCharacterLinks');
 });
 
 // CHARACTER RELATIONSHIPS
-Route::post(__('links.links') . '/{action}/{id}', 'LinkController@postHandleLink')->where('action', 'accept|reject');
+Route::post(__('links.links').'/{action}/{id}', 'LinkController@postHandleLink')->where('action', 'accept|reject');
 
 Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function () {
     Route::get('{id}/profile/edit', 'MyoController@getEditCharacterProfile');

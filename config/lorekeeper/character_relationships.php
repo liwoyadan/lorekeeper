@@ -29,5 +29,5 @@ return [
         'Rival'                    => 'Rival',
         'Roomate'                  => 'Roomate',
         'Significant Others'       => 'Significant Others',
-    ]
+    ],
 ];

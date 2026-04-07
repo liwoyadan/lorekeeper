@@ -2,11 +2,7 @@
 
 namespace App\Services\Item;
 
-use App\Models\Character\Character;
-use App\Models\Character\CharacterRelation;
-use App\Services\InventoryManager;
 use App\Services\Service;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class LinkService extends Service {

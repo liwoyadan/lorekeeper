@@ -323,7 +323,7 @@ return [
     200 => [
         'name'    => 'Link Requested',
         'message' => '{user} has requested to establish a link between your character {requested} with {character}. (<a href="{url}">View Link Requests</a>)',
-        'url'  => 'character/{character_slug}/links/edit',
+        'url'     => 'character/{character_slug}/links/edit',
     ],
 
     // LINK_ACCEPTED
