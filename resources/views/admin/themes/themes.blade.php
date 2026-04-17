@@ -41,32 +41,34 @@
         {!! Form::close() !!}
     </div>
 
-    @if (!count($indexThemes))
+    @if (!count($siteThemes))
         <p>No themes found.</p>
     @else
-        {!! $indexThemes->render() !!}
+        {!! $siteThemes->render() !!}
         <div class="row no-gutters">
             <div class="row flex-wrap col-12 pb-1 ubt-bottom font-weight-bold">
                 <div class="col-12 col-md-5">Name</div>
                 <div class="col-6 col-md">Creators</div>
             </div>
-            @foreach ($indexThemes as $indexTheme)
+            @foreach ($siteThemes as $siteTheme)
                 <div class="row flex-wrap col-12 mt-1 pt-2 ubt-top">
                     <div class="col-12 col-md-5">
-                        {!! $indexTheme->is_default ? '<i class="fas fa-star mr-2" data-toggle="tooltip" title="This is the default theme."></i>' : '' !!}{!! $indexTheme->is_active ? '' : '<i class="fas fa-eye-slash mr-2"></i>' !!}{{ $indexTheme->name }}
+                        {!! $siteTheme->is_default ? '<i class="fas fa-star mr-2" data-toggle="tooltip" title="This is the default theme."></i>' : '' !!}
+                        {!! $siteTheme->is_active ? '' : '<i class="fas fa-eye-slash mr-2"></i>' !!}
+                        {{ $siteTheme->name }}
                         <span class="small text-muted">
-                            ({!! $indexTheme->userCount ? 'In use by ' . $indexTheme->userCount . ' user' . ($indexTheme->userCount == 1 ? '' : 's') : 'Not in Use' !!})
+                            ({!! $siteTheme->userCount ? 'In use by ' . $siteTheme->userCount . ' user' . ($siteTheme->userCount == 1 ? '' : 's') : 'Not in Use' !!})
                         </span>
                     </div>
                     <div class="col-6 col-md">
-                        {!! $indexTheme->creators ? $indexTheme->creatorDisplayName : 'N/A' !!}
+                        {!! $siteTheme->creators ? $siteTheme->creatorDisplayName : 'N/A' !!}
                     </div>
                     <div class="col-6 col-md-1 text-right">
-                        <a href="{{ url('admin/themes/edit/' . $indexTheme->id) }}" class="btn btn-primary py-0 px-2">Edit</a>
+                        <a href="{{ url('admin/themes/edit/' . $siteTheme->id) }}" class="btn btn-primary py-0 px-2">Edit</a>
                     </div>
                 </div>
             @endforeach
         </div>
-        {!! $indexThemes->render() !!}
+        {!! $siteThemes->render() !!}
     @endif
 @endsection
