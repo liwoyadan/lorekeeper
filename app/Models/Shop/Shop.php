@@ -4,8 +4,11 @@ namespace App\Models\Shop;
 
 use App\Models\Item\Item;
 use App\Models\Model;
+use App\Traits\ConfiguredTags;
 
 class Shop extends Model {
+    use ConfiguredTags;
+
     /**
      * The attributes that are mass assignable.
      *

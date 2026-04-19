@@ -13,6 +13,7 @@
         <div><strong>Last updated:</strong> {!! format_date($page->updated_at) !!}</div>
     </div>
 
+    @include('widgets._tag_badges', ['model' => $page])
     <div class="site-page-content parsed-text">
         {!! $page->parsed_text !!}
     </div>

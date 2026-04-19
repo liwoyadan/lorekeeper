@@ -42,7 +42,7 @@ class WorldController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCurrencies(Request $request) {
-        $query = Currency::query();
+        $query = Currency::with('tags');
         $name = $request->get('name');
         if ($name) {
             $query->where('name', 'LIKE', '%'.$name.'%')->orWhere('abbreviation', 'LIKE', '%'.$name.'%');
@@ -76,7 +76,7 @@ class WorldController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getSpecieses(Request $request) {
-        $query = Species::query();
+        $query = Species::with('tags');
 
         if (config('lorekeeper.extensions.species_trait_index.enable')) {
             $query->withCount('features');
@@ -151,7 +151,7 @@ class WorldController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getFeatures(Request $request) {
-        $query = Feature::visible(Auth::check() ? Auth::user() : null)->with('category', 'rarity', 'species', 'subtype');
+        $query = Feature::visible(Auth::check() ? Auth::user() : null)->with('category', 'rarity', 'species', 'subtype', 'tags');
 
         $data = $request->only(['rarity_id', 'feature_category_id', 'species_id', 'subtype_id', 'name', 'sort']);
 
@@ -315,7 +315,7 @@ class WorldController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getItems(Request $request) {
-        $query = Item::with('category')->released(Auth::user() ?? null);
+        $query = Item::with('category', 'itemTags', 'tags')->released(Auth::user() ?? null);
 
         if (config('lorekeeper.extensions.item_entry_expansion.extra_fields')) {
             $query->with('artist', 'shopStock')->withCount('shopStock');

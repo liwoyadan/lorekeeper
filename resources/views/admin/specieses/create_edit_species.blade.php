@@ -66,10 +66,13 @@
             </div>
         </div>
     @endif
+
+    @include('widgets._tag_form', ['model' => $species])
 @endsection
 
 @section('scripts')
     @parent
+    @include('widgets._tag_input_js')
     <script>
         $(document).ready(function() {
             $('.delete-species-button').on('click', function(e) {

@@ -48,7 +48,7 @@
             @endif
             <div class="col-md-6 col-md">
                 <div class="row">
-                    @foreach ($item->tags as $tag)
+                    @foreach ($item->itemTags as $tag)
                         @if ($tag->is_active)
                             <div class="col">
                                 {!! $tag->displayTag !!}
@@ -58,6 +58,7 @@
                 </div>
             </div>
         </div>
+        @include('widgets._tag_badges', ['model' => $item])
         <div class="world-entry-text">
             @if (isset($item->reference) && $item->reference && config('lorekeeper.extensions.item_entry_expansion.extra_fields'))
                 <p>

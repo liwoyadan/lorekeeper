@@ -66,7 +66,7 @@
                                 @endif
                                 <div class="col-md-5 col-md">
                                     <div class="row">
-                                        @foreach ($item->tags as $tag)
+                                        @foreach ($item->itemTags as $tag)
                                             @if ($tag->is_active)
                                                 <div class="col">
                                                     {!! $tag->displayTag !!}

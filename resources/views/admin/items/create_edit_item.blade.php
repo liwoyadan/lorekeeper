@@ -151,7 +151,7 @@
     @if ($item->id)
         <h3>Item Tags</h3>
         <p>Item tags indicate extra functionality for the item. Click on the edit button to edit the specific item tag's data.</p>
-        @if (count($item->tags))
+        @if (count($item->itemTags))
             <table class="table">
                 <thead>
                     <tr>
@@ -160,7 +160,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                @foreach ($item->tags as $tag)
+                @foreach ($item->itemTags as $tag)
                     <tr>
                         <td>{!! $tag->displayTag !!}</td>
                         <td class="{{ $tag->is_active ? 'text-success' : 'text-danger' }}">{{ $tag->is_active ? 'Yes' : 'No' }}</td>
@@ -183,10 +183,12 @@
         </div>
     @endif
 
+    @include('widgets._tag_form', ['model' => $item])
 @endsection
 
 @section('scripts')
     @parent
+    @include('widgets._tag_input_js')
     <script>
         $(document).ready(function() {
             $('.selectize').selectize();

@@ -139,6 +139,8 @@
             </div>
         </div>
     @endif
+
+    @include('widgets._tag_form', ['model' => $currency])
 @endsection
 
 @section('scripts')
@@ -182,4 +184,5 @@
             });
         });
     </script>
+    @include('widgets._tag_input_js')
 @endsection

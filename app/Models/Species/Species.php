@@ -5,8 +5,11 @@ namespace App\Models\Species;
 use App\Models\Character\Sublist;
 use App\Models\Feature\Feature;
 use App\Models\Model;
+use App\Traits\ConfiguredTags;
 
 class Species extends Model {
+    use ConfiguredTags;
+
     /**
      * The attributes that are mass assignable.
      *

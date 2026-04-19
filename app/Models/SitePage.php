@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use App\Traits\Commentable;
+use App\Traits\ConfiguredTags;
 
 class SitePage extends Model {
-    use Commentable;
+    use Commentable, ConfiguredTags;
 
     /**
      * The attributes that are mass assignable.

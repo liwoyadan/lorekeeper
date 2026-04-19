@@ -130,12 +130,15 @@
             </div>
         </div>
     @endif
+
+    @include('widgets._tag_form', ['model' => $prompt])
 @endsection
 
 @section('scripts')
     @parent
     @include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true])
     @include('widgets._datetimepicker_js')
+    @include('widgets._tag_input_js')
     <script>
         $(document).ready(function() {
             $('.delete-prompt-button').on('click', function(e) {

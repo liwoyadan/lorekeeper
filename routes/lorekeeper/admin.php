@@ -11,6 +11,8 @@
 
 Route::get('/', 'HomeController@getIndex');
 
+Route::post('tags/{slug}/{id}', 'TagController@postSync')->where('slug', '[a-z]+')->where('id', '[0-9]+');
+
 Route::get('logs', 'HomeController@getLogs');
 Route::group(['middleware' => 'admin'], function () {
     Route::get('staff-reward-settings', 'HomeController@getStaffRewardSettings');

@@ -68,10 +68,13 @@
     </div>
 
     {!! Form::close() !!}
+
+    @include('widgets._tag_form', ['model' => $page])
 @endsection
 
 @section('scripts')
     @parent
+    @include('widgets._tag_input_js')
     <script>
         $(document).ready(function() {
             $('.delete-page-button').on('click', function(e) {

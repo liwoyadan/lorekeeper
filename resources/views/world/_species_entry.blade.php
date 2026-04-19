@@ -30,6 +30,7 @@
                 @endforeach
             </div>
         @endif
+        @include('widgets._tag_badges', ['model' => $species])
         <div class="world-entry-text">
             {!! $species->parsed_description !!}
         </div>

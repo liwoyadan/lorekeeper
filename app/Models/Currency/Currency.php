@@ -3,8 +3,11 @@
 namespace App\Models\Currency;
 
 use App\Models\Model;
+use App\Traits\ConfiguredTags;
 
 class Currency extends Model {
+    use ConfiguredTags;
+
     /**
      * The attributes that are mass assignable.
      *

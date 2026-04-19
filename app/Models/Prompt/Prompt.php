@@ -4,8 +4,11 @@ namespace App\Models\Prompt;
 
 use App\Models\Model;
 use Carbon\Carbon;
+use App\Traits\ConfiguredTags;
 
 class Prompt extends Model {
+    use ConfiguredTags;
+
     /**
      * The attributes that are mass assignable.
      *

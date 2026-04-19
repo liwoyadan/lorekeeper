@@ -3,7 +3,7 @@
 @else
     <div class="text-center">
         <div class="mb-1"><a href="{{ $item->url }}"><img src="{{ $item->imageUrl }}" alt="{{ $item->name }}" /></a></div>
-        <div @if (count($item->tags)) class="mb-1" @endif><a href="{{ $item->url }}">{{ $item->name }}</a></div>
+        <div @if (count($item->itemTags)) class="mb-1" @endif><a href="{{ $item->url }}">{{ $item->name }}</a></div>
     </div>
 
     <h5>Item Variations</h5>

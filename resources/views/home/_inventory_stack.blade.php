@@ -6,10 +6,10 @@
         @if ($item->has_image)
             <div class="mb-1"><a href="{{ $item->url }}"><img src="{{ $item->imageUrl }}" alt="{{ $item->name }}" /></a></div>
         @endif
-        <div @if (count($item->tags)) class="mb-1" @endif><a href="{{ $item->idUrl }}">{{ $item->name }}</a></div>
-        @if (count($item->tags))
+        <div @if (count($item->itemTags)) class="mb-1" @endif><a href="{{ $item->idUrl }}">{{ $item->name }}</a></div>
+        @if (count($item->itemTags))
             <div>
-                @foreach ($item->tags as $tag)
+                @foreach ($item->itemTags as $tag)
                     @if ($tag->is_active)
                         {!! $tag->displayTag !!}
                     @endif
@@ -78,8 +78,8 @@
     @if ($user && !$readOnly && ($stack->first()->user_id == $user->id || $user->hasPower('edit_inventories')))
         <div class="card mt-3">
             <ul class="list-group list-group-flush">
-                @if (count($item->tags))
-                    @foreach ($item->tags as $tag)
+                @if (count($item->itemTags))
+                    @foreach ($item->itemTags as $tag)
                         @if ($tag->is_active && View::exists('inventory._' . $tag->tag))
                             @include('inventory._' . $tag->tag, ['stack' => $stack, 'tag' => $tag])
                         @endif

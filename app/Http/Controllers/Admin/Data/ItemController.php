@@ -301,7 +301,7 @@ class ItemController extends Controller {
 
         return view('admin.items.add_tag', [
             'item' => $item,
-            'tags' => array_diff($service->getItemTags(), $item->tags()->pluck('tag')->toArray()),
+            'tags' => array_diff($service->getItemTags(), $item->itemTags()->pluck('tag')->toArray()),
         ]);
     }
 
@@ -339,7 +339,7 @@ class ItemController extends Controller {
      */
     public function getEditItemTag(ItemService $service, $id, $tag) {
         $item = Item::find($id);
-        $tag = $item->tags()->where('tag', $tag)->first();
+        $tag = $item->itemTags()->where('tag', $tag)->first();
         if (!$item || !$tag) {
             abort(404);
         }
@@ -382,7 +382,7 @@ class ItemController extends Controller {
      */
     public function getDeleteItemTag($id, $tag) {
         $item = Item::find($id);
-        $tag = $item->tags()->where('tag', $tag)->first();
+        $tag = $item->itemTags()->where('tag', $tag)->first();
 
         return view('admin.items._delete_item_tag', [
             'item' => $item,

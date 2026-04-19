@@ -17,6 +17,7 @@
             <img src="{{ $shop->shopImageUrl }}" style="max-width:100%" alt="{{ $shop->name }}" />
         @endif
         <p>{!! $shop->parsed_description !!}</p>
+        @include('widgets._tag_badges', ['model' => $shop])
     </div>
 
     @foreach ($items as $categoryId => $categoryItems)

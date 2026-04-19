@@ -74,10 +74,12 @@
         </div>
     @endif
 
+    @include('widgets._tag_form', ['model' => $shop])
 @endsection
 
 @section('scripts')
     @parent
+    @include('widgets._tag_input_js')
     <script>
         $(document).ready(function() {
             var $shopStock = $('#shopStock');

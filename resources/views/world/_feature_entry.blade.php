@@ -30,6 +30,7 @@
                 @endif
             </div>
         @endif
+        @include('widgets._tag_badges', ['model' => $feature])
         <div class="world-entry-text parsed-text">
             {!! $feature->parsed_description !!}
         </div>

@@ -7,8 +7,11 @@ use App\Models\Prompt\Prompt;
 use App\Models\Shop\Shop;
 use App\Models\Shop\ShopStock;
 use App\Models\User\User;
+use App\Traits\ConfiguredTags;
 
 class Item extends Model {
+    use ConfiguredTags;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -84,9 +87,10 @@ class Item extends Model {
     }
 
     /**
-     * Get the item's tags.
+     * Get the item's legacy ItemTag badges (configured via config/lorekeeper/item_tags.php).
+     * Not to be confused with Spatie\Tags\HasTags::tags() provided via ConfiguredTags trait.
      */
-    public function tags() {
+    public function itemTags() {
         return $this->hasMany(ItemTag::class, 'item_id');
     }
 
@@ -425,7 +429,7 @@ class Item extends Model {
      * @return bool
      */
     public function hasTag($tag) {
-        return $this->tags()->where('tag', $tag)->where('is_active', 1)->exists();
+        return $this->itemTags()->where('tag', $tag)->where('is_active', 1)->exists();
     }
 
     /**
@@ -436,6 +440,6 @@ class Item extends Model {
      * @return \App\Models\Item\ItemTag
      */
     public function tag($tag) {
-        return $this->tags()->where('tag', $tag)->where('is_active', 1)->first();
+        return $this->itemTags()->where('tag', $tag)->where('is_active', 1)->first();
     }
 }

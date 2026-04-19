@@ -7,8 +7,11 @@ use App\Models\Rarity;
 use App\Models\Species\Species;
 use App\Models\Species\Subtype;
 use Illuminate\Support\Facades\DB;
+use App\Traits\ConfiguredTags;
 
 class Feature extends Model {
+    use ConfiguredTags;
+
     /**
      * The attributes that are mass assignable.
      *

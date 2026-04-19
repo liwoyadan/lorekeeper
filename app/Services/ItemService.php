@@ -335,7 +335,7 @@ class ItemService extends Service {
             DB::table('items_log')->where('item_id', $item->id)->delete();
             DB::table('user_items')->where('item_id', $item->id)->delete();
             DB::table('character_items')->where('item_id', $item->id)->delete();
-            $item->tags()->delete();
+            $item->itemTags()->delete();
             if ($item->has_image) {
                 $this->deleteImage($item->imagePath, $item->imageFileName);
             }
@@ -386,7 +386,7 @@ class ItemService extends Service {
             if (!$item) {
                 throw new \Exception('Invalid item selected.');
             }
-            if ($item->tags()->where('tag', $tag)->exists()) {
+            if ($item->itemTags()->where('tag', $tag)->exists()) {
                 throw new \Exception('This item already has this tag attached to it.');
             }
             if (!$tag) {
@@ -427,7 +427,7 @@ class ItemService extends Service {
             if (!$item) {
                 throw new \Exception('Invalid item selected.');
             }
-            if (!$item->tags()->where('tag', $tag)->exists()) {
+            if (!$item->itemTags()->where('tag', $tag)->exists()) {
                 throw new \Exception('This item does not have this tag attached to it.');
             }
 
@@ -435,7 +435,7 @@ class ItemService extends Service {
                 throw new \Exception('Failed to log admin action.');
             }
 
-            $tag = $item->tags()->where('tag', $tag)->first();
+            $tag = $item->itemTags()->where('tag', $tag)->first();
 
             $service = $tag->service;
             if (!$service->updateData($tag, $data)) {
@@ -471,7 +471,7 @@ class ItemService extends Service {
             if (!$item) {
                 throw new \Exception('Invalid item selected.');
             }
-            if (!$item->tags()->where('tag', $tag)->exists()) {
+            if (!$item->itemTags()->where('tag', $tag)->exists()) {
                 throw new \Exception('This item does not have this tag attached to it.');
             }
 
@@ -479,7 +479,7 @@ class ItemService extends Service {
                 throw new \Exception('Failed to log admin action.');
             }
 
-            $item->tags()->where('tag', $tag)->delete();
+            $item->itemTags()->where('tag', $tag)->delete();
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {

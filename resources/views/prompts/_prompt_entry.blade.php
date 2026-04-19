@@ -20,6 +20,7 @@
                 <div><strong>Ends: </strong>{!! format_date($prompt->end_at) !!} ({{ $prompt->end_at->diffForHumans() }})</div>
             @endif
         </div>
+        @include('widgets._tag_badges', ['model' => $prompt])
         <div class="world-entry-text">
             <p>{{ $prompt->summary }}</p>
             <h3 class="mb-3"><a data-toggle="collapse" href="#prompt-{{ $prompt->id }}" @if (isset($isPage)) aria-expanded="true" @endif)>Details <i class="fas fa-angle-down"></i></a></h3>
