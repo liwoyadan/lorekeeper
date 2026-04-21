@@ -12,17 +12,17 @@
     </p>
     <p><strong>Please make sure you enter the correct date.</strong></p>
 
-    {!! Form::open(['url' => '/birthday']) !!}
+    {{ html()->form('POST', url('/birthday'))->open() }}
     <div class="form-group row">
-        {{ Form::label('dob', 'Date of Birth', ['class' => 'col-md-4 col-form-label text-md-right']) }}
+        {{ html()->label('Date of Birth', 'dob')->class('col-md-4 col-form-label text-md-right') }}
         <div class="col-md-6">
             <div class="col-md row">
-                {!! Form::date('dob', null, ['class' => 'form-control']) !!}
+                {{ html()->date('dob')->class('form-control') }}
             </div>
         </div>
         <div class="text-right">
-            {!! Form::submit('Submit', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Submit')->class('btn btn-primary') }}
         </div>
     </div>
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 @endsection

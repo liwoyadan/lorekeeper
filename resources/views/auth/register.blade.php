@@ -105,9 +105,9 @@
             @endif
 
             <div class="form-group row">
-                {{ Form::label('dob', 'Date of Birth', ['class' => 'col-md-4 col-form-label text-md-right']) }}
+                {{ html()->label('Date of Birth', 'dob')->class('col-md-4 col-form-label text-md-right') }}
                 <div class="col-md-6">
-                    {!! Form::date('dob', null, ['class' => 'form-control']) !!}
+                    {{ html()->date('dob')->class('form-control') }}
                 </div>
                 @if ($errors->has('dob'))
                     <span class="invalid-feedback" role="alert">
@@ -120,7 +120,7 @@
                 <div class="col-md-6 offset-md-4">
                     <div class="form-check">
                         <label class="form-check-label">
-                            {!! Form::checkbox('agreement', 1, false, ['class' => 'form-check-input']) !!}
+                            {{ html()->checkbox('agreement', false, 1)->class('form-check-input') }}
                             I have read and agree to the <a href="{{ url('info/terms') }}">Terms of Service</a> and <a href="{{ url('info/privacy') }}">Privacy Policy</a>.
                         </label>
                     </div>

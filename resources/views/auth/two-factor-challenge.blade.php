@@ -9,33 +9,33 @@
         <h1>Two-Factor Authentication</h1>
     </div>
 
-    {!! Form::open(['url' => 'two-factor-challenge']) !!}
+    {{ html()->form('POST', url('two-factor-challenge'))->open() }}
     <div class="form-group row">
-        {!! Form::label('Code', null, ['class' => 'col-md-3 col-form-label text-md-right']) !!}
+        {{ html()->label('Code', 'code')->class('col-md-3 col-form-label text-md-right') }}
         <div class="col-md-7">
-            {!! Form::text('code', null, ['class' => 'form-control']) !!}
+            {{ html()->text('code')->class('form-control') }}
         </div>
     </div>
 
     <div class="form-group row">
-        {!! Form::label('use_recovery', 'Use a Recovery Code', ['class' => 'form-label text-md-right col-md-6']) !!}
+        {{ html()->label('Use a Recovery Code', 'use_recovery')->class('form-label text-md-right col-md-6') }}
         <div class="col-md-6">
-            {!! Form::checkbox('use_recovery', 1, old('use_recovery'), ['class' => 'form-check-input', 'data-toggle' => 'toggle', 'data-on' => 'Yes', 'data-off' => 'No', 'id' => 'useRecovery']) !!}
+            {{ html()->checkbox('use_recovery', old('use_recovery'), 1)->class('form-check-input')->attribute('data-toggle', 'toggle')->attribute('data-on', 'Yes')->attribute('data-off', 'No')->id('useRecovery') }}
         </div>
     </div>
     <div class="mb-3" id="recoveryContainer">
         <div class="form-group row">
-            {!! Form::label('Recovery Code', null, ['class' => 'col-md-3 col-form-label text-md-right']) !!}
+            {{ html()->label('Recovery Code', 'recovery_code')->class('col-md-3 col-form-label text-md-right') }}
             <div class="col-md-7">
-                {!! Form::text('recovery_code', null, ['class' => 'form-control']) !!}
+                {{ html()->text('recovery_code')->class('form-control') }}
             </div>
         </div>
     </div>
 
     <div class="text-right">
-        {!! Form::submit('Submit', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit('Submit')->class('btn btn-primary') }}
     </div>
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 @endsection
 
 @section('scripts')

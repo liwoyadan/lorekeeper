@@ -12,11 +12,11 @@
     <p>Bookmarks allow you to keep track of characters that other users own without notifying them in any way. You can add new bookmarks by visiting the character's page and clicking the Bookmark button. You cannot bookmark your own characters, but
         characters you have bookmarked that are transferred to you will preserve the bookmarks until you delete them. Bookmarks on characters you own will not give you notifications.</p>
 
-    {!! Form::open(['method' => 'GET']) !!}
+    {{ html()->form('GET')->open() }}
     <div class="form-inline justify-content-end mb-3">
         <div class="form-group mr-3">
-            {!! Form::label('sort', 'Sort: ', ['class' => 'mr-2']) !!}
-            {!! Form::select(
+            {{ html()->label('Sort: ', 'sort')->class('mr-2') }}
+            {{ html()->select(
                 'sort',
                 [
                     'number_desc' => 'Number Descending',
@@ -35,12 +35,11 @@
                     'gift_write_desc' => 'Gift Writing Status (Reverse)',
                 ],
                 Request::get('sort'),
-                ['class' => 'form-control'],
-            ) !!}
+            )->class('form-control') }}
         </div>
-        {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit('Search')->class('btn btn-primary') }}
     </div>
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 
     <div class="text-right mb-3">
         <div class="btn-group">

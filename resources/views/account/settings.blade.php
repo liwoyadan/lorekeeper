@@ -16,27 +16,27 @@
             <div class="alert alert-info">For admins - note that .GIF avatars leave a tmp file in the directory (e.g php2471.tmp). There is an automatic schedule to delete these files.
             </div>
         @endif
-        {!! Form::open(['url' => 'account/avatar', 'files' => true]) !!}
+        {{ html()->form('POST', 'account/avatar')->acceptsFiles()->open() }}
         <div class="card mb-3 hide" id="avatarCrop">
             <div class="card-body">
                 <img src="#" id="cropper" class="hide" alt="" />
-                {!! Form::hidden('x0', null, ['id' => 'cropX0']) !!}
-                {!! Form::hidden('x1', null, ['id' => 'cropX1']) !!}
-                {!! Form::hidden('y0', null, ['id' => 'cropY0']) !!}
-                {!! Form::hidden('y1', null, ['id' => 'cropY1']) !!}
+                {{ html()->hidden('x0')->id('cropX0') }}
+                {{ html()->hidden('x1')->id('cropX1') }}
+                {{ html()->hidden('y0')->id('cropY0') }}
+                {{ html()->hidden('y1')->id('cropY1') }}
             </div>
             <div class="alert alert-info mx-3">
                 <b>Note:</b> Cropping does not work on gifs.
             </div>
         </div>
         <div class="custom-file mb-1">
-            {!! Form::label('avatar', 'Update Profile Image', ['class' => 'custom-file-label']) !!}
-            {!! Form::file('avatar', ['class' => 'custom-file-input', 'id' => 'avatar']) !!}
+            {{ html()->label('Update Profile Image', 'avatar')->class('custom-file-label') }}
+            {{ html()->file('avatar')->class('custom-file-input')->id('avatar') }}
         </div>
         <div class="text-right">
-            {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Edit')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
 
     @if (config('lorekeeper.settings.allow_username_changes'))
@@ -57,131 +57,129 @@
                     </div>
                 @endif
             @endif
-            {!! Form::open(['url' => 'account/username']) !!}
+            {{ html()->form('POST', 'account/username')->open() }}
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Username</label>
                 <div class="col-md-10">
-                    {!! Form::text('username', Auth::user()->name, ['class' => 'form-control']) !!}
+                    {{ html()->text('username', Auth::user()->name)->class('form-control') }}
                 </div>
             </div>
             <div class="text-right">
-                {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+                {{ html()->submit('Edit')->class('btn btn-primary') }}
             </div>
-            {!! Form::close() !!}
+            {{ html()->form()->close() }}
         </div>
     @endif
 
     <div class="card p-3 mb-2">
         <h3>Profile</h3>
-        {!! Form::open(['url' => 'account/profile']) !!}
+        {{ html()->form('POST', 'account/profile')->open() }}
         <div class="form-group">
-            {!! Form::label('text', 'Profile Text') !!}
-            {!! Form::textarea('text', Auth::user()->profile->text, ['class' => 'form-control wysiwyg']) !!}
+            {{ html()->label('Profile Text', 'text') }}
+            {{ html()->textarea('text', Auth::user()->profile->text)->class('form-control wysiwyg') }}
         </div>
         <div class="text-right">
-            {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Edit')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
 
     <div class="card p-3 mb-2">
         <h3>Birthday Publicity</h3>
-        {!! Form::open(['url' => 'account/dob']) !!}
+        {{ html()->form('POST', 'account/dob')->open() }}
         <div class="form-group row">
             <label class="col-md-2 col-form-label">Setting</label>
             <div class="col-md-10">
-                {!! Form::select(
+                {{ html()->select(
                     'birthday_setting',
                     ['0' => '0: No one can see your birthday.', '1' => '1: Members can see your day and month.', '2' => '2: Anyone can see your day and month.', '3' => '3: Full date public.'],
                     Auth::user()->settings->birthday_setting,
-                    ['class' => 'form-control'],
-                ) !!}
+                )->class('form-control') }}
             </div>
         </div>
         <div class="text-right">
-            {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Edit')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
 
     <div class="card p-3 mb-2">
         <h3>Allow Profile Comments</h3>
-        {!! Form::open(['url' => 'account/comments']) !!}
+        {{ html()->form('POST', 'account/comments')->open() }}
         <p>If turned off, all comments on your profile will be hidden.</p>
         <div class="form-group row">
             <label class="col-md-2 col-form-label">Setting</label>
             <div class="col-md-10">
-                {!! Form::select('allow_profile_comments', ['0' => '0: No one can comment on your profile.', '1' => '1: Users can comment on your profile.'], Auth::user()->settings->allow_profile_comments, ['class' => 'form-control']) !!}
+                {{ html()->select('allow_profile_comments', ['0' => '0: No one can comment on your profile.', '1' => '1: Users can comment on your profile.'], Auth::user()->settings->allow_profile_comments)->class('form-control') }}
             </div>
         </div>
         <div class="text-right">
-            {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Edit')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
 
     <div class="card p-3 mb-2">
         <h3>Character Warning Visibility</h3>
         <p>This setting will change how characters with content warnings are displayed to you.</p>
-        {!! Form::open(['url' => 'account/warning']) !!}
+        {{ html()->form('POST', 'account/warning')->open() }}
         <div class="form-group row">
             <label class="col-md-2 col-form-label">Setting</label>
             <div class="col-md-10">
-                {!! Form::select(
+                {{ html()->select(
                     'content_warning_visibility',
                     ['0' => '0: Character has pop-up warning and censored icons.', '1' => '1: Character has pop-up warnings only.', '2' => '2: No warnings will appear on characters.'],
                     Auth::user()->settings->content_warning_visibility,
-                    ['class' => 'form-control'],
-                ) !!}
+                )->class('form-control') }}
             </div>
         </div>
         <div class="text-right">
-            {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Edit')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
 
     <div class="card p-3 mb-2">
         <h3>Email Address</h3>
         <p>Changing your email address will require you to re-verify your email address.</p>
-        {!! Form::open(['url' => 'account/email']) !!}
+        {{ html()->form('POST', 'account/email')->open() }}
         <div class="form-group row">
             <label class="col-md-2 col-form-label">Email Address</label>
             <div class="col-md-10">
-                {!! Form::text('email', Auth::user()->email, ['class' => 'form-control']) !!}
+                {{ html()->text('email', Auth::user()->email)->class('form-control') }}
             </div>
         </div>
         <div class="text-right">
-            {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Edit')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
 
     <div class="card p-3 mb-2">
         <h3>Change Password</h3>
-        {!! Form::open(['url' => 'account/password']) !!}
+        {{ html()->form('POST', 'account/password')->open() }}
         <div class="form-group row">
             <label class="col-md-2 col-form-label">Old Password</label>
             <div class="col-md-10">
-                {!! Form::password('old_password', ['class' => 'form-control']) !!}
+                {{ html()->password('old_password')->class('form-control') }}
             </div>
         </div>
         <div class="form-group row">
             <label class="col-md-2 col-form-label">New Password</label>
             <div class="col-md-10">
-                {!! Form::password('new_password', ['class' => 'form-control']) !!}
+                {{ html()->password('new_password')->class('form-control') }}
             </div>
         </div>
         <div class="form-group row">
             <label class="col-md-2 col-form-label">Confirm New Password</label>
             <div class="col-md-10">
-                {!! Form::password('new_password_confirmation', ['class' => 'form-control']) !!}
+                {{ html()->password('new_password_confirmation')->class('form-control') }}
             </div>
         </div>
         <div class="text-right">
-            {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Edit')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
 
     <div class="card p-3 mb-2">
@@ -197,27 +195,27 @@
         @if (!isset(Auth::user()->two_factor_secret))
             <p>In order to enable two-factor authentication, you will need to scan a QR code with an authenticator app on your phone. Two-factor authentication will not be enabled until you do so and confirm by entering one of the codes provided by your
                 authentication app.</p>
-            {!! Form::open(['url' => 'account/two-factor/enable']) !!}
+            {{ html()->form('POST', 'account/two-factor/enable')->open() }}
             <div class="text-right">
-                {!! Form::submit('Enable', ['class' => 'btn btn-primary']) !!}
+                {{ html()->submit('Enable')->class('btn btn-primary') }}
             </div>
-            {!! Form::close() !!}
+            {{ html()->form()->close() }}
         @elseif(isset(Auth::user()->two_factor_secret))
             <p>Two-factor authentication is currently enabled.</p>
 
             <h4>Disable Two-Factor Authentication</h4>
             <p>To disable two-factor authentication, you must enter a code from your authenticator app.</p>
-            {!! Form::open(['url' => 'account/two-factor/disable']) !!}
+            {{ html()->form('POST', 'account/two-factor/disable')->open() }}
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Code</label>
                 <div class="col-md-10">
-                    {!! Form::text('code', null, ['class' => 'form-control']) !!}
+                    {{ html()->text('code')->class('form-control') }}
                 </div>
             </div>
             <div class="text-right">
-                {!! Form::submit('Disable', ['class' => 'btn btn-primary']) !!}
+                {{ html()->submit('Disable')->class('btn btn-primary') }}
             </div>
-            {!! Form::close() !!}
+            {{ html()->form()->close() }}
         @endif
     </div>
 @endsection

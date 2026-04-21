@@ -1,36 +1,36 @@
 <p>
     All information entered into a bookmark is strictly private - the owner of the bookmarked character will not be notified, and will not know who/how many users have bookmarked their character.
 </p>
-{!! Form::open(['url' => $bookmark->id ? 'account/bookmarks/edit/' . $bookmark->id : 'account/bookmarks/create']) !!}
-{!! Form::hidden('character_id', Request::get('character_id')) !!}
+{{ html()->form('POST', $bookmark->id ? 'account/bookmarks/edit/' . $bookmark->id : 'account/bookmarks/create')->open() }}
+{{ html()->hidden('character_id', Request::get('character_id')) }}
 <div class="form-group">
-    {!! Form::label('notify', 'Notify me when...') !!} {!! add_help('This will notify you whenever the respective change occurs, and is entirely optional.') !!}
+    {{ html()->label('Notify me when...', 'notify') }} {!! add_help('This will notify you whenever the respective change occurs, and is entirely optional.') !!}
     <div class="form-check">
-        {!! Form::checkbox('notify_on_trade_status', 1, $bookmark->notify_on_trade_status, ['class' => 'form-check-input', 'id' => 'notifyTrade']) !!}
-        {!! Form::label('notifyTrade', 'Open For Trades status changes', ['class' => 'form-check-label']) !!}
+        {{ html()->checkbox('notify_on_trade_status', $bookmark->notify_on_trade_status, 1)->class('form-check-input')->id('notifyTrade') }}
+        {{ html()->label('Open For Trades status changes', 'notifyTrade')->class('form-check-label') }}
     </div>
     <div class="form-check">
-        {!! Form::checkbox('notify_on_gift_art_status', 1, $bookmark->notify_on_gift_art_status, ['class' => 'form-check-input', 'id' => 'notifyGiftArt']) !!}
-        {!! Form::label('notifyGiftArt', 'Gift Art Allowed status changes', ['class' => 'form-check-label']) !!}
+        {{ html()->checkbox('notify_on_gift_art_status', $bookmark->notify_on_gift_art_status, 1)->class('form-check-input')->id('notifyGiftArt') }}
+        {{ html()->label('Gift Art Allowed status changes', 'notifyGiftArt')->class('form-check-label') }}
     </div>
     <div class="form-check">
-        {!! Form::checkbox('notify_on_gift_writing_status', 1, $bookmark->notify_on_gift_writing_status, ['class' => 'form-check-input', 'id' => 'notifyGiftArt']) !!}
-        {!! Form::label('notifyGiftWriting', 'Gift Writing Allowed status changes', ['class' => 'form-check-label']) !!}
+        {{ html()->checkbox('notify_on_gift_writing_status', $bookmark->notify_on_gift_writing_status, 1)->class('form-check-input')->id('notifyGiftArt') }}
+        {{ html()->label('Gift Writing Allowed status changes', 'notifyGiftWriting')->class('form-check-label') }}
     </div>
     <div class="form-check">
-        {!! Form::checkbox('notify_on_transfer', 1, $bookmark->notify_on_transfer, ['class' => 'form-check-input', 'id' => 'notifyTransfer']) !!}
-        {!! Form::label('notifyTransfer', 'Character\'s owner changes', ['class' => 'form-check-label']) !!}
+        {{ html()->checkbox('notify_on_transfer', $bookmark->notify_on_transfer, 1)->class('form-check-input')->id('notifyTransfer') }}
+        {{ html()->label('Character\'s owner changes', 'notifyTransfer')->class('form-check-label') }}
     </div>
     <div class="form-check">
-        {!! Form::checkbox('notify_on_image', 1, $bookmark->notify_on_image, ['class' => 'form-check-input', 'id' => 'notifyImage']) !!}
-        {!! Form::label('notifyImage', 'A new image is uploaded', ['class' => 'form-check-label']) !!}
+        {{ html()->checkbox('notify_on_image', $bookmark->notify_on_image, 1)->class('form-check-input')->id('notifyImage') }}
+        {{ html()->label('A new image is uploaded', 'notifyImage')->class('form-check-label') }}
     </div>
 </div>
 <div class="form-group">
-    {!! Form::label('comment', 'Comment (Optional)') !!} {!! add_help('HTML will not be rendered. Newlines will be honoured.') !!}
-    {!! Form::textarea('comment', $bookmark->comment, ['class' => 'form-control', 'maxLength' => 500]) !!}
+    {{ html()->label('Comment (Optional)', 'comment') }} {!! add_help('HTML will not be rendered. Newlines will be honoured.') !!}
+    {{ html()->textarea('comment', $bookmark->comment)->class('form-control')->attribute('maxLength', 500) }}
 </div>
 <div class="text-right">
-    {!! Form::submit('Submit', ['class' => 'btn btn-primary']) !!}
+    {{ html()->submit('Submit')->class('btn btn-primary') }}
 </div>
-{!! Form::close() !!}
+{{ html()->form()->close() }}

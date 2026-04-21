@@ -1,10 +1,10 @@
 @if (Auth::user()->is_deactivated)
     <p>This will reactivate your account, allowing you to use the site features again. Are you sure you want to do this?</p>
-    {!! Form::open(['url' => 'reactivate']) !!}
+    {{ html()->form('POST', 'reactivate')->open() }}
     <div class="text-right">
-        {!! Form::submit('Reactivate', ['class' => 'btn btn-success']) !!}
+        {{ html()->submit('Reactivate')->class('btn btn-success') }}
     </div>
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 @else
     <p>Your account is not deactivated.</p>
 @endif

@@ -21,14 +21,14 @@
         @if (Request::get('key'))
             <p class="text-danger">Incorrect key entered.</p>
         @endif
-        {!! Form::open(['method' => 'GET', 'class' => 'form-inline']) !!}
+        {{ html()->form('GET')->class('form-inline')->open() }}
         <div class="form-group mr-3 mb-3">
-            {!! Form::text('key', null, ['class' => 'form-control']) !!}
+            {{ html()->text('key', null)->class('form-control') }}
         </div>
         <div class="form-group mb-3">
-            {!! Form::submit('Submit', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Submit')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     @else
         <p>You cannot view this page.</p>
     @endif

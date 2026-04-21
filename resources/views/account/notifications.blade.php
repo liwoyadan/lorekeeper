@@ -10,9 +10,9 @@
     <h1>Notifications</h1>
 
     <div class="text-right mb-3">
-        {!! Form::open(['url' => 'notifications/clear', 'id' => 'clearForm']) !!}
+        {{ html()->form('POST', 'notifications/clear')->id('clearForm')->open() }}
         <a href="#" class="btn btn-primary" id="clearButton">Clear All</a>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
     {!! $notifications->render() !!}
 
@@ -21,12 +21,12 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <span class="float-right h5 mb-2">
-                        {!! Form::open(['url' => 'notifications/clear/' . $type]) !!}
+                        {{ html()->form('POST', 'notifications/clear/' . $type)->open() }}
                         <span class="badge badge-primary">
                             {{ $notifications->where('notification_type_id', $type)->count() }}
                         </span>
-                        {!! Form::submit('x clear', ['class' => 'badge btn-primary', 'style' => 'display:inline; border: 0;']) !!}
-                        {!! Form::close() !!}
+                        {{ html()->submit('x clear')->class('badge btn-primary')->attribute('style', 'display:inline; border: 0;') }}
+                        {{ html()->form()->close() }}
                     </span>
                     <a class="card-title h5 collapse-title mb-2" href="#{{ str_replace(' ', '_', config('lorekeeper.notifications.' . $type . '.name')) }}" data-toggle="collapse">{{ config('lorekeeper.notifications.' . $type . '.name') }}
                     </a>

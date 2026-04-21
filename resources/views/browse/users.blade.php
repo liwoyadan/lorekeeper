@@ -17,15 +17,15 @@
     </h1>
 
     <div>
-        {!! Form::open(['method' => 'GET', 'class' => 'form-inline justify-content-end']) !!}
+        {{ html()->form('GET')->class('form-inline justify-content-end')->open() }}
         <div class="form-group mr-3 mb-3">
-            {!! Form::text('name', Request::get('name'), ['class' => 'form-control']) !!}
+            {{ html()->text('name', Request::get('name'))->class('form-control') }}
         </div>
         <div class="form-group mr-3 mb-3">
-            {!! Form::select('rank_id', $ranks, Request::get('rank_id'), ['class' => 'form-control']) !!}
+            {{ html()->select('rank_id', $ranks, Request::get('rank_id'))->class('form-control')->placeholder('Any Rank') }}
         </div>
         <div class="form-group mr-3 mb-3">
-            {!! Form::select(
+            {{ html()->select(
                 'sort',
                 [
                     'alpha' => 'Sort Alphabetically (A-Z)',
@@ -37,13 +37,12 @@
                     'oldest' => 'Oldest First',
                 ],
                 Request::get('sort') ?: 'rank',
-                ['class' => 'form-control'],
-            ) !!}
+            )->class('form-control') }}
         </div>
         <div class="form-group mb-3">
-            {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Search')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
     {!! $users->render() !!}
     <div class="mb-4 logs-table">

@@ -25,13 +25,13 @@
         </div>
     </div>
 
-    {!! Form::open(['url' => 'account/two-factor/confirm']) !!}
+    {{ html()->form('POST', url('account/two-factor/confirm'))->open() }}
     <div class="form-group">
-        {!! Form::label('Confirm 2FA') !!}
-        {!! Form::text('code', null, ['class' => 'form-control']) !!}
+        {{ html()->label('Confirm 2FA') }}
+        {{ html()->text('code')->class('form-control') }}
     </div>
     <div class="text-right">
-        {!! Form::submit('Confirm', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit('Confirm')->class('btn btn-primary') }}
     </div>
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 @endsection
