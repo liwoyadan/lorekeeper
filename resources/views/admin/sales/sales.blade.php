@@ -14,15 +14,15 @@
     <div class="text-right mb-3"><a class="btn btn-primary" href="{{ url('admin/sales/create') }}"><i class="fas fa-plus"></i> Create New Sales Post</a></div>
 
     <div>
-        {!! Form::open(['method' => 'GET', 'class' => 'form-inline justify-content-end mb-3']) !!}
+        {{ html()->form('GET')->class('form-inline justify-content-end mb-3')->open() }}
         <div class="form-group">
-            {!! Form::text('title', Request::get('title'), ['class' => 'form-control', 'placeholder' => 'Name']) !!}
+            {{ html()->text('title', Request::get('title'))->class('form-control')->placeholder('Name') }}
         </div>
         <div class="form-group ml-3">
-            {!! Form::select('is_open', ['1' => 'Open', '0' => 'Closed'], Request::get('is_open'), ['class' => 'form-control', 'placeholder' => 'Status']) !!}
+            {{ html()->select('is_open', ['1' => 'Open', '0' => 'Closed'], Request::get('is_open'))->class('form-control')->placeholder('Status') }}
         </div>
         <div class="form-group ml-3">
-            {!! Form::select(
+            {{ html()->select(
                 'sort',
                 [
                     'bump-reverse' => 'Updated Newest',
@@ -33,13 +33,12 @@
                     'alpha-reverse' => 'Sort Alphabetically (Z-A)',
                 ],
                 Request::get('sort') ?: 'bump-reverse',
-                ['class' => 'form-control'],
-            ) !!}
+            )->class('form-control') }}
         </div>
         <div class="form-group ml-3">
-            {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Search')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
 
     @if (!count($saleses))

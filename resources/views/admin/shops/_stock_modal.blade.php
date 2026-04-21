@@ -1,8 +1,8 @@
 <div class="p-2">
     @if ($stock->id)
-        {!! Form::open(['url' => 'admin/data/shops/stock/edit/' . $stock->id]) !!}
+        {{ html()->form('POST', 'admin/data/shops/stock/edit/' . $stock->id)->open() }}
     @else
-        {!! Form::open(['url' => 'admin/data/shops/stock/' . $shop->id]) !!}
+        {{ html()->form('POST', 'admin/data/shops/stock/' . $shop->id)->open() }}
     @endif
 
     <h5>Stock</h5>
@@ -15,8 +15,8 @@
     </p>
     <div class="row">
         <div class="col-md-6 form-group">
-            {!! Form::label('stock_type', 'Type') !!}
-            {!! Form::select('stock_type', ['Item' => 'Item'], $stock->stock_type ?? null, ['class' => 'form-control stock-field', 'placeholder' => 'Select Stock Type', 'id' => 'type']) !!}
+            {{ html()->label('Type', 'stock_type') }}
+            {{ html()->select('stock_type', ['Item' => 'Item'], $stock->stock_type ?? null)->class('form-control stock-field')->placeholder('Select Stock Type')->id('type') }}
         </div>
         <div class="col-md-6 form-group" id="stock">
             @if ($stock->id)
@@ -50,15 +50,14 @@
             @foreach ($stock->costs ?? [] as $cost)
                 <div class="row mb-3">
                     <div class="col-3">
-                        {!! Form::select(
+                        {{ html()->select(
                             'cost_type[]',
                             [
                                 'Currency' => 'Currency',
                                 'Item' => 'Item',
                             ],
                             $cost->cost_type ?? null,
-                            ['class' => 'form-control cost-type', 'placeholder' => 'Select Cost Type'],
-                        ) !!}
+                        )->class('form-control cost-type')->placeholder('Select Cost Type') }}
                     </div>
                     <div class="col-4 costObjects">
                         @include('admin.shops._stock_cost', [
@@ -67,10 +66,10 @@
                         ])
                     </div>
                     <div class="col-2">
-                        {!! Form::number('cost_quantity[]', $cost->quantity ?? 1, ['class' => 'form-control', 'min' => 1]) !!}
+                        {{ html()->number('cost_quantity[]', $cost->quantity ?? 1)->class('form-control')->attribute('min', 1) }}
                     </div>
                     <div class="col-2">
-                        {!! Form::number('group[]', $cost->group ?? 1, ['class' => 'form-control', 'min' => 1]) !!}
+                        {{ html()->number('group[]', $cost->group ?? 1)->class('form-control')->attribute('min', 1) }}
                     </div>
                     <div class="col-1">
                         <div class="btn btn-danger removeCost">
@@ -90,8 +89,8 @@
         @if ($stock->id)
             @foreach ($stock->groups ?? [] as $group)
                 <div class="form-group">
-                    {!! Form::checkbox('can_group_use_coupon[' . $group . ']', 1, $stock->canGroupUseCoupons($group), ['class' => 'form-check-input stock-field', 'data-toggle' => 'checkbox']) !!}
-                    {!! Form::label('can_group_use_coupon[' . $group . ']', 'Allow group #' . $group . ' to use coupons', ['class' => 'form-check-label ml-3']) !!}
+                    {{ html()->checkbox('can_group_use_coupon[' . $group . ']', $stock->canGroupUseCoupons($group), 1)->class('form-check-input stock-field')->attribute('data-toggle', 'checkbox') }}
+                    {{ html()->label('Allow group #' . $group . ' to use coupons', 'can_group_use_coupon[' . $group . ']')->class('form-check-label ml-3') }}
                 </div>
             @endforeach
         @else
@@ -105,71 +104,67 @@
 
     <div class="row mb-3">
         <div class="col-md-6">
-            {!! Form::label('purchase_limit', 'User Purchase Limit') !!} {!! add_help('This is the maximum amount of this item a user can purchase from this shop. Set to 0 to allow infinite purchases.') !!}
-            {!! Form::number('purchase_limit', $stock ? $stock->purchase_limit : 0, ['class' => 'form-control stock-field', 'data-name' => 'purchase_limit']) !!}
+            {{ html()->label('User Purchase Limit', 'purchase_limit') }} {!! add_help('This is the maximum amount of this item a user can purchase from this shop. Set to 0 to allow infinite purchases.') !!}
+            {{ html()->number('purchase_limit', $stock ? $stock->purchase_limit : 0)->class('form-control stock-field')->attribute('data-name', 'purchase_limit') }}
         </div>
         <div class="col-md-6">
-            {!! Form::label('purchase_limit_timeframe', 'Purchase Limit Timeout') !!} {!! add_help('This is the timeframe that the purchase limit will apply to. I.E. yearly will only look at purchases made after the beginning of the current year. Weekly starts on Sunday. Rollover will happen on UTC time.') !!}
-            {!! Form::select('purchase_limit_timeframe', ['lifetime' => 'Lifetime', 'yearly' => 'Yearly', 'monthly' => 'Monthly', 'weekly' => 'Weekly', 'daily' => 'Daily'], $stock ? $stock->purchase_limit_timeframe : 0, [
-                'class' => 'form-control stock-field',
-                'data-name' => 'purchase_limit_timeframe',
-                'placeholder' => 'Select Timeframe',
-            ]) !!}
+            {{ html()->label('Purchase Limit Timeout', 'purchase_limit_timeframe') }} {!! add_help('This is the timeframe that the purchase limit will apply to. I.E. yearly will only look at purchases made after the beginning of the current year. Weekly starts on Sunday. Rollover will happen on UTC time.') !!}
+            {{ html()->select('purchase_limit_timeframe', ['lifetime' => 'Lifetime', 'yearly' => 'Yearly', 'monthly' => 'Monthly', 'weekly' => 'Weekly', 'daily' => 'Daily'], $stock ? $stock->purchase_limit_timeframe : 0)->class('form-control stock-field')->attribute('data-name', 'purchase_limit_timeframe')->placeholder('Select Timeframe') }}
         </div>
     </div>
 
     <div class="row no-gutters">
         <div class="col-md-6 form-group">
-            {!! Form::checkbox('use_user_bank', 1, $stock->use_user_bank ?? 1, ['class' => 'form-check-input stock-toggle stock-field', 'data-toggle' => 'checkbox', 'data-name' => 'use_user_bank']) !!}
-            {!! Form::label('use_user_bank', 'Use User Bank', ['class' => 'form-check-label ml-3']) !!} {!! add_help('This will allow users to purchase the item using the currency in their accounts, provided that users can own that currency.') !!}
+            {{ html()->checkbox('use_user_bank', $stock->use_user_bank ?? 1, 1)->class('form-check-input stock-toggle stock-field')->attribute('data-toggle', 'checkbox')->attribute('data-name', 'use_user_bank') }}
+            {{ html()->label('Use User Bank', 'use_user_bank')->class('form-check-label ml-3') }} {!! add_help('This will allow users to purchase the item using the currency in their accounts, provided that users can own that currency.') !!}
         </div>
         <div class="col-md-6 form-group">
-            {!! Form::checkbox('use_character_bank', 1, $stock->use_character_bank ?? 1, ['class' => 'form-check-input stock-toggle stock-field', 'data-toggle' => 'checkbox', 'data-name' => 'use_character_bank']) !!}
-            {!! Form::label('use_character_bank', 'Use Character Bank', ['class' => 'form-check-label ml-3']) !!} {!! add_help('This will allow users to purchase the item using the currency belonging to characters they own, provided that characters can own that currency.') !!}
+            {{ html()->checkbox('use_character_bank', $stock->use_character_bank ?? 1, 1)->class('form-check-input stock-toggle stock-field')->attribute('data-toggle', 'checkbox')->attribute('data-name', 'use_character_bank') }}
+            {{ html()->label('Use Character Bank', 'use_character_bank')->class('form-check-label ml-3') }} {!! add_help('This will allow users to purchase the item using the currency belonging to characters they own, provided that characters can own that currency.') !!}
         </div>
         <div class="col-md-6 form-group">
-            {!! Form::checkbox('is_fto', 1, $stock->is_fto ?? 0, ['class' => 'form-check-input stock-toggle stock-field', 'data-toggle' => 'checkbox', 'data-name' => 'is_fto']) !!}
-            {!! Form::label('is_fto', 'FTO Only?', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned on, only FTO will be able to purchase the item.') !!}
+            {{ html()->checkbox('is_fto', $stock->is_fto ?? 0, 1)->class('form-check-input stock-toggle stock-field')->attribute('data-toggle', 'checkbox')->attribute('data-name', 'is_fto') }}
+            {{ html()->label('FTO Only?', 'is_fto')->class('form-check-label ml-3') }} {!! add_help('If turned on, only FTO will be able to purchase the item.') !!}
         </div>
         <div class="col-md-6 form-group">
-            {!! Form::checkbox('disallow_transfer', 1, $stock->disallow_transfer ?? 0, ['class' => 'form-check-input stock-toggle stock-field', 'data-name' => 'disallow_transfer']) !!}
-            {!! Form::label('disallow_transfer', 'Disallow Transfer', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned on, users will be unable to transfer this item after purchase.') !!}
+            {{ html()->checkbox('disallow_transfer', $stock->disallow_transfer ?? 0, 1)->class('form-check-input stock-toggle stock-field')->attribute('data-name', 'disallow_transfer') }}
+            {{ html()->label('Disallow Transfer', 'disallow_transfer')->class('form-check-label ml-3') }} {!! add_help('If turned on, users will be unable to transfer this item after purchase.') !!}
         </div>
     </div>
 
     <div class="form-group">
-        {!! Form::checkbox('is_visible', 1, $stock->is_visible ?? 1, ['class' => 'form-check-input stock-limited stock-toggle stock-field', 'data-toggle' => 'checkbox']) !!}
-        {!! Form::label('is_visible', 'Set Visibility', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned off it will not appear in the store.') !!}
+        {{ html()->checkbox('is_visible', $stock->is_visible ?? 1, 1)->class('form-check-input stock-limited stock-toggle stock-field')->attribute('data-toggle', 'checkbox') }}
+        {{ html()->label('Set Visibility', 'is_visible')->class('form-check-label ml-3') }} {!! add_help('If turned off it will not appear in the store.') !!}
     </div>
     <div class="form-group">
-        {!! Form::checkbox('is_limited_stock', 1, $stock->is_limited_stock ?? 0, ['class' => 'form-check-input stock-limited stock-toggle stock-field', 'data-toggle' => 'checkbox', 'id' => 'is_limited_stock']) !!}
-        {!! Form::label('is_limited_stock', 'Set Limited Stock', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned on, will limit the amount purchaseable to the quantity set below.') !!}
+        {{ html()->checkbox('is_limited_stock', $stock->is_limited_stock ?? 0, 1)->class('form-check-input stock-limited stock-toggle stock-field')->attribute('data-toggle', 'checkbox')->id('is_limited_stock') }}
+        {{ html()->label('Set Limited Stock', 'is_limited_stock')->class('form-check-label ml-3') }} {!! add_help('If turned on, will limit the amount purchaseable to the quantity set below.') !!}
     </div>
 
     <div class="card mb-3 stock-limited-quantity {{ $stock->is_limited_stock ? '' : 'hide' }}">
         <div class="card-body">
             <div>
-                {!! Form::label('quantity', 'Quantity') !!} {!! add_help('If left blank, will be set to 0 (sold out).') !!}
-                {!! Form::text('quantity', $stock->quantity ?? 0, ['class' => 'form-control stock-field']) !!}
+                {{ html()->label('Quantity', 'quantity') }} {!! add_help('If left blank, will be set to 0 (sold out).') !!}
+                {{ html()->text('quantity', $stock->quantity ?? 0)->class('form-control stock-field') }}
             </div>
             <div class="my-2">
-                {!! Form::checkbox('restock', 1, $stock->restock ?? 0, ['class' => 'form-check-input', 'data-toggle' => 'checkbox']) !!}
-                {!! Form::label('restock', 'Auto Restock?', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If ticked to yes it will auto restock at the interval defined below.') !!}
+                {{ html()->checkbox('restock', $stock->restock ?? 0, 1)->class('form-check-input')->attribute('data-toggle', 'checkbox') }}
+                {{ html()->label('Auto Restock?', 'restock')->class('form-check-label ml-3') }} {!! add_help('If ticked to yes it will auto restock at the interval defined below.') !!}
             </div>
             <div>
-                {!! Form::label('restock_interval', 'Restock Interval') !!}
-                {!! Form::select('restock_interval', [1 => 'Day', 2 => 'Week', 3 => 'Month'], $stock->restock_interval ?? 2, ['class' => 'form-control stock-field']) !!}
+                {{ html()->label('Restock Interval', 'restock_interval') }}
+                {{ html()->select('restock_interval', [1 => 'Day', 2 => 'Week', 3 => 'Month'], $stock->restock_interval ?? 2)->class('form-control stock-field') }}
             </div>
             <div class="my-2">
-                {!! Form::checkbox('range', 1, $stock->range ?? 0, ['class' => 'form-check-input', 'data-toggle' => 'checkbox']) !!}
-                {!! Form::label('range', 'Restock in Range?', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If ticked to yes it will restock a random quantity between 1 and the quantity set above.') !!}
+                {{ html()->checkbox('range', $stock->range ?? 0, 1)->class('form-check-input')->attribute('data-toggle', 'checkbox') }}
+                {{ html()->label('Restock in Range?', 'range')->class('form-check-label ml-3') }} {!! add_help('If ticked to yes it will restock a random quantity between 1 and the quantity set above.') !!}
             </div>
         </div>
     </div>
 
     <div class="form-group">
-        {!! Form::checkbox('is_timed_stock', 1, $stock->is_timed_stock ?? 0, ['class' => 'form-check-input stock-timed stock-toggle stock-field', 'data-toggle' => 'checkbox', 'id' => 'is_timed_stock']) !!}
-        {!! Form::label('is_timed_stock', 'Set Timed Stock', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Sets the stock as timed between the chosen dates.') !!}
+        {{ html()->checkbox('is_timed_stock', $stock->is_timed_stock ?? 0, 1)->class('form-check-input stock-timed stock-toggle stock-field')->attribute('data-toggle', 'checkbox')->id('is_timed_stock') }}
+        {{ html()->label('Set Timed Stock', 'is_timed_stock')->class('form-check-label ml-3') }} {!! add_help('Sets the stock as timed between the chosen dates.') !!}
     </div>
     <div class="card stock-timed-quantity {{ $stock->is_timed_stock ? '' : 'hide' }}">
         <div class="card-body">
@@ -180,12 +175,12 @@
             <p>The time period below is between the specific dates and times, rather than an agnostic period like "every November".</p>
             <div class="row">
                 <div class="col-md-6 form-group">
-                    {!! Form::label('stock_start_at', 'Start Time') !!} {!! add_help('Stock will cycle in at this date.') !!}
-                    {!! Form::text('stock_start_at', $stock->start_at, ['class' => 'form-control datepicker']) !!}
+                    {{ html()->label('Start Time', 'stock_start_at') }} {!! add_help('Stock will cycle in at this date.') !!}
+                    {{ html()->text('stock_start_at', $stock->start_at)->class('form-control datepicker') }}
                 </div>
                 <div class="col-md-6 form-group">
-                    {!! Form::label('stock_end_at', 'End Time') !!} {!! add_help('Stock will cycle out at this date.') !!}
-                    {!! Form::text('stock_end_at', $stock->end_at, ['class' => 'form-control datepicker']) !!}
+                    {{ html()->label('End Time', 'stock_end_at') }} {!! add_help('Stock will cycle out at this date.') !!}
+                    {{ html()->text('stock_end_at', $stock->end_at)->class('form-control datepicker') }}
                 </div>
             </div>
 
@@ -193,15 +188,12 @@
             <p>Select the months and days of the week that the stock will be available.</p>
             <p><b>If months are set alongside days, the stock will only be available on those days in those months.</b></p>
             <div class="form-group">
-                {!! Form::label('stock_days', 'Days of the Week') !!}
-                {!! Form::select('stock_days[]', ['Monday' => 'Monday', 'Tuesday' => 'Tuesday', 'Wednesday' => 'Wednesday', 'Thursday' => 'Thursday', 'Friday' => 'Friday', 'Saturday' => 'Saturday', 'Sunday' => 'Sunday'], $stock->days ?? null, [
-                    'class' => 'form-control selectize',
-                    'multiple' => 'multiple',
-                ]) !!}
+                {{ html()->label('Days of the Week', 'stock_days') }}
+                {{ html()->select('stock_days[]', ['Monday' => 'Monday', 'Tuesday' => 'Tuesday', 'Wednesday' => 'Wednesday', 'Thursday' => 'Thursday', 'Friday' => 'Friday', 'Saturday' => 'Saturday', 'Sunday' => 'Sunday'], $stock->days ?? null)->class('form-control selectize')->attribute('multiple', 'multiple') }}
             </div>
             <div class="form-group">
-                {!! Form::label('stock_months', 'Months of the Year') !!}
-                {!! Form::select(
+                {{ html()->label('Months of the Year', 'stock_months') }}
+                {{ html()->select(
                     'stock_months[]',
                     [
                         'January' => 'January',
@@ -218,38 +210,36 @@
                         'December' => 'December',
                     ],
                     $stock->months ?? null,
-                    ['class' => 'form-control selectize', 'multiple' => 'multiple'],
-                ) !!}
+                )->class('form-control selectize')->attribute('multiple', 'multiple') }}
             </div>
         </div>
     </div>
 
     <div class="text-right mt-1">
-        {!! Form::submit($stock->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit($stock->id ? 'Edit' : 'Create')->class('btn btn-primary') }}
     </div>
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 
     <div class="form-group hide original cost-row">
         <div class="row">
             <div class="col-3">
-                {!! Form::select(
+                {{ html()->select(
                     'cost_type[]',
                     [
                         'Currency' => 'Currency',
                         'Item' => 'Item',
                     ],
                     null,
-                    ['class' => 'form-control cost-type', 'placeholder' => 'Select Cost Type'],
-                ) !!}
+                )->class('form-control cost-type')->placeholder('Select Cost Type') }}
             </div>
             <div class="col-4 costObjects">
                 Select Cost Type
             </div>
             <div class="col-2">
-                {!! Form::number('cost_quantity[]', 1, ['class' => 'form-control', 'min' => 1]) !!}
+                {{ html()->number('cost_quantity[]', 1)->class('form-control')->attribute('min', 1) }}
             </div>
             <div class="col-2">
-                {!! Form::number('group[]', 1, ['class' => 'form-control', 'min' => 1]) !!}
+                {{ html()->number('group[]', 1)->class('form-control')->attribute('min', 1) }}
             </div>
             <div class="col-1">
                 <div class="btn btn-danger removeCost">

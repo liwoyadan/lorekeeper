@@ -51,11 +51,11 @@
 
     </table>
     <div>
-        {!! Form::open(['url' => 'admin/users/ranks/sort']) !!}
-        {!! Form::hidden('sort', '', ['id' => 'sortableOrder']) !!}
-        {!! Form::submit('Save Order', ['class' => 'btn btn-primary']) !!}
+        {{ html()->form('POST', 'admin/users/ranks/sort')->open() }}
+        {{ html()->hidden('sort', '')->id('sortableOrder') }}
+        {{ html()->submit('Save Order')->class('btn btn-primary') }}
         {!! add_help('This order is reflected in the sort order on the users list. Additionally, users with the Edit User Info power cannot edit users with a rank higher than their own.') !!}
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
 @endsection
 

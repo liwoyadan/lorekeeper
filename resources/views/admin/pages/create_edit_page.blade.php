@@ -17,64 +17,64 @@
         @endif
     </h1>
 
-    {!! Form::open(['url' => $page->id ? 'admin/pages/edit/' . $page->id : 'admin/pages/create', 'files' => true]) !!}
+    {{ html()->form('POST', $page->id ? 'admin/pages/edit/' . $page->id : 'admin/pages/create')->acceptsFiles()->open() }}
 
     <h3>Basic Information</h3>
 
     <div class="row">
         <div class="col-md-6 form-group">
-            {!! Form::label('Title') !!}
-            {!! Form::text('title', $page->title, ['class' => 'form-control']) !!}
+            {{ html()->label('Title') }}
+            {{ html()->text('title', $page->title)->class('form-control') }}
         </div>
 
         <div class="col-md-6 form-group">
-            {!! Form::label('Key') !!} {!! add_help('This is a unique name used to form the URL of the page. Only alphanumeric characters, dash and underscore (no spaces) can be used.') !!}
-            {!! Form::text('key', $page->key, ['class' => 'form-control']) !!}
+            {{ html()->label('Key') }} {!! add_help('This is a unique name used to form the URL of the page. Only alphanumeric characters, dash and underscore (no spaces) can be used.') !!}
+            {{ html()->text('key', $page->key)->class('form-control') }}
         </div>
     </div>
 
     <div class="form-group">
-        {!! Form::label('Header Image (Optional)') !!} {!! add_help('This image will show up above the page content and on the meta-image.') !!}
+        {{ html()->label('Header Image (Optional)') }} {!! add_help('This image will show up above the page content and on the meta-image.') !!}
         <div class="custom-file">
-            {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
-            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
+            {{ html()->label('Choose file...', 'image')->class('custom-file-label') }}
+            {{ html()->file('image')->class('custom-file-input') }}
         </div>
         @if ($page->has_image)
             <div class="form-check">
-                {!! Form::checkbox('remove_image', 1, false, ['class' => 'form-check-input']) !!}
-                {!! Form::label('remove_image', 'Remove current image', ['class' => 'form-check-label']) !!}
+                {{ html()->checkbox('remove_image', false, 1)->class('form-check-input') }}
+                {{ html()->label('Remove current image', 'remove_image')->class('form-check-label') }}
             </div>
         @endif
     </div>
 
     <div class="form-group">
-        {!! Form::label('Page Content') !!}
-        {!! Form::textarea('text', $page->text, ['class' => 'form-control wysiwyg']) !!}
+        {{ html()->label('Page Content') }}
+        {{ html()->textarea('text', $page->text)->class('form-control wysiwyg') }}
     </div>
 
     <div class="row">
         <div class="col-md-4 form-group">
-            {!! Form::checkbox('is_visible', 1, $page->id ? $page->is_visible : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-            {!! Form::label('is_visible', 'Is Viewable', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned off, users will not be able to view the page even if they have the link to it.') !!}
+            {{ html()->checkbox('is_visible', $page->id ? $page->is_visible : 1, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+            {{ html()->label('Is Viewable', 'is_visible')->class('form-check-label ml-3') }} {!! add_help('If this is turned off, users will not be able to view the page even if they have the link to it.') !!}
         </div>
 
         <div class="col-md-4 form-group">
-            {!! Form::checkbox('can_comment', 1, $page->id ? $page->can_comment : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-            {!! Form::label('can_comment', 'Commentable', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, users will be able to comment on the page.') !!}
+            {{ html()->checkbox('can_comment', $page->id ? $page->can_comment : 0, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+            {{ html()->label('Commentable', 'can_comment')->class('form-check-label ml-3') }} {!! add_help('If this is turned on, users will be able to comment on the page.') !!}
             @if (!Settings::get('comment_dislikes_enabled'))
                 <div class="form-group">
-                    {!! Form::checkbox('allow_dislikes', 1, $page->id ? $page->allow_dislikes : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-                    {!! Form::label('allow_dislikes', 'Allow Dislikes On Comments?', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned off, users cannot dislike comments.') !!}
+                    {{ html()->checkbox('allow_dislikes', $page->id ? $page->allow_dislikes : 0, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+                    {{ html()->label('Allow Dislikes On Comments?', 'allow_dislikes')->class('form-check-label ml-3') }} {!! add_help('If this is turned off, users cannot dislike comments.') !!}
                 </div>
             @endif
         </div>
     </div>
 
     <div class="text-right">
-        {!! Form::submit($page->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit($page->id ? 'Edit' : 'Create')->class('btn btn-primary') }}
     </div>
 
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 @endsection
 
 @section('scripts')

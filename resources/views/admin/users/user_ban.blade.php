@@ -26,15 +26,15 @@
     <h3>{{ $user->is_banned ? 'Edit ' : '' }}Ban</h3>
     <p>Banning the user will remove their rank, cancel all of their queued submissions and transfers, and prevent them from using any other site features. The ban reason will be displayed on the blacklist.</p>
 
-    {!! Form::open(['url' => 'admin/users/' . $user->name . '/ban', 'id' => 'banForm']) !!}
+    {{ html()->form('POST', 'admin/users/' . $user->name . '/ban')->id('banForm')->open() }}
     <div class="form-group">
-        {!! Form::label('Reason (Optional; no HTML)') !!}
-        {!! Form::textarea('ban_reason', $user->settings->ban_reason, ['class' => 'form-control']) !!}
+        {{ html()->label('Reason (Optional; no HTML)') }}
+        {{ html()->textarea('ban_reason', $user->settings->ban_reason)->class('form-control') }}
     </div>
     <div class="text-right">
-        {!! Form::submit($user->is_banned ? 'Edit' : 'Ban', ['class' => 'btn btn' . ($user->is_banned ? '' : '-outline') . '-danger ban-button']) !!}
+        {{ html()->submit($user->is_banned ? 'Edit' : 'Ban')->class('btn btn' . ($user->is_banned ? '' : '-outline') . '-danger ban-button') }}
     </div>
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 
     @if ($user->is_banned)
         <h3>Unban</h3>

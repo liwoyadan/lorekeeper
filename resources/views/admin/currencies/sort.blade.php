@@ -32,10 +32,10 @@
 
         </table>
         <div class="mb-4">
-            {!! Form::open(['url' => 'admin/data/currencies/sort/user']) !!}
-            {!! Form::hidden('sort', '', ['id' => 'userSortableOrder']) !!}
-            {!! Form::submit('Save Order', ['class' => 'btn btn-primary']) !!}
-            {!! Form::close() !!}
+            {{ html()->form('POST', 'admin/data/currencies/sort/user')->open() }}
+            {{ html()->hidden('sort', '')->id('userSortableOrder') }}
+            {{ html()->submit('Save Order')->class('btn btn-primary') }}
+            {{ html()->form()->close() }}
         </div>
     @endif
 
@@ -60,10 +60,10 @@
 
         </table>
         <div>
-            {!! Form::open(['url' => 'admin/data/currencies/sort/character']) !!}
-            {!! Form::hidden('sort', '', ['id' => 'characterSortableOrder']) !!}
-            {!! Form::submit('Save Order', ['class' => 'btn btn-primary']) !!}
-            {!! Form::close() !!}
+            {{ html()->form('POST', 'admin/data/currencies/sort/character')->open() }}
+            {{ html()->hidden('sort', '')->id('characterSortableOrder') }}
+            {{ html()->submit('Save Order')->class('btn btn-primary') }}
+            {{ html()->form()->close() }}
         </div>
     @endif
 

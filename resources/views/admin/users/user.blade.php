@@ -25,11 +25,11 @@
 
     <div class="card p-3 mb-2">
         <h3>Basic Info</h3>
-        {!! Form::open(['url' => 'admin/users/' . $user->name . '/basic']) !!}
+        {{ html()->form('POST', 'admin/users/' . $user->name . '/basic')->open() }}
         <div class="form-group row">
             <label class="col-md-2 col-form-label">Username</label>
             <div class="col-md-10">
-                {!! Form::text('name', $user->name, ['class' => 'form-control']) !!}
+                {{ html()->text('name', $user->name)->class('form-control') }}
             </div>
         </div>
         <div class="form-group row">
@@ -42,31 +42,31 @@
             </label>
             <div class="col-md-10">
                 @if (!$user->isAdmin && Auth::user()->canEditRank($user->rank))
-                    {!! Form::select('rank_id', $ranks, $user->rank_id, ['class' => 'form-control']) !!}
+                    {{ html()->select('rank_id', $ranks, $user->rank_id)->class('form-control') }}
                 @else
-                    {!! Form::text('rank_id', $ranks[$user->rank_id], ['class' => 'form-control', 'disabled']) !!}
+                    {{ html()->text('rank_id', $ranks[$user->rank_id])->class('form-control')->attribute('disabled', 'disabled') }}
                 @endif
             </div>
         </div>
         <div class="text-right">
-            {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Edit')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
 
     <div class="card p-3 mb-2">
         <h3>Account</h3>
-        {!! Form::open(['url' => 'admin/users/' . $user->name . '/account']) !!}
+        {{ html()->form('POST', 'admin/users/' . $user->name . '/account')->open() }}
         <div class="form-group row">
             <label class="col-md-2 col-form-label">Email Address</label>
             <div class="col-md-10">
-                {!! Form::text('email', $user->email, ['class' => 'form-control', 'disabled']) !!}
+                {{ html()->text('email', $user->email)->class('form-control')->attribute('disabled', 'disabled') }}
             </div>
         </div>
         <div class="form-group row">
             <label class="col-md-2 col-form-label">Join Date</label>
             <div class="col-md-10">
-                {!! Form::text('created_at', format_date($user->created_at, false), ['class' => 'form-control', 'disabled']) !!}
+                {{ html()->text('created_at', format_date($user->created_at, false))->class('form-control')->attribute('disabled', 'disabled') }}
             </div>
         </div>
         <div class="form-group row">
@@ -75,14 +75,14 @@
             ) !!}</label>
             <div class="col-md-10">
                 <div class="form-check form-control-plaintext">
-                    {!! Form::checkbox('is_fto', 1, $user->settings->is_fto, ['class' => 'form-check-input', 'id' => 'checkFTO']) !!}
+                    {{ html()->checkbox('is_fto', $user->settings->is_fto, 1)->class('form-check-input')->id('checkFTO') }}
                 </div>
             </div>
         </div>
         <div class="text-right">
-            {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Edit')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
 
     <div class="card p-3 mb-2">
@@ -95,17 +95,17 @@
         @else
             <p class="text-danger">This user has not set their DOB.</p>
         @endif
-        {!! Form::open(['url' => 'admin/users/' . $user->name . '/birthday']) !!}
+        {{ html()->form('POST', 'admin/users/' . $user->name . '/birthday')->open() }}
         <div class="form-group row">
             <label class="col-md-2 col-form-label">Date of Birth</label>
             <div class="col-md-10 row">
-                {!! Form::date('dob', null, ['class' => 'form-control']) !!}
+                {{ html()->date('dob', null)->class('form-control') }}
             </div>
         </div>
         <div class="text-right">
-            {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Edit')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
 
     <div class="card p-3 mb-2">
@@ -120,12 +120,12 @@
                     </div>
                     <div class="col-10">
                         <div class="d-flex">
-                            {!! Form::text('alias', $alias->alias . '@' . $alias->siteDisplayName . (!$alias->is_visible ? ' (Hidden)' : ''), ['class' => 'form-control', 'disabled']) !!}
-                            {!! Form::open(['url' => 'admin/users/' . $user->name . '/alias/' . $alias->id]) !!}
-                            <div class="text-right ml-2">{!! Form::submit('Clear Alias', ['class' => 'btn btn-danger']) !!}</div>
+                            {{ html()->text('alias', $alias->alias . '@' . $alias->siteDisplayName . (!$alias->is_visible ? ' (Hidden)' : ''))->class('form-control')->attribute('disabled', 'disabled') }}
+                            {{ html()->form('POST', 'admin/users/' . $user->name . '/alias/' . $alias->id)->open() }}
+                            <div class="text-right ml-2">{{ html()->submit('Clear Alias')->class('btn btn-danger') }}</div>
                         </div>
                     </div>
-                    {!! Form::close() !!}
+                    {{ html()->form()->close() }}
                 </div>
             @endforeach
         @else

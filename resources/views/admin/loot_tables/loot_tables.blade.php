@@ -14,16 +14,16 @@
     <div class="text-right mb-3"><a class="btn btn-primary" href="{{ url('admin/data/loot-tables/create') }}"><i class="fas fa-plus"></i> Create New Loot Table</a></div>
 
     <div>
-        {!! Form::open(['method' => 'GET', 'class' => '']) !!}
+        {{ html()->form('GET')->class('')->open() }}
         <div class="form-inline justify-content-end">
             <div class="form-group ml-3 mb-3">
-                {!! Form::text('name', Request::get('name'), ['class' => 'form-control', 'placeholder' => 'Name']) !!}
+                {{ html()->text('name', Request::get('name'))->class('form-control')->placeholder('Name') }}
             </div>
             <div class="form-group ml-3 mb-3">
-                {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
+                {{ html()->submit('Search')->class('btn btn-primary') }}
             </div>
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
 
     @if (!count($tables))

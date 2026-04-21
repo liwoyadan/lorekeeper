@@ -14,24 +14,23 @@
     @include('admin.masterlist._header', ['tradeCount' => $tradeCount, 'transferCount' => $transferCount])
 
     <div>
-        {!! Form::open(['method' => 'GET', 'class' => 'form-inline justify-content-end']) !!}
+        {{ html()->form('GET')->class('form-inline justify-content-end')->open() }}
         <div class="form-inline justify-content-end">
             <div class="form-group ml-3 mb-3">
-                {!! Form::select(
+                {{ html()->select(
                     'sort',
                     [
                         'newest' => 'Newest First',
                         'oldest' => 'Oldest First',
                     ],
                     Request::get('sort') ?: 'oldest',
-                    ['class' => 'form-control'],
-                ) !!}
+                )->class('form-control') }}
             </div>
             <div class="form-group ml-3 mb-3">
-                {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
+                {{ html()->submit('Search')->class('btn btn-primary') }}
             </div>
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
 
     {!! $transfers->render() !!}

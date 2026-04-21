@@ -13,18 +13,18 @@
         @endif
     </h1>
 
-    {!! Form::open(['url' => $sublist->id ? 'admin/data/sublists/edit/' . $sublist->id : 'admin/data/sublists/create', 'files' => true]) !!}
+    {{ html()->form('POST', $sublist->id ? 'admin/data/sublists/edit/' . $sublist->id : 'admin/data/sublists/create')->acceptsFiles()->open() }}
 
     <h3>Basic Information</h3>
 
     <div class="row">
         <div class="col-md-6 form-group">
-            {!! Form::label('Name') !!}
-            {!! Form::text('name', $sublist->name, ['class' => 'form-control']) !!}
+            {{ html()->label('Name') }}
+            {{ html()->text('name', $sublist->name)->class('form-control') }}
         </div>
         <div class="col-md-6 form-group">
-            {!! Form::label('Key') !!}
-            {!! Form::text('key', $sublist->key, ['class' => 'form-control']) !!}
+            {{ html()->label('Key') }}
+            {{ html()->text('key', $sublist->key)->class('form-control') }}
         </div>
     </div>
 
@@ -33,25 +33,25 @@
         want a category shared across multiple lists, it is suggested you only use species.</p>
 
     <div class="form-group">
-        {!! Form::label('categories[]', 'Categories') !!}
-        {!! Form::select('categories[]', $categories, $subCategories, ['id' => 'categoryList', 'class' => 'form-control', 'multiple']) !!}
+        {{ html()->label('Categories', 'categories[]') }}
+        {{ html()->select('categories[]', $categories, $subCategories)->id('categoryList')->class('form-control')->attribute('multiple', 'multiple') }}
     </div>
 
     <div class="form-group">
-        {!! Form::label('species[]', 'Species') !!}
-        {!! Form::select('species[]', $species, $subSpecies, ['id' => 'speciesList', 'class' => 'form-control', 'multiple']) !!}
+        {{ html()->label('Species', 'species[]') }}
+        {{ html()->select('species[]', $species, $subSpecies)->id('speciesList')->class('form-control')->attribute('multiple', 'multiple') }}
     </div>
 
     <div class="form-group">
-        {!! Form::checkbox('show_main', 1, $sublist->id ? $sublist->show_main : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-        {!! Form::label('show_main', 'Show on Main', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Turn on to include these characters in the main masterlist as well. Turn off to entirely seperate them into the sub masterlist.') !!}
+        {{ html()->checkbox('show_main', $sublist->id ? $sublist->show_main : 1, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+        {{ html()->label('Show on Main', 'show_main')->class('form-check-label ml-3') }} {!! add_help('Turn on to include these characters in the main masterlist as well. Turn off to entirely seperate them into the sub masterlist.') !!}
     </div>
 
     <div class="text-right">
-        {!! Form::submit($sublist->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit($sublist->id ? 'Edit' : 'Create')->class('btn btn-primary') }}
     </div>
 
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 @endsection
 
 @section('scripts')

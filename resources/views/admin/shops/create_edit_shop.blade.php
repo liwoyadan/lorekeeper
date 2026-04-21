@@ -14,67 +14,67 @@
         @endif
     </h1>
 
-    {!! Form::open(['url' => $shop->id ? 'admin/data/shops/edit/' . $shop->id : 'admin/data/shops/create', 'files' => true]) !!}
+    {{ html()->form('POST', $shop->id ? 'admin/data/shops/edit/' . $shop->id : 'admin/data/shops/create')->acceptsFiles()->open() }}
 
     <h3>Basic Information</h3>
 
     <div class="form-group">
-        {!! Form::label('Name') !!}
-        {!! Form::text('name', $shop->name, ['class' => 'form-control']) !!}
+        {{ html()->label('Name') }}
+        {{ html()->text('name', $shop->name)->class('form-control') }}
     </div>
 
     <div class="form-group">
-        {!! Form::label('Shop Image (Optional)') !!} {!! add_help('This image is used on the shop index and on the shop page as a header.') !!}
+        {{ html()->label('Shop Image (Optional)') }} {!! add_help('This image is used on the shop index and on the shop page as a header.') !!}
         <div class="custom-file">
-            {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
-            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
+            {{ html()->label('Choose file...', 'image')->class('custom-file-label') }}
+            {{ html()->file('image')->class('custom-file-input') }}
         </div>
         <div class="text-muted">Recommended size: None (Choose a standard size for all shop images)</div>
         @if ($shop->has_image)
             <div class="form-check">
-                {!! Form::checkbox('remove_image', 1, false, ['class' => 'form-check-input']) !!}
-                {!! Form::label('remove_image', 'Remove current image', ['class' => 'form-check-label']) !!}
+                {{ html()->checkbox('remove_image', false, 1)->class('form-check-input') }}
+                {{ html()->label('Remove current image', 'remove_image')->class('form-check-label') }}
             </div>
         @endif
     </div>
 
     <div class="form-group">
-        {!! Form::label('Description (Optional)') !!}
-        {!! Form::textarea('description', $shop->description, ['class' => 'form-control wysiwyg']) !!}
+        {{ html()->label('Description (Optional)') }}
+        {{ html()->textarea('description', $shop->description)->class('form-control wysiwyg') }}
     </div>
 
     <div class="row">
         <div class="col-md form-group">
-            {!! Form::checkbox('is_active', 1, $shop->id ? $shop->is_active : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-            {!! Form::label('is_active', 'Set Active', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned off, the shop will not be accessible to anyone. Please note that this option is overridden if this is set as a Timed Shop.') !!}
+            {{ html()->checkbox('is_active', $shop->id ? $shop->is_active : 1, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+            {{ html()->label('Set Active', 'is_active')->class('form-check-label ml-3') }} {!! add_help('If turned off, the shop will not be accessible to anyone. Please note that this option is overridden if this is set as a Timed Shop.') !!}
         </div>
         <div class="col-md form-group">
-            {!! Form::checkbox('is_hidden', 0, $shop->id ? $shop->is_hidden : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-            {!! Form::label('is_hidden', 'Set Hidden', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned on, the shop will not be visible on the shop index, but still accessible.') !!}
+            {{ html()->checkbox('is_hidden', $shop->id ? $shop->is_hidden : 1, 0)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+            {{ html()->label('Set Hidden', 'is_hidden')->class('form-check-label ml-3') }} {!! add_help('If turned on, the shop will not be visible on the shop index, but still accessible.') !!}
         </div>
         <div class="col-md form-group">
-            {!! Form::checkbox('is_staff', 1, $shop->id ? $shop->is_staff : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-            {!! Form::label('is_staff', 'For Staff?', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned on, the shop will not be visible to or accessible by regular users, only staff.') !!}
+            {{ html()->checkbox('is_staff', $shop->id ? $shop->is_staff : 0, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+            {{ html()->label('For Staff?', 'is_staff')->class('form-check-label ml-3') }} {!! add_help('If turned on, the shop will not be visible to or accessible by regular users, only staff.') !!}
         </div>
         <div class="col-md form-group">
-            {!! Form::checkbox('is_fto', 1, $shop->id ? $shop->is_fto : 0, ['class' => 'form-check-label', 'data-toggle' => 'toggle']) !!}
-            {!! Form::label('is_fto', 'FTO Only?', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned on, only users who are currently FTO or staff can enter.') !!}
+            {{ html()->checkbox('is_fto', $shop->id ? $shop->is_fto : 0, 1)->class('form-check-label')->attribute('data-toggle', 'toggle') }}
+            {{ html()->label('FTO Only?', 'is_fto')->class('form-check-label ml-3') }} {!! add_help('If turned on, only users who are currently FTO or staff can enter.') !!}
         </div>
     </div>
 
     <div class="form-group">
-        {!! Form::checkbox('use_coupons', 1, $shop->id ? $shop->use_coupons : 0, ['class' => 'form-check-label', 'data-toggle' => 'toggle', 'id' => 'use_coupons']) !!}
-        {!! Form::label('use_coupons', 'Allow Coupons?', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Note that ALL coupons will be allowed to be used, unless specified otherwise.') !!}
+        {{ html()->checkbox('use_coupons', $shop->id ? $shop->use_coupons : 0, 1)->class('form-check-label')->attribute('data-toggle', 'toggle')->id('use_coupons') }}
+        {{ html()->label('Allow Coupons?', 'use_coupons')->class('form-check-label ml-3') }} {!! add_help('Note that ALL coupons will be allowed to be used, unless specified otherwise.') !!}
     </div>
     <div class="form-group coupon-row {{ $shop->use_coupons ? '' : 'hide' }}">
-        {!! Form::label('allowed_coupons', 'Allowed Coupon(s)', ['class' => 'form-check-label']) !!}
+        {{ html()->label('Allowed Coupon(s)', 'allowed_coupons')->class('form-check-label') }}
         <p>Leave blank to allow ALL coupons.</p>
-        {!! Form::select('allowed_coupons[]', $coupons, $shop->allowed_coupons, ['multiple', 'class' => 'form-check-label', 'placeholder' => 'Select Coupons', 'id' => 'allowed_coupons']) !!}
+        {{ html()->select('allowed_coupons[]', $coupons, $shop->allowed_coupons)->attribute('multiple', 'multiple')->class('form-check-label')->placeholder('Select Coupons')->id('allowed_coupons') }}
     </div>
 
     <div class="form-group">
-        {!! Form::checkbox('is_timed_shop', 1, $shop->is_timed_shop ?? 0, ['class' => 'form-check-input shop-timed shop-toggle shop-field', 'data-toggle' => 'toggle', 'id' => 'is_timed_shop']) !!}
-        {!! Form::label('is_timed_shop', 'Set Timed Shop', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Sets the shop as timed between the chosen dates.') !!}
+        {{ html()->checkbox('is_timed_shop', $shop->is_timed_shop ?? 0, 1)->class('form-check-input shop-timed shop-toggle shop-field')->attribute('data-toggle', 'toggle')->id('is_timed_shop') }}
+        {{ html()->label('Set Timed Shop', 'is_timed_shop')->class('form-check-label ml-3') }} {!! add_help('Sets the shop as timed between the chosen dates.') !!}
     </div>
     <div class="card mb-3 shop-timed-quantity {{ $shop->is_timed_shop ? '' : 'hide' }}">
         <div class="card-body">
@@ -85,12 +85,12 @@
             <p>The time period below is between the specific dates and times, rather than an agnostic period like "every November".</p>
             <div class="row">
                 <div class="col-md-6 form-group">
-                    {!! Form::label('start_at', 'Start Time') !!} {!! add_help('The shop will cycle in at this date.') !!}
-                    {!! Form::text('start_at', $shop->start_at, ['class' => 'form-control datepicker']) !!}
+                    {{ html()->label('Start Time', 'start_at') }} {!! add_help('The shop will cycle in at this date.') !!}
+                    {{ html()->text('start_at', $shop->start_at)->class('form-control datepicker') }}
                 </div>
                 <div class="col-md-6 form-group">
-                    {!! Form::label('end_at', 'End Time') !!} {!! add_help('The shop will cycle out at this date.') !!}
-                    {!! Form::text('end_at', $shop->end_at, ['class' => 'form-control datepicker']) !!}
+                    {{ html()->label('End Time', 'end_at') }} {!! add_help('The shop will cycle out at this date.') !!}
+                    {{ html()->text('end_at', $shop->end_at)->class('form-control datepicker') }}
                 </div>
             </div>
 
@@ -98,15 +98,12 @@
             <p>Select the months and days of the week that the shop will be available.</p>
             <p><b>If months are set alongside days, the shop will only be available on those days in those months.</b></p>
             <div class="form-group">
-                {!! Form::label('shop_days', 'Days of the Week') !!}
-                {!! Form::select('shop_days[]', ['Monday' => 'Monday', 'Tuesday' => 'Tuesday', 'Wednesday' => 'Wednesday', 'Thursday' => 'Thursday', 'Friday' => 'Friday', 'Saturday' => 'Saturday', 'Sunday' => 'Sunday'], $shop->days ?? null, [
-                    'class' => 'form-control selectize',
-                    'multiple' => 'multiple',
-                ]) !!}
+                {{ html()->label('Days of the Week', 'shop_days') }}
+                {{ html()->select('shop_days[]', ['Monday' => 'Monday', 'Tuesday' => 'Tuesday', 'Wednesday' => 'Wednesday', 'Thursday' => 'Thursday', 'Friday' => 'Friday', 'Saturday' => 'Saturday', 'Sunday' => 'Sunday'], $shop->days ?? null)->class('form-control selectize')->attribute('multiple', 'multiple') }}
             </div>
             <div class="form-group">
-                {!! Form::label('shop_months', 'Months of the Year') !!}
-                {!! Form::select(
+                {{ html()->label('Months of the Year', 'shop_months') }}
+                {{ html()->select(
                     'shop_months[]',
                     [
                         'January' => 'January',
@@ -123,17 +120,16 @@
                         'December' => 'December',
                     ],
                     $shop->months ?? null,
-                    ['class' => 'form-control selectize', 'multiple' => 'multiple'],
-                ) !!}
+                )->class('form-control selectize')->attribute('multiple', 'multiple') }}
             </div>
         </div>
     </div>
 
     <div class="text-right">
-        {!! Form::submit($shop->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit($shop->id ? 'Edit' : 'Create')->class('btn btn-primary') }}
     </div>
 
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 
     @if ($shop->id)
         <hr />

@@ -13,18 +13,18 @@
         @endif
     </h1>
 
-    {!! Form::open(['url' => $limit->id ? 'admin/data/limits/edit/' . $limit->id : 'admin/data/limits/create', 'id' => 'form']) !!}
+    {{ html()->form('POST', $limit->id ? 'admin/data/limits/edit/' . $limit->id : 'admin/data/limits/create')->id('form')->open() }}
 
     <h3>Basic Information</h3>
 
     <div class="form-group">
-        {!! Form::label('Name') !!}
-        {!! Form::text('name', $limit->name, ['class' => 'form-control']) !!}
+        {{ html()->label('Name') }}
+        {{ html()->text('name', $limit->name)->class('form-control') }}
     </div>
 
     <div class="form-group">
-        {!! Form::label('Description (Optional)') !!}
-        {!! Form::textarea('description', $limit->description, ['class' => 'form-control wysiwyg']) !!}
+        {{ html()->label('Description (Optional)') }}
+        {{ html()->textarea('description', $limit->description)->class('form-control wysiwyg') }}
     </div>
 
     <hr />
@@ -34,13 +34,13 @@
     <p>Laravel facades are accessible. For example, you can use <code>Auth::user()</code> to get the currently authenticated user.</p>
     <div class="mb-3" id="editor" style="height: 500px; width: 100%;"></div>
 
-    {!! Form::hidden('evaluation', $limit->evaluation, ['id' => 'evaluation']) !!}
+    {{ html()->hidden('evaluation', $limit->evaluation)->id('evaluation') }}
 
     <div class="text-right">
-        {!! Form::submit($limit->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary', 'id' => 'submit']) !!}
+        {{ html()->submit($limit->id ? 'Edit' : 'Create')->class('btn btn-primary')->id('submit') }}
     </div>
 
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 @endsection
 
 @section('scripts')

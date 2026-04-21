@@ -17,46 +17,46 @@
         @endif
     </h1>
 
-    {!! Form::open(['url' => $category->id ? 'admin/data/prompt-categories/edit/' . $category->id : 'admin/data/prompt-categories/create', 'files' => true]) !!}
+    {{ html()->form('POST', $category->id ? 'admin/data/prompt-categories/edit/' . $category->id : 'admin/data/prompt-categories/create')->acceptsFiles()->open() }}
 
     <h3>Basic Information</h3>
 
     <div class="row">
         <div class="form-group col-md-6">
-            {!! Form::label('Name') !!}
-            {!! Form::text('name', $category->name, ['class' => 'form-control']) !!}
+            {{ html()->label('Name') }}
+            {{ html()->text('name', $category->name)->class('form-control') }}
         </div>
         <div class="form-group col-md-6">
-            {!! Form::label('Parent Category (Optional)') !!}
-            {!! Form::select('parent_id', $categories, $category->parent_id, ['class' => 'form-control', 'placeholder' => 'Select Parent Category']) !!}
+            {{ html()->label('Parent Category (Optional)') }}
+            {{ html()->select('parent_id', $categories, $category->parent_id)->class('form-control')->placeholder('Select Parent Category') }}
         </div>
     </div>
 
     <div class="form-group">
-        {!! Form::label('World Page Image (Optional)') !!} {!! add_help('This image is used only on the world information pages.') !!}
+        {{ html()->label('World Page Image (Optional)') }} {!! add_help('This image is used only on the world information pages.') !!}
         <div class="custom-file">
-            {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
-            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
+            {{ html()->label('Choose file...', 'image')->class('custom-file-label') }}
+            {{ html()->file('image')->class('custom-file-input') }}
         </div>
         <div class="text-muted">Recommended size: 200px x 200px</div>
         @if ($category->has_image)
             <div class="form-check">
-                {!! Form::checkbox('remove_image', 1, false, ['class' => 'form-check-input']) !!}
-                {!! Form::label('remove_image', 'Remove current image', ['class' => 'form-check-label']) !!}
+                {{ html()->checkbox('remove_image', false, 1)->class('form-check-input') }}
+                {{ html()->label('Remove current image', 'remove_image')->class('form-check-label') }}
             </div>
         @endif
     </div>
 
     <div class="form-group">
-        {!! Form::label('Description (Optional)') !!}
-        {!! Form::textarea('description', $category->description, ['class' => 'form-control wysiwyg']) !!}
+        {{ html()->label('Description (Optional)') }}
+        {{ html()->textarea('description', $category->description)->class('form-control wysiwyg') }}
     </div>
 
     <div class="text-right">
-        {!! Form::submit($category->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit($category->id ? 'Edit' : 'Create')->class('btn btn-primary') }}
     </div>
 
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 
     @if ($category->id)
         <h3>Preview</h3>

@@ -28,31 +28,30 @@
         </li>
     </ul>
 
-    {!! Form::open(['method' => 'GET', 'class' => 'form-inline justify-content-end']) !!}
+    {{ html()->form('GET')->class('form-inline justify-content-end')->open() }}
     <div class="form-inline justify-content-end">
         @if (!$isClaims)
             <div class="form-group ml-3 mb-3">
-                {!! Form::select('prompt_category_id', $categories, Request::get('prompt_category_id'), ['class' => 'form-control']) !!}
+                {{ html()->select('prompt_category_id', $categories, Request::get('prompt_category_id'))->class('form-control')->placeholder('Any Category') }}
             </div>
         @endif
     </div>
     <div class="form-inline justify-content-end">
         <div class="form-group ml-3 mb-3">
-            {!! Form::select(
+            {{ html()->select(
                 'sort',
                 [
                     'newest' => 'Newest First',
                     'oldest' => 'Oldest First',
                 ],
                 Request::get('sort') ?: 'oldest',
-                ['class' => 'form-control'],
-            ) !!}
+            )->class('form-control') }}
         </div>
         <div class="form-group ml-3 mb-3">
-            {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Search')->class('btn btn-primary') }}
         </div>
     </div>
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 
     {!! $submissions->render() !!}
     <div class="mb-4 logs-table">

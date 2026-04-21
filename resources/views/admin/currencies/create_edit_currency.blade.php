@@ -13,57 +13,57 @@
         @endif
     </h1>
 
-    {!! Form::open(['url' => $currency->id ? 'admin/data/currencies/edit/' . $currency->id : 'admin/data/currencies/create', 'files' => true]) !!}
+    {{ html()->form('POST', $currency->id ? 'admin/data/currencies/edit/' . $currency->id : 'admin/data/currencies/create')->acceptsFiles()->open() }}
 
     <h3>Basic Information</h3>
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                {!! Form::label('Currency Name') !!}
-                {!! Form::text('name', $currency->name, ['class' => 'form-control']) !!}
+                {{ html()->label('Currency Name') }}
+                {{ html()->text('name', $currency->name)->class('form-control') }}
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-group">
-                {!! Form::label('Abbreviation (Optional)') !!} {!! add_help('This will be used to denote the currency if an icon is not provided. If an abbreviation is not given, the currency\'s full name will be used.') !!}
-                {!! Form::text('abbreviation', $currency->abbreviation, ['class' => 'form-control']) !!}
+                {{ html()->label('Abbreviation (Optional)') }} {!! add_help('This will be used to denote the currency if an icon is not provided. If an abbreviation is not given, the currency\'s full name will be used.') !!}
+                {{ html()->text('abbreviation', $currency->abbreviation)->class('form-control') }}
             </div>
         </div>
         <div class="col-md-4 form-group">
-            {!! Form::label('Currency Category (Optional)') !!}
-            {!! Form::select('currency_category_id', $categories, $currency->currency_category_id, ['class' => 'form-control', 'placeholder' => 'No category']) !!}
+            {{ html()->label('Currency Category (Optional)') }}
+            {{ html()->select('currency_category_id', $categories, $currency->currency_category_id)->class('form-control')->placeholder('No category') }}
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                {!! Form::label('Icon Image (Optional)') !!} {!! add_help('This will be used to denote the currency. If not provided, the abbreviation will be used.') !!}
+                {{ html()->label('Icon Image (Optional)') }} {!! add_help('This will be used to denote the currency. If not provided, the abbreviation will be used.') !!}
                 <div class="custom-file">
-                    {!! Form::label('icon', 'Choose icon file...', ['class' => 'custom-file-label']) !!}
-                    {!! Form::file('icon', ['class' => 'custom-file-input']) !!}
+                    {{ html()->label('Choose icon file...', 'icon')->class('custom-file-label') }}
+                    {{ html()->file('icon')->class('custom-file-input') }}
                 </div>
                 <div class="text-muted">Recommended height: 16px</div>
                 @if ($currency->has_icon)
                     <div class="form-check">
-                        {!! Form::checkbox('remove_icon', 1, false, ['class' => 'form-check-input']) !!}
-                        {!! Form::label('remove_icon', 'Remove current image', ['class' => 'form-check-label']) !!}
+                        {{ html()->checkbox('remove_icon', false, 1)->class('form-check-input') }}
+                        {{ html()->label('Remove current image', 'remove_icon')->class('form-check-label') }}
                     </div>
                 @endif
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {!! Form::label('World Page Image (Optional)') !!} {!! add_help('This image is used only on the world information pages.') !!}
+                {{ html()->label('World Page Image (Optional)') }} {!! add_help('This image is used only on the world information pages.') !!}
                 <div class="custom-file">
-                    {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
-                    {!! Form::file('image', ['class' => 'custom-file-input']) !!}
+                    {{ html()->label('Choose file...', 'image')->class('custom-file-label') }}
+                    {{ html()->file('image')->class('custom-file-input') }}
                 </div>
                 <div class="text-muted">Recommended size: 200px x 200px</div>
                 @if ($currency->has_image)
                     <div class="form-check">
-                        {!! Form::checkbox('remove_image', 1, false, ['class' => 'form-check-input']) !!}
-                        {!! Form::label('remove_image', 'Remove current image', ['class' => 'form-check-label']) !!}
+                        {{ html()->checkbox('remove_image', false, 1)->class('form-check-input') }}
+                        {{ html()->label('Remove current image', 'remove_image')->class('form-check-label') }}
                     </div>
                 @endif
             </div>
@@ -71,8 +71,8 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('Description (Optional)') !!}
-        {!! Form::textarea('description', $currency->description, ['class' => 'form-control wysiwyg']) !!}
+        {{ html()->label('Description (Optional)') }}
+        {{ html()->textarea('description', $currency->description)->class('form-control wysiwyg') }}
     </div>
 
     <h3>Usage</h3>
@@ -80,7 +80,7 @@
     <div class="form-group">
         <div class="form-check">
             <label class="form-check-label">
-                {!! Form::checkbox('is_user_owned', 1, $currency->is_user_owned, ['class' => 'form-check-input', 'id' => 'userOwned']) !!}
+                {{ html()->checkbox('is_user_owned', $currency->is_user_owned, 1)->class('form-check-input')->id('userOwned') }}
                 Attach to Users
             </label>
         </div>
@@ -88,21 +88,21 @@
     <div class="card mb-3" id="userOptions">
         <div class="card-body">
             <div class="mb-2">
-                {!! Form::checkbox('is_displayed', 1, $currency->is_displayed, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-                {!! Form::label('is_displayed', 'Profile Display', ['class' => 'form-check-label ml-3']) !!} {!! add_help(
+                {{ html()->checkbox('is_displayed', $currency->is_displayed, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+                {{ html()->label('Profile Display', 'is_displayed')->class('form-check-label ml-3') }} {!! add_help(
                     'If this is on, it will be displayed on users\' main profile pages. Additionally, if the user does not own the currency, it will be displayed as 0 currency. (If this is off, currencies not owned will not be displayed at all.) All owned currencies will still be visible from the user\'s bank page.',
                 ) !!}
             </div>
             <div>
-                {!! Form::checkbox('allow_user_to_user', 1, $currency->allow_user_to_user, ['class' => 'form-check-input', 'data-toggle' => 'toggle', 'data-on' => 'Allow', 'data-off' => 'Disallow']) !!}
-                {!! Form::label('allow_user_to_user', 'User → User Transfers', ['class' => 'form-check-label ml-3']) !!} {!! add_help('This will allow users to transfer this currency to other users from their bank.') !!}
+                {{ html()->checkbox('allow_user_to_user', $currency->allow_user_to_user, 1)->class('form-check-input')->attribute('data-toggle', 'toggle')->attribute('data-on', 'Allow')->attribute('data-off', 'Disallow') }}
+                {{ html()->label('User → User Transfers', 'allow_user_to_user')->class('form-check-label ml-3') }} {!! add_help('This will allow users to transfer this currency to other users from their bank.') !!}
             </div>
         </div>
     </div>
     <div class="form-group">
         <div class="form-check">
             <label class="form-check-label">
-                {!! Form::checkbox('is_character_owned', 1, $currency->is_character_owned, ['class' => 'form-check-input', 'id' => 'characterOwned']) !!}
+                {{ html()->checkbox('is_character_owned', $currency->is_character_owned, 1)->class('form-check-input')->id('characterOwned') }}
                 Attach to Characters
             </label>
         </div>
@@ -110,12 +110,12 @@
     <div class="card mb-3" id="characterOptions">
         <div class="card-body">
             <div class="mb-2">
-                {!! Form::checkbox('allow_user_to_character', 1, $currency->allow_user_to_character, ['class' => 'form-check-input', 'data-toggle' => 'toggle', 'data-on' => 'Allow', 'data-off' => 'Disallow']) !!}
-                {!! Form::label('allow_user_to_character', 'User → Character Transfers', ['class' => 'form-check-label ml-3']) !!} {!! add_help('This will allow a user to transfer this currency to their own characters unidirectionally.') !!}
+                {{ html()->checkbox('allow_user_to_character', $currency->allow_user_to_character, 1)->class('form-check-input')->attribute('data-toggle', 'toggle')->attribute('data-on', 'Allow')->attribute('data-off', 'Disallow') }}
+                {{ html()->label('User → Character Transfers', 'allow_user_to_character')->class('form-check-label ml-3') }} {!! add_help('This will allow a user to transfer this currency to their own characters unidirectionally.') !!}
             </div>
             <div>
-                {!! Form::checkbox('allow_character_to_user', 1, $currency->allow_character_to_user, ['class' => 'form-check-input', 'data-toggle' => 'toggle', 'data-on' => 'Allow', 'data-off' => 'Disallow']) !!}
-                {!! Form::label('allow_character_to_user', 'Character → User Transfers', ['class' => 'form-check-label ml-3']) !!} {!! add_help('This will allow a user to transfer this currency from their own characters to their bank unidirectionally.') !!}
+                {{ html()->checkbox('allow_character_to_user', $currency->allow_character_to_user, 1)->class('form-check-input')->attribute('data-toggle', 'toggle')->attribute('data-on', 'Allow')->attribute('data-off', 'Disallow') }}
+                {{ html()->label('Character → User Transfers', 'allow_character_to_user')->class('form-check-label ml-3') }} {!! add_help('This will allow a user to transfer this currency from their own characters to their bank unidirectionally.') !!}
             </div>
         </div>
     </div>
@@ -139,8 +139,8 @@
             <div id="conversionList">
                 @foreach ($currency->conversions as $conversion)
                     <div class="d-flex mb-2">
-                        {!! Form::select('conversion_id[]', $currencies, $conversion->conversion_id, ['class' => 'form-control mr-2 conversion-select original', 'placeholder' => 'Select Currency']) !!}
-                        {!! Form::text('rate[]', $conversion->rate, ['class' => 'form-control mr-2', 'placeholder' => 'Conversion Rate']) !!}
+                        {{ html()->select('conversion_id[]', $currencies, $conversion->conversion_id)->class('form-control mr-2 conversion-select original')->placeholder('Select Currency') }}
+                        {{ html()->text('rate[]', $conversion->rate)->class('form-control mr-2')->placeholder('Conversion Rate') }}
                         <div class="form-control border-0 w-25">
                             {{ $conversion->ratio() }}
                         </div>
@@ -152,20 +152,20 @@
     @endif
 
     <div class="form-group">
-        {!! Form::checkbox('is_visible', 1, $currency->id ? $currency->is_visible : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-        {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned off, the currency will not be visible in the currencies list or available for selection in search. Permissioned staff will still be able to see them, however.') !!}
+        {{ html()->checkbox('is_visible', $currency->id ? $currency->is_visible : 1, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+        {{ html()->label('Is Visible', 'is_visible')->class('form-check-label ml-3') }} {!! add_help('If turned off, the currency will not be visible in the currencies list or available for selection in search. Permissioned staff will still be able to see them, however.') !!}
     </div>
 
     <div class="text-right">
-        {!! Form::submit($currency->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit($currency->id ? 'Edit' : 'Create')->class('btn btn-primary') }}
     </div>
 
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 
     @if ($currency->id && $currency->is_user_owned)
         <div class="conversion-row hide mb-2">
-            {!! Form::select('conversion_id[]', $currencies, null, ['class' => 'form-control mr-2 conversion-select', 'placeholder' => 'Select Currency']) !!}
-            {!! Form::text('rate[]', null, ['class' => 'form-control mr-2 conversion-rate', 'placeholder' => 'Conversion Rate']) !!}
+            {{ html()->select('conversion_id[]', $currencies, null)->class('form-control mr-2 conversion-select')->placeholder('Select Currency') }}
+            {{ html()->text('rate[]', null)->class('form-control mr-2 conversion-rate')->placeholder('Conversion Rate') }}
             <div class="form-control border-0 w-25">
             </div>
             <a href="#" class="remove-conversion btn btn-danger mb-2">×</a>

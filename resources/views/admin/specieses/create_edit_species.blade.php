@@ -13,50 +13,50 @@
         @endif
     </h1>
 
-    {!! Form::open(['url' => $species->id ? 'admin/data/species/edit/' . $species->id : 'admin/data/species/create', 'files' => true]) !!}
+    {{ html()->form('POST', $species->id ? 'admin/data/species/edit/' . $species->id : 'admin/data/species/create')->acceptsFiles()->open() }}
 
     <h3>Basic Information</h3>
 
     <div class="form-group">
-        {!! Form::label('Name') !!}
-        {!! Form::text('name', $species->name, ['class' => 'form-control']) !!}
+        {{ html()->label('Name') }}
+        {{ html()->text('name', $species->name)->class('form-control') }}
     </div>
 
     <div class="form-group">
-        {!! Form::label('Sub Masterlist (Optional)') !!} {!! add_help('This puts it onto a sub masterlist.') !!}
-        {!! Form::select('masterlist_sub_id', $sublists, $species->masterlist_sub_id, ['class' => 'form-control']) !!}
+        {{ html()->label('Sub Masterlist (Optional)') }} {!! add_help('This puts it onto a sub masterlist.') !!}
+        {{ html()->select('masterlist_sub_id', $sublists, $species->masterlist_sub_id)->class('form-control') }}
     </div>
 
     <div class="form-group">
-        {!! Form::label('World Page Image (Optional)') !!} {!! add_help('This image is used only on the world information pages.') !!}
+        {{ html()->label('World Page Image (Optional)') }} {!! add_help('This image is used only on the world information pages.') !!}
         <div class="custom-file">
-            {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
-            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
+            {{ html()->label('Choose file...', 'image')->class('custom-file-label') }}
+            {{ html()->file('image')->class('custom-file-input') }}
         </div>
         <div class="text-muted">Recommended size: 200px x 200px</div>
         @if ($species->has_image)
             <div class="form-check">
-                {!! Form::checkbox('remove_image', 1, false, ['class' => 'form-check-input']) !!}
-                {!! Form::label('remove_image', 'Remove current image', ['class' => 'form-check-label']) !!}
+                {{ html()->checkbox('remove_image', false, 1)->class('form-check-input') }}
+                {{ html()->label('Remove current image', 'remove_image')->class('form-check-label') }}
             </div>
         @endif
     </div>
 
     <div class="form-group">
-        {!! Form::label('Description (Optional)') !!}
-        {!! Form::textarea('description', $species->description, ['class' => 'form-control wysiwyg']) !!}
+        {{ html()->label('Description (Optional)') }}
+        {{ html()->textarea('description', $species->description)->class('form-control wysiwyg') }}
     </div>
 
     <div class="form-group">
-        {!! Form::checkbox('is_visible', 1, $species->id ? $species->is_visible : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-        {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned off, the species will not be visible in the species list or available for selection in search and design updates. Permissioned staff will still be able to add them to characters, however.') !!}
+        {{ html()->checkbox('is_visible', $species->id ? $species->is_visible : 1, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+        {{ html()->label('Is Visible', 'is_visible')->class('form-check-label ml-3') }} {!! add_help('If turned off, the species will not be visible in the species list or available for selection in search and design updates. Permissioned staff will still be able to add them to characters, however.') !!}
     </div>
 
     <div class="text-right">
-        {!! Form::submit($species->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit($species->id ? 'Edit' : 'Create')->class('btn btn-primary') }}
     </div>
 
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 
     @if ($species->id)
         <h3>Preview</h3>

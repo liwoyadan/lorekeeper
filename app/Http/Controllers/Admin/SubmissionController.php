@@ -25,7 +25,7 @@ class SubmissionController extends Controller {
     public function getSubmissionIndex(Request $request, $status = null) {
         $submissions = Submission::with('prompt')->where('status', $status ? ucfirst($status) : 'Pending')->whereNotNull('prompt_id');
         $data = $request->only(['prompt_category_id', 'sort']);
-        if (isset($data['prompt_category_id']) && $data['prompt_category_id'] != 'none') {
+        if (isset($data['prompt_category_id']) && $data['prompt_category_id']) {
             $submissions->whereHas('prompt', function ($query) use ($data) {
                 $query->where('prompt_category_id', $data['prompt_category_id']);
             });
@@ -45,7 +45,7 @@ class SubmissionController extends Controller {
 
         return view('admin.submissions.index', [
             'submissions' => $submissions->paginate(30)->appends($request->query()),
-            'categories'  => ['none' => 'Any Category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'categories'  => PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'isClaims'    => false,
         ]);
     }

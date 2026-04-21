@@ -43,13 +43,13 @@
                 </div>
                 <div class="modal-body">
                     {{-- Delete a file --}}
-                    {!! Form::open(['url' => 'admin/logs/delete', 'id' => 'deleteForm', 'class' => 'file-form']) !!}
+                    {{ html()->form('POST', 'admin/logs/delete')->id('deleteForm')->class('file-form')->open() }}
                     <p>This will permanently delete <strong id="deleteFilename"></strong>. Are you sure?</p>
                     <div class="text-right">
-                        {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+                        {{ html()->submit('Delete')->class('btn btn-danger') }}
                     </div>
-                    {!! Form::hidden('filename', '', ['class' => 'edit-filename']) !!}
-                    {!! Form::close() !!}
+                    {{ html()->hidden('filename', '')->class('edit-filename') }}
+                    {{ html()->form()->close() }}
 
                 </div>
             </div>

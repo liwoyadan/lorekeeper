@@ -14,59 +14,59 @@
         @endif
     </h1>
 
-    {!! Form::open(['url' => $sales->id ? 'admin/sales/edit/' . $sales->id : 'admin/sales/create', 'files' => true]) !!}
+    {{ html()->form('POST', $sales->id ? 'admin/sales/edit/' . $sales->id : 'admin/sales/create')->acceptsFiles()->open() }}
 
     <h3>Basic Information</h3>
 
     <div class="row">
         <div class="col-md-6 form-group">
-            {!! Form::label('Title') !!}
-            {!! Form::text('title', $sales->title, ['class' => 'form-control']) !!}
+            {{ html()->label('Title') }}
+            {{ html()->text('title', $sales->title)->class('form-control') }}
         </div>
 
         <div class="col-md-6 form-group">
-            {!! Form::label('Post Time (Optional)') !!} {!! add_help('This is the time that the sales post should be posted. Make sure the Is Viewable switch is off.') !!}
-            {!! Form::text('post_at', $sales->post_at, ['class' => 'form-control datepicker']) !!}
+            {{ html()->label('Post Time (Optional)') }} {!! add_help('This is the time that the sales post should be posted. Make sure the Is Viewable switch is off.') !!}
+            {{ html()->text('post_at', $sales->post_at)->class('form-control datepicker') }}
         </div>
     </div>
 
     <div class="form-group">
-        {!! Form::label('Header Image (Optional)') !!} {!! add_help('This image will show up above the sales content and on the meta-image.') !!}
+        {{ html()->label('Header Image (Optional)') }} {!! add_help('This image will show up above the sales content and on the meta-image.') !!}
         <div class="custom-file">
-            {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
-            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
+            {{ html()->label('Choose file...', 'image')->class('custom-file-label') }}
+            {{ html()->file('image')->class('custom-file-input') }}
         </div>
         @if ($sales->has_image)
             <div class="form-check">
-                {!! Form::checkbox('remove_image', 1, false, ['class' => 'form-check-input']) !!}
-                {!! Form::label('remove_image', 'Remove current image', ['class' => 'form-check-label']) !!}
+                {{ html()->checkbox('remove_image', false, 1)->class('form-check-input') }}
+                {{ html()->label('Remove current image', 'remove_image')->class('form-check-label') }}
             </div>
         @endif
     </div>
 
     <div class="form-group">
-        {!! Form::label('Post Content') !!}
-        {!! Form::textarea('text', $sales->text, ['class' => 'form-control wysiwyg']) !!}
+        {{ html()->label('Post Content') }}
+        {{ html()->textarea('text', $sales->text)->class('form-control wysiwyg') }}
     </div>
 
     <div class="row">
         <div class="col-md form-group">
-            {!! Form::checkbox('is_visible', 1, $sales->id ? $sales->is_visible : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-            {!! Form::label('is_visible', 'Is Viewable', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned off, the post will not be visible. If the post time is set, it will automatically become visible at/after the given post time, so make sure the post time is empty if you want it to be completely hidden.') !!}
+            {{ html()->checkbox('is_visible', $sales->id ? $sales->is_visible : 1, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+            {{ html()->label('Is Viewable', 'is_visible')->class('form-check-label ml-3') }} {!! add_help('If this is turned off, the post will not be visible. If the post time is set, it will automatically become visible at/after the given post time, so make sure the post time is empty if you want it to be completely hidden.') !!}
         </div>
         @if ($sales->id && $sales->is_visible)
             <div class="col-md form-group">
-                {!! Form::checkbox('bump', 1, null, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-                {!! Form::label('bump', 'Bump Sale', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If toggled on, this will alert users that there is a new sale. Best in conjunction with a clear notification of changes!') !!}
+                {{ html()->checkbox('bump', null, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+                {{ html()->label('Bump Sale', 'bump')->class('form-check-label ml-3') }} {!! add_help('If toggled on, this will alert users that there is a new sale. Best in conjunction with a clear notification of changes!') !!}
             </div>
         @endif
         <div class="col-md form-group">
-            {!! Form::checkbox('is_open', 1, $sales->id ? $sales->is_open : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-            {!! Form::label('is_open', 'Is Open', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Whether or not the sale is open; used to label the post in the title. This should be on unless the sale is finished; if a time is set for comments to open, the sale will be labeled as \'Preview\' instead.') !!}
+            {{ html()->checkbox('is_open', $sales->id ? $sales->is_open : 1, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+            {{ html()->label('Is Open', 'is_open')->class('form-check-label ml-3') }} {!! add_help('Whether or not the sale is open; used to label the post in the title. This should be on unless the sale is finished; if a time is set for comments to open, the sale will be labeled as \'Preview\' instead.') !!}
         </div>
         <div class="col-md form-group">
-            {!! Form::label('comments_open_at', 'Comments Open At (Optional)') !!} {!! add_help('The time at which comments open to members. Staff can post comments before this time.') !!}
-            {!! Form::text('comments_open_at', $sales->comments_open_at, ['class' => 'form-control datepicker']) !!}
+            {{ html()->label('Comments Open At (Optional)', 'comments_open_at') }} {!! add_help('The time at which comments open to members. Staff can post comments before this time.') !!}
+            {{ html()->text('comments_open_at', $sales->comments_open_at)->class('form-control datepicker') }}
         </div>
     </div>
 
@@ -92,10 +92,10 @@
     </div>
 
     <div class="text-right">
-        {!! Form::submit($sales->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit($sales->id ? 'Edit' : 'Create')->class('btn btn-primary') }}
     </div>
 
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 
     @include('admin.sales._character_select')
 

@@ -18,20 +18,20 @@
     @if (View::exists('admin.items.tags.' . $tag->tag . '_pre'))
         @include('admin.items.tags.' . $tag->tag . '_pre', ['item' => $item, 'tag' => $tag])
     @endif
-    {!! Form::open(['url' => 'admin/data/items/tag/' . $item->id . '/' . $tag->tag]) !!}
+    {{ html()->form('POST', 'admin/data/items/tag/' . $item->id . '/' . $tag->tag)->open() }}
 
     @if (View::exists('admin.items.tags.' . $tag->tag))
         @include('admin.items.tags.' . $tag->tag, ['item' => $item, 'tag' => $tag])
     @endif
 
-    {!! Form::checkbox('is_active', 1, $tag->is_active, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-    {!! Form::label('is_active', 'Active', ['class' => 'form-check-label ml-3']) !!}
+    {{ html()->checkbox('is_active', $tag->is_active, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+    {{ html()->label('Active', 'is_active')->class('form-check-label ml-3') }}
 
     <div class="text-right">
-        {!! Form::submit('Edit Tag Settings', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit('Edit Tag Settings')->class('btn btn-primary') }}
     </div>
 
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
     @if (View::exists('admin.items.tags.' . $tag->tag . '_post'))
         @include('admin.items.tags.' . $tag->tag . '_post', ['item' => $item, 'tag' => $tag])
     @endif

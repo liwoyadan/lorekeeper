@@ -78,14 +78,14 @@
             @comments(['type' => 'Staff-User', 'model' => $report, 'perPage' => 5])
         @endif
 
-        {!! Form::open(['url' => url()->current(), 'id' => 'reportForm']) !!}
+        {{ html()->form('POST', url()->current())->id('reportForm')->open() }}
         @if ($report->status == 'Assigned' && Auth::user()->id == $report->staff_id)
             @if (Auth::user()->hasPower('manage_reports'))
                 <div class="alert alert-warning">Please include a small paragraph on the solution and as many important details as you deem necessary, as the user will no longer be able to view the comments after the report is closed.</div>
             @endif
             <div class="form-group">
-                {!! Form::label('staff_comments', 'Staff Comments (Optional)') !!}
-                {!! Form::textarea('staff_comments', $report->staffComments, ['class' => 'form-control wysiwyg']) !!}
+                {{ html()->label('Staff Comments (Optional)', 'staff_comments') }}
+                {{ html()->textarea('staff_comments', $report->staffComments)->class('form-control wysiwyg') }}
             </div>
         @endif
         <div class="text-right">
@@ -96,7 +96,7 @@
                 <a href="#" class="btn btn-success" id="closalButton">Close</a>
             @endif
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
 
         <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">

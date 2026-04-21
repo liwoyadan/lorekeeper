@@ -39,10 +39,10 @@
             </div>
         @endif
         <div class="mb-4">
-            {!! Form::open(['url' => 'admin/data/rarities/sort']) !!}
-            {!! Form::hidden('sort', '', ['id' => 'sortableOrder']) !!}
-            {!! Form::submit('Save Order', ['class' => 'btn btn-primary']) !!}
-            {!! Form::close() !!}
+            {{ html()->form('POST', 'admin/data/rarities/sort')->open() }}
+            {{ html()->hidden('sort', '')->id('sortableOrder') }}
+            {{ html()->submit('Save Order')->class('btn btn-primary') }}
+            {{ html()->form()->close() }}
         </div>
     @endif
 

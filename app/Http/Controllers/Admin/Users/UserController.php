@@ -60,7 +60,7 @@ class UserController extends Controller {
 
         return view('admin.users.index', [
             'users' => $query->paginate(30)->appends($request->query()),
-            'ranks' => [0 => 'Any Rank'] + Rank::orderBy('ranks.sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'ranks' => Rank::orderBy('ranks.sort', 'DESC')->pluck('name', 'id')->toArray(),
             'count' => $query->count(),
         ]);
     }

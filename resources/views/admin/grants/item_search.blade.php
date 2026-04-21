@@ -12,16 +12,16 @@
     <p>Select an item to search for all occurrences of it in user and character inventories. It will only display currently extant stacks (where the count is more than zero). If a stack is currently "held" in a trade, design update, or submission, this
         will be stated and all held locations will be linked.</p>
 
-    {!! Form::open(['method' => 'GET', 'class' => '']) !!}
+    {{ html()->form('GET')->class('')->open() }}
     <div class="form-inline justify-content-end">
         <div class="form-group ml-3 mb-3">
-            {!! Form::select('item_id', $items, Request::get('item_id'), ['class' => 'form-control selectize', 'placeholder' => 'Select an Item', 'style' => 'width: 25em; max-width: 100%;']) !!}
+            {{ html()->select('item_id', $items, Request::get('item_id'))->class('form-control selectize')->placeholder('Select an Item')->attribute('style', 'width: 25em; max-width: 100%;') }}
         </div>
         <div class="form-group ml-3 mb-3">
-            {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Search')->class('btn btn-primary') }}
         </div>
     </div>
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 
     @if ($item)
         <h3>{{ $item->name }}</h3>

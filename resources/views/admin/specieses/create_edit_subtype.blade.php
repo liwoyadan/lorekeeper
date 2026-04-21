@@ -13,49 +13,49 @@
         @endif
     </h1>
 
-    {!! Form::open(['url' => $subtype->id ? 'admin/data/subtypes/edit/' . $subtype->id : 'admin/data/subtypes/create', 'files' => true]) !!}
+    {{ html()->form('POST', $subtype->id ? 'admin/data/subtypes/edit/' . $subtype->id : 'admin/data/subtypes/create')->acceptsFiles()->open() }}
 
     <h3>Basic Information</h3>
 
     <div class="form-group">
-        {!! Form::label('Name') !!}
-        {!! Form::text('name', $subtype->name, ['class' => 'form-control']) !!}
+        {{ html()->label('Name') }}
+        {{ html()->text('name', $subtype->name)->class('form-control') }}
     </div>
 
     <div class="form-group">
-        {!! Form::label('Species') !!}
-        {!! Form::select('species_id', $specieses, $subtype->species_id, ['class' => 'form-control']) !!}
+        {{ html()->label('Species') }}
+        {{ html()->select('species_id', $specieses, $subtype->species_id)->class('form-control') }}
     </div>
 
     <div class="form-group">
-        {!! Form::label('World Page Image (Optional)') !!} {!! add_help('This image is used only on the world information pages.') !!}
+        {{ html()->label('World Page Image (Optional)') }} {!! add_help('This image is used only on the world information pages.') !!}
         <div class="custom-file">
-            {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
-            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
+            {{ html()->label('Choose file...', 'image')->class('custom-file-label') }}
+            {{ html()->file('image')->class('custom-file-input') }}
         </div>
         <div class="text-muted">Recommended size: 200px x 200px</div>
         @if ($subtype->has_image)
             <div class="form-check">
-                {!! Form::checkbox('remove_image', 1, false, ['class' => 'form-check-input']) !!}
-                {!! Form::label('remove_image', 'Remove current image', ['class' => 'form-check-label']) !!}
+                {{ html()->checkbox('remove_image', false, 1)->class('form-check-input') }}
+                {{ html()->label('Remove current image', 'remove_image')->class('form-check-label') }}
             </div>
         @endif
     </div>
 
     <div class="form-group">
-        {!! Form::label('Description (Optional)') !!}
-        {!! Form::textarea('description', $subtype->description, ['class' => 'form-control wysiwyg']) !!}
+        {{ html()->label('Description (Optional)') }}
+        {{ html()->textarea('description', $subtype->description)->class('form-control wysiwyg') }}
     </div>
 
     <div class="form-group">
-        {!! Form::checkbox('is_visible', 1, $subtype->id ? $subtype->is_visible : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-        {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned off, the subtype will not be visible in the subtypes list or available for selection in search and design updates. Permissioned staff will still be able to add them to characters, however.') !!}
+        {{ html()->checkbox('is_visible', $subtype->id ? $subtype->is_visible : 1, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+        {{ html()->label('Is Visible', 'is_visible')->class('form-check-label ml-3') }} {!! add_help('If turned off, the subtype will not be visible in the subtypes list or available for selection in search and design updates. Permissioned staff will still be able to add them to characters, however.') !!}
     </div>
     <div class="text-right">
-        {!! Form::submit($subtype->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit($subtype->id ? 'Edit' : 'Create')->class('btn btn-primary') }}
     </div>
 
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 
     @if ($subtype->id)
         <h3>Preview</h3>

@@ -13,65 +13,65 @@
         @endif
     </h1>
 
-    {!! Form::open(['url' => $feature->id ? 'admin/data/traits/edit/' . $feature->id : 'admin/data/traits/create', 'files' => true]) !!}
+    {{ html()->form('POST', $feature->id ? 'admin/data/traits/edit/' . $feature->id : 'admin/data/traits/create')->acceptsFiles()->open() }}
 
     <h3>Basic Information</h3>
 
     <div class="row">
         <div class="col-md-6 form-group">
-            {!! Form::label('Name') !!}
-            {!! Form::text('name', $feature->name, ['class' => 'form-control']) !!}
+            {{ html()->label('Name') }}
+            {{ html()->text('name', $feature->name)->class('form-control') }}
         </div>
         <div class="col-md-6 form-group">
-            {!! Form::label('Rarity') !!}
-            {!! Form::select('rarity_id', $rarities, $feature->rarity_id, ['class' => 'form-control']) !!}
+            {{ html()->label('Rarity') }}
+            {{ html()->select('rarity_id', $rarities, $feature->rarity_id)->class('form-control') }}
         </div>
     </div>
 
     <div class="form-group">
-        {!! Form::label('World Page Image (Optional)') !!} {!! add_help('This image is used only on the world information pages.') !!}
+        {{ html()->label('World Page Image (Optional)') }} {!! add_help('This image is used only on the world information pages.') !!}
         <div class="custom-file">
-            {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
-            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
+            {{ html()->label('Choose file...', 'image')->class('custom-file-label') }}
+            {{ html()->file('image')->class('custom-file-input') }}
         </div>
         <div class="text-muted">Recommended size: 200px x 200px</div>
         @if ($feature->has_image)
             <div class="form-check">
-                {!! Form::checkbox('remove_image', 1, false, ['class' => 'form-check-input']) !!}
-                {!! Form::label('remove_image', 'Remove current image', ['class' => 'form-check-label']) !!}
+                {{ html()->checkbox('remove_image', false, 1)->class('form-check-input') }}
+                {{ html()->label('Remove current image', 'remove_image')->class('form-check-label') }}
             </div>
         @endif
     </div>
 
     <div class="row">
         <div class="col-md-4 form-group">
-            {!! Form::label('Trait Category (Optional)') !!}
-            {!! Form::select('feature_category_id', $categories, $feature->feature_category_id, ['class' => 'form-control']) !!}
+            {{ html()->label('Trait Category (Optional)') }}
+            {{ html()->select('feature_category_id', $categories, $feature->feature_category_id)->class('form-control') }}
         </div>
         <div class="col-md-4 form-group">
-            {!! Form::label('Species Restriction (Optional)') !!}
-            {!! Form::select('species_id', $specieses, $feature->species_id, ['class' => 'form-control', 'id' => 'species']) !!}
+            {{ html()->label('Species Restriction (Optional)') }}
+            {{ html()->select('species_id', $specieses, $feature->species_id)->class('form-control')->id('species') }}
         </div>
         <div class="col-md-4 form-group" id="subtypes">
-            {!! Form::label('Subtypes (Optional)') !!} {!! add_help('This is cosmetic and does not limit choice of traits in selections.') !!}
-            {!! Form::select('subtype_ids[]', $subtypes, $feature->subtypes, ['class' => 'form-control', 'id' => 'subtype', 'multiple', 'placeholder' => 'Pick a species first.']) !!}
+            {{ html()->label('Subtypes (Optional)') }} {!! add_help('This is cosmetic and does not limit choice of traits in selections.') !!}
+            {{ html()->select('subtype_ids[]', $subtypes, $feature->subtypes)->class('form-control')->id('subtype')->attribute('multiple', 'multiple')->placeholder('Pick a species first.') }}
         </div>
     </div>
     <div class="form-group">
-        {!! Form::label('Description (Optional)') !!}
-        {!! Form::textarea('description', $feature->description, ['class' => 'form-control wysiwyg']) !!}
+        {{ html()->label('Description (Optional)') }}
+        {{ html()->textarea('description', $feature->description)->class('form-control wysiwyg') }}
     </div>
 
     <div class="form-group">
-        {!! Form::checkbox('is_visible', 1, $feature->id ? $feature->is_visible : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-        {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned off, the trait will not be visible in the trait list or available for selection in search and design updates. Permissioned staff will still be able to add them to characters, however.') !!}
+        {{ html()->checkbox('is_visible', $feature->id ? $feature->is_visible : 1, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+        {{ html()->label('Is Visible', 'is_visible')->class('form-check-label ml-3') }} {!! add_help('If turned off, the trait will not be visible in the trait list or available for selection in search and design updates. Permissioned staff will still be able to add them to characters, however.') !!}
     </div>
 
     <div class="text-right">
-        {!! Form::submit($feature->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit($feature->id ? 'Edit' : 'Create')->class('btn btn-primary') }}
     </div>
 
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 
     @if ($feature->id)
         <h3>Preview</h3>

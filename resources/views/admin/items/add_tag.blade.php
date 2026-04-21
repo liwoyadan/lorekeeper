@@ -11,16 +11,16 @@
 
     <p>Select an item tag to add to the item. You cannot add duplicate tags to the same item (they are removed from the selection). You will be taken to the parameter editing page after adding the tag. </p>
 
-    {!! Form::open(['url' => 'admin/data/items/tag/' . $item->id]) !!}
+    {{ html()->form('POST', 'admin/data/items/tag/' . $item->id)->open() }}
 
     <div class="form-group">
-        {!! Form::label('tag', 'Tag') !!}
-        {!! Form::select('tag', [0 => 'Select a Tag'] + $tags, null, ['class' => 'form-control']) !!}
+        {{ html()->label('Tag', 'tag') }}
+        {{ html()->select('tag', $tags, null)->class('form-control')->placeholder('Select a Tag') }}
     </div>
 
     <div class="text-right">
-        {!! Form::submit('Add Tag', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit('Add Tag')->class('btn btn-primary') }}
     </div>
 
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 @endsection

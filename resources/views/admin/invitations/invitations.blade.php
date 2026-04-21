@@ -12,9 +12,9 @@
     <p>Invitation keys can be used to register an account when the site is closed for registration (see the setting "is_registration_open" in <a href="{{ url('admin/settings') }}">Site Settings</a>). Users will be able to register by entering the code
         that is generated with the key. Generated invitations can be deleted only if they have not been used.</p>
 
-    {!! Form::open(['url' => 'admin/invitations/create', 'class' => 'text-right mb-3']) !!}
-    {!! Form::submit('Generate New Invitation', ['class' => 'btn btn-primary']) !!}
-    {!! Form::close() !!}
+    {{ html()->form('POST', 'admin/invitations/create')->class('text-right mb-3')->open() }}
+    {{ html()->submit('Generate New Invitation')->class('btn btn-primary') }}
+    {{ html()->form()->close() }}
     @if (!count($invitations))
         <p>No invitations found.</p>
     @else
@@ -73,9 +73,9 @@
                             <div class="col-6 col-md-1">
                                 <div class="logs-table-cell">
                                     @if (!$invitation->recipient_id)
-                                        {!! Form::open(['url' => 'admin/invitations/delete/' . $invitation->id]) !!}
-                                        {!! Form::submit('Delete', ['class' => 'btn btn-danger  py-0 px-1']) !!}
-                                        {!! Form::close() !!}
+                                        {{ html()->form('POST', 'admin/invitations/delete/' . $invitation->id)->open() }}
+                                        {{ html()->submit('Delete')->class('btn btn-danger  py-0 px-1') }}
+                                        {{ html()->form()->close() }}
                                     @endif
                                 </div>
                             </div>

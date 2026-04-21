@@ -96,7 +96,7 @@
             </div>
         @endif
 
-        {!! Form::open(['url' => url()->current(), 'id' => 'submissionForm']) !!}
+        {{ html()->form('POST', url()->current())->id('submissionForm')->open() }}
 
         <h2>Rewards</h2>
         @include('widgets._loot_select', ['loots' => $submission->rewards, 'showLootTables' => true, 'showRaffles' => true])
@@ -170,8 +170,8 @@
         @endif
 
         <div class="form-group">
-            {!! Form::label('staff_comments', 'Staff Comments (Optional)') !!}
-            {!! Form::textarea('staff_comments', $submission->staffComments, ['class' => 'form-control wysiwyg']) !!}
+            {{ html()->label('Staff Comments (Optional)', 'staff_comments') }}
+            {{ html()->textarea('staff_comments', $submission->staffComments)->class('form-control wysiwyg') }}
         </div>
 
         <div class="text-right">
@@ -180,7 +180,7 @@
             <a href="#" class="btn btn-success" id="approvalButton">Approve</a>
         </div>
 
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
 
         <div id="characterComponents" class="hide">
             <div class="submission-character mb-3 card">
@@ -195,8 +195,8 @@
                         </div>
                         <div class="col-md-10">
                             <div class="form-group">
-                                {!! Form::label('slug', 'Character Code') !!}
-                                {!! Form::select('slug[]', $characters, null, ['class' => 'form-control character-code', 'placeholder' => 'Select Character']) !!}
+                                {{ html()->label('Character Code', 'slug') }}
+                                {{ html()->select('slug[]', $characters, null)->class('form-control character-code')->placeholder('Select Character') }}
                             </div>
                             <div class="character-rewards hide">
                                 <h4>Character Rewards</h4>
@@ -228,22 +228,22 @@
 
                     @if ($expanded_rewards)
                         <td>
-                            {!! Form::select('character_rewardable_type[]', ['Item' => 'Item', 'Currency' => 'Currency', 'LootTable' => 'Loot Table'], null, ['class' => 'form-control character-rewardable-type', 'placeholder' => 'Select Reward Type']) !!}
+                            {{ html()->select('character_rewardable_type[]', ['Item' => 'Item', 'Currency' => 'Currency', 'LootTable' => 'Loot Table'], null)->class('form-control character-rewardable-type')->placeholder('Select Reward Type') }}
                         </td>
                         <td class="lootDivs">
-                            <div class="character-currencies hide">{!! Form::select('character_rewardable_id[]', $characterCurrencies, 0, ['class' => 'form-control character-currency-id', 'placeholder' => 'Select Currency']) !!}</div>
-                            <div class="character-items hide">{!! Form::select('character_rewardable_id[]', $items, 0, ['class' => 'form-control character-item-id', 'placeholder' => 'Select Item']) !!}</div>
-                            <div class="character-tables hide">{!! Form::select('character_rewardable_id[]', $tables, 0, ['class' => 'form-control character-table-id', 'placeholder' => 'Select Loot Table']) !!}</div>
+                            <div class="character-currencies hide">{{ html()->select('character_rewardable_id[]', $characterCurrencies, 0)->class('form-control character-currency-id')->placeholder('Select Currency') }}</div>
+                            <div class="character-items hide">{{ html()->select('character_rewardable_id[]', $items, 0)->class('form-control character-item-id')->placeholder('Select Item') }}</div>
+                            <div class="character-tables hide">{{ html()->select('character_rewardable_id[]', $tables, 0)->class('form-control character-table-id')->placeholder('Select Loot Table') }}</div>
                         </td>
                     @else
                         <td class="lootDivs">
-                            {!! Form::hidden('character_rewardable_type[]', 'Currency', ['class' => 'character-rewardable-type']) !!}
-                            {!! Form::select('character_rewardable_id[]', $characterCurrencies, 0, ['class' => 'form-control character-currency-id', 'placeholder' => 'Select Currency']) !!}
+                            {{ html()->hidden('character_rewardable_type[]', 'Currency')->class('character-rewardable-type') }}
+                            {{ html()->select('character_rewardable_id[]', $characterCurrencies, 0)->class('form-control character-currency-id')->placeholder('Select Currency') }}
                         </td>
                     @endif
 
                     <td class="d-flex align-items-center">
-                        {!! Form::text('character_quantity[]', 0, ['class' => 'form-control mr-2  character-rewardable-quantity']) !!}
+                        {{ html()->text('character_quantity[]', 0)->class('form-control mr-2  character-rewardable-quantity') }}
                         <a href="#" class="remove-reward d-block"><i class="fas fa-times text-muted"></i></a>
                     </td>
                 </tr>

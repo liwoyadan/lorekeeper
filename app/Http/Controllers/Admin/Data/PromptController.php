@@ -157,7 +157,7 @@ class PromptController extends Controller {
     public function getPromptIndex(Request $request) {
         $query = Prompt::query()->with('category');
         $data = $request->only(['prompt_category_id', 'name', 'sort', 'open_prompts']);
-        if (isset($data['prompt_category_id']) && $data['prompt_category_id'] != 'none') {
+        if (isset($data['prompt_category_id']) && $data['prompt_category_id']) {
             if ($data['prompt_category_id'] == 'withoutOption') {
                 $query->whereNull('prompt_category_id');
             } else {
@@ -219,7 +219,7 @@ class PromptController extends Controller {
 
         return view('admin.prompts.prompts', [
             'prompts'    => $query->paginate(20)->appends($request->query()),
-            'categories' => ['none' => 'Any Category'] + ['withoutOption' => 'Without Category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'categories' => ['withoutOption' => 'Without Category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
         ]);
     }
 

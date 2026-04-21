@@ -42,14 +42,14 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="logs-table-cell">
-                                    {!! Form::open(['url' => 'admin/settings/' . $setting->key, 'class' => 'd-flex justify-content-end']) !!}
+                                    {{ html()->form('POST', 'admin/settings/' . $setting->key)->class('d-flex justify-content-end')->open() }}
                                     <div class="form-group mr-3 mb-3">
-                                        {!! Form::text('value', $setting->value, ['class' => 'form-control']) !!}
+                                        {{ html()->text('value', $setting->value)->class('form-control') }}
                                     </div>
                                     <div class="form-group mb-3">
-                                        {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+                                        {{ html()->submit('Edit')->class('btn btn-primary') }}
                                     </div>
-                                    {!! Form::close() !!}
+                                    {{ html()->form()->close() }}
                                 </div>
                             </div>
                         </div>

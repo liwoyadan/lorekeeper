@@ -1,20 +1,20 @@
 @if ($rank)
-    {!! Form::open(['url' => $rank->id ? 'admin/users/ranks/edit/' . $rank->id : 'admin/users/ranks/create']) !!}
+    {{ html()->form('POST', $rank->id ? 'admin/users/ranks/edit/' . $rank->id : 'admin/users/ranks/create')->open() }}
 
     <div class="form-group">
-        {!! Form::label('Rank Name') !!}
-        {!! Form::text('name', $rank->name, ['class' => 'form-control']) !!}
+        {{ html()->label('Rank Name') }}
+        {{ html()->text('name', $rank->name)->class('form-control') }}
     </div>
 
     <div class="form-group">
-        {!! Form::label('Description (optional)') !!}
-        {!! Form::textarea('description', $rank->description, ['class' => 'form-control']) !!}
+        {{ html()->label('Description (optional)') }}
+        {{ html()->textarea('description', $rank->description)->class('form-control') }}
     </div>
 
     <div class="form-group">
-        {!! Form::label('Colour (Hex code; optional)') !!}
+        {{ html()->label('Colour (Hex code; optional)') }}
         <div class="input-group cp">
-            {!! Form::text('color', $rank->color, ['class' => 'form-control']) !!}
+            {{ html()->text('color', $rank->color)->class('form-control') }}
             <span class="input-group-append">
                 <span class="input-group-text colorpicker-input-addon"><i></i></span>
             </span>
@@ -23,13 +23,13 @@
 
     <div class="form-group row px-0 mx-0">
         <div class="col-5 align-self-center">
-            {!! Form::label('Icon (Font-awesome code; optional)') !!}
+            {{ html()->label('Icon (Font-awesome code; optional)') }}
         </div>
         <div class="col-1 align-self-center text-right p-0">
             <i id="rankitem" class="{{ $rank->icon }}"></i>
         </div>
         <div class="input-group col-6">
-            {!! Form::text('icon', $rank->icon, ['class' => 'form-control', 'id' => 'icon']) !!}
+            {{ html()->text('icon', $rank->icon)->class('form-control')->id('icon') }}
         </div>
     </div>
 
@@ -39,8 +39,8 @@
             <div class="row">
                 @foreach ($powers as $key => $power)
                     <div class="col-md-6 form-check">
-                        {!! Form::checkbox('powers[' . $key . ']', $key, $rankPowers ? isset($rankPowers[$key]) : false, ['class' => 'form-check-input', 'id' => 'powers[' . $key . ']']) !!}
-                        {!! Form::label('powers[' . $key . ']', $power['name'], ['class' => 'form-check-label']) !!}
+                        {{ html()->checkbox('powers[' . $key . ']', $rankPowers ? isset($rankPowers[$key]) : false, $key)->class('form-check-input')->id('powers[' . $key . ']') }}
+                        {{ html()->label($power['name'], 'powers[' . $key . ']')->class('form-check-label') }}
                         {!! add_help($power['description']) !!}
                     </div>
                 @endforeach
@@ -53,10 +53,10 @@
     @endif
 
     <div class="text-right">
-        {!! Form::submit($rank->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit($rank->id ? 'Edit' : 'Create')->class('btn btn-primary') }}
     </div>
 
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 
     <script>
         $(document).ready(function() {

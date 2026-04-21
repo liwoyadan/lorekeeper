@@ -73,24 +73,24 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                        {!! Form::open(['url' => 'admin/files/folder/rename', 'id' => 'renameFolderForm', 'class' => 'folder-form']) !!}
+                        {{ html()->form('POST', 'admin/files/folder/rename')->id('renameFolderForm')->class('folder-form')->open() }}
                         <p>This will rename the folder. Folders containing files cannot be renamed. Use alphanumeric characters and dashes/underscores only.</p>
                         <div class="form-group">
-                            {!! Form::label('name', 'New Name') !!}
-                            {!! Form::text('name', $folder, ['class' => 'form-control', 'id' => 'editFolderName']) !!}
+                            {{ html()->label('New Name', 'name') }}
+                            {{ html()->text('name', $folder)->class('form-control')->id('editFolderName') }}
                         </div>
                         <div class="text-right">
-                            {!! Form::submit('Rename', ['class' => 'btn btn-primary']) !!}
+                            {{ html()->submit('Rename')->class('btn btn-primary') }}
                         </div>
-                        {!! Form::hidden('folder', $folder, ['class' => 'edit-folder']) !!}
-                        {!! Form::close() !!}
-                        {!! Form::open(['url' => 'admin/files/folder/delete', 'id' => 'deleteFolderForm', 'class' => 'folder-form']) !!}
+                        {{ html()->hidden('folder', $folder)->class('edit-folder') }}
+                        {{ html()->form()->close() }}
+                        {{ html()->form('POST', 'admin/files/folder/delete')->id('deleteFolderForm')->class('folder-form')->open() }}
                         <p>This will permanently delete <strong>{{ $folder }}</strong>. Are you sure?</p>
                         <div class="text-right">
-                            {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+                            {{ html()->submit('Delete')->class('btn btn-danger') }}
                         </div>
-                        {!! Form::hidden('folder', $folder, ['class' => 'edit-folder']) !!}
-                        {!! Form::close() !!}
+                        {{ html()->hidden('folder', $folder)->class('edit-folder') }}
+                        {{ html()->form()->close() }}
                     </div>
                 </div>
             </div>
@@ -104,16 +104,16 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                        {!! Form::open(['url' => 'admin/files/folder/create']) !!}
+                        {{ html()->form('POST', 'admin/files/folder/create')->open() }}
                         <p>This will create a new folder in the root folder. Use alphanumeric characters and dashes/underscores only.</p>
                         <div class="form-group">
-                            {!! Form::label('name', 'Folder Name') !!}
-                            {!! Form::text('name', '', ['class' => 'form-control']) !!}
+                            {{ html()->label('Folder Name', 'name') }}
+                            {{ html()->text('name', '')->class('form-control') }}
                         </div>
                         <div class="text-right">
-                            {!! Form::submit('Create', ['class' => 'btn btn-primary']) !!}
+                            {{ html()->submit('Create')->class('btn btn-primary') }}
                         </div>
-                        {!! Form::close() !!}
+                        {{ html()->form()->close() }}
                     </div>
                 </div>
             </div>
@@ -129,72 +129,72 @@
                 </div>
                 <div class="modal-body">
                     {{-- Move a file --}}
-                    {!! Form::open(['url' => 'admin/files/move', 'id' => 'moveForm', 'class' => 'file-form']) !!}
+                    {{ html()->form('POST', 'admin/files/move')->id('moveForm')->class('file-form')->open() }}
                     <p>This will move the file. If a file exists in the destination folder with the same name, it will be overwritten.</p>
                     <div class="form-group">
-                        {!! Form::label('folder', 'Destination Folder') !!}
+                        {{ html()->label('Destination Folder', 'folder') }}
                         <?php
                         $folderSelection = ['root' => 'Root'];
                         foreach ($folders as $f) {
                             $folderSelection[basename($f)] = basename($f);
                         }
                         ?>
-                        {!! Form::select('destination', $folderSelection, null, ['class' => 'form-control']) !!}
+                        {{ html()->select('destination', $folderSelection, null)->class('form-control') }}
                     </div>
                     <div class="text-right">
-                        {!! Form::submit('Move', ['class' => 'btn btn-primary']) !!}
+                        {{ html()->submit('Move')->class('btn btn-primary') }}
                     </div>
-                    {!! Form::hidden('filename', '', ['class' => 'edit-filename']) !!}
-                    {!! Form::hidden('folder', $folder, ['class' => 'edit-folder']) !!}
-                    {!! Form::close() !!}
+                    {{ html()->hidden('filename', '')->class('edit-filename') }}
+                    {{ html()->hidden('folder', $folder)->class('edit-folder') }}
+                    {{ html()->form()->close() }}
 
                     {{-- Rename a file --}}
-                    {!! Form::open(['url' => 'admin/files/rename', 'id' => 'renameForm', 'class' => 'file-form']) !!}
+                    {{ html()->form('POST', 'admin/files/rename')->id('renameForm')->class('file-form')->open() }}
                     <p>This will rename the file. If a file exists in the same folder with the same name, it will be overwritten.</p>
                     <p>Use alphanumeric characters and dashes/underscores only. Include the file extension as well - you can change the file extension, but this is not recommended.</p>
                     <div class="form-group">
-                        {!! Form::label('name', 'New Name') !!}
-                        {!! Form::text('name', '', ['class' => 'form-control', 'id' => 'editFileName']) !!}
+                        {{ html()->label('New Name', 'name') }}
+                        {{ html()->text('name', '')->class('form-control')->id('editFileName') }}
                     </div>
                     <div class="text-right">
-                        {!! Form::submit('Rename', ['class' => 'btn btn-primary']) !!}
+                        {{ html()->submit('Rename')->class('btn btn-primary') }}
                     </div>
-                    {!! Form::hidden('filename', '', ['class' => 'edit-filename']) !!}
-                    {!! Form::hidden('folder', $folder, ['class' => 'edit-folder']) !!}
-                    {!! Form::close() !!}
+                    {{ html()->hidden('filename', '')->class('edit-filename') }}
+                    {{ html()->hidden('folder', $folder)->class('edit-folder') }}
+                    {{ html()->form()->close() }}
 
                     {{-- Delete a file --}}
-                    {!! Form::open(['url' => 'admin/files/delete', 'id' => 'deleteForm', 'class' => 'file-form']) !!}
+                    {{ html()->form('POST', 'admin/files/delete')->id('deleteForm')->class('file-form')->open() }}
                     <p>This will permanently delete <strong id="deleteFilename"></strong>. Are you sure?</p>
                     <div class="text-right">
-                        {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+                        {{ html()->submit('Delete')->class('btn btn-danger') }}
                     </div>
-                    {!! Form::hidden('filename', '', ['class' => 'edit-filename']) !!}
-                    {!! Form::hidden('folder', $folder, ['class' => 'edit-folder']) !!}
-                    {!! Form::close() !!}
+                    {{ html()->hidden('filename', '')->class('edit-filename') }}
+                    {{ html()->hidden('folder', $folder)->class('edit-folder') }}
+                    {{ html()->form()->close() }}
 
                     {{-- Upload a file --}}
-                    {!! Form::open(['url' => 'admin/files/upload', 'id' => 'uploadForm', 'class' => 'file-form', 'files' => true]) !!}
+                    {{ html()->form('POST', 'admin/files/upload')->id('uploadForm')->class('file-form')->acceptsFiles()->open() }}
                     <p>Select a file to upload. (Maximum size {{ min(ini_get('upload_max_filesize'), ini_get('post_max_size')) }}B.)</p>
                     <div id="fileList">
                         <div class="d-flex mb-2">
                             <div class="custom-file">
-                                {!! Form::label('files[]', 'No file selected.', ['class' => 'custom-file-label']) !!}
-                                {!! Form::file('files[]', ['class' => 'custom-file-input']) !!}
+                                {{ html()->label('No file selected.', 'files[]')->class('custom-file-label') }}
+                                {{ html()->file('files[]')->class('custom-file-input') }}
                             </div>
                         </div>
                     </div>
                     <div class="text-right">
-                        {!! Form::submit('Upload', ['class' => 'btn btn-primary']) !!}
+                        {{ html()->submit('Upload')->class('btn btn-primary') }}
                     </div>
-                    {!! Form::hidden('folder', $folder, ['class' => 'edit-folder']) !!}
+                    {{ html()->hidden('folder', $folder)->class('edit-folder') }}
                     <div class="btn btn-primary" id="add-file">
                         Add File
                     </div>
-                    {!! Form::close() !!}
+                    {{ html()->form()->close() }}
                     <div class="file-row custom-file hide mb-2">
-                        {!! Form::label('files[]', 'No file selected.', ['class' => 'custom-file-label']) !!}
-                        {!! Form::file('files[]', ['class' => 'custom-file-input']) !!}
+                        {{ html()->label('No file selected.', 'files[]')->class('custom-file-label') }}
+                        {{ html()->file('files[]')->class('custom-file-input') }}
                     </div>
                 </div>
             </div>

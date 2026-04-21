@@ -19,16 +19,16 @@
                     <div style="width: 100%;">
                         <h3 class="card-heading">{{ $image['name'] }} <a href="{{ asset('images/' . $image['filename']) }}" class="btn btn-info btn-sm float-right">View Current</a></h3>
                         <p>{{ $image['description'] }}</p>
-                        {!! Form::open(['url' => 'admin/images/upload', 'files' => true]) !!}
+                        {{ html()->form('POST', 'admin/images/upload')->acceptsFiles()->open() }}
                         <div class="d-flex">
                             <div class="custom-file">
-                                {!! Form::label('file', 'Choose file...', ['class' => 'custom-file-label']) !!}
-                                {!! Form::file('file', ['class' => 'custom-file-input']) !!}
+                                {{ html()->label('Choose file...', 'file')->class('custom-file-label') }}
+                                {{ html()->file('file')->class('custom-file-input') }}
                             </div>
-                            {!! Form::submit('Upload', ['class' => 'ml-1 btn btn-primary']) !!}
+                            {{ html()->submit('Upload')->class('ml-1 btn btn-primary') }}
                         </div>
-                        {!! Form::hidden('key', $key) !!}
-                        {!! Form::close() !!}
+                        {{ html()->hidden('key', $key) }}
+                        {{ html()->form()->close() }}
                     </div>
                 </div>
             </div>
@@ -43,15 +43,15 @@
         <div class="card-body">
             <div>
                 <h3 class="card-heading">CSS <a href="{{ asset('css/custom.css') }}" class="btn btn-info btn-sm float-right">View Current</a></h3>
-                {!! Form::open(['url' => 'admin/images/upload/css', 'files' => true]) !!}
+                {{ html()->form('POST', 'admin/images/upload/css')->acceptsFiles()->open() }}
                 <div class="d-flex">
                     <div class="custom-file">
-                        {!! Form::label('file', 'Choose CSS...', ['class' => 'custom-file-label']) !!}
-                        {!! Form::file('file', ['class' => 'custom-file-input']) !!}
+                        {{ html()->label('Choose CSS...', 'file')->class('custom-file-label') }}
+                        {{ html()->file('file')->class('custom-file-input') }}
                     </div>
-                    {!! Form::submit('Upload', ['class' => 'ml-1 btn btn-primary']) !!}
+                    {{ html()->submit('Upload')->class('ml-1 btn btn-primary') }}
                 </div>
-                {!! Form::close() !!}
+                {{ html()->form()->close() }}
             </div>
         </div>
     </div>

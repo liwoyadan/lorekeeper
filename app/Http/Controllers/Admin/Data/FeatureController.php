@@ -165,24 +165,24 @@ class FeatureController extends Controller {
     public function getFeatureIndex(Request $request) {
         $query = Feature::query();
         $data = $request->only(['rarity_id', 'feature_category_id', 'species_id', 'subtype_id', 'name', 'sort', 'visibility']);
-        if (isset($data['rarity_id']) && $data['rarity_id'] != 'none') {
+        if (isset($data['rarity_id']) && $data['rarity_id']) {
             $query->where('rarity_id', $data['rarity_id']);
         }
-        if (isset($data['feature_category_id']) && $data['feature_category_id'] != 'none') {
+        if (isset($data['feature_category_id']) && $data['feature_category_id']) {
             if ($data['feature_category_id'] == 'withoutOption') {
                 $query->whereNull('feature_category_id');
             } else {
                 $query->where('feature_category_id', $data['feature_category_id']);
             }
         }
-        if (isset($data['species_id']) && $data['species_id'] != 'none') {
+        if (isset($data['species_id']) && $data['species_id']) {
             if ($data['species_id'] == 'withoutOption') {
                 $query->whereNull('species_id');
             } else {
                 $query->where('species_id', $data['species_id']);
             }
         }
-        if (isset($data['subtype_id']) && $data['subtype_id'] != 'none') {
+        if (isset($data['subtype_id']) && $data['subtype_id']) {
             if ($data['subtype_id'] == 'withoutOption') {
                 $query->subtypes->isEmpty();
             } else {
@@ -194,7 +194,7 @@ class FeatureController extends Controller {
         if (isset($data['name'])) {
             $query->where('name', 'LIKE', '%'.$data['name'].'%');
         }
-        if (isset($data['visibility']) && $data['visibility'] != 'none') {
+        if (isset($data['visibility']) && $data['visibility']) {
             if ($data['visibility'] == 'visibleOnly') {
                 $query->where('is_visible', '=', 1);
             } else {
@@ -238,10 +238,10 @@ class FeatureController extends Controller {
 
         return view('admin.features.features', [
             'features'   => $query->paginate(20)->appends($request->query()),
-            'rarities'   => ['none' => 'Any Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'specieses'  => ['none' => 'Any Species'] + ['withoutOption' => 'Without Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'subtypes'   => ['none' => 'Any Subtype'] + ['withoutOption' => 'Without Subtype'] + Subtype::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'categories' => ['none' => 'Any Category'] + ['withoutOption' => 'Without Category'] + FeatureCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'rarities'   => Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'specieses'  => ['withoutOption' => 'Without Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'subtypes'   => ['withoutOption' => 'Without Subtype'] + Subtype::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'categories' => ['withoutOption' => 'Without Category'] + FeatureCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
         ]);
     }
 

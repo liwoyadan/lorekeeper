@@ -13,39 +13,39 @@
         @endif
     </h1>
 
-    {!! Form::open(['url' => $item->id ? 'admin/data/items/edit/' . $item->id : 'admin/data/items/create', 'files' => true]) !!}
+    {{ html()->form('POST', $item->id ? 'admin/data/items/edit/' . $item->id : 'admin/data/items/create')->acceptsFiles()->open() }}
 
     <h3>Basic Information</h3>
 
     <div class="form-group">
-        {!! Form::label('Name') !!}
-        {!! Form::text('name', $item->name, ['class' => 'form-control']) !!}
+        {{ html()->label('Name') }}
+        {{ html()->text('name', $item->name)->class('form-control') }}
     </div>
 
     <div class="form-group">
-        {!! Form::label('World Page Image (Optional)') !!} {!! add_help('This image is used only on the world information pages.') !!}
+        {{ html()->label('World Page Image (Optional)') }} {!! add_help('This image is used only on the world information pages.') !!}
         <div class="custom-file">
-            {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
-            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
+            {{ html()->label('Choose file...', 'image')->class('custom-file-label') }}
+            {{ html()->file('image')->class('custom-file-input') }}
         </div>
         <div class="text-muted">Recommended size: 100px x 100px</div>
         @if ($item->has_image)
             <div class="form-check">
-                {!! Form::checkbox('remove_image', 1, false, ['class' => 'form-check-input']) !!}
-                {!! Form::label('remove_image', 'Remove current image', ['class' => 'form-check-label']) !!}
+                {{ html()->checkbox('remove_image', false, 1)->class('form-check-input') }}
+                {{ html()->label('Remove current image', 'remove_image')->class('form-check-label') }}
             </div>
         @endif
     </div>
 
     <div class="row">
         <div class="col-md form-group">
-            {!! Form::label('Item Category (Optional)') !!}
-            {!! Form::select('item_category_id', $categories, $item->item_category_id, ['class' => 'form-control']) !!}
+            {{ html()->label('Item Category (Optional)') }}
+            {{ html()->select('item_category_id', $categories, $item->item_category_id)->class('form-control') }}
         </div>
         @if (config('lorekeeper.extensions.item_entry_expansion.extra_fields'))
             <div class="col-md form-group">
-                {!! Form::label('Item Rarity (Optional)') !!}
-                {!! Form::select('rarity_id', $rarities, $item && $item->rarityId ? $item->rarityId : '', ['class' => 'form-control', 'placeholder' => 'Select a Rarity']) !!}
+                {{ html()->label('Item Rarity (Optional)') }}
+                {{ html()->select('rarity_id', $rarities, $item && $item->rarityId ? $item->rarityId : '')->class('form-control')->placeholder('Select a Rarity') }}
             </div>
         @endif
     </div>
@@ -53,17 +53,17 @@
     @if (config('lorekeeper.extensions.item_entry_expansion.extra_fields'))
         <div class="row">
             <div class="col-md form-group">
-                {!! Form::label('Reference Link (Optional)') !!} {!! add_help('An optional link to an additional reference') !!}
-                {!! Form::text('reference_url', $item->reference_url, ['class' => 'form-control']) !!}
+                {{ html()->label('Reference Link (Optional)') }} {!! add_help('An optional link to an additional reference') !!}
+                {{ html()->text('reference_url', $item->reference_url)->class('form-control') }}
             </div>
             <div class="col-md">
-                {!! Form::label('Item Artist (Optional)') !!} {!! add_help('Provide the artist\'s username if they are on site or, failing that, a link.') !!}
+                {{ html()->label('Item Artist (Optional)') }} {!! add_help('Provide the artist\'s username if they are on site or, failing that, a link.') !!}
                 <div class="row">
                     <div class="col-md form-group">
-                        {!! Form::select('artist_id', $userOptions, $item && $item->artist_id ? $item->artist_id : null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select a User']) !!}
+                        {{ html()->select('artist_id', $userOptions, $item && $item->artist_id ? $item->artist_id : null)->class('form-control mr-2 selectize')->placeholder('Select a User') }}
                     </div>
                     <div class="col-md form-group">
-                        {!! Form::text('artist_url', $item && $item->artist_url ? $item->artist_url : '', ['class' => 'form-control mr-2', 'placeholder' => 'Artist URL']) !!}
+                        {{ html()->text('artist_url', $item && $item->artist_url ? $item->artist_url : '')->class('form-control mr-2')->placeholder('Artist URL') }}
                     </div>
                 </div>
             </div>
@@ -71,31 +71,31 @@
     @endif
 
     <div class="form-group">
-        {!! Form::label('Description (Optional)') !!}
-        {!! Form::textarea('description', $item->description, ['class' => 'form-control wysiwyg']) !!}
+        {{ html()->label('Description (Optional)') }}
+        {{ html()->textarea('description', $item->description)->class('form-control wysiwyg') }}
     </div>
 
     @if (config('lorekeeper.extensions.item_entry_expansion.extra_fields'))
         <div class="form-group">
-            {!! Form::label('Uses (Optional)') !!} {!! add_help('A short description of the item\'s use(s). Supports raw HTML if need be, but keep it brief.') !!}
-            {!! Form::text('uses', $item && $item->uses ? $item->uses : '', ['class' => 'form-control']) !!}
+            {{ html()->label('Uses (Optional)') }} {!! add_help('A short description of the item\'s use(s). Supports raw HTML if need be, but keep it brief.') !!}
+            {{ html()->text('uses', $item && $item->uses ? $item->uses : '')->class('form-control') }}
         </div>
     @endif
 
     <div class="row">
         <div class="col-md form-group">
-            {!! Form::checkbox('allow_transfer', 1, $item->id ? $item->allow_transfer : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-            {!! Form::label('allow_transfer', 'Allow User → User Transfer', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is off, users will not be able to transfer this item to other users. Non-account-bound items can be account-bound when granted to users directly.') !!}
+            {{ html()->checkbox('allow_transfer', $item->id ? $item->allow_transfer : 1, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+            {{ html()->label('Allow User → User Transfer', 'allow_transfer')->class('form-check-label ml-3') }} {!! add_help('If this is off, users will not be able to transfer this item to other users. Non-account-bound items can be account-bound when granted to users directly.') !!}
         </div>
         @if (config('lorekeeper.extensions.item_entry_expansion.extra_fields'))
             <div class="col-md form-group">
-                {!! Form::checkbox('is_released', 1, $item->id ? $item->is_released : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-                {!! Form::label('is_released', 'Is Released', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is off, users will not be able to view information for the item/it will be hidden from view. This is overridden by the item being owned at any point by anyone on the site.') !!}
+                {{ html()->checkbox('is_released', $item->id ? $item->is_released : 1, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+                {{ html()->label('Is Released', 'is_released')->class('form-check-label ml-3') }} {!! add_help('If this is off, users will not be able to view information for the item/it will be hidden from view. This is overridden by the item being owned at any point by anyone on the site.') !!}
             </div>
         @endif
         <div class="col-md form-group">
-            {!! Form::checkbox('is_deletable', 1, $item->id ? $item->is_deletable : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-            {!! Form::label('is_deletable', 'Can Be Deleted', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is off, users will not be able to delete this item from user or character inventories.') !!}
+            {{ html()->checkbox('is_deletable', $item->id ? $item->is_deletable : 1, 1)->class('form-check-input')->attribute('data-toggle', 'toggle') }}
+            {{ html()->label('Can Be Deleted', 'is_deletable')->class('form-check-label ml-3') }} {!! add_help('If this is off, users will not be able to delete this item from user or character inventories.') !!}
         </div>
     </div>
 
@@ -103,12 +103,12 @@
         <h3>Availability Information</h3>
         <div class="row">
             <div class="col-md form-group">
-                {!! Form::label('release', 'Source (Optional)') !!} {!! add_help('The original and/or general source of the item. Should be brief.') !!}
-                {!! Form::text('release', $item && $item->source ? $item->source : '', ['class' => 'form-control']) !!}
+                {{ html()->label('Source (Optional)', 'release') }} {!! add_help('The original and/or general source of the item. Should be brief.') !!}
+                {{ html()->text('release', $item && $item->source ? $item->source : '')->class('form-control') }}
             </div>
             <div class="col-md form-group">
-                {!! Form::label('prompts[]', 'Drop Location(s) (Optional)') !!} {!! add_help('You can select up to 10 prompts at once.') !!}
-                {!! Form::select('prompts[]', $prompts, $item && isset($item->data['prompts']) ? $item->data['prompts'] : '', ['id' => 'promptsList', 'class' => 'form-control', 'multiple']) !!}
+                {{ html()->label('Drop Location(s) (Optional)', 'prompts[]') }} {!! add_help('You can select up to 10 prompts at once.') !!}
+                {{ html()->select('prompts[]', $prompts, $item && isset($item->data['prompts']) ? $item->data['prompts'] : '')->id('promptsList')->class('form-control')->attribute('multiple', 'multiple') }}
             </div>
         </div>
     @endif
@@ -118,21 +118,21 @@
         <p>The currency and amount users will be able to sell this item from their inventory for. If quantity is not set, the item will be unable to be sold.</p>
         <div class="row">
             <div class="col-md form-group">
-                {!! Form::label('currency_id', 'Currency') !!}
-                {!! Form::select('currency_id', $userCurrencies, isset($item->data['resell']) && App\Models\Currency\Currency::where('id', $item->resell->flip()->pop())->first() ? $item->resell->flip()->pop() : null, ['class' => 'form-control']) !!}
+                {{ html()->label('Currency', 'currency_id') }}
+                {{ html()->select('currency_id', $userCurrencies, isset($item->data['resell']) && App\Models\Currency\Currency::where('id', $item->resell->flip()->pop())->first() ? $item->resell->flip()->pop() : null)->class('form-control') }}
             </div>
             <div class="col-md form-group">
-                {!! Form::label('currency_quantity', 'Quantity') !!}
-                {!! Form::text('currency_quantity', isset($item->data['resell']) ? $item->resell->pop() : null, ['class' => 'form-control']) !!}
+                {{ html()->label('Quantity', 'currency_quantity') }}
+                {{ html()->text('currency_quantity', isset($item->data['resell']) ? $item->resell->pop() : null)->class('form-control') }}
             </div>
         </div>
     @endif
 
     <div class="text-right">
-        {!! Form::submit($item->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
+        {{ html()->submit($item->id ? 'Edit' : 'Create')->class('btn btn-primary') }}
     </div>
 
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 
     @if ($item->id)
         <h3>Item Tags</h3>
