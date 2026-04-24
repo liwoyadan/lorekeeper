@@ -45,15 +45,15 @@
             </div>
             @if (Auth::check() && Auth::user()->hasPower('manage_characters'))
                 <div class="tab-pane fade" id="settings-all">
-                    {!! Form::open(['url' => $character->is_myo_slot ? 'admin/myo/' . $character->id . '/settings' : 'admin/character/' . $character->slug . '/settings']) !!}
+                    {{ html()->form('POST', $character->is_myo_slot ? 'admin/myo/' . $character->id . '/settings' : 'admin/character/' . $character->slug . '/settings')->open() }}
                     <div class="form-group">
-                        {!! Form::checkbox('is_visible', 1, $character->is_visible, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-                        {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Turn this off to hide the character. Only mods with the Manage Masterlist power (that\'s you!) can view it - the owner will also not be able to see the character\'s page.') !!}
+                        {{ html()->checkbox('is_visible', $character->is_visible, 1)->class('form-check-input')->data('toggle', 'toggle') }}
+                        {{ html()->label('Is Visible', 'is_visible')->class('form-check-label ml-3') }} {!! add_help('Turn this off to hide the character. Only mods with the Manage Masterlist power (that\'s you!) can view it - the owner will also not be able to see the character\'s page.') !!}
                     </div>
                     <div class="text-right">
-                        {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+                        {{ html()->submit('Edit')->class('btn btn-primary') }}
                     </div>
-                    {!! Form::close() !!}
+                    {{ html()->form()->close() }}
                     <hr />
                     <div class="text-right">
                         <a href="#" class="btn btn-outline-danger btn-sm delete-character" data-id="{{ $character->id }}">Delete</a>

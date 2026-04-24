@@ -11,7 +11,7 @@
         <p class="alert alert-warning my-2">Note: Your rank allows you to transfer character-bound items.</p>
     @endif
 
-    {!! Form::open(['url' => 'character/' . $character->slug . '/inventory/edit']) !!}
+    {{ html()->form('POST', 'character/' . $character->slug . '/inventory/edit')->open() }}
     <div class="card" style="border: 0px">
         <table class="table table-sm">
             <thead class="thead">
@@ -32,7 +32,7 @@
                 @foreach ($stack as $itemRow)
                     <tr id="itemRow{{ $itemRow->id }}" class="d-flex {{ $itemRow->isTransferrable ? '' : 'accountbound' }}">
                         @if ($user && !$readOnly && ($owner_id == $user->id || $has_power == true))
-                            <td class="col-1">{!! Form::checkbox('ids[]', $itemRow->id, false, ['class' => 'item-check', 'onclick' => 'updateQuantities(this)']) !!}</td>
+                            <td class="col-1">{{ html()->checkbox('ids[]', false, $itemRow->id)->class('item-check')->attribute('onclick', 'updateQuantities(this)') }}</td>
                         @endif
                         @if ($item->category->can_name)
                             <td class="col-2">{!! htmlentities($itemRow->stack_name) ?: 'N/A' !!}</td>
@@ -41,9 +41,9 @@
                         <td class="col">{!! array_key_exists('notes', $itemRow->data) ? ($itemRow->data['notes'] ? $itemRow->data['notes'] : 'N/A') : 'N/A' !!}</td>
                         @if ($user && !$readOnly && ($owner_id == $user->id || $has_power == true))
                             @if ($itemRow->availableQuantity)
-                                <td class="col-2">{!! Form::selectRange('', 1, $itemRow->availableQuantity, 1, ['class' => 'quantity-select', 'type' => 'number', 'style' => 'min-width:40px;']) !!} /{{ $itemRow->availableQuantity }}</td>
+                                <td class="col-2">{{ html()->select('', array_combine(range(1, $itemRow->availableQuantity), range(1, $itemRow->availableQuantity)), 1)->class('quantity-select')->attribute('type', 'number')->attribute('style', 'min-width:40px;') }} /{{ $itemRow->availableQuantity }}</td>
                             @else
-                                <td class="col-2">{!! Form::selectRange('', 0, 0, 0, ['class' => 'quantity-select', 'type' => 'number', 'style' => 'min-width:40px;', 'disabled']) !!} /{{ $itemRow->availableQuantity }}</td>
+                                <td class="col-2">{{ html()->select('', [0 => 0], 0)->class('quantity-select')->attribute('type', 'number')->attribute('style', 'min-width:40px;')->attribute('disabled', true) }} /{{ $itemRow->availableQuantity }}</td>
                             @endif
                         @else
                             <td class="col-3">{!! $itemRow->count !!}</td>
@@ -71,14 +71,14 @@
                         </a>
                         <div id="nameForm" class="collapse">
                             <p>Enter a name to display for the selected stack(s)! Note that only one of the stacks' names will display on the inventory page and title of this panel, while other stacks' names will appear in the list above.</p>
-                            {!! Form::open() !!}
+                            {{ html()->form('POST')->open() }}
                             <div class="form-group">
-                                {!! Form::text('stack_name', null, ['class' => 'form-control stock-field', 'data-name' => 'stack_name']) !!}
+                                {{ html()->text('stack_name', null)->class('form-control stock-field')->data('name', 'stack_name') }}
                             </div>
                             <div class="text-right">
-                                {!! Form::button('Submit', ['class' => 'btn btn-primary', 'name' => 'action', 'value' => 'name', 'type' => 'submit']) !!}
+                                {{ html()->button('Submit', 'submit')->class('btn btn-primary')->name('action')->value('name') }}
                             </div>
-                            {!! Form::close() !!}
+                            {{ html()->form()->close() }}
                         </div>
                     </li>
                 @endif
@@ -96,7 +96,7 @@
                                     your
                                 @endif inventory.</p>
                             <div class="text-right">
-                                {!! Form::button('Transfer', ['class' => 'btn btn-primary', 'name' => 'action', 'value' => 'take', 'type' => 'submit']) !!}
+                                {{ html()->button('Transfer', 'submit')->class('btn btn-primary')->name('action')->value('take') }}
                             </div>
                         </div>
                     </li>
@@ -111,7 +111,7 @@
                         <div id="deleteForm" class="collapse">
                             <p>This action is not reversible. Are you sure you want to delete this item?</p>
                             <div class="text-right">
-                                {!! Form::button('Delete', ['class' => 'btn btn-danger', 'name' => 'action', 'value' => 'delete', 'type' => 'submit']) !!}
+                                {{ html()->button('Delete', 'submit')->class('btn btn-danger')->name('action')->value('delete') }}
                             </div>
                         </div>
                     </li>
@@ -119,7 +119,7 @@
             </ul>
         </div>
     @endif
-    {!! Form::close() !!}
+    {{ html()->form()->close() }}
 @endif
 
 <script>

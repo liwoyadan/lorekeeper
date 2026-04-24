@@ -51,10 +51,10 @@
         @endforeach
     </ul>
     @if ($canManage)
-        {!! Form::open(['url' => 'admin/character/' . $character->slug . '/images/sort', 'class' => 'text-right']) !!}
-        {!! Form::hidden('sort', '', ['id' => 'sortableOrder']) !!}
-        {!! Form::submit('Save Order', ['class' => 'btn btn-primary']) !!}
-        {!! Form::close() !!}
+        {{ html()->form('POST', 'admin/character/' . $character->slug . '/images/sort')->class('text-right')->open() }}
+        {{ html()->hidden('sort', '')->id('sortableOrder') }}
+        {{ html()->submit('Save Order')->class('btn btn-primary') }}
+        {{ html()->form()->close() }}
 
         <div class="mobile-handle handle-clone badge badge-primary rounded-circle hide">
             <i class="fas fa-hand-point-up" aria-hidden="true"></i>

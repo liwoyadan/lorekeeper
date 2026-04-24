@@ -1,12 +1,12 @@
-{!! Form::open(['url' => $isMyo ? 'admin/myo/' . $character->id . '/description' : 'admin/character/' . $character->slug . '/description']) !!}
+{{ html()->form('POST', $isMyo ? 'admin/myo/' . $character->id . '/description' : 'admin/character/' . $character->slug . '/description')->open() }}
 <div class="form-group">
-    {!! Form::label('Character Description') !!}
-    {!! Form::textarea('description', $character->description, ['class' => 'form-control wysiwyg']) !!}
+    {{ html()->label('Character Description') }}
+    {{ html()->textarea('description', $character->description)->class('form-control wysiwyg') }}
 </div>
 
 <div class="text-right">
-    {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+    {{ html()->submit('Edit')->class('btn btn-primary') }}
 </div>
-{!! Form::close() !!}
+{{ html()->form()->close() }}
 
 @include('js._tinymce_wysiwyg', ['tinymceSelector' => '.descriptioneditingparse .wysiwyg'])

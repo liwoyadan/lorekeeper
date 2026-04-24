@@ -58,37 +58,37 @@
         <h3>
             Take/Give Currency
         </h3>
-        {!! Form::open(['url' => 'character/' . $character->slug . '/bank/transfer']) !!}
+        {{ html()->form('POST', 'character/' . $character->slug . '/bank/transfer')->open() }}
         <div class="form-group">
             <div class="row">
                 <div class="col-md-6">
-                    <label>{{ Form::radio('action', 'take', true, ['class' => 'take-button']) }} Take from Character</label>
+                    <label>{{ html()->radio('action', true, 'take')->class('take-button') }} Take from Character</label>
                 </div>
                 <div class="col-md-6">
-                    <label>{{ Form::radio('action', 'give', false, ['class' => 'give-button']) }} Give to Character</label>
+                    <label>{{ html()->radio('action', false, 'give')->class('give-button') }} Give to Character</label>
                 </div>
             </div>
         </div>
         <div class="form-group">
             <div class="row">
                 <div class="col-md-6">
-                    {!! Form::label('quantity', 'Quantity') !!}
-                    {!! Form::text('quantity', null, ['class' => 'form-control']) !!}
+                    {{ html()->label('Quantity', 'quantity') }}
+                    {{ html()->text('quantity', null)->class('form-control') }}
                 </div>
                 <div class="col-md-6 take">
-                    {!! Form::label('currency_id', 'Currency') !!}
-                    {!! Form::select('take_currency_id', $takeCurrencyOptions, null, ['class' => 'form-control', 'placeholder' => 'Select Currency']) !!}
+                    {{ html()->label('Currency', 'currency_id') }}
+                    {{ html()->select('take_currency_id', $takeCurrencyOptions, null)->class('form-control')->placeholder('Select Currency') }}
                 </div>
                 <div class="col-md-6 give hide">
-                    {!! Form::label('currency_id', 'Currency') !!}
-                    {!! Form::select('give_currency_id', $giveCurrencyOptions, null, ['class' => 'form-control', 'placeholder' => 'Select Currency']) !!}
+                    {{ html()->label('Currency', 'currency_id') }}
+                    {{ html()->select('give_currency_id', $giveCurrencyOptions, null)->class('form-control')->placeholder('Select Currency') }}
                 </div>
             </div>
         </div>
         <div class="text-right">
-            {!! Form::submit('Transfer', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Transfer')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     @endif
 
     <h3>Latest Activity</h3>
@@ -133,30 +133,30 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                        {!! Form::open(['url' => 'admin/character/' . $character->slug . '/grant']) !!}
+                        {{ html()->form('POST', 'admin/character/' . $character->slug . '/grant')->open() }}
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    {!! Form::label('currency_id', 'Currency') !!}
-                                    {!! Form::select('currency_id', $currencyOptions, null, ['class' => 'form-control']) !!}
+                                    {{ html()->label('Currency', 'currency_id') }}
+                                    {{ html()->select('currency_id', $currencyOptions, null)->class('form-control') }}
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    {!! Form::label('quantity', 'Quantity') !!} {!! add_help('If the value given is less than 0, this will be deducted from the character.') !!}
-                                    {!! Form::text('quantity', null, ['class' => 'form-control']) !!}
+                                    {{ html()->label('Quantity', 'quantity') }} {!! add_help('If the value given is less than 0, this will be deducted from the character.') !!}
+                                    {{ html()->text('quantity', null)->class('form-control') }}
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            {!! Form::label('data', 'Reason (Optional)') !!} {!! add_help('A reason for the grant. This will be noted in the logs.') !!}
-                            {!! Form::text('data', null, ['class' => 'form-control']) !!}
+                            {{ html()->label('Reason (Optional)', 'data') }} {!! add_help('A reason for the grant. This will be noted in the logs.') !!}
+                            {{ html()->text('data', null)->class('form-control') }}
                         </div>
                         <div class="text-right">
-                            {!! Form::submit('Submit', ['class' => 'btn btn-primary']) !!}
+                            {{ html()->submit('Submit')->class('btn btn-primary') }}
                         </div>
-                        {!! Form::close() !!}
+                        {{ html()->form()->close() }}
                     </div>
                 </div>
             </div>

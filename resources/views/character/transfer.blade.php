@@ -30,9 +30,9 @@
                         This character is already in a transfer to {!! $transfer->recipient->displayName !!}.
                     </p>
                     <div class="text-right">
-                        {!! Form::open(['url' => 'characters/transfer/act/' . $transfer->id]) !!}
-                        {!! Form::submit('Cancel', ['class' => 'btn btn-danger', 'name' => 'action']) !!}
-                        {!! Form::close() !!}
+                        {{ html()->form('POST', 'characters/transfer/act/' . $transfer->id)->open() }}
+                        {{ html()->submit('Cancel')->class('btn btn-danger')->name('action') }}
+                        {{ html()->form()->close() }}
                     </div>
                 </div>
             </div>
@@ -51,19 +51,19 @@
                     another person.
                 </p>
             @endif
-            {!! Form::open(['url' => $character->url . '/transfer']) !!}
+            {{ html()->form('POST', $character->url . '/transfer')->open() }}
             <div class="form-group">
-                {!! Form::label('recipient_id', 'Recipient') !!}
-                {!! Form::select('recipient_id', $userOptions, old('recipient_id'), ['class' => 'form-control selectize', 'placeholder' => 'Select User']) !!}
+                {{ html()->label('Recipient', 'recipient_id') }}
+                {{ html()->select('recipient_id', $userOptions, old('recipient_id'))->class('form-control selectize')->placeholder('Select User') }}
             </div>
             <div class="form-group">
-                {!! Form::label('user_reason', 'Reason for Transfer (Required)') !!}
-                {!! Form::text('user_reason', '', ['class' => 'form-control']) !!}
+                {{ html()->label('Reason for Transfer (Required)', 'user_reason') }}
+                {{ html()->text('user_reason', '')->class('form-control') }}
             </div>
             <div class="text-right">
-                {!! Form::submit('Send Transfer', ['class' => 'btn btn-primary']) !!}
+                {{ html()->submit('Send Transfer')->class('btn btn-primary') }}
             </div>
-            {!! Form::close() !!}
+            {{ html()->form()->close() }}
         @endif
     @endif
 
@@ -75,27 +75,27 @@
         <p>This will transfer the character automatically, without requiring the recipient to confirm the transfer. You may also transfer a character that is marked non-transferrable, or still under cooldown. Both the old and new owners will be notified
             of the transfer.</p>
         <p>Fill in either of the recipient fields - if transferring to an off-site user, leave the recipient field blank and vice versa.</p>
-        {!! Form::open(['url' => $character->is_myo_slot ? 'admin/myo/' . $character->id . '/transfer' : 'admin/character/' . $character->slug . '/transfer']) !!}
+        {{ html()->form('POST', $character->is_myo_slot ? 'admin/myo/' . $character->id . '/transfer' : 'admin/character/' . $character->slug . '/transfer')->open() }}
         <div class="form-group">
-            {!! Form::label('recipient_id', 'Recipient') !!}
-            {!! Form::select('recipient_id', $userOptions, old('recipient_id'), ['class' => 'form-control selectize', 'placeholder' => 'Select User']) !!}
+            {{ html()->label('Recipient', 'recipient_id') }}
+            {{ html()->select('recipient_id', $userOptions, old('recipient_id'))->class('form-control selectize')->placeholder('Select User') }}
         </div>
         <div class="form-group">
-            {!! Form::label('recipient_url', 'Recipient Url') !!} {!! add_help('Characters can only be transferred to offsite user URLs from site(s) used for authentication.') !!}
-            {!! Form::text('recipient_url', old('recipient_url'), ['class' => 'form-control']) !!}
+            {{ html()->label('Recipient Url', 'recipient_url') }} {!! add_help('Characters can only be transferred to offsite user URLs from site(s) used for authentication.') !!}
+            {{ html()->text('recipient_url', old('recipient_url'))->class('form-control') }}
         </div>
         <div class="form-group">
-            {!! Form::label('cooldown', 'Transfer Cooldown (days)') !!}
-            {!! Form::text('cooldown', $cooldown, ['class' => 'form-control']) !!}
+            {{ html()->label('Transfer Cooldown (days)', 'cooldown') }}
+            {{ html()->text('cooldown', $cooldown)->class('form-control') }}
         </div>
         <div class="form-group">
-            {!! Form::label('reason', 'Reason for Transfer (optional)') !!}
-            {!! Form::text('reason', '', ['class' => 'form-control']) !!}
+            {{ html()->label('Reason for Transfer (optional)', 'reason') }}
+            {{ html()->text('reason', '')->class('form-control') }}
         </div>
         <div class="text-right">
-            {!! Form::submit('Send Transfer', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Send Transfer')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     @endif
 
 @endsection

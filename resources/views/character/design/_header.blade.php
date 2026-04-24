@@ -23,17 +23,17 @@
                         <div class="row">
                             <div class="col-sm-6 text-center text-danger">
                                 {{ $request->getVoteData()['reject'] }}/{{ Settings::get('design_votes_needed') }}
-                                {!! Form::open(['url' => 'admin/designs/vote/' . $request->id . '/reject', 'id' => 'voteRejectForm']) !!}
+                                {{ html()->form('POST', 'admin/designs/vote/' . $request->id . '/reject')->id('voteRejectForm')->open() }}
                                 <button class="btn {{ ($request->getVoteData()['raw']->get(Auth::user()->id)['vote'] ?? 0) == 1 ? 'btn-danger' : 'btn-outline-danger' }}" style="min-width:40px;" data-action="reject"><i
                                         class="fas fa-times"></i></button>
-                                {!! Form::close() !!}
+                                {{ html()->form()->close() }}
                             </div>
                             <div class="col-sm-6 text-center text-success">
                                 {{ $request->getVoteData()['approve'] }}/{{ Settings::get('design_votes_needed') }}
-                                {!! Form::open(['url' => 'admin/designs/vote/' . $request->id . '/approve', 'id' => 'voteApproveForm']) !!}
+                                {{ html()->form('POST', 'admin/designs/vote/' . $request->id . '/approve')->id('voteApproveForm')->open() }}
                                 <button class="btn {{ ($request->getVoteData()['raw']->get(Auth::user()->id)['vote'] ?? 0) == 2 ? 'btn-success' : 'btn-outline-success' }}" style="min-width:40px;" data-action="approve"><i
                                         class="fas fa-check"></i></button>
-                                {!! Form::close() !!}
+                                {{ html()->form()->close() }}
                             </div>
                         </div>
                     </span>

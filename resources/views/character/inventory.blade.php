@@ -32,27 +32,27 @@
     </div>
 
     <div>
-        {!! Form::open(['method' => 'GET', 'class' => '']) !!}
+        {{ html()->form('GET')->class('')->open() }}
         <div class="form-inline justify-content-end">
             <div class="form-group ml-3 mb-3">
-                {!! Form::text('name', Request::get('name'), ['class' => 'form-control', 'placeholder' => 'Name']) !!}
+                {{ html()->text('name', Request::get('name'))->class('form-control')->attribute('placeholder', 'Name') }}
             </div>
             <div class="form-group ml-3 mb-3">
-                {!! Form::select('item_category_id', $categories->pluck('name', 'id'), Request::get('item_category_id'), ['class' => 'form-control', 'placeholder' => 'Any Category']) !!}
+                {{ html()->select('item_category_id', $categories->pluck('name', 'id'), Request::get('item_category_id'))->class('form-control')->placeholder('Any Category') }}
             </div>
             @if (config('lorekeeper.extensions.item_entry_expansion.extra_fields'))
                 <div class="form-group ml-3 mb-3">
-                    {!! Form::select('rarity_id', $rarities, Request::get('rarity_id'), ['class' => 'form-control', 'placeholder' => 'Any Rarity']) !!}
+                    {{ html()->select('rarity_id', $rarities, Request::get('rarity_id'))->class('form-control')->placeholder('Any Rarity') }}
                 </div>
                 <div class="form-group ml-3 mb-3">
-                    {!! Form::select('artist', $artists, Request::get('artist'), ['class' => 'form-control', 'placeholder' => 'Any Artist']) !!}
+                    {{ html()->select('artist', $artists, Request::get('artist'))->class('form-control')->placeholder('Any Artist') }}
                 </div>
             @endif
             <div class="form-group ml-3 mb-3">
-                {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
+                {{ html()->submit('Search')->class('btn btn-primary') }}
             </div>
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     </div>
 
     <div id="defView" class="hide">
@@ -177,45 +177,45 @@
                     <div class="modal-body">
                         <p>Note that granting items does not check against any category hold limits for characters.</p>
                         <div class="form-group">
-                            {!! Form::open(['url' => 'admin/character/' . $character->slug . '/grant-items']) !!}
+                            {{ html()->form('POST', 'admin/character/' . $character->slug . '/grant-items')->open() }}
 
-                            {!! Form::label('Item(s)') !!} {!! add_help('Must have at least 1 item and Quantity must be at least 1.') !!}
+                            {{ html()->label('Item(s)') }} {!! add_help('Must have at least 1 item and Quantity must be at least 1.') !!}
                             <div id="itemList">
                                 <div class="d-flex mb-2">
-                                    {!! Form::select('item_ids[]', $itemOptions, null, ['class' => 'form-control mr-2 default item-select', 'placeholder' => 'Select Item']) !!}
-                                    {!! Form::text('quantities[]', 1, ['class' => 'form-control mr-2', 'placeholder' => 'Quantity']) !!}
+                                    {{ html()->select('item_ids[]', $itemOptions, null)->class('form-control mr-2 default item-select')->placeholder('Select Item') }}
+                                    {{ html()->text('quantities[]', 1)->class('form-control mr-2')->attribute('placeholder', 'Quantity') }}
                                     <a href="#" class="remove-item btn btn-danger mb-2 disabled">×</a>
                                 </div>
                             </div>
                             <div class="mb-2"><a href="#" class="btn btn-primary" id="add-item">Add Item</a></div>
                             <div class="item-row hide mb-2">
-                                {!! Form::select('item_ids[]', $itemOptions, null, ['class' => 'form-control mr-2 item-select', 'placeholder' => 'Select Item']) !!}
-                                {!! Form::text('quantities[]', 1, ['class' => 'form-control mr-2', 'placeholder' => 'Quantity']) !!}
+                                {{ html()->select('item_ids[]', $itemOptions, null)->class('form-control mr-2 item-select')->placeholder('Select Item') }}
+                                {{ html()->text('quantities[]', 1)->class('form-control mr-2')->attribute('placeholder', 'Quantity') }}
                                 <a href="#" class="remove-item btn btn-danger mb-2">×</a>
                             </div>
 
                             <h5>Additional Data</h5>
 
                             <div class="form-group">
-                                {!! Form::label('data', 'Reason (Optional)') !!} {!! add_help('A reason for the grant. This will be noted in the logs and in the inventory description.') !!}
-                                {!! Form::text('data', null, ['class' => 'form-control', 'maxlength' => 400]) !!}
+                                {{ html()->label('Reason (Optional)', 'data') }} {!! add_help('A reason for the grant. This will be noted in the logs and in the inventory description.') !!}
+                                {{ html()->text('data', null)->class('form-control')->attribute('maxlength', 400) }}
                             </div>
 
                             <div class="form-group">
-                                {!! Form::label('notes', 'Notes (Optional)') !!} {!! add_help('Additional notes for the item. This will appear in the item\'s description, but not in the logs.') !!}
-                                {!! Form::text('notes', null, ['class' => 'form-control', 'maxlength' => 400]) !!}
+                                {{ html()->label('Notes (Optional)', 'notes') }} {!! add_help('Additional notes for the item. This will appear in the item\'s description, but not in the logs.') !!}
+                                {{ html()->text('notes', null)->class('form-control')->attribute('maxlength', 400) }}
                             </div>
 
                             <div class="form-group">
-                                {!! Form::checkbox('disallow_transfer', 1, 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-                                {!! Form::label('disallow_transfer', 'Character-bound', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is on, the character\'s owner will not be able to transfer this item to their inventory. Items that disallow transfers by default will still not be transferrable.') !!}
+                                {{ html()->checkbox('disallow_transfer', 0, 1)->class('form-check-input')->data('toggle', 'toggle') }}
+                                {{ html()->label('Character-bound', 'disallow_transfer')->class('form-check-label ml-3') }} {!! add_help('If this is on, the character\'s owner will not be able to transfer this item to their inventory. Items that disallow transfers by default will still not be transferrable.') !!}
                             </div>
 
                             <div class="text-right">
-                                {!! Form::submit('Submit', ['class' => 'btn btn-primary']) !!}
+                                {{ html()->submit('Submit')->class('btn btn-primary') }}
                             </div>
 
-                            {!! Form::close() !!}
+                            {{ html()->form()->close() }}
                         </div>
                     </div>
                 </div>

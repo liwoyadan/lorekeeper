@@ -39,8 +39,8 @@ class CharacterImageController extends Controller {
 
         return view('character.admin.upload_image', [
             'character' => $this->character,
-            'rarities'  => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'specieses' => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'rarities'  => Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'specieses' => Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes'  => Subtype::where('species_id', '=', $this->character->image->species_id)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'users'     => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
             'features'  => Feature::getDropdownItems(1),
@@ -103,8 +103,8 @@ class CharacterImageController extends Controller {
 
         return view('character.admin._edit_features_modal', [
             'image'     => $image,
-            'rarities'  => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'specieses' => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'rarities'  => Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'specieses' => Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes'  => Subtype::where('species_id', '=', $image->species_id)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'features'  => Feature::getDropdownItems(Auth::user()->hasPower('edit_data'), $image->species_id),
         ]);

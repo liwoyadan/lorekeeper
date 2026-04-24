@@ -13,15 +13,15 @@
 
     @if ($request->status == 'Draft' && $request->user_id == Auth::user()->id)
         <p>Enter an optional comment about your submission (e.g. calculations) that staff will consider when reviewing your request. If you don't have a comment, click the Save button once to mark this section complete regardless.</p>
-        {!! Form::open(['url' => 'designs/' . $request->id . '/comments']) !!}
+        {{ html()->form('POST', 'designs/' . $request->id . '/comments')->open() }}
         <div class="form-group">
-            {!! Form::label('Comments (Optional)') !!}
-            {!! Form::textarea('comments', $request->comments, ['class' => 'form-control']) !!}
+            {{ html()->label('Comments (Optional)') }}
+            {{ html()->textarea('comments', $request->comments)->class('form-control') }}
         </div>
         <div class="text-right">
-            {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+            {{ html()->submit('Save')->class('btn btn-primary') }}
         </div>
-        {!! Form::close() !!}
+        {{ html()->form()->close() }}
     @else
         <div class="card">
             <div class="card-body">
