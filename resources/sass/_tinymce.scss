@@ -1,0 +1,283 @@
+// TinyMCE oxide skin — visual overrides only (colors, borders, radius, fill)
+// Source: public/js/skins/ui/oxide/skin.min.css + content.min.css
+
+// ─── Variables ────────────────────────────────────────────────────────────────
+$tinymce-primary:          $primary !default;           // $primary = $blue (#3490dc, orig #3498db)
+$tinymce-primary-hover:    darken($primary, 5%) !default;
+$tinymce-primary-active:   darken($primary, 10%) !default;
+$tinymce-text:             $gray-900 !default;          // $gray-900 = #212529, orig #222f3e
+$tinymce-text-muted:       rgba($tinymce-text, .6) !default;
+$tinymce-text-disabled:    rgba($tinymce-text, .5) !default;
+$tinymce-text-faint:       rgba($tinymce-text, .3) !default;
+$tinymce-bg:               $white !default;
+$tinymce-border:           $gray-400 !default;          // $gray-400 = #ced4da, orig #ccc
+$tinymce-hover:            $gray-300 !default;          // $gray-300 = #dee2e6, orig #dee0e2
+$tinymce-active:           $gray-400 !default;          // $gray-400 = #ced4da, orig #c8cbcf
+$tinymce-secondary-btn:    $gray-200 !default;          // $gray-200 = #e9ecef, orig #f0f0f0
+$tinymce-secondary-hover:  $gray-300 !default;          // $gray-300 = #dee2e6, orig #e3e3e3
+$tinymce-secondary-active: $gray-400 !default;          // $gray-400 = #ced4da, orig #d6d6d6
+$tinymce-group-heading:    $gray-200 !default;          // $gray-200 = #e9ecef, orig #e6e6e6
+$tinymce-link:             $primary !default;
+$tinymce-resize-handle:    #4099ff !default;            // no close Bootstrap equivalent
+$tinymce-error:            $danger !default;            // $danger = $red (#e3342f, orig #c00)
+$tinymce-border-radius:    $border-radius-sm !default;  // $border-radius-sm = 0.2rem, orig 3px
+
+// ─── Editor shell ─────────────────────────────────────────────────────────────
+.tox-tinymce {
+  border: 1px solid $tinymce-border;
+  border-radius: 0;
+}
+
+.tox .tox-edit-area {
+  border-top: 1px solid $tinymce-border;
+}
+
+.tox .tox-edit-area__iframe {
+  background-color: $tinymce-bg;
+}
+
+// ─── Toolbar & menubar ────────────────────────────────────────────────────────
+.tox .tox-toolbar,
+.tox .tox-toolbar__overflow,
+.tox .tox-toolbar__primary,
+.tox .tox-menubar {
+  background-color: $tinymce-bg;
+  border-top: 1px solid $tinymce-border;
+}
+
+.tox .tox-toolbar__group:not(:last-of-type) {
+  border-right: 1px solid $tinymce-border;
+}
+
+// Toolbar buttons
+.tox .tox-tbtn {
+  color: $tinymce-text;
+  border-radius: $tinymce-border-radius;
+
+  svg { fill: $tinymce-text; }
+
+  &--enabled {
+    background: $tinymce-active;
+    color: $tinymce-text;
+    svg { fill: $tinymce-text; }
+  }
+
+  &:hover, &:focus {
+    background: $tinymce-hover;
+    color: $tinymce-text;
+    svg { fill: $tinymce-text; }
+  }
+
+  &:active {
+    background: $tinymce-active;
+    color: $tinymce-text;
+    svg { fill: $tinymce-text; }
+  }
+
+  &--disabled, &--disabled:hover, &:disabled, &:disabled:hover {
+    color: $tinymce-text-disabled;
+    svg { fill: $tinymce-text-disabled; }
+  }
+}
+
+.tox .tox-split-button:hover {
+  box-shadow: 0 0 0 1px $tinymce-hover inset;
+}
+
+// Menu bar buttons
+.tox .tox-mbtn {
+  color: $tinymce-text;
+  border-radius: $tinymce-border-radius;
+
+  &:hover:not(:disabled), &:focus:not(:disabled) { background: $tinymce-hover; color: $tinymce-text; }
+  &--active { background: $tinymce-active; color: $tinymce-text; }
+  &[disabled] { color: $tinymce-text-disabled; }
+}
+
+// ─── Buttons ──────────────────────────────────────────────────────────────────
+.tox .tox-button {
+  background-color: $tinymce-primary;
+  border-color: $tinymce-primary;
+  border-radius: $tinymce-border-radius;
+  color: $tinymce-bg;
+
+  &[disabled] { background-color: $tinymce-primary; border-color: $tinymce-primary; color: rgba($tinymce-bg, .5); }
+  &:focus:not(:disabled), &:hover:not(:disabled) { background-color: $tinymce-primary-hover; border-color: $tinymce-primary-hover; color: $tinymce-bg; }
+  &:active:not(:disabled) { background-color: $tinymce-primary-active; border-color: $tinymce-primary-active; color: $tinymce-bg; }
+}
+
+.tox .tox-button--secondary {
+  background-color: $tinymce-secondary-btn;
+  border-color: $tinymce-secondary-btn;
+  border-radius: $tinymce-border-radius;
+  color: $tinymce-text;
+
+  &[disabled] { background-color: $tinymce-secondary-btn; border-color: $tinymce-secondary-btn; color: $tinymce-text-disabled; }
+  &:focus:not(:disabled), &:hover:not(:disabled) { background-color: $tinymce-secondary-hover; border-color: $tinymce-secondary-hover; color: $tinymce-text; }
+  &:active:not(:disabled) { background-color: $tinymce-secondary-active; border-color: $tinymce-secondary-active; color: $tinymce-text; }
+}
+
+.tox .tox-button--naked {
+  color: $tinymce-text;
+  &:hover:not(:disabled), &:focus:not(:disabled) { background-color: $tinymce-secondary-hover; border-color: $tinymce-secondary-hover; color: $tinymce-text; }
+  &:active:not(:disabled) { background-color: $tinymce-secondary-active; border-color: $tinymce-secondary-active; color: $tinymce-text; }
+}
+
+// ─── Form fields ──────────────────────────────────────────────────────────────
+.tox .tox-selectfield select,
+.tox .tox-textarea,
+.tox .tox-textfield {
+  background-color: $tinymce-bg;
+  border-color: $tinymce-border;
+  border-radius: $tinymce-border-radius;
+  color: $tinymce-text;
+
+  &:focus { border-color: $tinymce-primary; }
+}
+
+.tox .tox-label,
+.tox .tox-toolbar-label {
+  color: $tinymce-text-muted;
+}
+
+.tox .tox-form__group--error { color: $tinymce-error; }
+.tox .tox-control-wrap__status-icon-invalid svg { fill: $tinymce-error; }
+
+// ─── Checkbox ─────────────────────────────────────────────────────────────────
+.tox .tox-checkbox__icons {
+  .tox-checkbox-icon__unchecked svg { fill: $tinymce-text-faint; }
+  .tox-checkbox-icon__indeterminate svg { fill: $tinymce-primary; }
+  .tox-checkbox-icon__checked svg { fill: $tinymce-primary; }
+}
+
+.tox input.tox-checkbox__input:focus + .tox-checkbox__icons {
+  box-shadow: inset 0 0 0 1px $tinymce-primary;
+}
+
+// ─── Collections / menus ──────────────────────────────────────────────────────
+.tox .tox-menu {
+  background-color: $tinymce-bg;
+  border: 1px solid $tinymce-border;
+  border-radius: $tinymce-border-radius;
+  box-shadow: 0 4px 8px 0 rgba($tinymce-text, .1);
+}
+
+.tox .tox-collection__group-heading {
+  background-color: $tinymce-group-heading;
+  color: $tinymce-text-muted;
+}
+
+.tox .tox-collection__item { color: $tinymce-text; }
+.tox .tox-collection__item--state-disabled { color: $tinymce-text-disabled; }
+
+.tox .tox-collection--list .tox-collection__item--active,
+.tox .tox-collection--toolbar .tox-collection__item--active,
+.tox .tox-collection--grid .tox-collection__item--active {
+  background-color: $tinymce-hover;
+  color: $tinymce-text;
+}
+
+.tox .tox-collection--toolbar .tox-collection__item--enabled,
+.tox .tox-collection--grid .tox-collection__item--enabled {
+  background-color: $tinymce-active;
+  color: $tinymce-text;
+}
+
+.tox .tox-collection--list .tox-collection__group {
+  border-color: $tinymce-border;
+}
+
+// ─── Dialog ───────────────────────────────────────────────────────────────────
+.tox .tox-dialog {
+  background-color: $tinymce-bg;
+  border-color: $tinymce-border;
+  border-radius: $tinymce-border-radius;
+  box-shadow: 0 16px 16px -10px rgba($tinymce-text, .15), 0 0 40px 1px rgba($tinymce-text, .15);
+}
+
+.tox .tox-dialog__header {
+  background-color: $tinymce-bg;
+  color: $tinymce-text;
+}
+
+.tox .tox-dialog__body { color: $tinymce-text; }
+
+.tox .tox-dialog__body-nav-item {
+  color: $tinymce-text-muted;
+  &--active { border-bottom-color: $tinymce-primary; color: $tinymce-primary; }
+}
+
+.tox .tox-dialog__footer {
+  background-color: $tinymce-bg;
+  border-top-color: $tinymce-border;
+}
+
+.tox .tox-dialog-wrap__backdrop {
+  background-color: rgba($tinymce-bg, .75);
+}
+
+// ─── Status bar ───────────────────────────────────────────────────────────────
+.tox .tox-statusbar {
+  background-color: $tinymce-bg;
+  border-top: 1px solid $tinymce-border;
+  color: $tinymce-text-muted;
+
+  a { color: $tinymce-text-muted; }
+}
+
+.tox .tox-statusbar__resize-handle svg { fill: $tinymce-text-muted; }
+
+// ─── Slider ───────────────────────────────────────────────────────────────────
+.tox .tox-slider__rail { border-color: $tinymce-border; }
+
+.tox .tox-slider__handle {
+  background-color: $tinymce-primary;
+  border-color: $tinymce-primary-active;
+  border-radius: $tinymce-border-radius;
+}
+
+// ─── Tooltip ──────────────────────────────────────────────────────────────────
+.tox .tox-tooltip__body {
+  background-color: $tinymce-text;
+  border-radius: $tinymce-border-radius;
+  color: rgba($tinymce-bg, .75);
+}
+
+.tox .tox-tooltip--down .tox-tooltip__arrow { border-top-color: $tinymce-text; }
+.tox .tox-tooltip--up .tox-tooltip__arrow { border-bottom-color: $tinymce-text; }
+.tox .tox-tooltip--right .tox-tooltip__arrow { border-left-color: $tinymce-text; }
+.tox .tox-tooltip--left .tox-tooltip__arrow { border-right-color: $tinymce-text; }
+
+// ─── Popout arrows ────────────────────────────────────────────────────────────
+.tox .tox-pop__dialog {
+  background-color: $tinymce-bg;
+  border-color: $tinymce-border;
+  border-radius: $tinymce-border-radius;
+}
+
+.tox .tox-pop.tox-pop--bottom::after { border-top-color: $tinymce-bg; }
+.tox .tox-pop.tox-pop--bottom::before { border-top-color: $tinymce-border; }
+.tox .tox-pop.tox-pop--top::after { border-bottom-color: $tinymce-bg; }
+.tox .tox-pop.tox-pop--top::before { border-bottom-color: $tinymce-border; }
+.tox .tox-pop.tox-pop--left::after { border-right-color: $tinymce-bg; }
+.tox .tox-pop.tox-pop--left::before { border-right-color: $tinymce-border; }
+.tox .tox-pop.tox-pop--right::after { border-left-color: $tinymce-bg; }
+.tox .tox-pop.tox-pop--right::before { border-left-color: $tinymce-border; }
+
+// ─── Misc ─────────────────────────────────────────────────────────────────────
+.tox .tox-well { border-color: $tinymce-border; border-radius: $tinymce-border-radius; }
+.tox .tox-custom-editor { border-color: $tinymce-border; border-radius: $tinymce-border-radius; }
+.tox .tox-dropzone { background: $tinymce-bg; border-color: $tinymce-border; }
+.tox .tox-insert-table-picker > div { border-color: $tinymce-border; }
+.tox .tox-insert-table-picker .tox-insert-table-picker__selected { background-color: rgba($tinymce-primary, .5); border-color: rgba($tinymce-primary, .5); }
+.tox .tox-color-input span { border-color: rgba($tinymce-text, .2); &:focus { border-color: $tinymce-primary; } }
+.tox .tox-swatches__picker-btn:hover { background: $tinymce-hover; }
+.tox .tox-swatch--remove svg path { stroke: $danger; }
+.tox a { color: $tinymce-link; }
+.tox.tox-inline-edit-area { border-color: $tinymce-border; }
+
+// ─── Content body ─────────────────────────────────────────────────────────────
+.mce-content-body div.mce-resizehandle {
+  background-color: $tinymce-resize-handle;
+  border-color: $tinymce-resize-handle;
+}

@@ -1,20 +1,31 @@
 
 // Body
-$body-bg: #f8fafc;
+$body-bg: #f8fafc !default;
 
 // Typography
-$font-family-sans-serif: "Nunito", sans-serif;
-$font-size-base: 0.9rem;
-$line-height-base: 1.6;
+$font-family-sans-serif: "Nunito", sans-serif !default;
+$font-family-heading: 'Roboto Condensed', serif !default;
+$font-size-base: 0.9rem !default;
+$line-height-base: 1.6 !default;
+
+// Heading overrides — propagate to all h1-h6 / .h1-.h6 via Bootstrap's _type.scss
+$headings-font-family: $font-family-heading !default;
+$headings-font-weight: bold !default;
 
 // Colors
-$blue: #3490dc;
-$indigo: #6574cd;
-$purple: #9561e2;
-$pink: #f66D9b;
-$red: #e3342f;
-$orange: #f6993f;
-$yellow: #ffed4a;
-$green: #38c172;
-$teal: #4dc0b5;
-$cyan: #6cb2eb;
+$blue:   #3490dc !default;
+$indigo: #6574cd !default;
+$purple: #9561e2 !default;
+$pink:   #f66D9b !default;
+$red:    #e3342f !default;
+$orange: #f6993f !default;
+$yellow: #ffed4a !default;
+$green:  #38c172 !default;
+$teal:   #4dc0b5 !default;
+$cyan:   #6cb2eb !default;
+
+// Lorekeeper colors
+$spoiler-bg: #f5f5f5 !default;
+$unread-bg: #fffdf0 !default;
+$inflow-bg: #fafaff !default;
+$outflow-bg: #fffafa !default;
