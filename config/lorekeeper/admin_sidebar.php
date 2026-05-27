@@ -40,6 +40,15 @@ return [
             ],
         ],
     ],
+    'Changelogs' => [
+        'power' => 'edit_data',
+        'links' => [
+            [
+                'name' => 'Changelogs',
+                'url'  => 'admin/changelogs',
+            ],
+        ],
+    ],
     'News' => [
         'power' => 'manage_news',
         'links' => [

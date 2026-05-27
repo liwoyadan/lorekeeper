@@ -262,6 +262,18 @@ Route::group(['prefix' => 'news', 'middleware' => 'power:manage_news'], function
     Route::post('delete/{id}', 'NewsController@postDeleteNews');
 });
 
+// CHANGELOGS
+Route::group(['prefix' => 'changelogs', 'namespace' => 'Data', 'middleware' => 'power:edit_data'], function () {
+    Route::get('/', 'ChangelogController@getIndex');
+    Route::get('create', 'ChangelogController@getCreateChangelog');
+    Route::get('edit/{id}', 'ChangelogController@getEditChangelog');
+    Route::get('delete/{id}', 'ChangelogController@getDeleteChangelog');
+    Route::get('subject-options', 'ChangelogController@getSubjectOptions');
+    Route::post('create', 'ChangelogController@postCreateEditChangelog');
+    Route::post('edit/{id?}', 'ChangelogController@postCreateEditChangelog');
+    Route::post('delete/{id}', 'ChangelogController@postDeleteChangelog');
+});
+
 // SALES
 Route::group(['prefix' => 'sales', 'middleware' => 'power:manage_sales'], function () {
     Route::get('/', 'SalesController@getIndex');
