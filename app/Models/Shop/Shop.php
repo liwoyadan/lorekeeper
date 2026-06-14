@@ -30,7 +30,7 @@ class Shop extends Model {
     public static $createRules = [
         'name'        => 'required|unique:shops|between:3,100',
         'description' => 'nullable',
-        'blurb' => 'nullable',
+        'blurb'       => 'nullable',
         'image'       => 'mimes:png',
     ];
 
@@ -42,7 +42,7 @@ class Shop extends Model {
     public static $updateRules = [
         'name'        => 'required|between:3,100',
         'description' => 'nullable',
-        'blurb' => 'nullable',
+        'blurb'       => 'nullable',
         'image'       => 'mimes:png',
     ];
 
