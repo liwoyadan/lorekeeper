@@ -39,6 +39,11 @@
     </div>
 
     <div class="form-group">
+        {!! Form::label('Index Blurb (Optional)') !!} {!! add_help('A bit of flavour text or description that will be displayed with this shop\'s link on the overall shop index. While there technically isn\'t a character limit, you should probably try to keep it brief!') !!}
+        {!! Form::textarea('blurb', $shop->blurb, ['class' => 'form-control', 'id' => 'shopBlurb']) !!}
+    </div>
+
+    <div class="form-group">
         {!! Form::label('Description (Optional)') !!}
         {!! Form::textarea('description', $shop->description, ['class' => 'form-control wysiwyg']) !!}
     </div>
@@ -80,6 +85,26 @@
     @parent
     <script>
         $(document).ready(function() {
+            tinymce.init({
+                selector: '#shopBlurb',
+                height: 200,
+                menubar: false,
+                convert_urls: false,
+                plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen spoiler',
+                    'insertdatetime media table paste code help wordcount'
+                ],
+                toolbar: 'undo redo | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | removeformat | code',
+                content_css: [
+                    '{{ asset('css/app.css') }}',
+                    '{{ asset('css/lorekeeper.css') }}',
+                    '{{ asset('css/all.min.css') }}', // fontawesome
+                ],
+                extended_valid_elements: '#i[class],#em[class]',
+                target_list: false,
+            });
+
             var $shopStock = $('#shopStock');
             var $stock = $('#shopStockData').find('.stock');
 

@@ -13,6 +13,7 @@ class Shop extends Model {
      */
     protected $fillable = [
         'name', 'sort', 'has_image', 'description', 'parsed_description', 'is_active', 'hash',
+        'blurb', 'parsed_blurb',
     ];
 
     /**
@@ -29,6 +30,7 @@ class Shop extends Model {
     public static $createRules = [
         'name'        => 'required|unique:shops|between:3,100',
         'description' => 'nullable',
+        'blurb' => 'nullable',
         'image'       => 'mimes:png',
     ];
 
@@ -40,6 +42,7 @@ class Shop extends Model {
     public static $updateRules = [
         'name'        => 'required|between:3,100',
         'description' => 'nullable',
+        'blurb' => 'nullable',
         'image'       => 'mimes:png',
     ];
 

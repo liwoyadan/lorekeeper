@@ -22,6 +22,18 @@
                 <div class="shop-name mt-1">
                     <a href="{{ $shop->url }}" class="h5 mb-0">{{ $shop->name }}</a>
                 </div>
+                @if (isset($shop->blurb) && $shop->blurb)
+                    <div class="card">
+                        <div class="card-header font-weight-bold py-1" role="button" data-toggle="collapse" data-target="#collapse{{ $shop->id }}" aria-conrols="collapse{{ $shop->id }}">
+                            Show Info
+                        </div>
+                        <div class="collapse" id="collapse{{ $shop->id }}">
+                            <div class="shop-blurb p-2">
+                                {!! $shop->parsed_blurb !!}
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         @endforeach
     </div>

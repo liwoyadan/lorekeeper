@@ -220,6 +220,11 @@ class ShopService extends Service {
         } else {
             $data['parsed_description'] = null;
         }
+        if (isset($data['blurb']) && $data['blurb']) {
+            $data['parsed_blurb'] = parse($data['blurb']);
+        } else {
+            $data['parsed_blurb'] = null;
+        }
         $data['is_active'] = isset($data['is_active']);
 
         if (isset($data['remove_image'])) {
