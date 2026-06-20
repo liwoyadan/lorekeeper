@@ -781,7 +781,7 @@ class User extends Authenticatable implements MustVerifyEmail {
                 $count[] = Trade::where('status', 'Pending')->count(); // tradeCount
             }
 
-            if ($manageSubmissions) {
+            if ($manageReports) {
                 $count[] = Report::where('status', 'Pending')->count(); // reportCount
                 $count[] = Report::assignedToMe($this)->count(); // assignedReportCount
             }
