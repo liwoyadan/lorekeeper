@@ -14,7 +14,10 @@
     if (!$showAll && ($subject || $subjectType)) {
         $query->subjectLogs($subject, $subjectType);
     }
-    $changelogs = $query->orderBy('created_at', 'DESC')->limit($limit)->get();
+    $changelogs = $query
+        ->orderBy('created_at', 'DESC')
+        ->limit($limit)
+        ->get();
 @endphp
 
 <div class="card my-1">
