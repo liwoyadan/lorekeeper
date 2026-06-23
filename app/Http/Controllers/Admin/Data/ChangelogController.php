@@ -52,7 +52,7 @@ class ChangelogController extends Controller {
     public function getCreateChangelog() {
         return view('admin.changelogs.create_edit_changelog', [
             'changelog'      => new Changelog,
-            'types'          => ['' => 'Select Type'] + config('lorekeeper.changelogs.subject_types'),
+            'types'          => config('lorekeeper.changelogs.subject_types'),
             'subjectOptions' => null,
         ]);
     }
@@ -72,7 +72,7 @@ class ChangelogController extends Controller {
 
         return view('admin.changelogs.create_edit_changelog', [
             'changelog'      => $changelog,
-            'types'          => ['' => 'Select Type'] + config('lorekeeper.changelogs.subject_types'),
+            'types'          => config('lorekeeper.changelogs.subject_types'),
             'subjectOptions' => $this->buildSubjectOptions($changelog->type),
         ]);
     }
@@ -83,6 +83,10 @@ class ChangelogController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getSubjectOptions(Request $request) {
+        if (!class_exists($request->input('type'))) {
+            return '';
+        }
+        
         return view('admin.changelogs._subject_options', [
             'options'  => $this->buildSubjectOptions($request->input('type')),
             'selected' => $request->input('selected'),
@@ -97,7 +101,7 @@ class ChangelogController extends Controller {
      * @return array
      */
     private function buildSubjectOptions($type) {
-        $options = ['' => 'Select Subject (Optional)'];
+        $options = [];
         if ($type && array_key_exists($type, config('lorekeeper.changelogs.subject_types')) && Changelog::typeIsModel($type)) {
             $column = in_array($type, config('lorekeeper.changelogs.title_columns') ?? []) ? 'title' : 'name';
             $options += $type::orderBy($column)->pluck($column, 'id')->toArray();

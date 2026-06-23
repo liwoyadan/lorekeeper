@@ -202,4 +202,13 @@
             @endif
         @endif
     </div>
+
+    <div class="row">
+        <div class="col-md">
+            @include('widgets._changelogs', ['staffOnly' => true, 'showAll' => true, 'changelogTitle' => 'Staff-Only'])
+        </div>
+        <div class="col-md">
+            @include('widgets._changelogs', ['showAll' => true, 'changelogTitle' => 'All'])
+        </div>
+    </div>
 @endsection

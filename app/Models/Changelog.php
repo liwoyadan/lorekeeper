@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Facades\Settings;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Model;
@@ -91,7 +92,7 @@ class Changelog extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeSubject($query, $subject = null, $subjectType = null) {
+    public function scopeSubjectLogs($query, $subject = null, $subjectType = null) {
         if ($subject) {
             return $query->where('type', get_class($subject))->where('type_id', $subject->id);
         }
@@ -103,14 +104,21 @@ class Changelog extends Model {
     }
 
     /**
-     * Scope a query to only include staff-only changelogs.
+     * Scope a query to filter staff only entries.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeStaffOnly($query) {
-        return $query->where('staff_only', 1);
+    public function scopeIsStaff($query, $user = null, $staffOnly = null) {
+        if (!$user || $user && !$user->isStaff) {
+            return $query->where('staff_only', 0);
+        }
+        if ($staffOnly) {
+            return $query->where('staff_only', 1);
+        }
+
+        return $query;
     }
 
     /**********************************************************************************************
@@ -133,11 +141,20 @@ class Changelog extends Model {
         if ($this->type_id && self::typeIsModel($this->type)) {
             $subject = $this->subject;
             if ($subject && isset($subject->displayName)) {
-                return 'Changelog #'.$this->id.' ('.$this->typeLabel.' - '.$subject->displayName.')';
+                return '('.$subject->displayName.add_help($this->typeLabel).')';
             }
         }
 
-        return 'Changelog #'.$this->id.' ('.$this->typeLabel.')';
+        return '('.$this->typeLabel.')';
+    }
+
+    /**
+     * Check if the changelog is recent.
+     */
+    public function getIsRecentAttribute() {
+        $days = Settings::get('recent_changelog_days') ?? 7;
+        
+        return $this->created_at->diffInDays(now()) <= $days;
     }
 
     /**

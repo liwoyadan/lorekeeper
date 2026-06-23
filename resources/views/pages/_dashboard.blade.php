@@ -1,10 +1,13 @@
 <h1>Welcome, {!! Auth::user()->displayName !!}!</h1>
-<div class="card mb-4 timestamp">
+<div class="card mb-2 timestamp">
     <div class="card-body">
         <i class="far fa-clock"></i> {!! format_date(Carbon\Carbon::now()) !!}
     </div>
 </div>
 <div class="row">
+    <div class="col-12 pb-2">
+        @include('widgets._changelogs', ['showAll' => true, 'changelogTitle' => 'Recent'])
+    </div>
     <div class="col-md-6">
         <div class="card mb-4">
             <div class="card-body text-center">

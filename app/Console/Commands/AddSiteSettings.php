@@ -83,6 +83,8 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('comment_dislikes_enabled', 0, '0: Dislikes disabled, 1: Dislikes enabled.');
 
+        $this->addSiteSetting('recent_changelog_days', 7, 'Within how many days from current moment a changelog entry is considered \'recent\' and marked as new.');
+
         $this->line("\nSite settings up to date!");
     }
 

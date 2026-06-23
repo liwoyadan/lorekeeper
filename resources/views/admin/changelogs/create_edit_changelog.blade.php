@@ -19,15 +19,20 @@
 
     {!! Form::open(['url' => $changelog->id ? 'admin/changelogs/edit/' . $changelog->id : 'admin/changelogs/create']) !!}
 
-    <div class="form-group">
-        {!! Form::label('Type') !!} {!! add_help('Choose what kind of subject this changelog applies to. Selecting a type loads a list of records you can optionally pin the changelog to.') !!}
-        {!! Form::select('type', $types, $changelog->type, ['class' => 'form-control selectize', 'id' => 'typeSelect']) !!}
-    </div>
-
-    <div class="form-group" id="subjectContainer">
-        @if ($subjectOptions && $changelog->type)
-            @include('admin.changelogs._subject_options', ['options' => $subjectOptions, 'selected' => $changelog->type_id])
-        @endif
+    <div class="row">
+        <div class="col-md">
+            <div class="form-group">
+                {!! Form::label('Type') !!} {!! add_help('Choose what kind of subject this changelog applies to. Selecting a type loads a list of records you can optionally pin the changelog to.') !!}
+                {!! Form::select('type', $types, $changelog->type, ['class' => 'form-control selectize', 'id' => 'typeSelect', 'placeholder' => 'Select Type']) !!}
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-group" id="subjectContainer">
+                @if ($subjectOptions && $changelog->type)
+                    @include('admin.changelogs._subject_options', ['options' => $subjectOptions, 'selected' => $changelog->type_id])
+                @endif
+            </div>
+        </div>
     </div>
 
     <div class="form-group">

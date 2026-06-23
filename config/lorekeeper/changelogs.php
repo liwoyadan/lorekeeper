@@ -5,8 +5,8 @@ return [
     // Selectable subject types for changelogs.
     // Maps the fully-qualified model class (stored in the 'type' column)
     // to a human-readable display name shown in admin selectors.
-
     'subject_types' => [
+        'General' => 'General',
         'App\Models\Item\Item'           => 'Item',
         'App\Models\Currency\Currency'   => 'Currency',
         'App\Models\Species\Species'     => 'Species',
@@ -24,7 +24,6 @@ return [
 
     // Subject types whose human-readable label lives in a 'title' column
     // instead of the default 'name' column.
-
     'title_columns' => [
         'App\Models\News',
         'App\Models\Sales\Sales',

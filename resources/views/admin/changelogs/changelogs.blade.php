@@ -36,19 +36,19 @@
         <div class="mb-4 logs-table">
             <div class="logs-table-header">
                 <div class="row">
-                    <div class="col-4 col-md-3">
+                    <div class="col-4 col-md-2 order-1">
                         <div class="logs-table-cell">Type</div>
                     </div>
-                    <div class="col-md-4 d-none d-md-block">
+                    <div class="col-md order-4 order-md-2">
                         <div class="logs-table-cell">Log</div>
                     </div>
-                    <div class="col-3 col-md-2">
+                    <div class="col-4 col-md-2 order-2">
                         <div class="logs-table-cell">Staff</div>
                     </div>
-                    <div class="col-4 col-md-2">
+                    <div class="col-4 col-md-2 order-3">
                         <div class="logs-table-cell">Posted</div>
                     </div>
-                    <div class="col-1 col-md-1">
+                    <div class="col col-md-auto order-5">
                         <div class="logs-table-cell"></div>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                 @foreach ($changelogs as $changelog)
                     <div class="logs-table-row">
                         <div class="row flex-wrap">
-                            <div class="col-4 col-md-3">
+                            <div class="col-4 col-md-2 order-1">
                                 <div class="logs-table-cell">
                                     {{ $changelog->typeLabel }}
                                     @if ($changelog->type_id && \App\Models\Changelog::typeIsModel($changelog->type) && $changelog->subject)
@@ -68,16 +68,16 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-md-4 d-none d-md-block">
+                            <div class="col-md order-4 order-md-2">
                                 <div class="logs-table-cell">{!! $changelog->parsed_text !!}</div>
                             </div>
-                            <div class="col-3 col-md-2">
+                            <div class="col-4 col-md-2 order-2">
                                 <div class="logs-table-cell">{!! $changelog->staff ? $changelog->staff->displayName : '<em>Unknown</em>' !!}</div>
                             </div>
-                            <div class="col-4 col-md-2">
+                            <div class="col-4 col-md-2 order-3">
                                 <div class="logs-table-cell">{!! pretty_date($changelog->created_at) !!}</div>
                             </div>
-                            <div class="col-1 col-md-1 text-right">
+                            <div class="col col-md-auto order-5 text-right">
                                 <div class="logs-table-cell">
                                     <a href="{{ url('admin/changelogs/edit/' . $changelog->id) }}" class="btn btn-primary py-0 px-2">Edit</a>
                                 </div>
