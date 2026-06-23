@@ -77,6 +77,7 @@ class ChangelogService extends Service {
      * Deletes a changelog entry.
      *
      * @param Changelog $changelog
+     * @param mixed     $user
      *
      * @return bool
      */

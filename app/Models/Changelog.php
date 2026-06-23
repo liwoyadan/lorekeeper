@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Facades\Settings;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Changelog extends Model {
     use SoftDeletes;
@@ -107,6 +107,8 @@ class Changelog extends Model {
      * Scope a query to filter staff only entries.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed|null                            $user
+     * @param mixed|null                            $staffOnly
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -153,13 +155,15 @@ class Changelog extends Model {
      */
     public function getIsRecentAttribute() {
         $days = Settings::get('recent_changelog_days') ?? 7;
-        
+
         return $this->created_at->diffInDays(now()) <= $days;
     }
 
     /**
      * Whether the given type string identifies a loadable Eloquent model
      * (and therefore the subject() morphTo can be safely accessed).
+     *
+     * @param mixed $type
      */
     public static function typeIsModel($type) {
         return $type && is_subclass_of($type, Model::class);

@@ -86,28 +86,11 @@ class ChangelogController extends Controller {
         if (!class_exists($request->input('type'))) {
             return '';
         }
-        
+
         return view('admin.changelogs._subject_options', [
             'options'  => $this->buildSubjectOptions($request->input('type')),
             'selected' => $request->input('selected'),
         ]);
-    }
-
-    /**
-     * Builds the subject options list for a given type class.
-     *
-     * @param string|null $type
-     *
-     * @return array
-     */
-    private function buildSubjectOptions($type) {
-        $options = [];
-        if ($type && array_key_exists($type, config('lorekeeper.changelogs.subject_types')) && Changelog::typeIsModel($type)) {
-            $column = in_array($type, config('lorekeeper.changelogs.title_columns') ?? []) ? 'title' : 'name';
-            $options += $type::orderBy($column)->pluck($column, 'id')->toArray();
-        }
-
-        return $options;
     }
 
     /**
@@ -177,5 +160,22 @@ class ChangelogController extends Controller {
         }
 
         return redirect()->to('admin/changelogs');
+    }
+
+    /**
+     * Builds the subject options list for a given type class.
+     *
+     * @param string|null $type
+     *
+     * @return array
+     */
+    private function buildSubjectOptions($type) {
+        $options = [];
+        if ($type && array_key_exists($type, config('lorekeeper.changelogs.subject_types')) && Changelog::typeIsModel($type)) {
+            $column = in_array($type, config('lorekeeper.changelogs.title_columns') ?? []) ? 'title' : 'name';
+            $options += $type::orderBy($column)->pluck($column, 'id')->toArray();
+        }
+
+        return $options;
     }
 }

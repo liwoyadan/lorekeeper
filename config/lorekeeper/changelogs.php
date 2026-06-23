@@ -6,7 +6,7 @@ return [
     // Maps the fully-qualified model class (stored in the 'type' column)
     // to a human-readable display name shown in admin selectors.
     'subject_types' => [
-        'General' => 'General',
+        'General'                        => 'General',
         'App\Models\Item\Item'           => 'Item',
         'App\Models\Currency\Currency'   => 'Currency',
         'App\Models\Species\Species'     => 'Species',
