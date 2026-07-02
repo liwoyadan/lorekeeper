@@ -1,0 +1,56 @@
+// Theme-color generation for compiled bootstrap
+// BootstrapManager makes a $lk-theme-colors map, i.e.
+//   "primary": (base: #3490dc, step: 8, direction: "darken")
+// and has lk-theme-generate() after Bootstrap so these are after in order
+
+@function lk-clamp-pct($n) {
+    @return if($n > 100, 100, $n) * 1%;
+}
+
+@mixin lk-theme-generate($colors) {
+    // Button hover/active overrides. Shifts by the per-color direction.
+    @each $name, $cfg in $colors {
+        $base: map-get($cfg, base);
+        $step: map-get($cfg, step);
+        $dir: map-get($cfg, direction);
+
+        $hover: if($dir == "lighten", lighten($base, lk-clamp-pct($step)), darken($base, lk-clamp-pct($step)));
+        $active: if($dir == "lighten", lighten($base, lk-clamp-pct($step * 2)), darken($base, lk-clamp-pct($step * 2)));
+
+        .btn-#{$name}:hover,
+        .btn-outline-#{$name}:hover {
+            background-color: $hover;
+            border-color: $hover;
+        }
+
+        .btn-#{$name}:not(:disabled):not(.disabled):active,
+        .btn-#{$name}:not(:disabled):not(.disabled).active,
+        .btn-outline-#{$name}:not(:disabled):not(.disabled):active,
+        .btn-outline-#{$name}:not(:disabled):not(.disabled).active {
+            background-color: $active;
+            border-color: $active;
+        }
+    }
+
+    // --{name}-100..900 scale. 500 is the base; lower lightens, higher darkens,
+    // each step of 100 shifting by step% regardless of the hover direction.
+    :root {
+        @each $name, $cfg in $colors {
+            $base: map-get($cfg, base);
+            $step: map-get($cfg, step);
+
+            @for $level from 1 through 9 {
+                $slot: $level * 100;
+                $delta: $level - 5;
+
+                @if $delta == 0 {
+                    --#{$name}-#{$slot}: #{$base};
+                } @else if $delta < 0 {
+                    --#{$name}-#{$slot}: #{lighten($base, lk-clamp-pct($step * abs($delta)))};
+                } @else {
+                    --#{$name}-#{$slot}: #{darken($base, lk-clamp-pct($step * $delta))};
+                }
+            }
+        }
+    }
+}

@@ -4,49 +4,49 @@
     {{ $theme->id ? 'Edit Theme: ' . $theme->name : 'Create Theme' }}
 @endsection
 
-@push('head')
-    <style media="screen">
-        #aceEditor { 
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-        }
-    </style>
-    <script src="https://cdn.jsdelivr.net/combine/npm/ace-builds@1.43.6,npm/ace-builds@1.43.6/src-min-noconflict/ext-language_tools.min.js,npm/ace-builds@1.43.6/src-min-noconflict/ext-searchbox.min.js"></script>
-@endpush
-
 @section('admin-content')
     {!! breadcrumbs(['Admin Panel' => 'admin', 'Themes' => 'admin/themes', ($theme->id ? 'Edit' : 'Create') . ' Theme' => $theme->id ? 'admin/themes/edit/' . $theme->id : 'admin/themes/create']) !!}
 
-    <h1 class="mb-1">
+    <h1 class="mb-0">
         {{ $theme->id ? 'Edit ' . $theme->name : 'Create Theme' }}
         @if ($theme->id)
             <a href="#" class="btn btn-danger float-right delete-theme-button">Delete Theme</a>
         @endif
     </h1>
-    @if ($theme->creators && count($theme->creatorData))
-        <h5 class="mb-1">
+    @if ($theme->creators && count(array_filter($theme->creatorData)))
+        <div class="mb-0">
             by {!! $theme->creatorDisplayName !!}
-        </h5>
+        </div>
     @endif
 
     {!! Form::open(['url' => $theme->id ? 'admin/themes/edit/' . $theme->id : 'admin/themes/create', 'files' => true]) !!}
-    <h5 class="mb-1">
+    <h3 class="my-1">
         Basic Information
-    </h5>
-    <div class="form-group row">
+    </h3>
+    <div class="row">
         <div class="col-md-8">
             <div class="form-group">
-                {!! Form::label('Name') !!}
+                {!! Form::label('Theme Name') !!}
                 {!! Form::text('name', $theme->name, ['class' => 'form-control']) !!}
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-group">
                 {!! Form::label('theme_type', 'Type') !!}{!! add_help('Users can select both a base, and a decorator theme, where decorator themes will be layered over the selected base theme.') !!}
-                {!! Form::select('theme_type', ['base' => 'Base', 'decorator' => 'Decorator'], $theme->theme_type ?? 'base', ['class' => 'form-control']) !!}
+                {!! Form::select('theme_type', ['base' => 'Base', 'decorator' => 'Decorator'], $theme->theme_type ?? 'base', ['class' => 'form-control', 'id' => 'themeTypeSelect']) !!}
+            </div>
+        </div>
+    </div>
+    <div class="row {{ ($theme->theme_type ?? 'base') != 'base' ? 'hide' : '' }}" id="themeBootstrapRow">
+        <div class="col-md">
+            <div class="form-group">
+                {!! Form::label('theme_bootstrap_id', 'Bootstrap Theme') !!}{!! add_help('Compiled Bootstrap theme to apply to the site when this theme is active. Only for base themes. If this is blank, it will fallback to either your set sitewide default if applicable, if not then LK\'s slightly edited default (app.css).') !!}
+                {!! Form::select(
+                    'theme_bootstrap_id',
+                    $bootstrapOptions,
+                    $theme->theme_bootstrap_id,
+                    ['class' => 'form-control', 'placeholder' => 'None (Default)']
+                ) !!}
             </div>
         </div>
     </div>
@@ -105,9 +105,9 @@
 
     <hr />
 
-    <h5 class="mb-1">
+    <h4 class="mb-1">
         Creator(s)
-    </h5>
+    </h4>
     <div class="row">
         <div class="col-md-6">
             <div class="form-group row align-items-center">
@@ -134,9 +134,9 @@
 
     <hr />
 
-    <h5 class="mb-1">
-        CSS File
-    </h5>
+    <h4 class="mb-1">
+        Custom CSS File
+    </h4>
     <div class="row align-items-center">
         <div class="col-md">
             <div class="form-group">
@@ -167,16 +167,21 @@
         </div>
     </div>
     <hr class="w-75 mx-auto">
-    <div class="card rounded-0 position-relative" style="height: 250px;">
-        <div id="aceEditor"></div>
-        {!! Form::textarea('raw_css', '', ['class' => 'form-control', 'id' => 'rawCSS', 'class' => 'hide']) !!}
+    <h5 class="mb-1">
+        Raw CSS
+    </h5>
+    <p>
+        For any extra snippets of raw CSS you would like added to this theme.
+    </p>
+    <div class="card rounded-0">
+        {!! Form::textarea('raw_css', '', ['id' => 'rawCSS']) !!}
     </div>
 
     <hr>
 
-    <h5 class="mb-1">
+    <h4 class="mb-1">
         Header Image
-    </h5>
+    </h4>
     <p>
         The Header Image can be uploaded directly or specified by url. Finally you can turn the header off entirely and have just the top nav.
     </p>
@@ -218,9 +223,9 @@
 
     <hr class="w-75 mx-auto" />
 
-    <h5 class="mb-1">
+    <h4 class="mb-1">
         Background Image
-    </h5>
+    </h4>
     <p>
         The Background Image can be uploaded directly or specified by url. If you only specify a color there will be no background image.
     </p>
@@ -456,24 +461,13 @@
     @parent
     <script>
         $(document).ready(function() {
-            const $codeEditor = ace.edit("aceEditor");
-            var $cssInput = $('#rawCSS');
-
-            $codeEditor.setValue($cssInput.val());
-            $codeEditor.setOptions({
-                    mode: "ace/mode/css",
-                    theme: "ace/theme/dracula",
-                    wrapBehavioursEnabled: true,
-                    autoScrollEditorIntoView: true,
-                    enableAutoIndent: true,
-                    showPrintMargin: false,
-                    wrap: true,
-                    indentedSoftWrap: false,
-                    enableBasicAutocompletion: true,
-                    enableLiveAutocompletion: true
-                });
-            $codeEditor.session.on('change', function(e) {
-                $cssInput.val($codeEditor.getValue());
+            const codeEditor = CodeMirror.fromTextArea(document.getElementById('rawCSS'), {
+                mode: 'css',
+                theme: 'dracula',
+                lineNumbers: true,
+                lineWrapping: true,
+                indentWithTabs: false,
+                tabSize: 4,
             });
 
             $('.delete-theme-button').on('click', function(e) {
@@ -482,6 +476,10 @@
             });
 
             $('.creator-select').selectize();
+
+            $('#themeTypeSelect').on('change', function() {
+                $('#themeBootstrapRow').toggleClass('hide', $(this).val() != 'base');
+            });
         });
     </script>
 @endsection

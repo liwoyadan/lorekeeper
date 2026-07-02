@@ -3,6 +3,7 @@
 namespace App\Models\Theme;
 
 use App\Models\Model;
+use Illuminate\Support\Facades\Cache;
 
 class ThemeBootstrap extends Model {
     /**
@@ -11,7 +12,8 @@ class ThemeBootstrap extends Model {
      * @var array
      */
     protected $fillable = [
-        'name', 'color_data', 'theme_color_data', 'style_data', 'custom_scss_data', 'has_scss',
+        'name', 'color_data', 'theme_color_data', 'style_data', 'custom_scss_data',
+        'custom_prepend', 'custom_append', 'is_default', 'hash',
     ];
 
     /**
@@ -31,8 +33,20 @@ class ThemeBootstrap extends Model {
         'theme_color_data'  => 'array',
         'style_data'        => 'array',
         'custom_scss_data'  => 'array',
+        'is_default'        => 'boolean',
     ];
-    
+
+    /**
+     * Validation rules. Create & update have the same rules.
+     *
+     * @var array
+     */
+    public static $rules = [
+        'name'           => 'required|string|max:255',
+        'custom_prepend' => 'nullable',
+        'custom_append'  => 'nullable',
+    ];
+
     /**********************************************************************************************
 
         RELATIONS
@@ -71,39 +85,78 @@ class ThemeBootstrap extends Model {
     }
 
     /**
-     * Gets the file name of the model's css.
+     * Gets the file name of the model's compiled css.
+     * Includes the hash for cache-busting; null until first compile.
      *
-     * @return string
+     * @return string|null
      */
     public function getCompiledFileNameAttribute() {
-        return $this->id.'-bootstrap.css';
+        return $this->hash ? $this->id.'-'.$this->hash.'.css' : null;
     }
 
     /**
-     * Gets the URL of the model's css.
+     * Gets the URL of the model's compiled css.
      *
-     * @return string
+     * @return string|null
      */
     public function getCompiledUrlAttribute() {
-        return $this->imageDirectory.'/'.$this->compiledFileName;
+        return $this->compiledFileName ? $this->imageDirectory.'/'.$this->compiledFileName : null;
     }
-    
+
+    /**********************************************************************************************
+
+        SCOPES
+
+    **********************************************************************************************/
+
+    /**
+     * Scope a query to sort bootstrap themes in alphabetical order.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param bool                                  $reverse
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSortAlphabetical($query, $reverse = false) {
+        return $query->orderBy('name', $reverse ? 'DESC' : 'ASC');
+    }
+
+    /**
+     * Scope a query to sort bootstrap themes by newest first.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed                                 $reverse
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSortNewest($query, $reverse = false) {
+        return $query->orderBy('id', $reverse ? 'ASC' : 'DESC');
+    }
+
     /**********************************************************************************************
 
         OTHER FUNCTIONS
 
     **********************************************************************************************/
-        
+
     /**
-     * Gets file name of the model's scss.
+     * Gets the compiled CSS URL of the default Bootstrap.
+     * (cached so it doesn't query on every page)
      *
      * @return string
      */
-    public function scssFileName($name = null) {
-        if (!$name) {
-            $name = 'app';
-        }
+    public static function defaultCompiledUrl() {
+        return Cache::rememberForever('default_bootstrap_css', function () {
+            $default = self::where('is_default', 1)->first();
 
-        return $this->id.'_'.$name.'.scss';
+            return $default && $default->compiledFileName ? $default->compiledUrl : '';
+        });
+    }
+
+    /**
+     * Clears the cached default bootstrap CSS URL.
+     */
+    public static function clearDefaultCache() {
+        Cache::forget('default_bootstrap_css');
     }
 }

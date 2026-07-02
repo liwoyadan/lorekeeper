@@ -205,12 +205,16 @@ return [
             ],
         ],
     ],
-    'Themes'     => [
+    'Theme Manager'     => [
         'power' => 'edit_site_settings',
         'links' => [
             [
-                'name' => 'Theme Manager',
+                'name' => 'Themes',
                 'url'  => 'admin/themes',
+            ],
+            [
+                'name' => 'Bootstrap Themes',
+                'url'  => 'admin/bootstrap-themes',
             ],
         ],
     ],

@@ -261,7 +261,7 @@ class ThemeManager extends Service {
 
         $creators = [];
         $names = (isset($data['creator_name']) && $data['creator_name']) ? User::whereIn('id', $data['creator_name'])->get() : [];
-        if ($names->count()) {
+        if (count($names)) {
             foreach ($names as $name) {
                 $creators['name'][] = $name->id ?? $name->name;
             }
@@ -286,6 +286,11 @@ class ThemeManager extends Service {
         }
         if (!isset($data['is_user_selectable'])) {
             $data['is_user_selectable'] = 0;
+        }
+
+        // Bootstrap only applies to base themes
+        if (($data['theme_type'] ?? null) != 'base' || ($data['theme_bootstrap_id'] ?? '') == '') {
+            $data['theme_bootstrap_id'] = null;
         }
 
         // Unset Default

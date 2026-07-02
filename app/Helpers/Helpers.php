@@ -447,3 +447,21 @@ function prettyProfileName($url) {
         return $url;
     }
 }
+
+/**
+ * Returns a CSS <link> for the active Bootstrap, in order of priority:
+ *  1. The user or default theme's assigned Bootstrap
+ *  2. Whichever Bootstrap is default
+ *  3. The default compiled app.css
+ *
+ * @return string
+ */
+function app_css($theme) {
+    if ($theme && ($theme->theme_type == 'base') && ($theme->bootstrap && $theme->bootstrap->compiledFileName)) {
+        $url = $theme->bootstrap->compiledUrl;
+    } else {
+        $url = \App\Models\Theme\ThemeBootstrap::defaultCompiledUrl() ?: 'css/app.css';
+    }
+
+    return '<link href="'.asset($url).'" rel="stylesheet">';
+}

@@ -88,6 +88,17 @@ Route::group(['prefix' => 'themes', 'middleware' => 'power:edit_site_settings'],
     Route::post('delete/{id}', 'ThemeController@postDeleteTheme');
 });
 
+// BOOTSTRAP THEME MANAGER
+Route::group(['prefix' => 'bootstrap-themes', 'middleware' => 'power:edit_site_settings'], function () {
+    Route::get('/', 'ThemeController@getBootstrapIndex');
+    Route::get('create', 'ThemeController@getCreateBootstrapTheme');
+    Route::get('edit/{id}', 'ThemeController@getEditBootstrapTheme');
+    Route::get('delete/{id}', 'ThemeController@getDeleteBootstrapTheme');
+    Route::post('create', 'ThemeController@postCreateEditBootstrapTheme');
+    Route::post('edit/{id}', 'ThemeController@postCreateEditBootstrapTheme');
+    Route::post('delete/{id}', 'ThemeController@postDeleteBootstrapTheme');
+});
+
 // SITE IMAGES
 Route::group(['prefix' => 'images', 'middleware' => 'power:edit_site_settings'], function () {
     Route::get('/', 'FileController@getSiteImages');
