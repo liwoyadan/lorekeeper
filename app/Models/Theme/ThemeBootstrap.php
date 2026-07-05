@@ -59,13 +59,13 @@ class ThemeBootstrap extends Model {
     public function themes() {
         return $this->hasMany(Theme::class, 'theme_bootstrap_id');
     }
-    
+
     /**********************************************************************************************
 
         ACCESSORS
 
     **********************************************************************************************/
-    
+
     /**
      * Gets the file directory containing the model's files.
      *
@@ -141,7 +141,7 @@ class ThemeBootstrap extends Model {
 
     /**
      * Gets the compiled CSS URL of the default Bootstrap.
-     * (cached so it doesn't query on every page)
+     * (cached so it doesn't query on every page).
      *
      * @return string
      */

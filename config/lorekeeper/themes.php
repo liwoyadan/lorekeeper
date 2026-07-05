@@ -77,119 +77,119 @@ return [
 
     'styles' => [
         'border-radius' => [
-            'label' => 'Border Radius',
-            'default' => '0.25rem'
+            'label'   => 'Border Radius',
+            'default' => '0.25rem',
         ],
         'border-width'  => [
-            'label' => 'Border Width',
+            'label'   => 'Border Width',
             'default' => '1',
-            'type' => 'width'
+            'type'    => 'width',
         ],
         'border-color'  => [
-            'label' => 'Border Color',
-            'default' => '#dee2e6'
+            'label'   => 'Border Color',
+            'default' => '#dee2e6',
         ],
         'border-style'  => [
-            'label' => 'Border Style',
-            'default' => 'solid'
+            'label'   => 'Border Style',
+            'default' => 'solid',
         ],
     ],
 
     'typography' => [
         'body-color'     => [
-            'label' => 'Body Text Color',
-            'default' => '#212529'
+            'label'   => 'Body Text Color',
+            'default' => '#212529',
         ],
         'headings-color' => [
-            'label' => 'Headings Color',
-            'default' => 'inherit'
+            'label'   => 'Headings Color',
+            'default' => 'inherit',
         ],
     ],
 
     'extras' => [
         'text-muted'      => [
-            'label' => 'Muted Text',
+            'label'   => 'Muted Text',
             'default' => '#6c757d',
-            'type' => 'color'
+            'type'    => 'color',
         ],
         'hr-border-color' => [
-            'label' => 'Divider Color',
+            'label'   => 'Divider Color',
             'default' => 'rgba(0,0,0,.1)',
-            'type' => 'color'
+            'type'    => 'color',
         ],
         'hr-border-width' => [
-            'label' => 'Divider Width',
+            'label'   => 'Divider Width',
             'default' => '1',
-            'type' => 'width'
+            'type'    => 'width',
         ],
     ],
 
     'tooltips' => [
         'tooltip-bg'            => [
-            'label' => 'Background',
+            'label'   => 'Background',
             'default' => '#000',
-            'type' => 'color'
+            'type'    => 'color',
         ],
         'tooltip-color'         => [
-            'label' => 'Text Color',
+            'label'   => 'Text Color',
             'default' => '#fff',
-            'type' => 'color'
+            'type'    => 'color',
         ],
         'tooltip-border-radius' => [
-            'label' => 'Border Radius',
+            'label'   => 'Border Radius',
             'default' => '0.25rem',
-            'type' => 'text'
+            'type'    => 'text',
         ],
         'tooltip-opacity'       => [
-            'label' => 'Opacity',
+            'label'   => 'Opacity',
             'default' => '0.9',
-            'type' => 'opacity'
+            'type'    => 'opacity',
         ],
     ],
 
     'thumbnails' => [
         'thumbnail-bg'            => [
-            'label' => 'Background',
+            'label'   => 'Background',
             'default' => '#fff',
-            'type' => 'color'
+            'type'    => 'color',
         ],
         'thumbnail-border-width'  => [
-            'label' => 'Border Width',
+            'label'   => 'Border Width',
             'default' => '1',
-            'type' => 'width'
+            'type'    => 'width',
         ],
         'thumbnail-border-color'  => [
-            'label' => 'Border Color',
+            'label'   => 'Border Color',
             'default' => '#dee2e6',
-            'type' => 'color'
+            'type'    => 'color',
         ],
         'thumbnail-border-radius' => [
-            'label' => 'Border Radius',
+            'label'   => 'Border Radius',
             'default' => '0.25rem',
-            'type' => 'text'
+            'type'    => 'text',
         ],
     ],
 
     'toggles' => [
         'enable-rounded'               => [
-            'label' => 'Rounded Corners',       
-            'default' => true,  
-            'help' => 'Rounds corners on buttons, cards, inputs, and other components.'
+            'label'   => 'Rounded Corners',
+            'default' => true,
+            'help'    => 'Rounds corners on buttons, cards, inputs, and other components.',
         ],
         'enable-shadows'               => [
-            'label' => 'Shadows',               
-            'default' => false, 
-            'help' => 'Adds subtle box-shadows to components like buttons, cards, and dropdowns for depth.'
+            'label'   => 'Shadows',
+            'default' => false,
+            'help'    => 'Adds subtle box-shadows to components like buttons, cards, and dropdowns for depth.',
         ],
         'enable-gradients'             => [
-            'label' => 'Gradients',             
-            'default' => false, 
-            'help' => 'Applies subtle background gradients to components such as buttons and the navbar.'
+            'label'   => 'Gradients',
+            'default' => false,
+            'help'    => 'Applies subtle background gradients to components such as buttons and the navbar.',
         ],
         'enable-responsive-font-sizes' => [
-            'label' => 'Responsive Font Sizes', 
-            'default' => false, 
-            'help' => 'Scales font sizes fluidly with the viewport width instead of fixed breakpoints (RFS).'
+            'label'   => 'Responsive Font Sizes',
+            'default' => false,
+            'help'    => 'Scales font sizes fluidly with the viewport width instead of fixed breakpoints (RFS).',
         ],
     ],
 
@@ -200,8 +200,8 @@ return [
     | Custom Variable Suggestions
     |--------------------------------------------------------------------------
     |
-    | Specific Bootstrap variables for the custom variables dropdown that 
-    | site owners would probably like ease of retheming; grouped by component. The 
+    | Specific Bootstrap variables for the custom variables dropdown that
+    | site owners would probably like ease of retheming; grouped by component. The
     | selectize allows just typing a value, though, so users aren't limited to these.
     |
     */

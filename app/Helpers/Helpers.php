@@ -454,13 +454,15 @@ function prettyProfileName($url) {
  *  2. Whichever Bootstrap is default
  *  3. The default compiled app.css
  *
+ * @param mixed $theme
+ *
  * @return string
  */
 function app_css($theme) {
     if ($theme && ($theme->theme_type == 'base') && ($theme->bootstrap && $theme->bootstrap->compiledFileName)) {
         $url = $theme->bootstrap->compiledUrl;
     } else {
-        $url = \App\Models\Theme\ThemeBootstrap::defaultCompiledUrl() ?: 'css/app.css';
+        $url = App\Models\Theme\ThemeBootstrap::defaultCompiledUrl() ?: 'css/app.css';
     }
 
     return '<link href="'.asset($url).'" rel="stylesheet">';

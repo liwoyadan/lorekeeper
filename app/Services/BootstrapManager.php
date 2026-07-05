@@ -19,7 +19,7 @@ class BootstrapManager extends Service {
     |--------------------------------------------------------------------------
     |
     | Compiles a ThemeBootstrap's data into a Bootstrap CSS file with the
-    | data from the Create/Edit Bootstrap Theme in admin panel, using 
+    | data from the Create/Edit Bootstrap Theme in admin panel, using
     | Bootstrap's SCSS files & ScssPhp.
     |
     */
@@ -57,108 +57,11 @@ class BootstrapManager extends Service {
     }
 
     /**
-     * Drops blank color_data entries.
-     */
-    private function setupColorData($data) {
-        $colorData = array_filter($data['color_data'] ?? [], function ($v) {
-            return $v != null && $v != '';
-        });
-
-        return $colorData ?: null;
-    }
-
-    /**
-     * Builds per-colour [lighten, step] entries, keeping only colours that have a
-     * step or the lighten toggle set.
-     */
-    private function setupThemeColorData($data) {
-        $input = $data['theme_color_data'] ?? [];
-        $themeColorData = [];
-        foreach (array_keys(config('lorekeeper.themes.theme_colors')) as $color) {
-            $entry = [
-                'lighten' => isset($input[$color]['lighten']) ? 1 : 0,
-                'step'    => isset($input[$color]['step']) && $input[$color]['step'] != ''
-                    ? (int) $input[$color]['step']
-                    : null,
-            ];
-            if ($entry['step'] != null || $entry['lighten']) {
-                $themeColorData[$color] = $entry;
-            }
-        }
-
-        return $themeColorData ?: null;
-    }
-
-    /**
-     * Drops blank values, then sets every toggleable value to 1 or 0.
-     */
-    private function setupStyleData($data) {
-        $styleData = array_filter($data['style_data'] ?? [], function ($v) {
-            return $v != null && $v != '';
-        });
-        foreach (array_keys(config('lorekeeper.themes.toggles')) as $toggle) {
-            $styleData[$toggle] = (isset($data['style_data'][$toggle]) && $data['style_data'][$toggle]) ? 1 : 0;
-        }
-
-        return $styleData ?: null;
-    }
-
-    /**
-     * Parses the custom theme-color rows and the custom variable overrides.
-     * Drops blanks and $-values (SCSS variables are undefined at the point
-     * these get injected, so they'd break the whole compile).
-     */
-    private function setupCustomData($data) {
-        $input = $data['custom_scss_data']['theme_colors'] ?? [];
-        $names = $input['name'] ?? [];
-        $values = $input['value'] ?? [];
-        $steps = $input['step'] ?? [];
-        $lightens = $input['lighten'] ?? [];
-        $themeColorKeys = array_keys(config('lorekeeper.themes.theme_colors'));
-
-        $additions = [];
-        foreach ($names as $i => $rawName) {
-            $name = preg_replace('/[^a-z0-9-]/', '', strtolower(trim($rawName ?? '')));
-            $value = isset($values[$i]) ? trim($values[$i]) : '';
-            if ($name == '' || $value == '' || in_array($name, $themeColorKeys) || preg_match('/^\$/', $value)) {
-                continue;
-            }
-            $additions[$name] = [
-                'value'   => $value,
-                'step'    => isset($steps[$i]) && $steps[$i] != '' ? (int) $steps[$i] : null,
-                'lighten' => isset($lightens[$i]) && $lightens[$i] ? 1 : 0,
-            ];
-        }
-
-        $varInput = $data['custom_scss_data']['custom_variables'] ?? [];
-        $varNames = $varInput['name'] ?? [];
-        $varValues = $varInput['value'] ?? [];
-
-        $customVariables = [];
-        foreach ($varNames as $i => $rawName) {
-            $name = preg_replace('/[^a-z0-9-]/', '', strtolower(trim($rawName ?? '')));
-            $value = isset($varValues[$i]) ? trim($varValues[$i]) : '';
-            if ($name == '' || $value == '' || preg_match('/^\$/', $value)) {
-                continue;
-            }
-            $customVariables[$name] = $value;
-        }
-
-        $custom = [];
-        if ($additions) {
-            $custom['theme_colors'] = $additions;
-        }
-        if ($customVariables) {
-            $custom['custom_variables'] = $customVariables;
-        }
-
-        return $custom ?: null;
-    }
-
-    /**
      * The ... compiling :)
      * Should (hopefully) spit out a proper SCSS compile error
      * if anything goes wrong...
+     *
+     * @param mixed $bootstrap
      */
     public function compile($bootstrap) {
         DB::beginTransaction();
@@ -213,8 +116,117 @@ class BootstrapManager extends Service {
     }
 
     /**
+     * Drops blank color_data entries.
+     *
+     * @param mixed $data
+     */
+    private function setupColorData($data) {
+        $colorData = array_filter($data['color_data'] ?? [], function ($v) {
+            return $v != null && $v != '';
+        });
+
+        return $colorData ?: null;
+    }
+
+    /**
+     * Builds per-colour [lighten, step] entries, keeping only colours that have a
+     * step or the lighten toggle set.
+     *
+     * @param mixed $data
+     */
+    private function setupThemeColorData($data) {
+        $input = $data['theme_color_data'] ?? [];
+        $themeColorData = [];
+        foreach (array_keys(config('lorekeeper.themes.theme_colors')) as $color) {
+            $entry = [
+                'lighten' => isset($input[$color]['lighten']) ? 1 : 0,
+                'step'    => isset($input[$color]['step']) && $input[$color]['step'] != ''
+                    ? (int) $input[$color]['step']
+                    : null,
+            ];
+            if ($entry['step'] != null || $entry['lighten']) {
+                $themeColorData[$color] = $entry;
+            }
+        }
+
+        return $themeColorData ?: null;
+    }
+
+    /**
+     * Drops blank values, then sets every toggleable value to 1 or 0.
+     *
+     * @param mixed $data
+     */
+    private function setupStyleData($data) {
+        $styleData = array_filter($data['style_data'] ?? [], function ($v) {
+            return $v != null && $v != '';
+        });
+        foreach (array_keys(config('lorekeeper.themes.toggles')) as $toggle) {
+            $styleData[$toggle] = (isset($data['style_data'][$toggle]) && $data['style_data'][$toggle]) ? 1 : 0;
+        }
+
+        return $styleData ?: null;
+    }
+
+    /**
+     * Parses the custom theme-color rows and the custom variable overrides.
+     * Drops blanks and $-values (SCSS variables are undefined at the point
+     * these get injected, so they'd break the whole compile).
+     *
+     * @param mixed $data
+     */
+    private function setupCustomData($data) {
+        $input = $data['custom_scss_data']['theme_colors'] ?? [];
+        $names = $input['name'] ?? [];
+        $values = $input['value'] ?? [];
+        $steps = $input['step'] ?? [];
+        $lightens = $input['lighten'] ?? [];
+        $themeColorKeys = array_keys(config('lorekeeper.themes.theme_colors'));
+
+        $additions = [];
+        foreach ($names as $i => $rawName) {
+            $name = preg_replace('/[^a-z0-9-]/', '', strtolower(trim($rawName ?? '')));
+            $value = isset($values[$i]) ? trim($values[$i]) : '';
+            if ($name == '' || $value == '' || in_array($name, $themeColorKeys) || preg_match('/^\$/', $value)) {
+                continue;
+            }
+            $additions[$name] = [
+                'value'   => $value,
+                'step'    => isset($steps[$i]) && $steps[$i] != '' ? (int) $steps[$i] : null,
+                'lighten' => isset($lightens[$i]) && $lightens[$i] ? 1 : 0,
+            ];
+        }
+
+        $varInput = $data['custom_scss_data']['custom_variables'] ?? [];
+        $varNames = $varInput['name'] ?? [];
+        $varValues = $varInput['value'] ?? [];
+
+        $customVariables = [];
+        foreach ($varNames as $i => $rawName) {
+            $name = preg_replace('/[^a-z0-9-]/', '', strtolower(trim($rawName ?? '')));
+            $value = isset($varValues[$i]) ? trim($varValues[$i]) : '';
+            if ($name == '' || $value == '' || preg_match('/^\$/', $value)) {
+                continue;
+            }
+            $customVariables[$name] = $value;
+        }
+
+        $custom = [];
+        if ($additions) {
+            $custom['theme_colors'] = $additions;
+        }
+        if ($customVariables) {
+            $custom['custom_variables'] = $customVariables;
+        }
+
+        return $custom ?: null;
+    }
+
+    /**
      * Assembles the SCSS with scssphp. Output is a drop-in replacement
      * for the default compiled app.css with all the custom values.
+     *
+     * @param mixed $bootstrap
      */
     private function buildScssSource($bootstrap) {
         $themeColors = $this->themeColorConfig($bootstrap);
@@ -240,6 +252,8 @@ class BootstrapManager extends Service {
      * Does all the sections (colors, styles, typography, etc) on the
      * create/edit page and sets their values with their BS variable
      * names. These will override anything Bootstrap has declared as !default.
+     *
+     * @param mixed $bootstrap
      */
     private function themeVariables($bootstrap) {
         $colorData = $bootstrap->color_data ?? [];
@@ -257,7 +271,7 @@ class BootstrapManager extends Service {
 
         $styleData = $bootstrap->style_data ?? [];
         foreach (config('lorekeeper.themes.toggles') as $key => $entry) {
-            $vars[$key] = (isset($styleData[$key]) ? $styleData[$key] : $entry['default']) ? 'true' : 'false';
+            $vars[$key] = ($styleData[$key] ?? $entry['default']) ? 'true' : 'false';
         }
 
         foreach ($bootstrap->custom_scss_data['custom_variables'] ?? [] as $name => $value) {
@@ -269,8 +283,10 @@ class BootstrapManager extends Service {
 
     /**
      * Adds in any custom additions to Bootstrap's $theme-colors map.
-     * Also will generate the full utility family (.btn-{name}, .bg-{name}, 
+     * Also will generate the full utility family (.btn-{name}, .bg-{name},
      * .text-{name}, etc.) for every custom theme colour.
+     *
+     * @param mixed $bootstrap
      */
     private function customThemeColors($bootstrap) {
         $additions = $bootstrap->custom_scss_data['theme_colors'] ?? [];
@@ -296,7 +312,11 @@ class BootstrapManager extends Service {
 
     /**
      * Handles all the style_data...
-     * (the $skipBlank just skips blank values and falls back to BS default)
+     * (the $skipBlank just skips blank values and falls back to BS default).
+     *
+     * @param mixed $bootstrap
+     * @param mixed $groups
+     * @param mixed $skipBlank
      */
     private function setValues($bootstrap, $groups, $skipBlank) {
         $styleData = $bootstrap->style_data ?? [];
@@ -319,7 +339,9 @@ class BootstrapManager extends Service {
 
     /**
      * Style & typography values as a :root CSS variables
-     * Skips blank typography values
+     * Skips blank typography values.
+     *
+     * @param mixed $bootstrap
      */
     private function styleCssVariables($bootstrap) {
         $declarations = [];
@@ -333,6 +355,8 @@ class BootstrapManager extends Service {
     /**
      * Processes theme_color_data into [name => [base, step, direction]] for the
      * colours that have a step and exist in the config file.
+     *
+     * @param mixed $bootstrap
      */
     private function themeColorConfig($bootstrap) {
         $themeColorData = $bootstrap->theme_color_data ?? [];
@@ -375,6 +399,8 @@ class BootstrapManager extends Service {
 
     /**
      * Makes a map of the theme colours as the $lk-theme-colors SCSS map.
+     *
+     * @param mixed $config
      */
     private function themeColorMap($config) {
         if (!$config) {
@@ -392,6 +418,10 @@ class BootstrapManager extends Service {
     /**
      * Deletes any old {id}-{hash}.css files for this Bootstrap
      * using regex.
+     *
+     * @param mixed $bootstrap
+     * @param mixed $outputDir
+     * @param mixed $keepFileName
      */
     private function cleanOldCompiles($bootstrap, $outputDir, $keepFileName) {
         foreach (File::glob($outputDir.'/'.$bootstrap->id.'-*.css') as $stale) {

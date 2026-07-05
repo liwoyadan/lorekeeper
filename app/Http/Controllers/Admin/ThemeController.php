@@ -126,28 +126,6 @@ class ThemeController extends Controller {
     }
 
     /**
-     * Shared default data for the Bootstrap theme create/edit view,
-     * editable in config. Just a private function for ease of edit.
-     *
-     * @return array
-     */
-    private function bootstrapThemeViewData() {
-        return [
-            'baseColors'   => config('lorekeeper.themes.base_colors'),
-            'grays'        => config('lorekeeper.themes.grays'),
-            'themeColors'  => config('lorekeeper.themes.theme_colors'),
-            'styles'       => config('lorekeeper.themes.styles'),
-            'borderStyles' => config('lorekeeper.themes.border_styles'),
-            'typography'   => config('lorekeeper.themes.typography'),
-            'toggles'      => config('lorekeeper.themes.toggles'),
-            'extras'       => config('lorekeeper.themes.extras'),
-            'tooltips'     => config('lorekeeper.themes.tooltips'),
-            'thumbnails'   => config('lorekeeper.themes.thumbnails'),
-            'stepDefault'  => config('lorekeeper.themes.theme_color_step_default'),
-        ];
-    }
-
-    /**
      * Creates or edits a bootstrap theme.
      *
      * @param int|null $id
@@ -337,5 +315,27 @@ class ThemeController extends Controller {
         }
 
         return redirect()->to('admin/themes');
+    }
+
+    /**
+     * Shared default data for the Bootstrap theme create/edit view,
+     * editable in config. Just a private function for ease of edit.
+     *
+     * @return array
+     */
+    private function bootstrapThemeViewData() {
+        return [
+            'baseColors'   => config('lorekeeper.themes.base_colors'),
+            'grays'        => config('lorekeeper.themes.grays'),
+            'themeColors'  => config('lorekeeper.themes.theme_colors'),
+            'styles'       => config('lorekeeper.themes.styles'),
+            'borderStyles' => config('lorekeeper.themes.border_styles'),
+            'typography'   => config('lorekeeper.themes.typography'),
+            'toggles'      => config('lorekeeper.themes.toggles'),
+            'extras'       => config('lorekeeper.themes.extras'),
+            'tooltips'     => config('lorekeeper.themes.tooltips'),
+            'thumbnails'   => config('lorekeeper.themes.thumbnails'),
+            'stepDefault'  => config('lorekeeper.themes.theme_color_step_default'),
+        ];
     }
 }
