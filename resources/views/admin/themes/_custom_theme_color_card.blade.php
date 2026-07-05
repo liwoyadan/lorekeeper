@@ -22,23 +22,14 @@
             <div class="col-6 p-1 col-md-2">
                 <div class="form-group mb-0">
                     {!! Form::label('custom_scss_data[theme_colors][lighten][]', 'Direction', ['class' => 'font-weight-bold mb-0']) !!}
-                    {!! Form::select(
-                        'custom_scss_data[theme_colors][lighten][]',
-                        [0 => 'Darken', 1 => 'Lighten'],
-                        $lighten,
-                        ['class' => 'form-control']
-                    ) !!}
+                    {!! Form::select('custom_scss_data[theme_colors][lighten][]', [0 => 'Darken', 1 => 'Lighten'], $lighten, ['class' => 'form-control']) !!}
                 </div>
             </div>
 
             <div class="col-6 p-1 col-md-2">
                 <div class="form-group mb-0">
                     {!! Form::label('custom_scss_data[theme_colors][step][]', 'Step %', ['class' => 'font-weight-bold mb-0']) !!}
-                    {!! Form::number(
-                        'custom_scss_data[theme_colors][step][]',
-                        $step,
-                        ['class' => 'form-control', 'min' => 1, 'max' => 25, 'placeholder' => '-']
-                    ) !!}
+                    {!! Form::number('custom_scss_data[theme_colors][step][]', $step, ['class' => 'form-control', 'min' => 1, 'max' => 25, 'placeholder' => '-']) !!}
                     <div class="small mt-1">
                         <a href="#" class="set-step-default">Default ({{ $stepDefault }}%)</a>
                         <span class="text-muted">·</span>

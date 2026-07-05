@@ -22,13 +22,10 @@
     @endphp
 
     {!! breadcrumbs([
-        'Admin Panel'      => 'admin',
-        'Themes'           => 'admin/themes',
+        'Admin Panel' => 'admin',
+        'Themes' => 'admin/themes',
         'Bootstrap Themes' => 'admin/bootstrap-themes',
-        ($bootstrap->id ? 'Edit' : 'Create') . ' Bootstrap Theme'
-            => $bootstrap->id
-                ? 'admin/bootstrap-themes/edit/' . $bootstrap->id
-                : 'admin/bootstrap-themes/create',
+        ($bootstrap->id ? 'Edit' : 'Create') . ' Bootstrap Theme' => $bootstrap->id ? 'admin/bootstrap-themes/edit/' . $bootstrap->id : 'admin/bootstrap-themes/create',
     ]) !!}
 
     <h1>
@@ -51,7 +48,9 @@
         <div class="form-check">
             {!! Form::checkbox('is_default', 1, $bootstrap->is_default, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
             {!! Form::label('is_default', 'Site Default', ['class' => 'form-check-label ml-3']) !!}
-            {!! add_help('When set, this Bootstrap is used as the site\'s overall default Bootstrap theme, including as a fallback for any themes that do not have a Bootstrap theme assigned, and will display instead of Lorekeeper\'s default. Only one Bootstrap theme can be the default at any given time; saving this while On will unset any other(s) set as default!') !!}
+            {!! add_help(
+                'When set, this Bootstrap is used as the site\'s overall default Bootstrap theme, including as a fallback for any themes that do not have a Bootstrap theme assigned, and will display instead of Lorekeeper\'s default. Only one Bootstrap theme can be the default at any given time; saving this while On will unset any other(s) set as default!',
+            ) !!}
         </div>
     </div>
 
@@ -134,7 +133,8 @@
         <b>Direction</b> picks whether hover/active states lighten or darken the color.<br>
     </p>
     <p>
-        <b>Step</b> sets the percentage shift (darker/lighter) per increment (also used to generate a set of CSS variables from <code>--{theme}-100</code> through <code>--{theme}-900</code>, with the picked color set in the middle as <code>-500</code> ).<br>
+        <b>Step</b> sets the percentage shift (darker/lighter) per increment (also used to generate a set of CSS variables from <code>--{theme}-100</code> through <code>--{theme}-900</code>, with the picked color set in the middle as <code>-500</code>
+        ).<br>
         For example, if you set the step to <b>5</b>, then <code>$primary-600</code> will be 5% darker and <code>$primary-700</code> is 10% darker than your chosen color. Likewise, <code>$primary-400</code> is 5% lighter and so on.<br>
         Step maxes out at <b>25%</b>, since Bootstrap won't compute values past #fff white or #000 black.
     </p>
@@ -163,9 +163,11 @@
     {{-- CUSTOM THEME COLORS --}}
     <h5 class="mb-1">Custom Theme Colors</h5>
     <p>
-        Add your own named entries to Bootstrap's <code>$theme-colors</code> map (by default this is: primary, secondary, success, danger, warning, info, light, and dark). Each one generates a full family of classes for themed components, so a color named <code>brand</code> yields <code>.btn-brand</code>, <code>.btn-outline-brand</code>,
+        Add your own named entries to Bootstrap's <code>$theme-colors</code> map (by default this is: primary, secondary, success, danger, warning, info, light, and dark). Each one generates a full family of classes for themed components, so a color
+        named <code>brand</code> yields <code>.btn-brand</code>, <code>.btn-outline-brand</code>,
         <code>.bg-brand</code>, <code>.text-brand</code>, <code>.border-brand</code>, <code>.alert-brand</code>, and so on.<br>
-        Names are <b>lowercase</b> and limited to <b>letters</b>, <b>numbers</b>, and <b>hyphens</b>; do not include the dollar sign. Color must be a literal value (hexcode, <code>rgb()</code>, or a named color); SCSS variables like <code>$blue</code> are not supported here.<br>
+        Names are <b>lowercase</b> and limited to <b>letters</b>, <b>numbers</b>, and <b>hyphens</b>; do not include the dollar sign. Color must be a literal value (hexcode, <code>rgb()</code>, or a named color); SCSS variables like <code>$blue</code>
+        are not supported here.<br>
         <b>Direction</b> and <b>Step</b> work just like the Theme Colors above: set a step to generate hover/active states plus the <code>--{name}-100</code>..<code>900</code> scale. Leave step blank for a plain color with stock Bootstrap hover.
     </p>
     <div class="text-right mb-1">
@@ -279,12 +281,7 @@
                 <span class="small">
                     (<code>$border-style</code>)
                 </span>
-                {!! Form::select(
-                    'style_data[border-style]',
-                    array_combine($borderStyles, array_map('ucfirst', $borderStyles)),
-                    $styleData['border-style'] ?? null,
-                    ['class' => 'form-control', 'placeholder' => $styles['border-style']['default']]
-                ) !!}
+                {!! Form::select('style_data[border-style]', array_combine($borderStyles, array_map('ucfirst', $borderStyles)), $styleData['border-style'] ?? null, ['class' => 'form-control', 'placeholder' => $styles['border-style']['default']]) !!}
             </div>
         </div>
     </div>
@@ -300,11 +297,7 @@
     </p>
 
     @php
-        $variableSections = [
-            ['heading' => null, 'fields' => $extras],
-            ['heading' => 'Tooltips', 'fields' => $tooltips],
-            ['heading' => 'Thumbnails', 'fields' => $thumbnails],
-        ];
+        $variableSections = [['heading' => null, 'fields' => $extras], ['heading' => 'Tooltips', 'fields' => $tooltips], ['heading' => 'Thumbnails', 'fields' => $thumbnails]];
     @endphp
     @foreach ($variableSections as $section)
         @if ($section['heading'])
@@ -345,7 +338,7 @@
                             </div>
                         </div>
                     @endforeach
-                    
+
                     @if ($section['heading'] == 'Thumbnails')
                         <div class="col-12 p-1">
                             <button type="button" class="btn btn-outline-primary btn-sm" id="refreshThumbnailPreview">
@@ -353,7 +346,7 @@
                             </button>
                         </div>
                     @endif
-                </div>      
+                </div>
             </div>
 
             @if ($section['heading'])
@@ -363,13 +356,13 @@
                             <div>
                                 <img id="thumbnailPreview" class="img-thumbnail" src="{{ asset('images/myo-th.png') }}">
                             </div>
-                            @break
+                        @break
 
                         @case('Tooltips')
                             <button type="button" class="btn btn-secondary" id="tooltipPreviewBtn">
                                 Click Me
                             </button>
-                            @break
+                        @break
                     @endswitch
                 </div>
             @endif
@@ -382,7 +375,8 @@
     <h4 class="mb-1">Custom Variables</h4>
     <p>
         Override common Bootstrap variables for individual components. You can either pick one from the list (grouped by component, i.e. card) or type any Bootstrap variable name to add your own.<br>
-        Names are <b>lowercase</b> letters, <b>numbers</b>, and <b>hyphens</b>; do not include the dollar sign. Values must be literal (a hexcode, a size like 0.5rem, etc.); SCSS variables like <code>$primary</code> are <u>not</u> supported here. These are applied <i>before</i> Bootstrap compiles, so they override its defaults.
+        Names are <b>lowercase</b> letters, <b>numbers</b>, and <b>hyphens</b>; do not include the dollar sign. Values must be literal (a hexcode, a size like 0.5rem, etc.); SCSS variables like <code>$primary</code> are <u>not</u> supported here. These
+        are applied <i>before</i> Bootstrap compiles, so they override its defaults.
     </p>
     <div class="text-right mb-2">
         <button type="button" class="btn btn-outline-primary btn-sm" id="addCustomVariable">
@@ -456,9 +450,14 @@
     @parent
     <script>
         $(document).ready(function() {
-            [
-                { textarea: 'customPrepend', collapse: '#prependCollapse' },
-                { textarea: 'customAppend', collapse: '#appendCollapse' },
+            [{
+                    textarea: 'customPrepend',
+                    collapse: '#prependCollapse'
+                },
+                {
+                    textarea: 'customAppend',
+                    collapse: '#appendCollapse'
+                },
             ].forEach(function(cfg) {
                 var editor = CodeMirror.fromTextArea(document.getElementById(cfg.textarea), {
                     mode: 'text/x-scss',
@@ -487,7 +486,9 @@
                     autoHexInputFallback: false,
                     format: 'auto',
                     useAlpha: true,
-                    extensions: [{ name: 'blurValid' }]
+                    extensions: [{
+                        name: 'blurValid'
+                    }]
                 });
             });
 
@@ -506,7 +507,9 @@
                 $select.selectize({
                     create: true,
                     persist: false,
-                    render: { item: customVariableRender }
+                    render: {
+                        item: customVariableRender
+                    }
                 });
             }
 
@@ -520,7 +523,9 @@
                         autoHexInputFallback: false,
                         format: 'auto',
                         useAlpha: true,
-                        extensions: [{ name: 'blurValid' }]
+                        extensions: [{
+                            name: 'blurValid'
+                        }]
                     });
                 } else if (!isColor && $value.data('colorpicker')) {
                     $value.colorpicker('destroy');
@@ -590,10 +595,10 @@
                 }
                 $('#thumbnailPreview').css({
                     'background-color': styleFieldValue('thumbnail-bg'),
-                    'border-width':     width,
-                    'border-style':     'solid',
-                    'border-color':     styleFieldValue('thumbnail-border-color'),
-                    'border-radius':    styleFieldValue('thumbnail-border-radius'),
+                    'border-width': width,
+                    'border-style': 'solid',
+                    'border-color': styleFieldValue('thumbnail-border-color'),
+                    'border-radius': styleFieldValue('thumbnail-border-radius'),
                 });
             }
 
@@ -604,13 +609,13 @@
                 var bg = styleFieldValue('tooltip-bg');
                 $('#tooltipPreviewStyle').text(
                     '.tooltip-preview .tooltip-inner {' +
-                        'background-color:' + bg + ';' +
-                        'color:' + styleFieldValue('tooltip-color') + ';' +
-                        'border-radius:' + styleFieldValue('tooltip-border-radius') + ';' +
+                    'background-color:' + bg + ';' +
+                    'color:' + styleFieldValue('tooltip-color') + ';' +
+                    'border-radius:' + styleFieldValue('tooltip-border-radius') + ';' +
                     '}' +
                     '.tooltip-preview.show { opacity:' + styleFieldValue('tooltip-opacity') + '; }' +
                     '.tooltip-preview .arrow::before {' +
-                        'border-top-color:' + bg + ';' +
+                    'border-top-color:' + bg + ';' +
                     '}'
                 );
             }
@@ -625,13 +630,13 @@
                     template: '<div class="tooltip tooltip-preview bs-tooltip-top" role="tooltip" x-placement="top"><div class="arrow"></div><div class="tooltip-inner"></div></div>',
                 });
 
-                $tooltipPreviewBtn.on('click', function (e) {
+                $tooltipPreviewBtn.on('click', function(e) {
                     e.stopPropagation();
                     applyTooltipPreviewStyles();
                     $tooltipPreviewBtn.tooltip('show');
                 });
 
-                $(document).on('click', function () {
+                $(document).on('click', function() {
                     $tooltipPreviewBtn.tooltip('hide');
                 });
             }
@@ -640,19 +645,23 @@
             var $form = $submitButtons.closest('form');
             var clickedAction = null;
 
-            $submitButtons.on('click', function () {
+            $submitButtons.on('click', function() {
                 clickedAction = $(this).val();
             });
 
-            $form.on('submit', function () {
-                $submitButtons.prop('disabled', true).each(function () {
+            $form.on('submit', function() {
+                $submitButtons.prop('disabled', true).each(function() {
                     var $btn = $(this);
                     if ($btn.val() == clickedAction) {
                         $btn.html('<i class="fas fa-spinner fa-spin mr-1"></i>' + (clickedAction == 'save_compile' ? 'Compiling...' : 'Saving...'));
                     }
                 });
                 if (clickedAction) {
-                    $form.append($('<input>', { type: 'hidden', name: 'action', value: clickedAction }));
+                    $form.append($('<input>', {
+                        type: 'hidden',
+                        name: 'action',
+                        value: clickedAction
+                    }));
                 }
             });
         });

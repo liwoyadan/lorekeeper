@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5/theme/dracula.css">
     <style>
-        .CodeMirror { height: 250px; }
+        .CodeMirror {
+            height: 250px;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5/mode/css/css.js"></script>

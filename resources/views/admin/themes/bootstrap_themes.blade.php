@@ -11,10 +11,13 @@
             width: 16px;
             height: 168px;
             border-radius: 3px;
-            border: 1px solid rgba(0,0,0,0.15);
+            border: 1px solid rgba(0, 0, 0, 0.15);
             vertical-align: middle;
         }
-        .color-swatches { white-space: nowrap; }
+
+        .color-swatches {
+            white-space: nowrap;
+        }
     </style>
 @endpush
 
@@ -23,7 +26,8 @@
 
     <h1>Bootstrap Themes</h1>
     <p>
-        Bootstrap themes are rethemed versions of Bootstrap v4 with custom variables, compiled into a single CSS file like the default app.css. Bootstrap themes are made/edited separately from regular themes intentionally - so a single rethemed Bootstrap can be applied to multiple themes.<br>
+        Bootstrap themes are rethemed versions of Bootstrap v4 with custom variables, compiled into a single CSS file like the default app.css. Bootstrap themes are made/edited separately from regular themes intentionally - so a single rethemed Bootstrap
+        can be applied to multiple themes.<br>
         The Bootstrap themes made here can then be applied to any <b>base</b> themes made with theme manager.
     </p>
 
@@ -42,10 +46,10 @@
             {!! Form::select(
                 'sort',
                 [
-                    'alpha'         => 'Sort Alphabetically (A-Z)',
+                    'alpha' => 'Sort Alphabetically (A-Z)',
                     'alpha-reverse' => 'Sort Alphabetically (Z-A)',
-                    'newest'        => 'Newest First',
-                    'oldest'        => 'Oldest First',
+                    'newest' => 'Newest First',
+                    'oldest' => 'Oldest First',
                 ],
                 Request::get('sort') ?: 'alpha',
                 ['class' => 'form-control'],
@@ -86,12 +90,7 @@
                                 $isDefault = !isset($colors[$key]) || $colors[$key] == '';
                                 $swatch = $isDefault ? $entry['default'] : $colors[$key];
                             @endphp
-                            <span
-                                class="color-swatch mr-1"
-                                style="background-color: {{ $swatch }};"
-                                data-toggle="tooltip"
-                                title="{{ $entry['label'] }}: {{ $swatch }}{{ $isDefault ? ' (default)' : '' }}"
-                            ></span>
+                            <span class="color-swatch mr-1" style="background-color: {{ $swatch }};" data-toggle="tooltip" title="{{ $entry['label'] }}: {{ $swatch }}{{ $isDefault ? ' (default)' : '' }}"></span>
                         @endforeach
                     </div>
                     <div class="col-6 col-md-2 text-center">

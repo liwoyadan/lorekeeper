@@ -21,20 +21,15 @@
                     <div class="form-group mb-0">
                         {!! Form::label('theme_color_data[' . $key . '][lighten]', 'Direction', ['class' => 'font-weight-bold mb-1']) !!}
                         <div>
-                            {!! Form::checkbox(
-                                'theme_color_data[' . $key . '][lighten]',
-                                1,
-                                $lighten,
-                                [
-                                    'class'         => 'form-check-input',
-                                    'data-toggle'   => 'toggle',
-                                    'data-on'       => 'Lighten',
-                                    'data-off'      => 'Darken',
-                                    'data-onstyle'  => 'light border',
-                                    'data-offstyle' => 'dark',
-                                    'data-size'     => 'sm',
-                                ]
-                            ) !!}
+                            {!! Form::checkbox('theme_color_data[' . $key . '][lighten]', 1, $lighten, [
+                                'class' => 'form-check-input',
+                                'data-toggle' => 'toggle',
+                                'data-on' => 'Lighten',
+                                'data-off' => 'Darken',
+                                'data-onstyle' => 'light border',
+                                'data-offstyle' => 'dark',
+                                'data-size' => 'sm',
+                            ]) !!}
                         </div>
                     </div>
                 </div>
@@ -43,11 +38,7 @@
                     <div class="form-group mb-0">
                         {!! Form::label('theme_color_data[' . $key . '][step]', 'Step %', ['class' => 'font-weight-bold mb-0']) !!}
                         {!! add_help('Percentage shift per increment. Controls hover/active intensity and the spacing of the generated <code>--' . $key . '-100</code>..<code>900</code> CSS variables.') !!}
-                        {!! Form::number(
-                            'theme_color_data[' . $key . '][step]',
-                            $step,
-                            ['class' => 'form-control', 'min' => 1, 'max' => 25, 'placeholder' => '-']
-                        ) !!}
+                        {!! Form::number('theme_color_data[' . $key . '][step]', $step, ['class' => 'form-control', 'min' => 1, 'max' => 25, 'placeholder' => '-']) !!}
                         <div class="small mt-1">
                             <a href="#" class="set-step-default">Default ({{ $stepDefault }}%)</a>
                             <span class="text-muted">·</span>

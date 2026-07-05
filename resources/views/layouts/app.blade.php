@@ -81,6 +81,7 @@
         <link href="{{ asset('css/custom.css') . '?v=' . filemtime(public_path('css/custom.css')) }}" rel="stylesheet">
     @endif
 
+    {{-- blade-formatter-disable --}}
     @if (isset($theme) && $theme?->prioritize_css)
         @include('layouts.editable_theme')
     @endif
@@ -123,6 +124,7 @@
     @if (isset($decoratorTheme) && !$decoratorTheme?->prioritize_css)
         @include('layouts.editable_theme', ['theme' => $decoratorTheme])
     @endif
+    {{-- blade-formatter-enable --}}
 
     @stack('head')
     @include('feed::links')
@@ -243,13 +245,13 @@
                     ],
                     toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | spoiler-add spoiler-remove | removeformat | code',
                     content_css: [
-                        '{{ asset("css/app.css?v=" . filemtime(public_path("css/app.css"))) }}',
-                        '{{ asset("css/lorekeeper.css?v=" . filemtime(public_path("css/lorekeeper.css"))) }}',
-                        '{{ asset("css/all.min.css") }}', //fontawesome
-                        {{ file_exists(public_path("/css/custom.css")) ? "'".asset("css/custom.css?v=".filemtime(public_path("css/custom.css")))."'," : "" }}
-                        {!! $theme?->cssUrl ? "'".asset($theme?->cssUrl)."'," : "" !!}
-                        {!! $conditionalTheme?->cssUrl ? "'".asset($conditionalTheme?->cssUrl)."'," : "" !!}
-                        {!! $decoratorTheme?->cssUrl ? "'".asset($decoratorTheme?->cssUrl)."'," : "" !!}
+                        '{{ asset('css/app.css?v=' . filemtime(public_path('css/app.css'))) }}',
+                        '{{ asset('css/lorekeeper.css?v=' . filemtime(public_path('css/lorekeeper.css'))) }}',
+                        '{{ asset('css/all.min.css') }}', //fontawesome
+                        {{ file_exists(public_path('/css/custom.css')) ? "'" . asset('css/custom.css?v=' . filemtime(public_path('css/custom.css'))) . "'," : '' }}
+                        {!! $theme?->cssUrl ? "'" . asset($theme?->cssUrl) . "'," : '' !!}
+                        {!! $conditionalTheme?->cssUrl ? "'" . asset($conditionalTheme?->cssUrl) . "'," : '' !!}
+                        {!! $decoratorTheme?->cssUrl ? "'" . asset($decoratorTheme?->cssUrl) . "'," : '' !!}
                     ],
                     content_style: `
                         {!! isset($theme) && $theme ? str_replace(['<style>', '</style>'], '', view('layouts.editable_theme', ['theme' => $theme])) : '' !!}

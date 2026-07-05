@@ -40,13 +40,10 @@
     <div class="row {{ ($theme->theme_type ?? 'base') != 'base' ? 'hide' : '' }}" id="themeBootstrapRow">
         <div class="col-md">
             <div class="form-group">
-                {!! Form::label('theme_bootstrap_id', 'Bootstrap Theme') !!}{!! add_help('Compiled Bootstrap theme to apply to the site when this theme is active. Only for base themes. If this is blank, it will fallback to either your set sitewide default if applicable, if not then LK\'s slightly edited default (app.css).') !!}
-                {!! Form::select(
-                    'theme_bootstrap_id',
-                    $bootstrapOptions,
-                    $theme->theme_bootstrap_id,
-                    ['class' => 'form-control', 'placeholder' => 'None (Default)']
+                {!! Form::label('theme_bootstrap_id', 'Bootstrap Theme') !!}{!! add_help(
+                    'Compiled Bootstrap theme to apply to the site when this theme is active. Only for base themes. If this is blank, it will fallback to either your set sitewide default if applicable, if not then LK\'s slightly edited default (app.css).',
                 ) !!}
+                {!! Form::select('theme_bootstrap_id', $bootstrapOptions, $theme->theme_bootstrap_id, ['class' => 'form-control', 'placeholder' => 'None (Default)']) !!}
             </div>
         </div>
     </div>
@@ -115,7 +112,7 @@
                     {!! Form::label('creator_name[]', 'Creator(s) Name', ['class' => 'mb-md-0']) !!}{!! add_help('On-site users you would like to credit for this theme.') !!}
                 </div>
                 <div class="col-md">
-                    {!! Form::select('creator_name[]', $userOptions, ($theme->creatorData['name'] ?? null) ?? null, ['class' => 'form-control creator-select', 'multiple']) !!}
+                    {!! Form::select('creator_name[]', $userOptions, $theme->creatorData['name'] ?? null ?? null, ['class' => 'form-control creator-select', 'multiple']) !!}
                 </div>
             </div>
         </div>
@@ -126,7 +123,7 @@
                     {!! Form::label('creator_url', 'Creator Url(s)', ['class' => 'mb-md-0']) !!}{!! add_help('Separate multiples via comma.') !!}
                 </div>
                 <div class="col-md">
-                    {!! Form::text('creator_url', $theme->creators ? ($theme->creatorData['url'] ?? null) : null, ['class' => 'form-control']) !!}
+                    {!! Form::text('creator_url', $theme->creators ? $theme->creatorData['url'] ?? null : null, ['class' => 'form-control']) !!}
                 </div>
             </div>
         </div>
