@@ -95,6 +95,14 @@
     </div>
 
     <div class="card p-3 mb-2">
+        <h3>Accessibility</h3>
+        <p>
+            Adjust the site's appearance to suit your needs. Changes preview live and save to your user data.
+        </p>
+        @include('account._accessibility_panel')
+    </div>
+
+    <div class="card p-3 mb-2">
         <h3>Birthday Publicity</h3>
         {!! Form::open(['url' => 'account/dob']) !!}
         <div class="form-group row">

@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Color Step Default
@@ -12,7 +11,6 @@ return [
     | from ${colour}-500.
     |
     */
-
     'theme_color_step_default' => 5,
 
     /*
@@ -25,7 +23,6 @@ return [
     | were what shipped with Lorekeeper default. The rest are Bootstrap default.
     |
     */
-
     'base_colors' => [
         'blue'   => ['label' => 'Blue',   'default' => '#3490dc'],
         'indigo' => ['label' => 'Indigo', 'default' => '#6574cd'],
@@ -74,7 +71,6 @@ return [
     | for compilation (i.e. appending 'px' to a bare width number).
     |
     */
-
     'styles' => [
         'border-radius' => [
             'label'   => 'Border Radius',
@@ -200,12 +196,11 @@ return [
     | Custom Variable Suggestions
     |--------------------------------------------------------------------------
     |
-    | Specific Bootstrap variables for the custom variables dropdown that
-    | site owners would probably like ease of retheming; grouped by component. The
-    | selectize allows just typing a value, though, so users aren't limited to these.
+    | Specific Bootstrap variables for the custom variables dropdown that site
+    | owners would probably like ease of retheming; grouped by component. The selectize 
+    | allows just typing a value, though, so site owners aren't limited to these.
     |
     */
-
     'common_variables' => [
         'Cards' => [
             'card-bg', 'card-cap-bg', 'card-color', 'card-border-color', 'card-border-radius',
@@ -222,6 +217,101 @@ return [
         ],
         'Dropdowns' => [
             'dropdown-bg', 'dropdown-color', 'dropdown-border-color', 'dropdown-border-radius', 'dropdown-link-color',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Accessibility/Alt Settings Config Catalog
+    |--------------------------------------------------------------------------
+    |
+    | This is just a basic starting list of accessibility settings you can set
+    | up. They're grouped into panels, and each setting has a selector + property
+    | set for them. These're just basic defaults: you can override them in
+    | the admin panel or customize the selectors and whatnot here if you have
+    | custom CSS.
+    |
+    | Also here's a link to the WCAG resources site. *Not* an end-all-be-all
+    | as accessibility itself is highly varied and person-to-person, but a nice
+    | starting point for info, international & federal guidelines, and the like...
+    | https://www.wcag.com/
+    |
+    */
+    'accessibility' => [
+        'panels' => [
+            'text'   => 'Text & Reading',
+            'color'  => 'Colours',
+            'motion' => 'Motion & Contrast',
+        ],
+
+        'settings' => [
+            'body_font_size' => [
+                'label'      => 'Body Font Size',
+                'selector'   => 'body',
+                'property'   => 'font-size',
+                'input_type' => 'range',
+                'unit'       => 'px',
+            ],
+            'link_color' => [
+                'label'      => 'Link Colour',
+                'selector'   => 'a:not(.btn, .navbar-brand, .card-link, .dropdown-item):not(.sidebar-item > a)',
+                'property'   => 'color',
+                'input_type' => 'color',
+            ],
+            'heading_font_family' => [
+                'label'      => 'Heading Font',
+                'selector'   => 'h1, h2, h3, h4, h5, h6',
+                'property'   => 'font-family',
+                'input_type' => 'select',
+            ],
+            'body_font_family' => [
+                'label'      => 'Body Font',
+                'selector'   => 'body',
+                'property'   => 'font-family',
+                'input_type' => 'select',
+            ],
+            'body_text_color' => [
+                'label'      => 'Body Text Colour',
+                'selector'   => 'body',
+                'property'   => 'color',
+                'input_type' => 'color',
+            ],
+            'main_content_color' => [
+                'label'      => 'Main Content Background',
+                'selector'   => '.main-content',
+                'property'   => 'background-color',
+                'input_type' => 'color',
+            ],
+            'reduce_motion' => [
+                'label'          => 'Reduce Motion',
+                'selector'       => '*, *::before, *::after',
+                'property'       => 'animation-duration',
+                'extra_property' => 'transition-duration',
+                'input_type'     => 'toggle',
+                'on_value'       => '0.001s',
+                'off_value'      => null,
+            ],
+            'line_height' => [
+                'label'      => 'Line Height',
+                'selector'   => 'body',
+                'property'   => 'line-height',
+                'input_type' => 'range',
+            ],
+            'letter_spacing' => [
+                'label'      => 'Letter Spacing',
+                'selector'   => 'body',
+                'property'   => 'letter-spacing',
+                'input_type' => 'range',
+                'unit'       => 'px',
+            ],
+            'contrast' => [
+                'label'      => 'Increase Contrast',
+                'selector'   => 'body',
+                'property'   => 'filter',
+                'input_type' => 'toggle',
+                'on_value'   => 'contrast(1.25)',
+                'off_value'  => null,
+            ],
         ],
     ],
 

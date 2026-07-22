@@ -12,7 +12,7 @@ class Theme extends Model {
      * @var array
      */
     protected $fillable = [
-        'name', 'hash', 'is_default', 'is_active', 'has_css', 'has_header', 'has_background', 'extension', 'extension_background', 'creators', 'prioritize_css', 'link_id', 'link_type', 'is_user_selectable', 'theme_type', 'theme_bootstrap_id',
+        'name', 'hash', 'is_default', 'is_active', 'has_css', 'has_header', 'has_background', 'extension', 'extension_background', 'creators', 'prioritize_css', 'link_id', 'link_type', 'is_user_selectable', 'theme_type', 'theme_bootstrap_id', 'accessibility_data',
     ];
 
     /**
@@ -21,6 +21,15 @@ class Theme extends Model {
      * @var string
      */
     protected $table = 'themes';
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'accessibility_data' => 'array',
+    ];
 
     /**
      * Validation rules for creation.

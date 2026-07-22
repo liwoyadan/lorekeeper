@@ -216,6 +216,10 @@ return [
                 'name' => 'Bootstrap Themes',
                 'url'  => 'admin/bootstrap-themes',
             ],
+            [
+                'name' => 'Accessibility Settings',
+                'url'  => 'admin/accessibility-settings',
+            ],
         ],
     ],
     'Settings'   => [

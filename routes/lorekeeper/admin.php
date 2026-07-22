@@ -99,6 +99,23 @@ Route::group(['prefix' => 'bootstrap-themes', 'middleware' => 'power:edit_site_s
     Route::post('delete/{id}', 'ThemeController@postDeleteBootstrapTheme');
 });
 
+// ACCESSIBILITY SETTINGS
+Route::group(['prefix' => 'accessibility-settings', 'middleware' => 'power:edit_site_settings'], function () {
+    Route::get('/', 'AccessibilityController@getSettings');
+    Route::get('create', 'AccessibilityController@getCreateSetting');
+    Route::get('edit/{id}', 'AccessibilityController@getEditSetting');
+    Route::get('delete/{id}', 'AccessibilityController@getDeleteSetting');
+    Route::post('create', 'AccessibilityController@postCreateEditSetting');
+    Route::post('edit/{id}', 'AccessibilityController@postCreateEditSetting');
+    Route::post('delete/{id}', 'AccessibilityController@postDeleteSetting');
+
+    Route::get('overrides', 'AccessibilityController@getOverrides');
+    Route::post('overrides', 'AccessibilityController@postOverrides');
+
+    Route::get('themes', 'AccessibilityController@getThemeOverrides');
+    Route::post('themes/{id}', 'AccessibilityController@postThemeOverrides');
+});
+
 // SITE IMAGES
 Route::group(['prefix' => 'images', 'middleware' => 'power:edit_site_settings'], function () {
     Route::get('/', 'FileController@getSiteImages');

@@ -126,6 +126,12 @@
     @endif
     {{-- blade-formatter-enable --}}
 
+    {{-- Accessibility/Alt Settings Overrides: last so they win the CSS cascade --}}
+    @include('layouts.accessibility_styles')
+    @guest
+        @include('layouts.accessibility_head_script')
+    @endguest
+
     @stack('head')
     @include('feed::links')
 </head>

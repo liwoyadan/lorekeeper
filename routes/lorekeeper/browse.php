@@ -18,6 +18,16 @@ Route::get('items/{id}', 'Users\InventoryController@getStack');
 Route::get('items/character/{id}', 'Users\InventoryController@getCharacterStack');
 
 /**************************************************************************************************
+    Accessibility (public: guests persist client-side, logged-in users persist to their settings)
+**************************************************************************************************/
+Route::group(['prefix' => 'accessibility', 'namespace' => 'Users'], function () {
+    Route::get('/', 'AccessibilityController@getSettings');
+    Route::post('/', 'AccessibilityController@postSave');
+    Route::post('reset', 'AccessibilityController@postResetAll');
+    Route::post('reset/{id}', 'AccessibilityController@postReset');
+});
+
+/**************************************************************************************************
     News
 **************************************************************************************************/
 // PROFILES
