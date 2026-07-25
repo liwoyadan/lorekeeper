@@ -125,6 +125,15 @@
 
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
+                <!-- Accessibility/Alt Settings Menu -->
+                @if (Settings::get('accessibility_menu_enabled'))
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('accessibility') }}" id="a11yNavToggle" data-url="{{ url('accessibility/panel') }}" title="Accessibility & Alternate Settings Menu" data-toggle="tooltip" aria-label="Accessibility settings">
+                            <i class="fas fa-universal-access" style="font-size: 1.5em;" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                @endif
+
                 <!-- Authentication Links -->
                 @guest
                     <li class="nav-item">

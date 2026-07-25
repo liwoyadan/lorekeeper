@@ -22,9 +22,8 @@ Route::get('items/character/{id}', 'Users\InventoryController@getCharacterStack'
 **************************************************************************************************/
 Route::group(['prefix' => 'accessibility', 'namespace' => 'Users'], function () {
     Route::get('/', 'AccessibilityController@getSettings');
-    Route::post('/', 'AccessibilityController@postSave');
-    Route::post('reset', 'AccessibilityController@postResetAll');
-    Route::post('reset/{id}', 'AccessibilityController@postReset');
+    Route::get('panel', 'AccessibilityController@getPanel');
+    Route::post('/', 'AccessibilityController@postSaveAll');
 });
 
 /**************************************************************************************************

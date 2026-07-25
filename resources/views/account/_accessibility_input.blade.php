@@ -1,4 +1,5 @@
 @php
+    // sorry for the nasty nasty @php in blade
     $a11yType = $setting->input_type;
     $a11yChoices = isset($options['choices']) && is_array($options['choices']) ? $options['choices'] : [];
     $a11yPresets = isset($options['presets']) && is_array($options['presets']) ? $options['presets'] : [];
@@ -13,10 +14,11 @@
         $a11ySelectOptions[$cv] = is_array($choice) ? ($choice['label'] ?? $cv) : $choice;
     }
 @endphp
+
 <div class="form-group a11y-control" data-a11y-setting="{{ $setting->setting_key }}" data-a11y-id="{{ $setting->id }}" data-a11y-type="{{ $a11yType }}">
     <div class="d-flex justify-content-between align-items-center">
         {!! Form::label($a11yName, $setting->name, ['class' => 'mb-1 font-weight-bold']) !!}
-        <a href="#" class="small text-muted a11y-reset-one" data-a11y-id="{{ $setting->id }}">Reset</a>
+        <a href="#" class="badge badge-danger a11y-reset-one" data-a11y-id="{{ $setting->id }}">Reset</a>
     </div>
     @if ($setting->description)
         <p class="text-muted small mb-1">
@@ -33,24 +35,26 @@
                 </span>
             </div>
             @if ($default != '')
-                <small class="text-muted">Default: {{ $default }}{{ $a11yUnit }}</small>
+                <div class="text-muted small">
+                    Default: {{ $default }}{{ is_numeric($default) ? $a11yUnit : '' }}
+                </div>
             @endif
-        @break
+            @break
 
         @case('number')
             {!! Form::number($a11yName, $value, ['class' => 'form-control a11y-input', 'min' => $a11yMin, 'max' => $a11yMax, 'step' => $a11yStep, 'placeholder' => $default]) !!}
-        @break
+            @break
 
         @case('select')
             {!! Form::select($a11yName, $a11ySelectOptions, $value, ['class' => 'form-control a11y-input', 'placeholder' => $a11ySelectOptions[$default] ?? 'Default']) !!}
-        @break
+            @break
 
         @case('toggle')
             <div>
-                {!! Form::checkbox($a11yName, 1, $value == '1' || $value == 'on', ['class' => 'a11y-input', 'data-toggle' => 'toggle']) !!}
+                {!! Form::checkbox($a11yName, 1, $value == '1', ['class' => 'a11y-input', 'data-toggle' => 'toggle']) !!}
             </div>
-        @break
-
+            @break
+            
         @case('color')
             @if ($setting->is_constrained)
                 {!! Form::hidden($a11yName, $value, ['class' => 'a11y-input']) !!}
@@ -64,8 +68,13 @@
                     @endforeach
                 </div>
             @else
-                {!! Form::text($a11yName, $value, ['class' => 'form-control cp a11y-input', 'placeholder' => $default]) !!}
+                <div class="input-group cp">
+                    {!! Form::text($a11yName, $value, ['class' => 'form-control a11y-input', 'placeholder' => $default]) !!}
+                    <span class="input-group-append">
+                        <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                    </span>
+                </div>
             @endif
-        @break
+            @break
     @endswitch
 </div>

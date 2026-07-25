@@ -30,7 +30,8 @@
             @php $ov = $overrides[$key] ?? null; @endphp
             <div class="row flex-wrap col-12 mt-1 pt-2 ubt-top align-items-center">
                 <div class="col-12 col-md-3">
-                    <b>{{ $entry['label'] }}</b><br><code class="small">{{ $key }}</code>
+                    <b>{{ $entry['label'] }}</b><br>
+                    <code class="small">{{ $key }}</code>
                 </div>
                 <div class="col-12 col-md-5">
                     {!! Form::text('overrides[' . $key . '][selector]', $ov->selector ?? null, ['class' => 'form-control', 'placeholder' => $entry['selector'] ?? '']) !!}

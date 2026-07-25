@@ -85,6 +85,9 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('comment_dislikes_enabled', 0, '0: Dislikes disabled, 1: Dislikes enabled.');
 
+        // this is default 0 to allow for setup in the back before enabling for the userbase
+        $this->addSiteSetting('accessibility_menu_enabled', 0, '0: Accessibility menu hidden (disabled, but staff can still create and manage accessibility/alt settings), 1: Accessibility menu visible and available to users. ');
+
         $this->line("\nSite settings up to date!");
     }
 

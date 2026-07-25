@@ -59,7 +59,7 @@ class AppServiceProvider extends ServiceProvider {
         view()->composer('account._accessibility_panel', function ($view) {
             $accessibility = new AccessibilityManager;
             $user = Auth::user();
-            $theme = $user->theme ?? Theme::where('is_default', true)->first() ?? null;
+            $theme = $user?->theme ?? (Theme::where('is_default', true)->first() ?? null);
 
             $grouped = $accessibility->panelSettings($theme);
             $panels = config('lorekeeper.themes.accessibility.panels');

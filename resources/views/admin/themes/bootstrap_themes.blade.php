@@ -71,7 +71,7 @@
         <div class="row no-gutters">
             <div class="row flex-wrap col-12 pb-1 ubt-bottom font-weight-bold">
                 <div class="col-12 col-md-4">Name</div>
-                <div class="col-6 col-md">Colours</div>
+                <div class="col-6 col-md">Colors</div>
                 <div class="col-6 col-md-2 text-center">Themes Using</div>
                 <div class="col-6 col-md-2 text-center">Last Updated</div>
                 <div class="col-6 col-md-1"></div>

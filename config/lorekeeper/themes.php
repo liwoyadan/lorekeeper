@@ -1,6 +1,21 @@
 <?php
 
+    /*
+    |--------------------------------------------------------------------------
+    | THEMES / THEME MANAGER CONFIG
+    |--------------------------------------------------------------------------
+    |
+    | This file contains pretty much all the default(s) and configurables for
+    | Bootstrap retheming, accessibility/alt settings, and the like.
+    | (Sorry it's a lot.)
+    |
+    | NOTE: by default the accessibility/alt settings panel is off and must be
+    | turned on in the site settings page via admin panel.
+    |
+    */
+    
 return [
+
     /*
     |--------------------------------------------------------------------------
     | Color Step Default
@@ -8,7 +23,7 @@ return [
     |
     | The percentage the "Default"/"Set all" step buttons apply in the Bootstrap
     | theme editor. Step is % how much darker/lighter a colour becomes up and down
-    | from ${colour}-500.
+    | from ${color}-500. (i.e. if it's 5, ${color}-600 is 5% darker, etc.)
     |
     */
     'theme_color_step_default' => 5,
@@ -63,7 +78,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Non-color Variable Groups
+    | Non-Color Variable Groups
     |--------------------------------------------------------------------------
     |
     | Other variable groups that aren't colour palette related.
@@ -166,6 +181,9 @@ return [
         ],
     ],
 
+    // These are toggles Bootstrap ships with! Check out:
+    // https://getbootstrap.com/docs/4.6/getting-started/theming/#sass-options
+    // The four most-likely-to-be-used ones are here, but you can add the others.
     'toggles' => [
         'enable-rounded'               => [
             'label'   => 'Rounded Corners',
@@ -193,11 +211,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Custom Variable Suggestions
+    | Common Custom Variable Suggestions
     |--------------------------------------------------------------------------
     |
     | Specific Bootstrap variables for the custom variables dropdown that site
-    | owners would probably like ease of retheming; grouped by component. The selectize 
+    | owners would probably like ease of retheming; grouped by component. The input 
     | allows just typing a value, though, so site owners aren't limited to these.
     |
     */
@@ -227,9 +245,9 @@ return [
     |
     | This is just a basic starting list of accessibility settings you can set
     | up. They're grouped into panels, and each setting has a selector + property
-    | set for them. These're just basic defaults: you can override them in
-    | the admin panel or customize the selectors and whatnot here if you have
-    | custom CSS.
+    | set for them. These're basic defaults: you can override them in the
+    | admin panel or customize the selectors and whatnot here, directly, if 
+    | you have custom CSS.
     |
     | Also here's a link to the WCAG resources site. *Not* an end-all-be-all
     | as accessibility itself is highly varied and person-to-person, but a nice
@@ -240,20 +258,33 @@ return [
     'accessibility' => [
         'panels' => [
             'text'   => 'Text & Reading',
-            'color'  => 'Colours',
+            'color'  => 'Colors',
             'motion' => 'Motion & Contrast',
         ],
 
         'settings' => [
             'body_font_size' => [
                 'label'      => 'Body Font Size',
-                'selector'   => 'body',
+                'selector'   => '#headerNav, #main, #modal',
                 'property'   => 'font-size',
                 'input_type' => 'range',
-                'unit'       => 'px',
+                'unit'       => '%',
+            ],
+            'heading_scale' => [
+                'label'      => 'Heading Size',
+                'input_type' => 'range',
+                'unit'       => 'rem',
+                'levels'     => [
+                    'h1' => ['selector' => '#main h1, #main .h1', 'base' => 2.5],
+                    'h2' => ['selector' => '#main h2, #main .h2', 'base' => 2],
+                    'h3' => ['selector' => '#main h3, #main .h3', 'base' => 1.75],
+                    'h4' => ['selector' => '#main h4, #main .h4', 'base' => 1.5],
+                    'h5' => ['selector' => '#main h5, #main .h5', 'base' => 1.25],
+                    'h6' => ['selector' => '#main h6, #main .h6', 'base' => 1],
+                ],
             ],
             'link_color' => [
-                'label'      => 'Link Colour',
+                'label'      => 'Link Color',
                 'selector'   => 'a:not(.btn, .navbar-brand, .card-link, .dropdown-item):not(.sidebar-item > a)',
                 'property'   => 'color',
                 'input_type' => 'color',
@@ -266,19 +297,19 @@ return [
             ],
             'body_font_family' => [
                 'label'      => 'Body Font',
-                'selector'   => 'body',
+                'selector'   => '#headerNav, #main, #modal',
                 'property'   => 'font-family',
                 'input_type' => 'select',
             ],
             'body_text_color' => [
-                'label'      => 'Body Text Colour',
-                'selector'   => 'body',
+                'label'      => 'Body Text Color',
+                'selector'   => '#headerNav, #main, #modal',
                 'property'   => 'color',
                 'input_type' => 'color',
             ],
             'main_content_color' => [
                 'label'      => 'Main Content Background',
-                'selector'   => '.main-content',
+                'selector'   => '#main .main-content',
                 'property'   => 'background-color',
                 'input_type' => 'color',
             ],
@@ -293,20 +324,20 @@ return [
             ],
             'line_height' => [
                 'label'      => 'Line Height',
-                'selector'   => 'body',
+                'selector'   => '#headerNav, #main, #modal',
                 'property'   => 'line-height',
                 'input_type' => 'range',
             ],
             'letter_spacing' => [
                 'label'      => 'Letter Spacing',
-                'selector'   => 'body',
+                'selector'   => '#headerNav, #main, #modal',
                 'property'   => 'letter-spacing',
                 'input_type' => 'range',
                 'unit'       => 'px',
             ],
             'contrast' => [
                 'label'      => 'Increase Contrast',
-                'selector'   => 'body',
+                'selector'   => '#headerNav, #main',
                 'property'   => 'filter',
                 'input_type' => 'toggle',
                 'on_value'   => 'contrast(1.25)',

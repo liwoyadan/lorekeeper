@@ -32,37 +32,64 @@
                 No accessibility/alt settings exist yet. Create some first!
             </p>
         @else
-            <div class="row no-gutters">
-                <div class="row flex-wrap col-12 pb-1 ubt-bottom font-weight-bold">
-                    <div class="col-12 col-md-5">Setting</div>
-                    <div class="col-6 col-md-3 text-center">On Theme(s)...</div>
-                    <div class="col-6 col-md-4">Theme Default</div>
-                </div>
-                @foreach ($settings as $setting)
-                    @php
-                        $entry = $themeData[$setting->setting_key] ?? [];
-                        $enabled = $entry['is_enabled'] ?? true;
-                    @endphp
-                    <div class="row flex-wrap col-12 mt-1 pt-2 ubt-top align-items-center">
-                        <div class="col-12 col-md-5">
-                            <b>{{ $setting->name }}</b>
-                            <span class="badge badge-secondary ml-1">{{ ucfirst($setting->input_type) }}</span><br>
-                            <code class="small">{{ $setting->setting_key }}</code>
-                        </div>
-                        <div class="col-6 col-md-3 text-center">
-                            {!! Form::hidden('overrides[' . $setting->setting_key . '][is_enabled]', 0) !!}
-                            {!! Form::checkbox('overrides[' . $setting->setting_key . '][is_enabled]', 1, $enabled, ['class' => 'form-check-input', 'data-toggle' => 'toggle', 'data-on' => 'Offered', 'data-off' => 'Hidden', 'data-onstyle' => 'success', 'data-offstyle' => 'secondary']) !!}
-                        </div>
-                        <div class="col-6 col-md-4">
-                            {!! Form::text('overrides[' . $setting->setting_key . '][default_value]', $entry['default_value'] ?? null, ['class' => 'form-control', 'placeholder' => $setting->default_value ?? 'global default']) !!}
-                        </div>
-                    </div>
-                @endforeach
-            </div>
+            <p class="text-muted mb-2">
+                Settings already overridden on this theme are expanded. Hit <b>Customize</b> to override a setting; leave one collapsed to keep using its global options here.
+            </p>
+            @foreach ($settings as $setting)
+                @include('admin.accessibility._theme_override_row', ['setting' => $setting, 'entry' => $themeData[$setting->setting_key] ?? []])
+            @endforeach
             <div class="text-right mt-3">
                 {!! Form::submit('Save Theme Overrides', ['class' => 'btn btn-primary']) !!}
             </div>
         @endif
         {!! Form::close() !!}
     @endif
+@endsection
+
+@section('scripts')
+    @parent
+    <script>
+        $(document).ready(function () {
+            $('.a11y-theme-toggle').on('click', function (e) {
+                e.preventDefault();
+                var body = $(this).closest('.a11y-theme-row').find('.a11y-theme-body');
+                body.toggleClass('hide');
+                var open = !body.hasClass('hide');
+                $(this).find('i').toggleClass('fa-chevron-down', !open).toggleClass('fa-chevron-up', open);
+                $(this).find('.a11y-theme-toggle-text').text(open ? 'Hide' : 'Customize');
+                if (open) {
+                    // toggles that auto-init while hidden come out zero-width; rebuild once visible
+                    var tog = body.find('input[data-toggle="toggle"]');
+                    try { tog.bootstrapToggle('destroy'); } catch (err) {}
+                    tog.bootstrapToggle();
+                }
+            });
+
+            $('.a11y-add-row').on('click', function (e) {
+                e.preventDefault();
+                var field = $(this).data('field');
+                var key = $(this).data('key');
+                var clone = $('#' + field + 'Clone-' + key);
+                var row = clone.clone().removeClass('a11y-clone hide').removeAttr('id');
+                row.find('[name]').prop('disabled', false);
+                $('#' + field + 'List-' + key).append(row);
+                if (field == 'presets') {
+                    row.find('.cp').colorpicker({
+                        'autoInputFallback': false,
+                        'autoHexInputFallback': false,
+                        'format': 'auto',
+                        'useAlpha': true,
+                        extensions: [{
+                            name: 'blurValid'
+                        }]
+                    });
+                }
+            });
+
+            $(document).on('click', '.a11y-remove-row', function (e) {
+                e.preventDefault();
+                $(this).closest('.a11y-choice-row').remove();
+            });
+        });
+    </script>
 @endsection

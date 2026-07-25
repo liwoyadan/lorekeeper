@@ -88,11 +88,13 @@ class AccessibilityController extends Controller {
             abort(404);
         }
 
-        if ($service->createEditSetting($setting, $data)) {
-            flash('Setting '.($id ? 'updated' : 'created').' successfully.')->success();
-            if (!$id) {
-                return redirect()->to('admin/accessibility-settings');
-            }
+        $setting = $service->createEditSetting($setting, $data);
+        if ($id && $setting) {
+            flash('Setting updated successfully.')->success();
+        } elseif (!$id && $setting) {
+            flash('Setting created successfully.')->success();
+
+            return redirect()->to('admin/accessibility-settings/edit/'.$setting->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();

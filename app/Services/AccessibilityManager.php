@@ -33,8 +33,8 @@ class AccessibilityManager extends Service {
     }
 
     /**
-     * Active accessibility/alt settings the panel should show, grouped.
-     * Inactive ones are hidden. The function just consolidates the
+     * Active accessibility/alt settings the panel should show, grouped
+     * together. Inactive are hidden. Just consolidates the
      * settings grab & grouping in one place for convenience.
      */
     public function panelSettings($theme) {
@@ -50,7 +50,7 @@ class AccessibilityManager extends Service {
      * @return string
      */
     public function compileStyleBlock($user, $theme) {
-        if (!$user || !$theme) {
+        if (!$user) {
             return '';
         }
 
@@ -60,6 +60,7 @@ class AccessibilityManager extends Service {
             if (!isset($value)) {
                 continue;
             }
+
             $css = $this->cssFor($setting, $value);
             if ($css != '') {
                 $rules[] = $css;
@@ -75,7 +76,7 @@ class AccessibilityManager extends Service {
 
     /**
      * The formatted value for this user for a given setting,
-     * returns null if unset or disabled.
+     * returning null if unset or if the setting is disabled.
      * 
      * @return mixed
      */
@@ -102,7 +103,6 @@ class AccessibilityManager extends Service {
      */
     public function displayValue($setting, $user) {
         $stored = $this->storedValues($user);
-
         return $stored[$setting->setting_key] ?? null;
     }
 
@@ -129,7 +129,14 @@ class AccessibilityManager extends Service {
      */
     public function cssFor($setting, $value) {
         $target = $setting->target;
-        if (!$target || !isset($target['selector']) || !isset($target['property'])) {
+        if (!$target) {
+            return '';
+        }
+
+        if (isset($target['levels']) && is_array($target['levels'])) {
+            return $this->cssForLevels($setting, $target, $value);
+        }
+        if (!isset($target['selector']) || !isset($target['property'])) {
             return '';
         }
 
@@ -155,8 +162,40 @@ class AccessibilityManager extends Service {
     }
 
     /**
+     * Generate the multiple CSS blocks for targets that scale based on
+     * a multiplier, like headings/heading classes. Defaults can be overriden
+     * in the config file! (themes.php)
+     *
+     * @return string
+     */
+    private function cssForLevels($setting, $target, $value) {
+        if (!is_numeric($value)) {
+            return '';
+        }
+        $factor = $value + 0;
+        $unit = $target['unit'] ?? 'rem';
+        $options = $setting->options_data ?? [];
+        $overrides = isset($options['bases']) && is_array($options['bases']) ? $options['bases'] : [];
+
+        $rules = [];
+        foreach ($target['levels'] as $key => $level) {
+            if (!isset($level['selector'])) {
+                continue;
+            }
+            $base = isset($overrides[$key]) && $overrides[$key] != '' ? $overrides[$key] : ($level['base'] ?? null);
+            if (!is_numeric($base)) {
+                continue;
+            }
+            $size = rtrim(rtrim(sprintf('%.4f', $base * $factor), '0'), '.');
+            $rules[] = $level['selector'].' { font-size: '.$size.$unit.' !important; }';
+        }
+
+        return implode(' ', $rules);
+    }
+
+    /**
      * Array of the selectors/properties/types/etc of active settings.
-     * It's like the function above but for JS-friendliness...
+     * It's like the cssFor() function above but JS-friendly...
      * 
      * @return array
      */
@@ -168,6 +207,23 @@ class AccessibilityManager extends Service {
                 continue;
             }
             $options = $setting->options_data ?? [];
+
+            if (isset($target['levels']) && is_array($target['levels'])) {
+                $overrides = isset($options['bases']) && is_array($options['bases']) ? $options['bases'] : [];
+                $levels = [];
+                // '$or' = 'override'. i'm running out of variable names.
+                foreach ($target['levels'] as $or => $lv) {
+                    $base = isset($overrides[$or]) && $overrides[$or] != '' ? $overrides[$or] : ($lv['base'] ?? null);
+                    $levels[$or] = ['base' => is_numeric($base) ? $base + 0 : null];
+                }
+                $map[$setting->setting_key] = [
+                    'input_type' => $setting->input_type,
+                    'unit'       => $target['unit'] ?? 'rem',
+                    'levels'     => $levels,
+                ];
+                continue;
+            }
+
             $map[$setting->setting_key] = [
                 'selector'       => $target['selector'] ?? null,
                 'property'       => $target['property'] ?? null,
@@ -192,7 +248,7 @@ class AccessibilityManager extends Service {
         $options = $setting->options_data ?? [];
         if ($theme) {
             $override = $this->themeOverride($setting, $theme);
-            if ($override && isset($override['options_data']) && is_array($override['options_data'])) {
+            if ($override && (isset($override['options_data']) && is_array($override['options_data']))) {
                 $options = array_merge($options, $override['options_data']);
             }
         }
@@ -202,7 +258,7 @@ class AccessibilityManager extends Service {
 
     /**
      * Validate and/or clamp a value for a given setting (if needed). 
-     * If it's invalid (i.e. out of range) then this just returns null.
+     * If it's invalid (i.e. out of range) then just return null.
      * 
      * @return string|null
      */
@@ -215,21 +271,23 @@ class AccessibilityManager extends Service {
                 if (!is_numeric($value)) {
                     return null;
                 }
-                $num = $value + 0;
-                if (isset($options['min']) && $num < $options['min']) {
-                    $num = $options['min'] + 0;
+
+                $num = (float) $value;
+                if (isset($options['min']) && ($num < $options['min'])) {
+                    $num = (float) $options['min'];
                 }
-                if (isset($options['max']) && $num > $options['max']) {
-                    $num = $options['max'] + 0;
+                if (isset($options['max']) && ($num > $options['max'])) {
+                    $num = (float) $options['max'];
                 }
 
                 return (string) $num;
             case 'toggle':
-                return filter_var($value, FILTER_VALIDATE_BOOLEAN) ? '1' : '0';
+                return (int) $value ? '1' : '0';
             case 'select': case 'color':
                 if ($type == 'color' && !$setting->is_constrained) {
                     return $value;
                 }
+
                 $allowed = $this->allowedValues($options);
                 if (count($allowed) && !in_array($value, $allowed)) {
                     return null;
@@ -242,68 +300,33 @@ class AccessibilityManager extends Service {
     }
 
     /**
-     * Check & store a setting value in the user's accessibility_data!
-     * Spits out an error if it isn't valid.
+     * Saves all of the user's selected accessibility/alt settings values
+     * in one go...! Only settings that are currently active save, so anything
+     * set inactive is just dropped from the array.
      */
-    public function saveUserValue($user, $setting, $value) {
+    public function saveAllUserValues($user, $values) {
         DB::beginTransaction();
+
         try {
             $settings = $user->settings;
             if (!$settings) {
                 throw new \Exception('Your user settings data could not be retrieved.');
             }
 
-            $clean = $this->formatValue($setting, $user->theme, $value);
-            if (!isset($clean)) {
-                throw new \Exception('The given value is not a valid value for this setting.');
+            $clean = [];
+            foreach ($this->definitions() as $setting) {
+                if (!isset($values[$setting->setting_key])) {
+                    continue;
+                }
+
+                $value = $this->formatValue($setting, $user->theme, $values[$setting->setting_key]);
+                if (isset($value)) {
+                    $clean[$setting->setting_key] = $value;
+                }
             }
+            $settings->update(['accessibility_data' => count($clean) ? $clean : null]);
 
-            $data = $settings->accessibility_data ?? [];
-            $data[$setting->setting_key] = $clean;
-            $settings->update(['accessibility_data' => $data]);
-
-            return $this->commitReturn($clean);
-        } catch (\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
-
-        return $this->rollbackReturn(false);
-    }
-
-    /**
-     * Removes one setting from the user's accessibility_data.
-     */
-    public function resetUserValue($user, $setting) {
-        DB::beginTransaction();
-        try {
-            $settings = $user->settings;
-            if ($settings) {
-                $data = $settings->accessibility_data ?? [];
-                unset($data[$setting->setting_key]);
-                $settings->update(['accessibility_data' => count($data) ? $data : null]);
-            }
-
-            return $this->commitReturn(true);
-        } catch (\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
-
-        return $this->rollbackReturn(false);
-    }
-
-    /**
-     * Clear all of the user's accessibility choices at once.
-     * (Nulls the entire column/full reset)
-     */
-    public function resetAllUserValues($user) {
-        DB::beginTransaction();
-        try {
-            $settings = $user->settings;
-            if ($settings) {
-                $settings->update(['accessibility_data' => null]);
-            }
-
-            return $this->commitReturn(true);
+            return $this->commitReturn($settings);
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
@@ -317,19 +340,19 @@ class AccessibilityManager extends Service {
      */
     public function createEditSetting($setting, $data) {
         DB::beginTransaction();
+
         try {
             if (!config('lorekeeper.themes.accessibility.settings.'.($data['setting_key'] ?? ''))) {
                 throw new \Exception('The selected target does not exist.');
             }
 
             $data = $this->processSettingData($data);
-
             if ($setting && $setting->id) {
                 $setting->update($data);
             } else {
                 $setting = AccessibilitySetting::create($data);
             }
-
+            
             self::clearDefinitionsCache();
 
             return $this->commitReturn($setting);
@@ -341,10 +364,11 @@ class AccessibilityManager extends Service {
     }
 
     /**
-     * Delete a setting and drop the cached list.
+     * Delete a setting and drop the cache.
      */
     public function deleteSetting($setting) {
         DB::beginTransaction();
+
         try {
             $setting->delete();
             self::clearDefinitionsCache();
@@ -359,18 +383,19 @@ class AccessibilityManager extends Service {
 
     /**
      * Save per-site selector/property overrides. $data is keyed by setting_key
-     * with 'selector'/'property'; empty rows are removed.
+     * with 'selector' & 'property'; empty/non-existent ones are removed.
      */
     public function saveOverride($data) {
         DB::beginTransaction();
+
         try {
             foreach ($data as $key => $fields) {
                 if (!config('lorekeeper.themes.accessibility.settings.'.$key)) {
                     continue;
                 }
 
-                $selector = isset($fields['selector']) && $fields['selector'] != '' ? $fields['selector'] : null;
-                $property = isset($fields['property']) && $fields['property'] != '' ? $fields['property'] : null;
+                $selector = $fields['selector'] ?? null;
+                $property = $fields['property'] ?? null;
                 $existing = AccessibilityOverride::where('setting_key', $key)->first();
 
                 if (!$selector && !$property) {
@@ -403,6 +428,7 @@ class AccessibilityManager extends Service {
      */
     public function saveThemeOverride($theme, $data) {
         DB::beginTransaction();
+
         try {
             $clean = [];
             foreach ($data as $key => $fields) {
@@ -411,23 +437,24 @@ class AccessibilityManager extends Service {
                 }
 
                 $entry = [];
-                if (isset($fields['is_enabled'])) {
-                    $entry['is_enabled'] = (bool) $fields['is_enabled'];
-                }
-                if (isset($fields['default_value']) && $fields['default_value'] != '') {
+                $entry['is_enabled'] = isset($fields['is_enabled']) && $fields['is_enabled'];
+
+                if (isset($fields['default_value']) && $fields['default_value']) {
                     $entry['default_value'] = $fields['default_value'];
                 }
-                if (isset($fields['options_data']) && is_array($fields['options_data'])) {
-                    $entry['options_data'] = $fields['options_data'];
+
+                $options = $this->normalizeOptions($fields['options_data'] ?? null);
+                if (count($options)) {
+                    $entry['options_data'] = $options;
                 }
+
                 if (count($entry)) {
                     $clean[$key] = $entry;
                 }
             }
-
             $theme->update(['accessibility_data' => count($clean) ? $clean : null]);
 
-            return $this->commitReturn(true);
+            return $this->commitReturn($theme);
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
@@ -436,19 +463,17 @@ class AccessibilityManager extends Service {
     }
 
     private function storedValues($user) {
-        return $user && $user->settings ? ($user->settings->accessibility_data ?? []) : [];
+        return ($user && $user->settings) ? ($user->settings->accessibility_data ?? []) : [];
     }
 
     private function themeOverride($setting, $theme) {
         $data = $theme->accessibility_data ?? [];
-
         return $data[$setting->setting_key] ?? null;
     }
 
     private function themeDisabled($setting, $theme) {
         $override = $this->themeOverride($setting, $theme);
-
-        return $override && isset($override['is_enabled']) && !$override['is_enabled'];
+        return $override && (isset($override['is_enabled']) && !$override['is_enabled']);
     }
 
     private function toggleToken($setting, $value, $target) {
@@ -456,7 +481,7 @@ class AccessibilityManager extends Service {
         $on = $options['on_value'] ?? ($target['on_value'] ?? null);
         $off = $options['off_value'] ?? ($target['off_value'] ?? null);
 
-        return filter_var($value, FILTER_VALIDATE_BOOLEAN) ? $on : $off;
+        return (int) $value ? $on : $off;
     }
 
     private function allowedValues($options) {
@@ -470,18 +495,81 @@ class AccessibilityManager extends Service {
         }
 
         return array_values(array_filter($values, function ($value) {
-            return isset($value) && $value != '';
+            return isset($value) && ($value != '');
         }));
     }
 
     private function processSettingData($data) {
         $data['is_constrained'] = isset($data['is_constrained']) && $data['is_constrained'];
-        $data['is_active'] = isset($data['is_active']) && $data['is_active'];
-        $data['sort_order'] = $data['sort_order'] ?? 0;
-        if (!isset($data['options_data'])) {
-            $data['options_data'] = null;
+        // 'select' settings are always constrained to their preset choices
+        if (($data['input_type'] ?? null) == 'select') {
+            $data['is_constrained'] = true;
         }
 
+        $data['is_active'] = isset($data['is_active']) && $data['is_active'];
+        $data['sort_order'] = $data['sort_order'] ?? 0;
+
+        $options = (isset($data['options_data']) && is_array($data['options_data'])) ? $data['options_data'] : [];
+
+        foreach (['choices', 'presets'] as $bucket) {
+            $values = $data[$bucket.'_value'] ?? null;
+            if (is_array($values)) {
+                $options[$bucket] = $this->sortChoiceRows($values, $data[$bucket.'_label'] ?? null);
+            }
+            unset($data[$bucket.'_value'], $data[$bucket.'_label']);
+        }
+        $data['options_data'] = $options ?: null;
+
         return $data;
+    }
+
+    /**
+     * Goes through keys and values passed,
+     * drops any row without a value.
+     */
+    private function sortChoiceRows($values, $labels) {
+        if (!is_array($values)) {
+            return [];
+        }
+
+        $rows = [];
+        foreach ($values as $i => $value) {
+            if (!$value || ($value == '')) {
+                continue;
+            }
+
+            $label = is_array($labels) && isset($labels[$i]) ? $labels[$i] : '';
+            $rows[] = ['value' => $value, 'label' => $label];
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Clean raw per-theme options_data into a tidy array to store.
+     * Blank ranges & empty choice lists are dropped entirely
+     * so an untouched field inherits the global option via 
+     * getOptionSet() rather than overwriting it with empty value.
+     */
+    private function normalizeOptions($raw) {
+        if (!is_array($raw)) {
+            return [];
+        }
+
+        $out = [];
+        foreach (['min', 'max', 'step', 'unit', 'on_value', 'off_value'] as $key) {
+            if (isset($raw[$key])) {
+                $out[$key] = $raw[$key];
+            }
+        }
+
+        foreach (['choices', 'presets'] as $bucket) {
+            $rows = $this->sortChoiceRows($raw[$bucket.'_value'] ?? null, $raw[$bucket.'_label'] ?? null);
+            if (count($rows)) {
+                $out[$bucket] = $rows;
+            }
+        }
+
+        return $out;
     }
 }

@@ -41,6 +41,9 @@
     @endif
 
     @if ($navTextColor)
+        .sidebar a {
+            color:  {{ $navTextColor }} !important;
+        }
         .dropdown-item:hover,
         .sidebar a:hover,
         .sidebar a:active,

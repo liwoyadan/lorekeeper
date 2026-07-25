@@ -205,7 +205,7 @@ return [
             ],
         ],
     ],
-    'Theme Manager'     => [
+    'Theme-Manager'     => [
         'power' => 'edit_site_settings',
         'links' => [
             [
