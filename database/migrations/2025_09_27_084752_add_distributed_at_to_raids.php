@@ -4,15 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
-    {
+    public function up() {
         Schema::table('raids', function (Blueprint $table) {
             $table->integer('status')->unsigned()->default(0);
             $table->timestamp('distributed_at')->nullable()->default(null);
@@ -22,11 +18,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::table('raids', function (Blueprint $table) {
             $table->dropColumn('status');
             $table->dropColumn('distributed_at');

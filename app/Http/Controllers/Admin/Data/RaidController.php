@@ -76,7 +76,7 @@ class RaidController extends Controller {
      * Creates or edits a raid.
      *
      * @param App\Services\RaidService $service
-     * @param int|null                   $id
+     * @param int|null                 $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -120,7 +120,7 @@ class RaidController extends Controller {
      * Deletes a raid.
      *
      * @param App\Services\RaidService $service
-     * @param int                        $id
+     * @param int                      $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -155,7 +155,7 @@ class RaidController extends Controller {
      * Starts a raid.
      *
      * @param App\Services\RaidService $service
-     * @param int                        $id
+     * @param int                      $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -190,7 +190,7 @@ class RaidController extends Controller {
      * Ends a raid.
      *
      * @param App\Services\RaidService $service
-     * @param int                        $id
+     * @param int                      $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -225,7 +225,7 @@ class RaidController extends Controller {
      * Rewards a raid.
      *
      * @param App\Services\RaidService $service
-     * @param int                        $id
+     * @param int                      $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -264,12 +264,14 @@ class RaidController extends Controller {
 
         return view('admin.raids.raid_bosses', [
             'bosses'    => $query->paginate(20)->appends($request->query()),
-            'raids' => Raid::orderBy('id', 'DESC')->get(),
+            'raids'     => Raid::orderBy('id', 'DESC')->get(),
         ]);
     }
 
     /**
      * Shows the create raid page.
+     *
+     * @param mixed $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -281,7 +283,7 @@ class RaidController extends Controller {
 
         return view('admin.raids.create_edit_raid_boss', [
             'raidBoss'     => new RaidBoss,
-            'raid' => $raid,
+            'raid'         => $raid,
         ]);
     }
 
@@ -304,7 +306,7 @@ class RaidController extends Controller {
 
         return view('admin.raids.create_edit_raid_boss', [
             'raidBoss'     => $raidBoss,
-            'bossImages' => $bossImages,
+            'bossImages'   => $bossImages,
         ]);
     }
 
@@ -312,7 +314,7 @@ class RaidController extends Controller {
      * Creates or edits a raid.
      *
      * @param App\Services\RaidService $service
-     * @param int|null                   $id
+     * @param int|null                 $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -338,7 +340,7 @@ class RaidController extends Controller {
      * Creates or edits a raid.
      *
      * @param App\Services\RaidService $service
-     * @param int|null                   $id
+     * @param int|null                 $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -377,7 +379,7 @@ class RaidController extends Controller {
      * Deletes a raid.
      *
      * @param App\Services\RaidService $service
-     * @param int                        $id
+     * @param int                      $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -404,7 +406,7 @@ class RaidController extends Controller {
         $raidBoss = RaidBoss::find($id);
 
         return view('admin.raids._create_edit_raid_boss_image', [
-            'raidBoss' => $raidBoss,
+            'raidBoss'      => $raidBoss,
             'bossImage'     => new RaidBossImage,
         ]);
     }
@@ -412,7 +414,8 @@ class RaidController extends Controller {
     /**
      * Gets the raid deletion modal.
      *
-     * @param int $id
+     * @param int   $id
+     * @param mixed $imageId
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -420,7 +423,7 @@ class RaidController extends Controller {
         $bossImage = RaidBossImage::find($imageId);
 
         return view('admin.raids._create_edit_raid_boss_image', [
-            'raidBoss' => $bossImage->boss,
+            'raidBoss'      => $bossImage->boss,
             'bossImage'     => $bossImage,
         ]);
     }
@@ -429,7 +432,8 @@ class RaidController extends Controller {
      * Creates or edits a raid.
      *
      * @param App\Services\RaidService $service
-     * @param int|null                   $id
+     * @param int|null                 $id
+     * @param mixed|null               $imageId
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -458,7 +462,8 @@ class RaidController extends Controller {
     /**
      * Gets the boss image deletion modal.
      *
-     * @param int $id
+     * @param int   $id
+     * @param mixed $imageId
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -470,7 +475,7 @@ class RaidController extends Controller {
         }
 
         return view('admin.raids._delete_raid_boss_image', [
-            'raidBoss' => $raidBoss,
+            'raidBoss'  => $raidBoss,
             'bossImage' => $bossImage,
         ]);
     }
@@ -479,7 +484,8 @@ class RaidController extends Controller {
      * Deletes a boss image.
      *
      * @param App\Services\RaidService $service
-     * @param int                        $id
+     * @param int                      $id
+     * @param mixed                    $imageId
      *
      * @return \Illuminate\Http\RedirectResponse
      */

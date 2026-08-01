@@ -3,7 +3,6 @@
 namespace App\Models\Raid;
 
 use App\Models\Model;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RaidBoss extends Model {
@@ -90,6 +89,7 @@ class RaidBoss extends Model {
      * Scope a query to only include visible bosses.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed|null                            $user
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -117,6 +117,7 @@ class RaidBoss extends Model {
      * Scope a query to sort bosses by newest first.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed                                 $reverse
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */

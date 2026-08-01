@@ -3,19 +3,19 @@
 namespace App\Services;
 
 use App\Facades\Notifications;
+use App\Models\Currency\Currency;
+use App\Models\Item\Item;
+use App\Models\Loot\LootTable;
+use App\Models\Raffle\Raffle;
 use App\Models\Raid\Raid;
 use App\Models\Raid\RaidBoss;
 use App\Models\Raid\RaidBossImage;
 use App\Models\Raid\RaidReward;
-use App\Models\Currency\Currency;
-use App\Models\Item\Item;
-use App\Models\Raffle\Raffle;
-use App\Models\Loot\LootTable;
 use App\Models\User\User;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class RaidService extends Service {
     /*
@@ -36,10 +36,10 @@ class RaidService extends Service {
     /**
      * Creates a new raid.
      *
-     * @param array                 $data
-     * @param \App\Models\User\User $user
+     * @param array $data
+     * @param User  $user
      *
-     * @return \App\Models\Raid\Raid|bool
+     * @return bool|Raid
      */
     public function createRaid($data, $user) {
         DB::beginTransaction();
@@ -75,11 +75,11 @@ class RaidService extends Service {
     /**
      * Updates a raid.
      *
-     * @param \App\Models\Raid\Raid $raid
-     * @param array                     $data
-     * @param \App\Models\User\User     $user
+     * @param Raid  $raid
+     * @param array $data
+     * @param User  $user
      *
-     * @return \App\Models\Raid\Raid|bool
+     * @return bool|Raid
      */
     public function updateRaid($raid, $data, $user) {
         DB::beginTransaction();
@@ -121,7 +121,7 @@ class RaidService extends Service {
     /**
      * Deletes a raid.
      *
-     * @param \App\Models\Raid\Raid $raid
+     * @param Raid $raid
      *
      * @return bool
      */
@@ -153,10 +153,10 @@ class RaidService extends Service {
     /**
      * Creates a new raid boss.
      *
-     * @param array                 $data
-     * @param \App\Models\User\User $user
+     * @param array $data
+     * @param User  $user
      *
-     * @return \App\Models\Raid\RaidBoss|bool
+     * @return bool|RaidBoss
      */
     public function createRaidBoss($data, $user) {
         DB::beginTransaction();
@@ -181,11 +181,11 @@ class RaidService extends Service {
     /**
      * Updates a raid boss.
      *
-     * @param \App\Models\Raid\RaidBoss $boss
-     * @param array                     $data
-     * @param \App\Models\User\User     $user
+     * @param RaidBoss $boss
+     * @param array    $data
+     * @param User     $user
      *
-     * @return \App\Models\Raid\RaidBoss|bool
+     * @return bool|RaidBoss
      */
     public function updateRaidBoss($boss, $data, $user) {
         DB::beginTransaction();
@@ -232,7 +232,6 @@ class RaidService extends Service {
                     $boss->save();
                 }
 
-
                 if ($a > 0) {
                     flash('One or more threshold entries have been skipped due to lacking an amount value.')->error();
                 }
@@ -254,7 +253,7 @@ class RaidService extends Service {
     /**
      * Deletes a raid boss.
      *
-     * @param \App\Models\Raid\RaidBoss $boss
+     * @param RaidBoss $boss
      *
      * @return bool
      */
@@ -279,11 +278,11 @@ class RaidService extends Service {
     /**
      * Creates a new image for a raid boss.
      *
-     * @param \App\Models\Raid\RaidBoss $boss
-     * @param array                 $data
-     * @param \App\Models\User\User $user
+     * @param RaidBoss $boss
+     * @param array    $data
+     * @param User     $user
      *
-     * @return \App\Models\Raid\Raid|bool
+     * @return bool|Raid
      */
     public function createRaidBossImage($boss, $data, $user) {
         DB::beginTransaction();
@@ -308,12 +307,12 @@ class RaidService extends Service {
             }
 
             $raidBossImage = RaidBossImage::create([
-                'raid_boss_id' => $boss->id,
+                'raid_boss_id'     => $boss->id,
                 'health_threshold' => $data['health_threshold'] ?? null,
-                'threshold_type' => $data['threshold_type'] ?? 'percent',
-                'has_image' => $data['has_image'],
-                'hash' => $data['hash'] ?? null,
-                'extension' => $data['extension'] ?? null,
+                'threshold_type'   => $data['threshold_type'] ?? 'percent',
+                'has_image'        => $data['has_image'],
+                'hash'             => $data['hash'] ?? null,
+                'extension'        => $data['extension'] ?? null,
             ]);
 
             if ($image) {
@@ -331,11 +330,12 @@ class RaidService extends Service {
     /**
      * Updates an image for a raid boss.
      *
-     * @param \App\Models\Raid\RaidBoss $boss
-     * @param array                 $data
-     * @param \App\Models\User\User $user
+     * @param RaidBoss $boss
+     * @param array    $data
+     * @param User     $user
+     * @param mixed    $bossImage
      *
-     * @return \App\Models\Raid\Raid|bool
+     * @return bool|Raid
      */
     public function updateRaidBossImage($boss, $data, $user, $bossImage) {
         DB::beginTransaction();
@@ -385,8 +385,8 @@ class RaidService extends Service {
     /**
      * Deletes a raid.
      *
-     * @param \App\Models\Raid\RaidBoss $boss
-     * @param \App\Models\Raid\RaidBossImage $bossImage
+     * @param RaidBoss      $boss
+     * @param RaidBossImage $bossImage
      *
      * @return bool
      */
@@ -411,116 +411,10 @@ class RaidService extends Service {
         return $this->rollbackReturn(false);
     }
 
-    /**********************************************************************************************
-
-        OTHER FUNCTIONS
-
-    **********************************************************************************************/
-
-    /**
-     * Processes user input for creating/updating a raid.
-     *
-     * @param array                     $data
-     * @param \App\Models\Raid\Raid $raid
-     *
-     * @return array
-     */
-    private function populateData($data, $raid = null) {
-        if (isset($data['description']) && $data['description']) {
-            $data['parsed_description'] = parse($data['description']);
-        } else {
-            $data['description'] = null;
-            $data['parsed_description'] = null;
-        }
-
-        if (!isset($data['is_visible'])) {
-            $data['is_visible'] = 0;
-        }
-
-        if (!isset($data['continue_raid'])) {
-            $data['continue_raid'] = 0;
-        }
-
-        if (isset($data['remove_image'])) {
-            if ($raid && $raid->has_background && $data['remove_image']) {
-                $data['has_background'] = 0;
-                $this->deleteImage($raid->imagePath, $raid->imageFileName);
-            }
-            unset($data['remove_image']);
-        }
-
-        return $data;
-    }
-
-    /**
-     * Processes user input for creating/updating a raid boss.
-     *
-     * @param array                     $data
-     * @param \App\Models\Raid\Raid $raid
-     *
-     * @return array
-     */
-    private function populateBossData($data, $boss = null) {
-        if (isset($data['description']) && $data['description']) {
-            $data['parsed_description'] = parse($data['description']);
-        } else {
-            $data['description'] = null;
-            $data['parsed_description'] = null;
-        }
-
-        if (!isset($data['is_visible'])) {
-            $data['is_visible'] = 0;
-        }
-
-        if (!isset($data['health'])) {
-            $data['health'] = null;
-        }
-
-        return $data;
-    }
-
-    /**
-     * Processes user input for creating/updating raid rewards.
-     *
-     * @param array                     $data
-     * @param \App\Models\Raid\Raid $raid
-     */
-    private function populateRewards($data, $raid) {
-        // Clear the old rewards...
-        $raid->rewards()->delete();
-
-        if (isset($data['rewardable_type'])) {
-            foreach ($data['rewardable_type'] as $key => $type) {
-                RaidReward::create([
-                    'raid_id'       => $raid->id,
-                    'rewardable_type' => $type,
-                    'rewardable_id'   => $data['rewardable_id'][$key],
-                    'quantity'        => $data['quantity'][$key],
-                    'damage_required' => $data['damage_required'][$key] ?? 0,
-                ]);
-            }
-        }
-    }
-
-    /**
-     * Processes input for what deals damage to the raid.
-     *
-     * @param array                     $data
-     * @param \App\Models\Raid\Raid $raid
-     */
-    private function populateDamage($data, $raid) {
-        $raidData = $raid->data;
-        $raidData['damage']['type'] = $data['damage_type'] ?? null;
-        $raidData['damage']['id'] = $data['damage_id'] ?? null;
-        $raidData['damage']['quantity'] = $data['damage_quantity'] ?? null;
-        $raidData['damage']['base'] = $data['damage_base'] ?? 1;
-        $raidData['damage']['max'] = $data['damage_max'] ?? null;
-        $raid->data = $raidData;
-        $raid->save();
-    }
-
     /**
      * Manually begin the specified raid.
+     *
+     * @param mixed $raid
      *
      * @return bool
      */
@@ -560,6 +454,8 @@ class RaidService extends Service {
     /**
      * Manually end the specified raid.
      *
+     * @param mixed $raid
+     *
      * @return bool
      */
     public function endRaid($raid) {
@@ -590,6 +486,8 @@ class RaidService extends Service {
 
     /**
      * Distributes the raid rewards..
+     *
+     * @param mixed $raid
      *
      * @return bool
      */
@@ -629,14 +527,14 @@ class RaidService extends Service {
 
                         Notifications::create('RAID_PARTICIPANT_REWARDS', $user, [
                             'raid_name'     => $raid->name,
-                            'raid_word'    => __('raids.raid'),
-                            'damage' => $raid->userDamage($user),
+                            'raid_word'     => __('raids.raid'),
+                            'damage'        => $raid->userDamage($user),
                         ]);
                         $c++;
                     } else {
                         Notifications::create('RAID_PARTICIPANT_REWARDLESS', $user, [
                             'raid_name'     => $raid->name,
-                            'raid_word'    => __('raids.raid'),
+                            'raid_word'     => __('raids.raid'),
                         ]);
                     }
                     $t++;
@@ -667,7 +565,7 @@ class RaidService extends Service {
 
             try {
                 Raid::shouldBeVisible()->has('bosses')->update(['is_visible' => 1, 'status' => 1]);
-                $bosses = RaidBoss::where('is_visible', 0)->whereHas('raid', function($r) {
+                $bosses = RaidBoss::where('is_visible', 0)->whereHas('raid', function ($r) {
                     $r->where('is_visible', 1)->where('status', 1);
                 })->update(['is_visible' => 1]);
 
@@ -680,11 +578,119 @@ class RaidService extends Service {
         }
     }
 
+    /**********************************************************************************************
+
+        OTHER FUNCTIONS
+
+    **********************************************************************************************/
+
+    /**
+     * Processes user input for creating/updating a raid.
+     *
+     * @param array $data
+     * @param Raid  $raid
+     *
+     * @return array
+     */
+    private function populateData($data, $raid = null) {
+        if (isset($data['description']) && $data['description']) {
+            $data['parsed_description'] = parse($data['description']);
+        } else {
+            $data['description'] = null;
+            $data['parsed_description'] = null;
+        }
+
+        if (!isset($data['is_visible'])) {
+            $data['is_visible'] = 0;
+        }
+
+        if (!isset($data['continue_raid'])) {
+            $data['continue_raid'] = 0;
+        }
+
+        if (isset($data['remove_image'])) {
+            if ($raid && $raid->has_background && $data['remove_image']) {
+                $data['has_background'] = 0;
+                $this->deleteImage($raid->imagePath, $raid->imageFileName);
+            }
+            unset($data['remove_image']);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Processes user input for creating/updating a raid boss.
+     *
+     * @param array      $data
+     * @param mixed|null $boss
+     *
+     * @return array
+     */
+    private function populateBossData($data, $boss = null) {
+        if (isset($data['description']) && $data['description']) {
+            $data['parsed_description'] = parse($data['description']);
+        } else {
+            $data['description'] = null;
+            $data['parsed_description'] = null;
+        }
+
+        if (!isset($data['is_visible'])) {
+            $data['is_visible'] = 0;
+        }
+
+        if (!isset($data['health'])) {
+            $data['health'] = null;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Processes user input for creating/updating raid rewards.
+     *
+     * @param array $data
+     * @param Raid  $raid
+     */
+    private function populateRewards($data, $raid) {
+        // Clear the old rewards...
+        $raid->rewards()->delete();
+
+        if (isset($data['rewardable_type'])) {
+            foreach ($data['rewardable_type'] as $key => $type) {
+                RaidReward::create([
+                    'raid_id'         => $raid->id,
+                    'rewardable_type' => $type,
+                    'rewardable_id'   => $data['rewardable_id'][$key],
+                    'quantity'        => $data['quantity'][$key],
+                    'damage_required' => $data['damage_required'][$key] ?? 0,
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Processes input for what deals damage to the raid.
+     *
+     * @param array $data
+     * @param Raid  $raid
+     */
+    private function populateDamage($data, $raid) {
+        $raidData = $raid->data;
+        $raidData['damage']['type'] = $data['damage_type'] ?? null;
+        $raidData['damage']['id'] = $data['damage_id'] ?? null;
+        $raidData['damage']['quantity'] = $data['damage_quantity'] ?? null;
+        $raidData['damage']['base'] = $data['damage_base'] ?? 1;
+        $raidData['damage']['max'] = $data['damage_max'] ?? null;
+        $raid->data = $raidData;
+        $raid->save();
+    }
+
     /**
      * Processes reward data into a format that can be used for distribution.
      *
-     * @param array $data
-     * @param int  $damage
+     * @param int   $damage
+     * @param mixed $raid
      *
      * @return array
      */

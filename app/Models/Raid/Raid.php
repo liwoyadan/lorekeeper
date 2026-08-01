@@ -3,9 +3,9 @@
 namespace App\Models\Raid;
 
 use App\Models\Model;
+use App\Services\RaidManager;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Services\RaidManager;
 
 class Raid extends Model {
     use SoftDeletes;
@@ -34,10 +34,10 @@ class Raid extends Model {
      * @var array
      */
     protected $casts = [
-        'start_at' => 'datetime',
-        'end_at'   => 'datetime',
+        'start_at'         => 'datetime',
+        'end_at'           => 'datetime',
         'distributed_at'   => 'datetime',
-        'data' => 'array',
+        'data'             => 'array',
     ];
 
     /**
@@ -143,6 +143,7 @@ class Raid extends Model {
      * Scope a query to sort features by newest first.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed                                 $reverse
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -222,7 +223,7 @@ class Raid extends Model {
      * @return string
      */
     public function getUrlAttribute() {
-        return url( __('raids.raids').'?name='.$this->name);
+        return url(__('raids.raids').'?name='.$this->name);
     }
 
     /**
@@ -231,7 +232,7 @@ class Raid extends Model {
      * @return string
      */
     public function getIdUrlAttribute() {
-        return url( __('raids.raids').'/data/'.$this->id);
+        return url(__('raids.raids').'/data/'.$this->id);
     }
 
     /**
@@ -373,6 +374,8 @@ class Raid extends Model {
     /**
      * Get the required asset to make an attack on this raid.
      *
+     * @param mixed $flat
+     *
      * @return array
      */
     public function attackAsset($flat = true) {
@@ -389,12 +392,12 @@ class Raid extends Model {
 
                     if ($flat) {
                         $attack = [
-                            'asset' => $asset,
+                            'asset'    => $asset,
                             'quantity' => $damageData['quantity'],
                         ];
                     } else {
                         $attack['items'] = [
-                            'asset' => $asset,
+                            'asset'    => $asset,
                             'quantity' => $damageData['quantity'],
                         ];
                     }
@@ -408,12 +411,12 @@ class Raid extends Model {
 
                     if ($flat) {
                         $attack = [
-                            'asset' => $asset,
+                            'asset'    => $asset,
                             'quantity' => $damageData['quantity'],
                         ];
                     } else {
                         $attack['currencies'] = [
-                            'asset' => $asset,
+                            'asset'    => $asset,
                             'quantity' => $damageData['quantity'],
                         ];
                     }
@@ -448,6 +451,8 @@ class Raid extends Model {
      * Checks if the user has the requirements to
      * make an attack.
      *
+     * @param mixed|null $user
+     *
      * @return mixed
      */
     public function canAttack($user = null) {
@@ -469,6 +474,8 @@ class Raid extends Model {
     /**
      * Gets how much damage a user has
      * done so far.
+     *
+     * @param mixed|null $user
      *
      * @return int
      */

@@ -17,12 +17,12 @@ return [
     /
     */
 
-    'raid' => 'raid',                         // use __
-    'raids' => 'raids',                       // use __
+    'raid'   => 'raid',                         // use __
+    'raids'  => 'raids',                       // use __
     'raids_' => 'raid|raids',                // Use trans_choice instead of __
 
-    'boss' => 'boss',                 // use __
-    'bosses' => 'bosses',               // use __
+    'boss'    => 'boss',                 // use __
+    'bosses'  => 'bosses',               // use __
     'bosses_' => 'boss|bosses',    // Use trans_choice instead of __
 
 ];

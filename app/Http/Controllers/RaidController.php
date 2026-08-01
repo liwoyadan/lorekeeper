@@ -4,14 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Raid\Raid;
 use App\Models\Raid\RaidBoss;
-use App\Models\Currency\Currency;
-use App\Models\Item\Item;
-use App\Models\User\User;
+use App\Services\RaidManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
-use App\Services\RaidManager;
-use Illuminate\Support\Facades\DB;
 
 class RaidController extends Controller {
     /*
@@ -31,10 +27,11 @@ class RaidController extends Controller {
         $this->middleware(function ($request, $next) {
             $visibleRaids = Raid::where('is_visible', 1)->orderBy('id', 'DESC')->get();
             $currentRaid = $visibleRaids->filter(function ($raid) {
-                    return $raid->isActive;
-                });
+                return $raid->isActive;
+            });
 
             View::share('currentRaid', $currentRaid->first() ?? null);
+
             return $next($request);
         });
     }
@@ -84,6 +81,8 @@ class RaidController extends Controller {
 
     /**
      * Shows a specific raid's page.
+     *
+     * @param mixed $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -157,6 +156,8 @@ class RaidController extends Controller {
     /**
      * Shows the raid boss individual page.
      *
+     * @param mixed $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getBoss($id) {
@@ -175,6 +176,9 @@ class RaidController extends Controller {
 
     /**
      * Attacks the current raid.
+     *
+     * @param mixed $id
+     * @param mixed $bossId
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -206,6 +210,8 @@ class RaidController extends Controller {
      * Shows the leaderboard of users and their damage dealt
      * for a specific raid.
      *
+     * @param mixed $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUserLeaderboard($id) {
@@ -216,10 +222,10 @@ class RaidController extends Controller {
         if (!$raid->is_visible && (!Auth::check() || Auth::check() && !Auth::user()->hasPower('manage_raids'))) {
             abort(404);
         }
-        $query = $raid->damageLogs()->selectRaw("SUM(damage) as total_damage,user_id")->groupBy('user_id')->get();
+        $query = $raid->damageLogs()->selectRaw('SUM(damage) as total_damage,user_id')->groupBy('user_id')->get();
 
         return view('raids.user_leaderboard', [
-            'raid' => $raid,
+            'raid'    => $raid,
             'entries' => $query->sortByDesc('total_damage'),
         ]);
     }

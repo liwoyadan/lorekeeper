@@ -2,17 +2,14 @@
 
 namespace App\Services;
 
+use App\Models\Currency\Currency;
 use App\Models\Raid\Raid;
 use App\Models\Raid\RaidBoss;
-use App\Models\Currency\Currency;
-use App\Models\Raid\RaidBossImage;
-use App\Models\Raid\RaidReward;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 use App\Models\User\User;
-use App\Models\User\UserItem;
 use App\Models\User\UserCurrency;
+use App\Models\User\UserItem;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class RaidManager extends Service {
     /*
@@ -31,14 +28,14 @@ class RaidManager extends Service {
     **********************************************************************************************/
 
     /**
-    *  Checks if the user has the requirements to make an attack.
-    *
-    *  @param  \App\Models\User\User                   $user
-    *  @param  \App\Models\Raid\Raid                   $raid
-    *  @param  \App\Models\Raid\RaidBoss               $boss
-    *
-    *  @return array|null
-    */
+     *  Checks if the user has the requirements to make an attack.
+     *
+     * @param User     $user
+     * @param Raid     $raid
+     * @param RaidBoss $boss
+     *
+     * @return array|null
+     */
     public function pluckRequirements($user, $raid, $boss) {
         if (!$boss || !$raid) {
             return null;
@@ -106,14 +103,14 @@ class RaidManager extends Service {
     }
 
     /**
-    *  Attacks the raid boss.
-    *
-    *  @param  \App\Models\User\User                   $user
-    *  @param  \App\Models\Raid\Raid                   $raid
-    *  @param  \App\Models\Raid\RaidBoss               $boss
-    *
-    *  @return array|null
-    */
+     *  Attacks the raid boss.
+     *
+     * @param User     $user
+     * @param Raid     $raid
+     * @param RaidBoss $boss
+     *
+     * @return array|null
+     */
     public function attackBoss($raid, $boss, $user) {
         DB::beginTransaction();
 
@@ -141,7 +138,7 @@ class RaidManager extends Service {
 
             switch (array_key_first($raid->attackAsset(0))) {
                 case 'items':
-                    $invManager = new InventoryManager();
+                    $invManager = new InventoryManager;
                     foreach ($plucked as $id => $quantity) {
                         $itemStack = UserItem::find($id);
                         if (!$invManager->debitStack($user, 'Attacked '.ucfirst(__('raids.raid')), ['data' => 'Used to attack '.$boss->displayName.' encountered in '.$raid->displayName.'.'], $itemStack, $quantity)) {
@@ -150,7 +147,7 @@ class RaidManager extends Service {
                     }
                     break;
                 case 'currencies':
-                    $cManager = new CurrencyManager();
+                    $cManager = new CurrencyManager;
                     if (!$cManager->debitCurrency($user, null, 'Attacked '.ucfirst(__('raids.raid')), ('Used to attack '.$boss->displayName.' encountered in '.$raid->displayName.'.'), Currency::find($raid->attackAsset()['asset']->id), $raid->attackAsset()['quantity'])) {
                         throw new \Exception('Currency could not be debited.');
                     }
@@ -176,7 +173,7 @@ class RaidManager extends Service {
             flash('You dealt '.$damageDone.' damage to the '.__('raids.boss').'.')->info();
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
 
@@ -197,12 +194,12 @@ class RaidManager extends Service {
     public function createLog($userId, $raidId, $type, $data, $damage) {
         return DB::table('raids_log')->insert(
             [
-                'user_id'      => $userId,
-                'raid_id'    => $raidId,
+                'user_id'        => $userId,
+                'raid_id'        => $raidId,
                 'log'            => $type.($data ? ' ('.$data.')' : ''),
                 'log_type'       => $type,
                 'data'           => $data,
-                'damage'       => $damage ?? null,
+                'damage'         => $damage ?? null,
                 'created_at'     => Carbon::now(),
                 'updated_at'     => Carbon::now(),
             ]

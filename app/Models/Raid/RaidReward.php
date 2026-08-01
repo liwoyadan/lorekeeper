@@ -31,9 +31,9 @@ class RaidReward extends Model {
      * @var array
      */
     public static $createRules = [
-        'rewardable_type' => 'required',
-        'rewardable_id'   => 'required',
-        'quantity'        => 'required|integer|min:1',
+        'rewardable_type'        => 'required',
+        'rewardable_id'          => 'required',
+        'quantity'               => 'required|integer|min:1',
         'damage_required'        => 'required|integer',
     ];
 
@@ -43,9 +43,9 @@ class RaidReward extends Model {
      * @var array
      */
     public static $updateRules = [
-        'rewardable_type' => 'required',
-        'rewardable_id'   => 'required',
-        'quantity'        => 'required|integer|min:1',
+        'rewardable_type'        => 'required',
+        'rewardable_id'          => 'required',
+        'quantity'               => 'required|integer|min:1',
         'damage_required'        => 'required|integer',
     ];
 

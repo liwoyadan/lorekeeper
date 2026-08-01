@@ -3,7 +3,6 @@
 namespace App\Models\Raid;
 
 use App\Models\Model;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RaidBossImage extends Model {
@@ -39,7 +38,7 @@ class RaidBossImage extends Model {
      */
     public static $createRules = [
         'image'              => 'required|mimes:png,gif,webp',
-        'health_threshold' => 'nullable|integer',
+        'health_threshold'   => 'nullable|integer',
         'threshold_type'     => 'in:percent,amount',
     ];
 
@@ -50,7 +49,7 @@ class RaidBossImage extends Model {
      */
     public static $updateRules = [
         'image'              => 'mimes:png,gif,webp',
-        'health_threshold' => 'nullable|integer',
+        'health_threshold'   => 'nullable|integer',
         'threshold_type'     => 'in:percent,amount',
     ];
 
@@ -77,6 +76,7 @@ class RaidBossImage extends Model {
      * Scope a query to sort features by newest first.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed                                 $reverse
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -154,6 +154,7 @@ class RaidBossImage extends Model {
                         $calc = round($calc);
                     }
                 }
+
                 return $calc;
             }
         } elseif ($this->threshold_type == 'amount') {
