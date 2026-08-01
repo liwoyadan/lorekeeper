@@ -53,7 +53,7 @@ class AccessibilitySetting extends Model {
 
     /**
      * Show only active settings.
-     * 
+     *
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -64,7 +64,7 @@ class AccessibilitySetting extends Model {
 
     /**
      * Order settings for display: grouped and ordered by sort.
-     * 
+     *
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder

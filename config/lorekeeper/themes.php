@@ -1,19 +1,19 @@
 <?php
 
-    /*
-    |--------------------------------------------------------------------------
-    | THEMES / THEME MANAGER CONFIG
-    |--------------------------------------------------------------------------
-    |
-    | This file contains pretty much all the default(s) and configurables for
-    | Bootstrap retheming, accessibility/alt settings, and the like.
-    | (Sorry it's a lot.)
-    |
-    | NOTE: by default the accessibility/alt settings panel is off and must be
-    | turned on in the site settings page via admin panel.
-    |
-    */
-    
+/*
+|--------------------------------------------------------------------------
+| THEMES / THEME MANAGER CONFIG
+|--------------------------------------------------------------------------
+|
+| This file contains pretty much all the default(s) and configurables for
+| Bootstrap retheming, accessibility/alt settings, and the like.
+| (Sorry it's a lot.)
+|
+| NOTE: by default the accessibility/alt settings panel is off and must be
+| turned on in the site settings page via admin panel.
+|
+*/
+
 return [
 
     /*
@@ -215,7 +215,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Specific Bootstrap variables for the custom variables dropdown that site
-    | owners would probably like ease of retheming; grouped by component. The input 
+    | owners would probably like ease of retheming; grouped by component. The input
     | allows just typing a value, though, so site owners aren't limited to these.
     |
     */
@@ -246,7 +246,7 @@ return [
     | This is just a basic starting list of accessibility settings you can set
     | up. They're grouped into panels, and each setting has a selector + property
     | set for them. These're basic defaults: you can override them in the
-    | admin panel or customize the selectors and whatnot here, directly, if 
+    | admin panel or customize the selectors and whatnot here, directly, if
     | you have custom CSS.
     |
     | Also here's a link to the WCAG resources site. *Not* an end-all-be-all

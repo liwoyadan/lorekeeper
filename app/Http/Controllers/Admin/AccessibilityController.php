@@ -70,7 +70,7 @@ class AccessibilityController extends Controller {
      * Creates or edits a setting.
      *
      * @param App\Services\AccessibilityManager $service
-     * @param int|null                  $id
+     * @param int|null                          $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -121,7 +121,7 @@ class AccessibilityController extends Controller {
      * Deletes a setting.
      *
      * @param App\Services\AccessibilityManager $service
-     * @param int                      $id
+     * @param int                               $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -150,6 +150,7 @@ class AccessibilityController extends Controller {
      * Saves overrides for a setting.
      *
      * @param App\Services\AccessibilityManager $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postOverrides(Request $request, AccessibilityManager $service) {
@@ -183,6 +184,8 @@ class AccessibilityController extends Controller {
      * Saves the overrides for a specified theme.
      *
      * @param App\Services\AccessibilityManager $service
+     * @param mixed                             $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postThemeOverrides(Request $request, AccessibilityManager $service, $id) {

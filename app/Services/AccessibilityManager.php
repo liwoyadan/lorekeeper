@@ -36,6 +36,8 @@ class AccessibilityManager extends Service {
      * Active accessibility/alt settings the panel should show, grouped
      * together. Inactive are hidden. Just consolidates the
      * settings grab & grouping in one place for convenience.
+     *
+     * @param mixed $theme
      */
     public function panelSettings($theme) {
         return $this->definitions()->filter(function ($setting) use ($theme) {
@@ -44,9 +46,12 @@ class AccessibilityManager extends Service {
     }
 
     /**
-     * Style block for a logged-in users 
+     * Style block for a logged-in users
      * (this doesn't affect guests, they use localStorage).
-     * 
+     *
+     * @param mixed $user
+     * @param mixed $theme
+     *
      * @return string
      */
     public function compileStyleBlock($user, $theme) {
@@ -77,7 +82,11 @@ class AccessibilityManager extends Service {
     /**
      * The formatted value for this user for a given setting,
      * returning null if unset or if the setting is disabled.
-     * 
+     *
+     * @param mixed      $setting
+     * @param mixed|null $user
+     * @param mixed|null $theme
+     *
      * @return mixed
      */
     public function getValue($setting, $user = null, $theme = null) {
@@ -98,17 +107,24 @@ class AccessibilityManager extends Service {
 
     /**
      * The user's saved value for a given setting, or null if not applicable.
-     * 
+     *
+     * @param mixed $setting
+     * @param mixed $user
+     *
      * @return string
      */
     public function displayValue($setting, $user) {
         $stored = $this->storedValues($user);
+
         return $stored[$setting->setting_key] ?? null;
     }
 
     /**
      * The admin-set default for a setting, shown as the control's placeholder rather
      * than a pre-selected value. A theme may override the setting's own default.
+     *
+     * @param mixed      $setting
+     * @param mixed|null $theme
      */
     public function defaultValue($setting, $theme = null) {
         if ($theme) {
@@ -124,7 +140,10 @@ class AccessibilityManager extends Service {
     /**
      * The actual CSS for an applied setting,
      * or '' (empty string) if nothing.
-     * 
+     *
+     * @param mixed $setting
+     * @param mixed $value
+     *
      * @return string
      */
     public function cssFor($setting, $value) {
@@ -162,41 +181,9 @@ class AccessibilityManager extends Service {
     }
 
     /**
-     * Generate the multiple CSS blocks for targets that scale based on
-     * a multiplier, like headings/heading classes. Defaults can be overriden
-     * in the config file! (themes.php)
-     *
-     * @return string
-     */
-    private function cssForLevels($setting, $target, $value) {
-        if (!is_numeric($value)) {
-            return '';
-        }
-        $factor = $value + 0;
-        $unit = $target['unit'] ?? 'rem';
-        $options = $setting->options_data ?? [];
-        $overrides = isset($options['bases']) && is_array($options['bases']) ? $options['bases'] : [];
-
-        $rules = [];
-        foreach ($target['levels'] as $key => $level) {
-            if (!isset($level['selector'])) {
-                continue;
-            }
-            $base = isset($overrides[$key]) && $overrides[$key] != '' ? $overrides[$key] : ($level['base'] ?? null);
-            if (!is_numeric($base)) {
-                continue;
-            }
-            $size = rtrim(rtrim(sprintf('%.4f', $base * $factor), '0'), '.');
-            $rules[] = $level['selector'].' { font-size: '.$size.$unit.' !important; }';
-        }
-
-        return implode(' ', $rules);
-    }
-
-    /**
      * Array of the selectors/properties/types/etc of active settings.
      * It's like the cssFor() function above but JS-friendly...
-     * 
+     *
      * @return array
      */
     public function activeSettingsArray() {
@@ -239,9 +226,12 @@ class AccessibilityManager extends Service {
     }
 
     /**
-     * Merged alt options set for a setting, with any per-theme 
+     * Merged alt options set for a setting, with any per-theme
      * override applied over the global, if applicable.
-     * 
+     *
+     * @param mixed      $setting
+     * @param mixed|null $theme
+     *
      * @return array
      */
     public function getOptionSet($setting, $theme = null) {
@@ -257,9 +247,13 @@ class AccessibilityManager extends Service {
     }
 
     /**
-     * Validate and/or clamp a value for a given setting (if needed). 
+     * Validate and/or clamp a value for a given setting (if needed).
      * If it's invalid (i.e. out of range) then just return null.
-     * 
+     *
+     * @param mixed $setting
+     * @param mixed $theme
+     * @param mixed $value
+     *
      * @return string|null
      */
     public function formatValue($setting, $theme, $value) {
@@ -303,6 +297,9 @@ class AccessibilityManager extends Service {
      * Saves all of the user's selected accessibility/alt settings values
      * in one go...! Only settings that are currently active save, so anything
      * set inactive is just dropped from the array.
+     *
+     * @param mixed $user
+     * @param mixed $values
      */
     public function saveAllUserValues($user, $values) {
         DB::beginTransaction();
@@ -337,6 +334,9 @@ class AccessibilityManager extends Service {
     /**
      * Create or update a setting. The entry sets input_type, so a
      * setting can only point at a target that exists in the config.
+     *
+     * @param mixed $setting
+     * @param mixed $data
      */
     public function createEditSetting($setting, $data) {
         DB::beginTransaction();
@@ -352,7 +352,7 @@ class AccessibilityManager extends Service {
             } else {
                 $setting = AccessibilitySetting::create($data);
             }
-            
+
             self::clearDefinitionsCache();
 
             return $this->commitReturn($setting);
@@ -365,6 +365,8 @@ class AccessibilityManager extends Service {
 
     /**
      * Delete a setting and drop the cache.
+     *
+     * @param mixed $setting
      */
     public function deleteSetting($setting) {
         DB::beginTransaction();
@@ -384,6 +386,8 @@ class AccessibilityManager extends Service {
     /**
      * Save per-site selector/property overrides. $data is keyed by setting_key
      * with 'selector' & 'property'; empty/non-existent ones are removed.
+     *
+     * @param mixed $data
      */
     public function saveOverride($data) {
         DB::beginTransaction();
@@ -425,6 +429,9 @@ class AccessibilityManager extends Service {
     /**
      * Save a theme's per-setting overrides into accessibility_data. $data is
      * keyed by setting_key with its is_enabled/default_value/options_data.
+     *
+     * @param mixed $theme
+     * @param mixed $data
      */
     public function saveThemeOverride($theme, $data) {
         DB::beginTransaction();
@@ -462,17 +469,55 @@ class AccessibilityManager extends Service {
         return $this->rollbackReturn(false);
     }
 
+    /**
+     * Generate the multiple CSS blocks for targets that scale based on
+     * a multiplier, like headings/heading classes. Defaults can be overriden
+     * in the config file! (themes.php).
+     *
+     * @param mixed $setting
+     * @param mixed $target
+     * @param mixed $value
+     *
+     * @return string
+     */
+    private function cssForLevels($setting, $target, $value) {
+        if (!is_numeric($value)) {
+            return '';
+        }
+        $factor = $value + 0;
+        $unit = $target['unit'] ?? 'rem';
+        $options = $setting->options_data ?? [];
+        $overrides = isset($options['bases']) && is_array($options['bases']) ? $options['bases'] : [];
+
+        $rules = [];
+        foreach ($target['levels'] as $key => $level) {
+            if (!isset($level['selector'])) {
+                continue;
+            }
+            $base = isset($overrides[$key]) && $overrides[$key] != '' ? $overrides[$key] : ($level['base'] ?? null);
+            if (!is_numeric($base)) {
+                continue;
+            }
+            $size = rtrim(rtrim(sprintf('%.4f', $base * $factor), '0'), '.');
+            $rules[] = $level['selector'].' { font-size: '.$size.$unit.' !important; }';
+        }
+
+        return implode(' ', $rules);
+    }
+
     private function storedValues($user) {
         return ($user && $user->settings) ? ($user->settings->accessibility_data ?? []) : [];
     }
 
     private function themeOverride($setting, $theme) {
         $data = $theme->accessibility_data ?? [];
+
         return $data[$setting->setting_key] ?? null;
     }
 
     private function themeDisabled($setting, $theme) {
         $override = $this->themeOverride($setting, $theme);
+
         return $override && (isset($override['is_enabled']) && !$override['is_enabled']);
     }
 
@@ -507,7 +552,7 @@ class AccessibilityManager extends Service {
         }
 
         $data['is_active'] = isset($data['is_active']) && $data['is_active'];
-        $data['sort_order'] = $data['sort_order'] ?? 0;
+        $data['sort_order'] ??= 0;
 
         $options = (isset($data['options_data']) && is_array($data['options_data'])) ? $data['options_data'] : [];
 
@@ -526,6 +571,9 @@ class AccessibilityManager extends Service {
     /**
      * Goes through keys and values passed,
      * drops any row without a value.
+     *
+     * @param mixed $values
+     * @param mixed $labels
      */
     private function sortChoiceRows($values, $labels) {
         if (!is_array($values)) {
@@ -548,8 +596,10 @@ class AccessibilityManager extends Service {
     /**
      * Clean raw per-theme options_data into a tidy array to store.
      * Blank ranges & empty choice lists are dropped entirely
-     * so an untouched field inherits the global option via 
+     * so an untouched field inherits the global option via
      * getOptionSet() rather than overwriting it with empty value.
+     *
+     * @param mixed $raw
      */
     private function normalizeOptions($raw) {
         if (!is_array($raw)) {

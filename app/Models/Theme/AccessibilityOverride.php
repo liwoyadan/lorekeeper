@@ -12,7 +12,7 @@ class AccessibilityOverride extends Model {
      * @var array
      */
     protected $fillable = [
-        'setting_key', 'selector', 'property'
+        'setting_key', 'selector', 'property',
     ];
 
     /**
@@ -38,7 +38,7 @@ class AccessibilityOverride extends Model {
         OTHER FUNCTIONS
 
     **********************************************************************************************/
-        
+
     /**
      * Per-theme overrides; these are cached so they don't
      * need to be re-queried every pageview.

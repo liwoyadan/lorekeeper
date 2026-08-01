@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use App\Facades\Settings;
 use App\Models\Theme\Theme;
-use App\Services\AccessibilityManager;
 use App\Providers\Socialite\ToyhouseProvider;
+use App\Services\AccessibilityManager;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
