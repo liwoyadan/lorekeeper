@@ -17,14 +17,9 @@
         @endif {{ $submission->displayTitle }}
         <div class="float-right">
             @if (Auth::check())
-                {!! Form::open(['url' => '/gallery/favorite/' . $submission->id]) !!}
+                {{ html()->form('POST', '/gallery/favorite/' . $submission->id)->open() }}
                 @if ($submission->user->id != Auth::user()->id && $submission->collaborators->where('user_id', Auth::user()->id)->first() == null && $submission->isVisible)
-                    {!! Form::button('<i class="fas fa-star"></i> ', [
-                        'class' => 'btn ' . ($submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'btn-outline-primary' : 'btn-primary'),
-                        'data-toggle' => 'tooltip',
-                        'title' => ($submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'Add to' : 'Remove from') . ' your Favorites',
-                        'type' => 'submit',
-                    ]) !!}
+                    <button type="submit" class="btn {{ $submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'btn-outline-primary' : 'btn-primary' }}" data-toggle="tooltip" title="{{ ($submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'Add to' : 'Remove from') . ' your Favorites' }}"><i class="fas fa-star"></i> </button>
                 @endif
                 @if ($submission->user->id == Auth::user()->id || Auth::user()->hasPower('manage_submissions'))
                     <a class="btn btn-outline-primary" href="/gallery/queue/{{ $submission->id }}" data-toggle="tooltip" title="View Log Details"><i class="fas fa-clipboard-list"></i></a>
@@ -32,7 +27,7 @@
                         <a class="btn btn-outline-primary" href="/gallery/edit/{{ $submission->id }}"><i class="fas fa-edit"></i> Edit</a>
                     @endif
                 @endif
-                {!! Form::close() !!}
+                {{ html()->form()->close() }}
             @endif
         </div>
     </h1>
@@ -86,15 +81,9 @@
                             </h5>
                             <div class="float-right">
                                 @if (Auth::check() && ($submission->user->id != Auth::user()->id && $submission->collaborators->where('user_id', Auth::user()->id)->first() == null) && $submission->isVisible)
-                                    {!! Form::open(['url' => '/gallery/favorite/' . $submission->id]) !!}
-                                    {{ $submission->favorites->count() }} {!! Form::button('<i class="fas fa-star"></i> ', [
-                                        'style' => 'border:0; border-radius:.5em;',
-                                        'class' => $submission->favorites->where('user_id', Auth::user()->id)->first() != null ? 'btn-success' : '',
-                                        'data-toggle' => 'tooltip',
-                                        'title' => ($submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'Add to' : 'Remove from') . ' your Favorites',
-                                        'type' => 'submit',
-                                    ]) !!} ・ {{ $submission->comments->where('type', 'User-User')->count() }} <i class="fas fa-comment"></i>
-                                    {!! Form::close() !!}
+                                    {{ html()->form('POST', '/gallery/favorite/' . $submission->id)->open() }}
+                                    {{ $submission->favorites->count() }} <button type="submit" style="border:0; border-radius:.5em;" class="{{ $submission->favorites->where('user_id', Auth::user()->id)->first() != null ? 'btn-success' : '' }}" data-toggle="tooltip" title="{{ ($submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'Add to' : 'Remove from') . ' your Favorites' }}"><i class="fas fa-star"></i> </button> ・ {{ $submission->comments->where('type', 'User-User')->count() }} <i class="fas fa-comment"></i>
+                                    {{ html()->form()->close() }}
                                 @else
                                     {{ $submission->favorites->count() }} <i class="fas fa-star" data-toggle="tooltip" title="Favorites"></i> ・ {{ $submission->comments->where('type', 'User-User')->count() }} <i class="fas fa-comment"
                                         data-toggle="tooltip" title="Comments"></i>
@@ -136,17 +125,17 @@
                         @if ($submission->status == 'Pending' && Auth::check() && $submission->collaborators->where('user_id', Auth::user()->id)->first() != null)
                             <p>Check that your role in the collaboration is correct as listed, and if not, make any changes. You can also remove yourself from the collaborator list if necessary. When you are done, or if the record is already accurate,
                                 press "submit" to make any changes and mark yourself as having approved. You will be able to edit this until the submission is approved.</p>
-                            {!! Form::open(['url' => '/gallery/collaborator/' . $submission->id]) !!}
+                            {{ html()->form('POST', '/gallery/collaborator/' . $submission->id)->open() }}
                             @foreach ($submission->collaborators as $collaborator)
                                 @if ($collaborator->user_id == Auth::user()->id)
                                     <div class="mb-2">
                                         <div class="d-flex">{!! $collaborator->has_approved ? '<div class="mb-2 mr-2 text-success" data-toggle="tooltip" title="Has Approved"><i class="fas fa-check"></i></div>' : '' !!}{!! $collaborator->user->displayName !!}:
                                         </div>
                                         <div class="d-flex">
-                                            {!! Form::text('collaborator_data[]', $collaborator->data, ['class' => 'form-control mr-2', 'placeholder' => 'Role (Sketch, Lines, etc.)']) !!}
+                                            {{ html()->text('collaborator_data[]', $collaborator->data)->class('form-control mr-2')->attribute('placeholder', 'Role (Sketch, Lines, etc.)') }}
                                         </div>
-                                        {!! Form::label('remove_user', 'Remove Me', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If toggled on, this will remove the record of your collaboration from this submission.') !!}
-                                        {!! Form::checkbox('remove_user', 1, false, ['class' => 'form-check-input', 'data-toggle' => 'toggle', 'data-onstyle' => 'danger']) !!}
+                                        {{ html()->label('Remove Me', 'remove_user')->class('form-check-label ml-3') }} {!! add_help('If toggled on, this will remove the record of your collaboration from this submission.') !!}
+                                        {{ html()->checkbox('remove_user', false, 1)->class('form-check-input')->data('toggle', 'toggle')->data('onstyle', 'danger') }}
                                     </div>
                                 @else
                                     <div class="d-flex">
@@ -155,9 +144,9 @@
                                 @endif
                             @endforeach
                             <div class="mt-2 text-right">
-                                {!! Form::submit('Submit', ['class' => 'btn btn-primary']) !!}
+                                {{ html()->submit('Submit')->class('btn btn-primary') }}
                             </div>
-                            {!! Form::close() !!}
+                            {{ html()->form()->close() }}
                         @else
                             @foreach ($submission->collaborators as $collaborator)
                                 <div class="d-flex">

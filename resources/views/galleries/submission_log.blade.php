@@ -28,57 +28,37 @@
                                     <p>Enter in the amount of {{ $currency->name }} that {{ $submission->collaborators->count() ? 'each collaborator' : 'the submitting user' }}{{ $submission->participants->count() ? ' and any participants' : '' }}
                                         should receive. The suggested amount has been pre-filled for you based on the provided form responses, but this is only a guideline based on user input and should be verified and any adjustments made as necessary.
                                     </p>
-                                    {!! Form::open(['url' => 'admin/gallery/edit/' . $submission->id . '/value']) !!}
+                                    {{ html()->form('POST', 'admin/gallery/edit/' . $submission->id . '/value')->open() }}
                                     @if (!$submission->collaborators->count() || $submission->collaborators->where('user_id', $submission->user_id)->first() == null)
                                         <div class="form-group">
-                                            {!! Form::label($submission->user->name) !!}:
-                                            {!! Form::number(
-                                                'value[submitted][' . $submission->user->id . ']',
-                                                isset($submission->data['total'])
-                                                    ? round(($submission->characters->count() ? round($submission->data['total'] * $submission->characters->count()) : $submission->data['total']) / ($submission->collaborators->count() ? $submission->collaborators->count() : '1'))
-                                                    : 0,
-                                                ['class' => 'form-control'],
-                                            ) !!}
+                                            {{ html()->label($submission->user->name) }}:
+                                            {{ html()->number('value[submitted][' . $submission->user->id . ']', isset($submission->data['total']) ? round(($submission->characters->count() ? round($submission->data['total'] * $submission->characters->count()) : $submission->data['total']) / ($submission->collaborators->count() ? $submission->collaborators->count() : '1')) : 0)->class('form-control') }}
                                         </div>
                                     @endif
                                     @if ($submission->collaborators->count())
                                         @foreach ($submission->collaborators as $key => $collaborator)
                                             <div class="form-group">
-                                                {!! Form::label($collaborator->user->name . ' (' . $collaborator->data . ')') !!}:
-                                                {!! Form::number(
-                                                    'value[collaborator][' . $collaborator->user->id . ']',
-                                                    isset($submission->data['total'])
-                                                        ? round(($submission->characters->count() ? round($submission->data['total'] * $submission->characters->count()) : $submission->data['total']) / ($submission->collaborators->count() ? $submission->collaborators->count() : '1'))
-                                                        : 0,
-                                                    ['class' => 'form-control'],
-                                                ) !!}
+                                                {{ html()->label($collaborator->user->name . ' (' . $collaborator->data . ')') }}:
+                                                {{ html()->number('value[collaborator][' . $collaborator->user->id . ']', isset($submission->data['total']) ? round(($submission->characters->count() ? round($submission->data['total'] * $submission->characters->count()) : $submission->data['total']) / ($submission->collaborators->count() ? $submission->collaborators->count() : '1')) : 0)->class('form-control') }}
                                             </div>
                                         @endforeach
                                     @endif
                                     @if ($submission->participants->count())
                                         @foreach ($submission->participants as $key => $participant)
                                             <div class="form-group">
-                                                {!! Form::label($participant->user->name . ' (' . $participant->displayType . ')') !!}:
-                                                {!! Form::number(
-                                                    'value[participant][' . $participant->user->id . ']',
-                                                    isset($submission->data['total'])
-                                                        ? ($participant->type == 'Comm'
-                                                            ? round(($submission->characters->count() ? round($submission->data['total'] * $submission->characters->count()) : $submission->data['total']) / ($submission->collaborators->count() ? $submission->collaborators->count() : '1') / 2)
-                                                            : 0)
-                                                        : 0,
-                                                    ['class' => 'form-control'],
-                                                ) !!}
+                                                {{ html()->label($participant->user->name . ' (' . $participant->displayType . ')') }}:
+                                                {{ html()->number('value[participant][' . $participant->user->id . ']', isset($submission->data['total']) ? ($participant->type == 'Comm' ? round(($submission->characters->count() ? round($submission->data['total'] * $submission->characters->count()) : $submission->data['total']) / ($submission->collaborators->count() ? $submission->collaborators->count() : '1') / 2) : 0) : 0)->class('form-control') }}
                                             </div>
                                         @endforeach
                                     @endif
                                     <div class="form-group">
-                                        {!! Form::checkbox('ineligible', 1, false, ['class' => 'form-check-input', 'data-toggle' => 'toggle', 'data-onstyle' => 'danger']) !!}
-                                        {!! Form::label('ineligible', 'Inelegible/Award No Currency', ['class' => 'form-check-label ml-3']) !!} {!! add_help('When on, this will mark the submission as valued, but will not award currency to any of the users listed.') !!}
+                                        {{ html()->checkbox('ineligible', false, 1)->class('form-check-input')->data('toggle', 'toggle')->data('onstyle', 'danger') }}
+                                        {{ html()->label('Inelegible/Award No Currency', 'ineligible')->class('form-check-label ml-3') }} {!! add_help('When on, this will mark the submission as valued, but will not award currency to any of the users listed.') !!}
                                     </div>
                                     <div class="text-right">
-                                        {!! Form::submit('Submit', ['class' => 'btn btn-primary']) !!}
+                                        {{ html()->submit('Submit')->class('btn btn-primary') }}
                                     </div>
-                                    {!! Form::close() !!}
+                                    {{ html()->form()->close() }}
                                 @else
                                     <p>This submission hasn't been evaluated yet. You'll receive a notification once it has!</p>
                                 @endif

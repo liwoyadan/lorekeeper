@@ -19,7 +19,7 @@
         </div>
         <div class="col-md-7">
             <div class="form-group">
-                {!! Form::select('slug[]', $characters, $character->character ? $character->character->slug : $character->slug, ['class' => 'form-control character-code', 'placeholder' => 'Select Character']) !!}
+                {{ html()->select('slug[]', $characters, $character->character ? $character->character->slug : $character->slug)->class('form-control character-code')->placeholder('Select Character') }}
             </div>
         </div>
         <div class="col-md-1 text-right">

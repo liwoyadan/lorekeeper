@@ -27,29 +27,13 @@
                     {{ $comment->likes()->where('is_like', 1)->count() - $comment->likes()->where('is_like', 0)->count() != 1 ? 'Likes' : 'Like' }}
                 </button>
             </a>
-            {!! Form::open(['url' => 'comments/' . $comment->id . '/like/1', 'class' => 'd-inline-block']) !!}
-            {!! Form::button('<i class="fas fa-thumbs-up"></i>', [
-                'type' => 'submit',
-                'class' =>
-                    'btn btn-sm px-3 py-2 px-sm-2 py-sm-1 ' .
-                    ($comment->likes()->where('user_id', Auth::user()->id)->where('is_like', 1)->exists()
-                        ? 'btn-success'
-                        : 'btn-outline-success') .
-                    ' text-uppercase',
-            ]) !!}
-            {!! Form::close() !!}
+            {{ html()->form('POST', 'comments/' . $comment->id . '/like/1')->class('d-inline-block')->open() }}
+            <button type="submit" class="btn btn-sm px-3 py-2 px-sm-2 py-sm-1 {{ $comment->likes()->where('user_id', Auth::user()->id)->where('is_like', 1)->exists() ? 'btn-success' : 'btn-outline-success' }} text-uppercase"><i class="fas fa-thumbs-up"></i></button>
+            {{ html()->form()->close() }}
             @if (Settings::get('comment_dislikes_enabled') || (isset($allow_dislikes) && $allow_dislikes))
-                {!! Form::open(['url' => 'comments/' . $comment->id . '/like/0', 'class' => 'd-inline-block']) !!}
-                {!! Form::button('<i class="fas fa-thumbs-down"></i>', [
-                    'type' => 'submit',
-                    'class' =>
-                        'btn btn-sm px-3 py-2 px-sm-2 py-sm-1 ' .
-                        ($comment->likes()->where('user_id', Auth::user()->id)->where('is_like', 0)->exists()
-                            ? 'btn-danger'
-                            : 'btn-outline-danger') .
-                        ' text-uppercase',
-                ]) !!}
-                {!! Form::close() !!}
+                {{ html()->form('POST', 'comments/' . $comment->id . '/like/0')->class('d-inline-block')->open() }}
+                <button type="submit" class="btn btn-sm px-3 py-2 px-sm-2 py-sm-1 {{ $comment->likes()->where('user_id', Auth::user()->id)->where('is_like', 0)->exists() ? 'btn-danger' : 'btn-outline-danger' }} text-uppercase"><i class="fas fa-thumbs-down"></i></button>
+                {{ html()->form()->close() }}
             @endif
         </div>
     </div>
@@ -60,7 +44,7 @@
     <div class="modal fade" id="comment-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                {{ Form::model($comment, ['route' => ['comments.update', $comment->getKey()]]) }}
+                {{ html()->form('PUT', route('comments.update', $comment->getKey()))->open() }}
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Comment</h5>
                     <button type="button" class="close" data-dismiss="modal">
@@ -69,14 +53,14 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        {!! Form::label('message', 'Update your message here:') !!}
-                        {!! Form::textarea('message', $comment->comment, ['class' => 'form-control ' . (config('lorekeeper.settings.wysiwyg_comments') ? 'comment-wysiwyg' : ''), 'rows' => 3, config('lorekeeper.settings.wysiwyg_comments') ? '' : 'required']) !!}
+                        {{ html()->label('Update your message here:', 'message') }}
+                        {{ html()->textarea('message', $comment->comment)->class('form-control ' . (config('lorekeeper.settings.wysiwyg_comments') ? 'comment-wysiwyg' : ''))->attribute('rows', 3)->attributeIf(!config('lorekeeper.settings.wysiwyg_comments'), 'required', true) }}
                         <small class="form-text text-muted"><a target="_blank" href="https://help.github.com/articles/basic-writing-and-formatting-syntax">Markdown</a> cheatsheet.</small>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-outline-secondary text-uppercase" data-dismiss="modal">Cancel</button>
-                    {!! Form::submit('Update', ['class' => 'btn btn-sm btn-outline-success text-uppercase']) !!}
+                    {{ html()->submit('Update')->class('btn btn-sm btn-outline-success text-uppercase') }}
                 </div>
                 </form>
             </div>
@@ -88,7 +72,7 @@
     <div class="modal fade" id="reply-modal-{{ $comment->getKey() }}" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                {{ Form::open(['route' => ['comments.reply', $comment->getKey()]]) }}
+                {{ html()->form('POST', route('comments.reply', $comment->getKey()))->open() }}
                 <div class="modal-header">
                     <h5 class="modal-title">Reply to Comment</h5>
                     <button type="button" class="close" data-dismiss="modal">
@@ -97,14 +81,14 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        {!! Form::label('message', 'Enter your message here:') !!}
-                        {!! Form::textarea('message', null, ['class' => 'form-control ' . (config('lorekeeper.settings.wysiwyg_comments') ? 'comment-wysiwyg' : ''), 'rows' => 3, config('lorekeeper.settings.wysiwyg_comments') ? '' : 'required']) !!}
+                        {{ html()->label('Enter your message here:', 'message') }}
+                        {{ html()->textarea('message', null)->class('form-control ' . (config('lorekeeper.settings.wysiwyg_comments') ? 'comment-wysiwyg' : ''))->attribute('rows', 3)->attributeIf(!config('lorekeeper.settings.wysiwyg_comments'), 'required', true) }}
                         <small class="form-text text-muted"><a target="_blank" href="https://help.github.com/articles/basic-writing-and-formatting-syntax">Markdown</a> cheatsheet.</small>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-outline-secondary text-uppercase" data-dismiss="modal">Cancel</button>
-                    {!! Form::submit('Reply', ['class' => 'btn btn-sm btn-outline-success text-uppercase']) !!}
+                    {{ html()->submit('Reply')->class('btn btn-sm btn-outline-success text-uppercase') }}
                 </div>
                 </form>
             </div>
@@ -154,13 +138,13 @@
                 <div class="form-group">Are you sure you want to {{ $comment->is_featured ? 'un' : '' }}feature this comment?</div>
             </div>
             <div class="alert alert-warning">Comments can be unfeatured.</div>
-            {!! Form::open(['url' => 'comments/' . $comment->id . '/feature']) !!}
+            {{ html()->form('POST', 'comments/' . $comment->id . '/feature')->open() }}
             @if (!$comment->is_featured)
-                {!! Form::submit('Feature', ['class' => 'btn btn-primary w-100 mb-0 mx-0']) !!}
+                {{ html()->submit('Feature')->class('btn btn-primary w-100 mb-0 mx-0') }}
             @else
-                {!! Form::submit('Unfeature', ['class' => 'btn btn-primary w-100 mb-0 mx-0']) !!}
+                {{ html()->submit('Unfeature')->class('btn btn-primary w-100 mb-0 mx-0') }}
             @endif
-            {!! Form::close() !!}
+            {{ html()->form()->close() }}
         </div>
     </div>
 </div>
