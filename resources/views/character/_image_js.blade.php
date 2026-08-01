@@ -33,6 +33,7 @@
                         {!! isset($decoratorTheme) && $decoratorTheme ? str_replace(['<style>', '</style>'], '', view('layouts.editable_theme', ['theme' => $decoratorTheme])) : '' !!}
                     `,
                     spoiler_caption: 'Toggle Spoiler',
+                    extended_valid_elements: '#i[class],#em[class]',
                     target_list: false
                 });
             });
@@ -87,6 +88,7 @@
                         {!! isset($decoratorTheme) && $decoratorTheme ? str_replace(['<style>', '</style>'], '', view('layouts.editable_theme', ['theme' => $decoratorTheme])) : '' !!}
                     `,
                     spoiler_caption: 'Toggle Spoiler',
+                    extended_valid_elements: '#i[class],#em[class]',
                     target_list: false
                 });
             });
