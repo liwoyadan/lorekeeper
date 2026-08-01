@@ -179,7 +179,7 @@
                 </a>
             </div>
         </div>
-    
+
         <h3>Preview</h3>
         @include('admin.forums._preview_post', ['flair' => $flair])
     @endif

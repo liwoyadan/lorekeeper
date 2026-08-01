@@ -139,11 +139,10 @@
     @if ($decor->id)
         <h3>Preview</h3>
         @include('admin.forums._preview_post', [
-            'bgDecor'       => ($decor->type == 'background') ? $decor : null,
-            'borderDecor' => ($decor->type == 'border') ? $decor : null,
+            'bgDecor' => $decor->type == 'background' ? $decor : null,
+            'borderDecor' => $decor->type == 'border' ? $decor : null,
         ])
     @endif
-
 @endsection
 
 @section('scripts')

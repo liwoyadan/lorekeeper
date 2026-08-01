@@ -28,11 +28,11 @@
                                             <h3 class="mb-0 px-3 mt-2">
                                                 {!! $forum->displayName !!}
                                                 <span class="small">
-                                                    {!! (isset($forum->description) && $forum->description) ? add_help(strip_tags($forum->parsed_description)) : '' !!}
+                                                    {!! isset($forum->description) && $forum->description ? add_help(strip_tags($forum->parsed_description)) : '' !!}
                                                 </span>
                                             </h3>
                                         </div>
-                                        
+
                                         <div class="col-auto px-3 pt-2">
                                             <a class="h4 mb-0 toggle-category" href="#forumCategory{{ $forum->id ?? '_' }}" data-toggle="collapse" aria-expanded="true">
                                                 <i class="fas fa-angle-down" aria-hidden="true"></i>

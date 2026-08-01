@@ -19,7 +19,7 @@
             </h1>
         </div>
 
-        @if (!$forum->is_locked || $forum->is_locked && (Auth::check() && Auth::user()->hasPower('manage_forums')))
+        @if (!$forum->is_locked || ($forum->is_locked && (Auth::check() && Auth::user()->hasPower('manage_forums'))))
             <div class="col text-right">
                 <a class="btn btn-primary" href="{{ url('forum/' . $forum->id . '/new') }}">
                     New Thread
@@ -33,7 +33,7 @@
     @else
         @include('forums._forum_topper', ['forum' => $forum])
         <hr class="w-75 mx-auto">
-        
+
         <h5 class="text-center mb-3">
             Boards in {!! $forum->name !!}
         </h5>

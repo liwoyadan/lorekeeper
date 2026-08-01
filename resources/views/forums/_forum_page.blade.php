@@ -54,7 +54,8 @@
             @foreach ($posts as $comment)
                 <div class="row no-gutters align-items-center {{ $loop->last ? '' : 'border-bottom' }} py-2">
                     <div class="col-auto pr-2">
-                        <i class="fas {{ $comment->is_featured ? 'fa-thumbtack text-primary' : ($comment->is_locked ? 'fa-lock text-muted' : 'fa-circle') }}" data-toggle="tooltip" title="{{ $comment->is_featured ? 'This thread is pinned.' : ($comment->is_locked ? 'This thread is locked.' : 'This thread is open.') }}"></i>
+                        <i class="fas {{ $comment->is_featured ? 'fa-thumbtack text-primary' : ($comment->is_locked ? 'fa-lock text-muted' : 'fa-circle') }}" data-toggle="tooltip"
+                            title="{{ $comment->is_featured ? 'This thread is pinned.' : ($comment->is_locked ? 'This thread is locked.' : 'This thread is open.') }}"></i>
                     </div>
                     <div class="col-11 col-md-6">
                         <div class="font-weight-bold">
@@ -71,7 +72,7 @@
                         <div>
                             @if (isset($comment->latestReply))
                                 <div>
-                                    Latest reply by {!! $comment->latestReply->commenter->displayName !!}, 
+                                    Latest reply by {!! $comment->latestReply->commenter->displayName !!},
                                 </div>
                                 <div class="small">
                                     {!! pretty_date($comment->latestReply->updated_at) !!}

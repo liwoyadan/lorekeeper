@@ -34,7 +34,7 @@
         @endauth
     </div>
 
-    <div class="{{ $thread->commenter->profile->forumDecorOf('border') ? '' : 'border' }} rounded mb-2 row no-gutters position-relative" {!! $thread->commenter->profile->forumDecorOf('border') ? 'style="'.($thread->commenter->profile->forumDecorOf('border')->cssStyle ?? '').'"' : '' !!}>
+    <div class="{{ $thread->commenter->profile->forumDecorOf('border') ? '' : 'border' }} rounded mb-2 row no-gutters position-relative" {!! $thread->commenter->profile->forumDecorOf('border') ? 'style="' . ($thread->commenter->profile->forumDecorOf('border')->cssStyle ?? '') . '"' : '' !!}>
         @if ($thread->commenter->profile->forumDecorOf('background') || $thread->commenter->profile->forumBgCssStyle)
             <div class="forum-heading-bg" style="{{ $thread->commenter->profile->forumDecorOf('background')->cssStyle ?? $thread->commenter->profile->forumBgCssStyle }}"></div>
         @endif
@@ -58,10 +58,10 @@
             </div>
             <div class="small mt-1">
                 @auth
-                    <a href="{{ $thread->commenter->url.'/forum' }}">
-                @endauth
+                    <a href="{{ $thread->commenter->url . '/forum' }}">
+                    @endauth
                     {!! $thread->commenter->forumCount !!} {{ $thread->commenter->forumCount == 1 ? 'Post' : 'Posts' }}
-                @auth
+                    @auth
                     </a>
                 @endauth
             </div>
@@ -116,7 +116,7 @@
             @if (config('lorekeeper.forums.allow_signatures.enabled') && (isset($thread->commenter->profile->forum_signature) && $thread->commenter->profile->forum_signature))
                 <div class="px-2 pb-2">
                     <hr class="mx-auto my-1" style="width: 90%;">
-                    <div class="forum-signature" style="overflow: auto; max-height: {{ config('lorekeeper.forums.allow_signatures.max_height') ?? ''}}px;">
+                    <div class="forum-signature" style="overflow: auto; max-height: {{ config('lorekeeper.forums.allow_signatures.max_height') ?? '' }}px;">
                         {!! $thread->commenter->profile->parsed_forum_signature !!}
                     </div>
                 </div>
@@ -153,7 +153,13 @@
             @php
                 $profile = $comment->commenter->profile;
             @endphp
-            @include('forums._forum_comment', ['comment' => $comment, 'thread' => $thread, 'forum' => $thread->commentable, 'postBgStyle' => $profile->forumDecorOf('background')?->cssStyle ?? ($profile->forumBgCssStyle ?? null), 'postBorderDecor' => $profile->forumDecorOf('border')])
+            @include('forums._forum_comment', [
+                'comment' => $comment,
+                'thread' => $thread,
+                'forum' => $thread->commentable,
+                'postBgStyle' => $profile->forumDecorOf('background')?->cssStyle ?? ($profile->forumBgCssStyle ?? null),
+                'postBorderDecor' => $profile->forumDecorOf('border'),
+            ])
         @endforeach
         {!! $replies->render() !!}
     @else

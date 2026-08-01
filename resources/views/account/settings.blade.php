@@ -79,7 +79,7 @@
         <p>
             You can customize your forum appearance (optional, flair & decor) as well as your publicly displayed forum signature here.<br>
             @if (config('lorekeeper.forums.allow_signatures.enabled'))
-                Forum signatures are currently <b>enabled</b> and have a maximum height of <b>{{ config('lorekeeper.forums.allow_signatures.max_height') ?? '???'}}px</b> (not inclusive of surrounding padding) before beginning to scroll.
+                Forum signatures are currently <b>enabled</b> and have a maximum height of <b>{{ config('lorekeeper.forums.allow_signatures.max_height') ?? '???' }}px</b> (not inclusive of surrounding padding) before beginning to scroll.
             @else
                 Forum signatures are currently <b>disabled</b>.
             @endif
@@ -92,7 +92,7 @@
                     Signature Preview
                 </h5>
                 <div class="card p-2 mb-2">
-                    <div class="forum-signature" style="overflow: auto; max-height: {{ config('lorekeeper.forums.allow_signatures.max_height') ?? ''}}px;">
+                    <div class="forum-signature" style="overflow: auto; max-height: {{ config('lorekeeper.forums.allow_signatures.max_height') ?? '' }}px;">
                         {!! Auth::user()->profile->parsed_forum_signature !!}
                     </div>
                 </div>
@@ -147,7 +147,12 @@
             </div>
             <div class="form-group">
                 {!! Form::label('forum_bg_opacity', 'Opacity (%)') !!}
-                {!! Form::number('forum_bg_opacity', Auth::user()->profile->forum_bg_opacity, ['class' => 'form-control', 'min' => 0, 'max' => config('lorekeeper.forums.user_uploads.background.max_opacity'), 'placeholder' => config('lorekeeper.forums.user_uploads.background.default_opacity')]) !!}
+                {!! Form::number('forum_bg_opacity', Auth::user()->profile->forum_bg_opacity, [
+                    'class' => 'form-control',
+                    'min' => 0,
+                    'max' => config('lorekeeper.forums.user_uploads.background.max_opacity'),
+                    'placeholder' => config('lorekeeper.forums.user_uploads.background.default_opacity'),
+                ]) !!}
             </div>
             @if (Auth::user()->profile->forumBgUrl)
                 <div class="form-check mb-2">

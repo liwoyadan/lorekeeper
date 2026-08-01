@@ -1,5 +1,5 @@
 @if (!isset($comment->deleted_at))
-    <div class="{!! isset($postBorderDecor) && $postBorderDecor?->cssStyle ? '' : 'border' !!} rounded mb-3 row no-gutters position-relative" {!! isset($postBorderDecor) && $postBorderDecor?->cssStyle ? 'style="'.$postBorderDecor->cssStyle.'"' : '' !!}>
+    <div class="{!! isset($postBorderDecor) && $postBorderDecor?->cssStyle ? '' : 'border' !!} rounded mb-3 row no-gutters position-relative" {!! isset($postBorderDecor) && $postBorderDecor?->cssStyle ? 'style="' . $postBorderDecor->cssStyle . '"' : '' !!}>
         @isset($postBgStyle)
             <div class="forum-heading-bg" style="{{ $postBgStyle }}"></div>
         @endisset
@@ -8,7 +8,8 @@
                 {!! $comment->commenter->forumName !!}
             </h5>
             <div class="comment-avatar mb-1">
-                <img class="mx-100 rounded-circle" src="{{ $comment->character->image->thumbnailUrl ?? $comment->commenter->avatarUrl }}" style="aspect-ratio: 1/1; max-height: 100px;" alt="{{ $comment->character->name ?? $comment->commenter->name }} Avatar">
+                <img class="mx-100 rounded-circle" src="{{ $comment->character->image->thumbnailUrl ?? $comment->commenter->avatarUrl }}" style="aspect-ratio: 1/1; max-height: 100px;"
+                    alt="{{ $comment->character->name ?? $comment->commenter->name }} Avatar">
             </div>
             @if ($comment->character_id && $comment->character)
                 <h5 class="mb-0 text-muted">
@@ -23,10 +24,10 @@
             </div>
             <div class="small mt-1">
                 @auth
-                    <a href="{{ $comment->commenter->url.'/forum' }}">
-                @endauth
+                    <a href="{{ $comment->commenter->url . '/forum' }}">
+                    @endauth
                     {!! $comment->commenter->forumCount !!} {{ $comment->commenter->forumCount == 1 ? 'Post' : 'Posts' }}
-                @auth
+                    @auth
                     </a>
                 @endauth
             </div>
@@ -84,7 +85,7 @@
             @if (config('lorekeeper.forums.allow_signatures.enabled') && (isset($comment->commenter->profile->forum_signature) && $comment->commenter->profile->forum_signature))
                 <div class="px-2 pb-2">
                     <hr class="mx-auto my-1" style="width: 90%;">
-                    <div class="forum-signature" style="overflow: auto; max-height: {{ config('lorekeeper.forums.allow_signatures.max_height') ?? ''}}px;">
+                    <div class="forum-signature" style="overflow: auto; max-height: {{ config('lorekeeper.forums.allow_signatures.max_height') ?? '' }}px;">
                         {!! $comment->commenter->profile->parsed_forum_signature !!}
                     </div>
                 </div>

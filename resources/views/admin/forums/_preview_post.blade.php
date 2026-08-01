@@ -1,4 +1,4 @@
-<div class="{!! isset($borderDecor) && $borderDecor?->cssStyle ? '' : 'border' !!} rounded mb-3 row no-gutters position-relative" {!! isset($borderDecor) && $borderDecor?->cssStyle ? 'style="'.$borderDecor->cssStyle.'"' : '' !!}>
+<div class="{!! isset($borderDecor) && $borderDecor?->cssStyle ? '' : 'border' !!} rounded mb-3 row no-gutters position-relative" {!! isset($borderDecor) && $borderDecor?->cssStyle ? 'style="' . $borderDecor->cssStyle . '"' : '' !!}>
     @if (isset($bgDecor) && $bgDecor?->cssStyle)
         <div class="forum-heading-bg" style="{{ $bgDecor->cssStyle }}"></div>
     @endif
@@ -39,17 +39,19 @@
         <div class="p-2 flex-grow-1 d-flex flex-column">
             <div>
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec volutpat porta ligula, eget hendrerit ante. Aenean eleifend justo eu nunc molestie, ac dictum magna malesuada. Sed ultrices justo sit amet nisl euismod, ac sodales ligula maximus. Sed eu enim egestas, blandit leo eget, gravida nibh. Sed dapibus, eros nec dignissim consectetur, ex dolor faucibus enim, vitae luctus elit leo vitae nisi.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec volutpat porta ligula, eget hendrerit ante. Aenean eleifend justo eu nunc molestie, ac dictum magna malesuada. Sed ultrices justo sit amet nisl euismod, ac sodales
+                    ligula maximus. Sed eu enim egestas, blandit leo eget, gravida nibh. Sed dapibus, eros nec dignissim consectetur, ex dolor faucibus enim, vitae luctus elit leo vitae nisi.
                 </p>
                 <p>
-                    Quisque consectetur, odio sit amet placerat commodo, lacus ipsum gravida quam, at pulvinar lorem ante sed lorem. Mauris mollis velit arcu, ac condimentum lacus tristique nec. Proin sagittis felis ac ex tristique, vitae auctor tellus ultricies. Mauris vitae tincidunt sem. Aliquam volutpat laoreet risus, non tempus ante pharetra sed.
+                    Quisque consectetur, odio sit amet placerat commodo, lacus ipsum gravida quam, at pulvinar lorem ante sed lorem. Mauris mollis velit arcu, ac condimentum lacus tristique nec. Proin sagittis felis ac ex tristique, vitae auctor
+                    tellus ultricies. Mauris vitae tincidunt sem. Aliquam volutpat laoreet risus, non tempus ante pharetra sed.
                 </p>
             </div>
         </div>
         @if (config('lorekeeper.forums.allow_signatures.enabled'))
             <div class="px-2 pb-2">
                 <hr class="mx-auto my-1" style="width: 90%;">
-                <div class="forum-signature" style="overflow: auto; max-height: {{ config('lorekeeper.forums.allow_signatures.max_height') ?? ''}}px;">
+                <div class="forum-signature" style="overflow: auto; max-height: {{ config('lorekeeper.forums.allow_signatures.max_height') ?? '' }}px;">
                     <div class="text-center">
                         This is an optional signature, only displayed when both enabled in config and set by the user.
                     </div>

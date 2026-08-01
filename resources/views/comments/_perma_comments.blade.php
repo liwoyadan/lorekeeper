@@ -6,8 +6,8 @@
 @if ($comment->deleted_at == null)
     @if (isset($reply) && $reply === true)
         <div id="comment-{{ $comment->getKey() }}" class="comment_replies border-left col-12 column mw-100 pr-0 pt-4" style="flex-basis: 100%;">
-    @else
-        <div id="comment-{{ $comment->getKey() }}" class="pt-4" style="flex-basis: 100%;">
+        @else
+            <div id="comment-{{ $comment->getKey() }}" class="pt-4" style="flex-basis: 100%;">
     @endif
     <div class="media-body row mw-100 mx-0" style="flex:1;flex-wrap:wrap;">
         <div class="d-none d-md-block">
@@ -24,7 +24,8 @@
                     <div class="ml-1 text-muted text-right col-6 mx-0 pr-1"><small class="text-success">Featured by Owner</small></div>
                 @endif
             </div>
-            <div class="comment border pb-2 px-3 rounded {{ $limit == 0 ? 'shadow-sm border-info' : '' }} {{ $comment->is_featured && ($limit != 0) ? 'border-success' : '' }} {{ $comment->likes()->where('is_like', 1)->count() -$comment->likes()->where('is_like', 0)->count() < 0 ? 'bg-light bg-gradient' : '' }}">
+            <div
+                class="comment border pb-2 px-3 rounded {{ $limit == 0 ? 'shadow-sm border-info' : '' }} {{ $comment->is_featured && $limit != 0 ? 'border-success' : '' }} {{ $comment->likes()->where('is_like', 1)->count() -$comment->likes()->where('is_like', 0)->count() <0? 'bg-light bg-gradient': '' }}">
                 <p>
                     {!! config('lorekeeper.settings.wysiwyg_comments') ? nl2br($comment->comment) : nl2br($markdown->line($comment->comment)) !!}
                 </p>
@@ -58,12 +59,12 @@
 
         {{-- Recursion for children --}}
         <div class="w-100 mw-100">
-            @php 
+            @php
                 $children = $depth == 0 ? $comment->children->sortByDesc('created_at')->paginate(5) : $comment->children->sortByDesc('created_at');
             @endphp
             @foreach ($children as $reply)
-                @php 
-                    $limit++; 
+                @php
+                    $limit++;
                 @endphp
 
                 @if ($limit >= 5 && $depth >= 1)

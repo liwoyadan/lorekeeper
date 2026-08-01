@@ -18,18 +18,30 @@
             ->orderBy('name')
             ->pluck('name', 'id');
     }
-    $forumFlairs = \App\Models\Forum\ForumFlair::visible()->default(0)->sortAlphabetical()->pluck('name', 'id');
-    $forumDecors = \App\Models\Forum\ForumDecor::visible()->default(0)->sortAlphabetical()->get()->pluck('fullName', 'id');
+    $forumFlairs = \App\Models\Forum\ForumFlair::visible()
+        ->default(0)
+        ->sortAlphabetical()
+        ->pluck('name', 'id');
+    $forumDecors = \App\Models\Forum\ForumDecor::visible()
+        ->default(0)
+        ->sortAlphabetical()
+        ->get()
+        ->pluck('fullName', 'id');
 @endphp
 
 <div id="lootRowData" class="hide">
     <table class="table table-sm">
         <tbody id="lootRow">
             <tr class="loot-row">
-                <td>{!! Form::select('rewardable_type[]', ['Item' => 'Item', 'Currency' => 'Currency', 'ForumFlair' => 'Forum Flair', 'ForumDecor' => 'Forum Decor'] + ($showLootTables ? ['LootTable' => 'Loot Table'] : []) + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : []), null, [
-                    'class' => 'form-control reward-type',
-                    'placeholder' => 'Select Reward Type',
-                ]) !!}</td>
+                <td>{!! Form::select(
+                    'rewardable_type[]',
+                    ['Item' => 'Item', 'Currency' => 'Currency', 'ForumFlair' => 'Forum Flair', 'ForumDecor' => 'Forum Decor'] + ($showLootTables ? ['LootTable' => 'Loot Table'] : []) + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : []),
+                    null,
+                    [
+                        'class' => 'form-control reward-type',
+                        'placeholder' => 'Select Reward Type',
+                    ],
+                ) !!}</td>
                 <td class="loot-row-select"></td>
                 <td>{!! Form::text('quantity[]', 1, ['class' => 'form-control']) !!}</td>
                 <td class="text-right"><a href="#" class="btn btn-danger remove-loot-button">Remove</a></td>

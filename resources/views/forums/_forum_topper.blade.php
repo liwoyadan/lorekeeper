@@ -20,7 +20,7 @@
         </div>
     @endif
 
-    @if ((isset($forum->allRules) && $forum->allRules) && count($forum->allRules))
+    @if (isset($forum->allRules) && $forum->allRules && count($forum->allRules))
         <div class="col-md {{ isset($forum->description) && $forum->description ? 'pt-2 pt-md-0' : '' }}">
             <div class="card h-100">
                 <div class="card-header h5 text-center">
@@ -53,7 +53,7 @@
                             </a>
                             <div class="collapse border rounded py-2" id="forumRuleSet{!! $parentKey ?? '_' !!}">
                                 <ul class="mb-0">
-                                    @foreach($parentForumSet['rules'] as $parentForumRule)
+                                    @foreach ($parentForumSet['rules'] as $parentForumRule)
                                         <li>
                                             {!! $parentForumRule !!}
                                         </li>
@@ -70,4 +70,3 @@
         </div>
     @endif
 </div>
-

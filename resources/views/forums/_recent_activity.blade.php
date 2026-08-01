@@ -15,7 +15,7 @@
                             by {!! $recent->commenter->displayName !!}
                         </div>
                     </div>
-                    
+
                     <div class="col-auto col-md-12 col-xl-auto text-right small">
                         {!! pretty_date($recent->updated_at) !!}
                     </div>

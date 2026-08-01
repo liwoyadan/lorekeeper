@@ -143,7 +143,7 @@
             </div>
         @endif
     </div>
-    
+
     @if ($forum->id && $forum->has_image)
         <div class="row align-items-end">
             <div class="col-md">
@@ -161,13 +161,14 @@
             </div>
         </div>
     @endif
-    
+
     <hr>
     <h3>
         Forum Rules
     </h3>
     <p class="mb-0">
-        Optional. Here you can add and specific rules pertaining to this forum. Note that rules applied to <b>forum categories</b> (aka parent forums) will also be shown in all of its forum/subforums within it, while rules applied to regular forum boards are specific to that board.
+        Optional. Here you can add and specific rules pertaining to this forum. Note that rules applied to <b>forum categories</b> (aka parent forums) will also be shown in all of its forum/subforums within it, while rules applied to regular forum boards
+        are specific to that board.
     </p>
     <div class="text-right mb-2">
         <a class="btn btn-primary" id="addRule" href="#">Add Rule</a>

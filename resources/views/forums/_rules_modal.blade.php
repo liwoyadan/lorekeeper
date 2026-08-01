@@ -38,7 +38,7 @@
                         </a>
                         <div class="collapse border rounded py-2" id="forumRuleSet{!! $parentKey ?? '_' !!}">
                             <ul class="mb-0">
-                                @foreach($parentForumSet['rules'] as $parentForumRule)
+                                @foreach ($parentForumSet['rules'] as $parentForumRule)
                                     <li>
                                         {!! $parentForumRule !!}
                                     </li>

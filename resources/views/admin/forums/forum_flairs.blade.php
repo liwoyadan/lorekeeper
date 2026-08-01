@@ -10,7 +10,8 @@
     <h1>Forum Flairs</h1>
 
     <p>
-        Forum flairs are cosmetic badges and styling applied to a given user's username on their forum posts, as well as displaying the flair itself underneath. Forum flairs can either be set as default selectable by any user, can be granted as rewards, or unlocked through forum post count requirements.
+        Forum flairs are cosmetic badges and styling applied to a given user's username on their forum posts, as well as displaying the flair itself underneath. Forum flairs can either be set as default selectable by any user, can be granted as rewards,
+        or unlocked through forum post count requirements.
     </p>
 
     <div class="text-right mb-3">

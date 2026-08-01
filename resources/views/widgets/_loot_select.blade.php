@@ -18,8 +18,15 @@
             ->orderBy('name')
             ->pluck('name', 'id');
     }
-    $forumFlairs = \App\Models\Forum\ForumFlair::visible()->default(0)->sortAlphabetical()->pluck('name', 'id');
-    $forumDecors = \App\Models\Forum\ForumDecor::visible()->default(0)->sortAlphabetical()->get()->pluck('fullName', 'id');
+    $forumFlairs = \App\Models\Forum\ForumFlair::visible()
+        ->default(0)
+        ->sortAlphabetical()
+        ->pluck('name', 'id');
+    $forumDecors = \App\Models\Forum\ForumDecor::visible()
+        ->default(0)
+        ->sortAlphabetical()
+        ->get()
+        ->pluck('fullName', 'id');
 @endphp
 
 <div class="text-right mb-3">
@@ -38,10 +45,15 @@
         @if ($loots)
             @foreach ($loots as $loot)
                 <tr class="loot-row">
-                    <td>{!! Form::select('rewardable_type[]', ['Item' => 'Item', 'Currency' => 'Currency', 'ForumFlair' => 'Forum Flair', 'ForumDecor' => 'Forum Decor'] + ($showLootTables ? ['LootTable' => 'Loot Table'] : []) + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : []), $loot->rewardable_type, [
-                        'class' => 'form-control reward-type',
-                        'placeholder' => 'Select Reward Type',
-                    ]) !!}</td>
+                    <td>{!! Form::select(
+                        'rewardable_type[]',
+                        ['Item' => 'Item', 'Currency' => 'Currency', 'ForumFlair' => 'Forum Flair', 'ForumDecor' => 'Forum Decor'] + ($showLootTables ? ['LootTable' => 'Loot Table'] : []) + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : []),
+                        $loot->rewardable_type,
+                        [
+                            'class' => 'form-control reward-type',
+                            'placeholder' => 'Select Reward Type',
+                        ],
+                    ) !!}</td>
                     <td class="loot-row-select">
                         @if ($loot->rewardable_type == 'Item')
                             {!! Form::select('rewardable_id[]', $items, $loot->rewardable_id, ['class' => 'form-control item-select selectize', 'placeholder' => 'Select Item']) !!}
