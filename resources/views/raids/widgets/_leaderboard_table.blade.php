@@ -21,7 +21,7 @@
                 <div class="row flex-wrap align-items-center">
                     <div class="col-2 text-center">
                         <div class="logs-table-cell">
-                            @if (($loop->index + 1) < 4)
+                            @if ($loop->index + 1 < 4)
                                 <span class="btn btn-sm btn-primary font-weight-bold">
                                     {{ $loop->index + 1 }}
                                 </span>

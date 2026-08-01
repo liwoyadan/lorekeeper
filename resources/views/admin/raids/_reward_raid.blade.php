@@ -1,5 +1,5 @@
 @if ($raid)
-    {!! Form::open(['url' => 'admin/data/'.__('raids.raids').'/reward/' . $raid->id]) !!}
+    {!! Form::open(['url' => 'admin/data/' . __('raids.raids') . '/reward/' . $raid->id]) !!}
     <p>
         The {{ __('raids.raid') }} <strong>{{ $raid->name }}</strong> has concluded and rewards are awaiting distribution.
     </p>

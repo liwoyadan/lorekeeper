@@ -1,5 +1,5 @@
 @if ($raid)
-    {!! Form::open(['url' => 'admin/data/'.__('raids.raids').'/end/' . $raid->id]) !!}
+    {!! Form::open(['url' => 'admin/data/' . __('raids.raids') . '/end/' . $raid->id]) !!}
     <p>
         The {{ __('raids.raid') }} <strong>{{ $raid->name }}</strong> is currently ongoing!
         @if (isset($raid->end_at) && $raid->end_at < Carbon\Carbon::now())
@@ -16,7 +16,7 @@
     </p>
 
     <div class="text-right">
-        {!! Form::submit('End '.ucfirst(__('raids.raid')), ['class' => 'btn btn-danger']) !!}
+        {!! Form::submit('End ' . ucfirst(__('raids.raid')), ['class' => 'btn btn-danger']) !!}
     </div>
 
     {!! Form::close() !!}

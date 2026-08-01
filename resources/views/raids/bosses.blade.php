@@ -1,14 +1,14 @@
 @extends('raids.layout')
 
 @section('raids-title')
-    {{ ucwords(__('raids.raid').' '.__('raids.bosses')) }}
+    {{ ucwords(__('raids.raid') . ' ' . __('raids.bosses')) }}
 @endsection
 
 @section('content')
-    {!! breadcrumbs([ucwords(__('raids.raid').' '.__('raids.bosses')) => __('raids.raids').'/'.__('raids.bosses')]) !!}
+    {!! breadcrumbs([ucwords(__('raids.raid') . ' ' . __('raids.bosses')) => __('raids.raids') . '/' . __('raids.bosses')]) !!}
 
     <h1>
-        {{ ucwords(__('raids.raid').' '.__('raids.bosses')) }}
+        {{ ucwords(__('raids.raid') . ' ' . __('raids.bosses')) }}
     </h1>
 
     <div class="mb-2">
@@ -44,7 +44,7 @@
         @endforeach
     @else
         <div class="text-center text-muted">
-            No {{ __('raids.raid').' '.__('raids.bosses') }} encountered so far.
+            No {{ __('raids.raid') . ' ' . __('raids.bosses') }} encountered so far.
         </div>
     @endif
     {!! $bosses->render() !!}

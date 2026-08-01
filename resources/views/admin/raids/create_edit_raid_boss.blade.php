@@ -1,17 +1,23 @@
 @extends('admin.layout')
 
 @section('admin-title')
-    {{ $raidBoss->id ? 'Edit' : 'Create' }} {{ ucwords(__('raids.raid').' '.__('raids.boss')) }}
+    {{ $raidBoss->id ? 'Edit' : 'Create' }} {{ ucwords(__('raids.raid') . ' ' . __('raids.boss')) }}
 @endsection
 
 @section('admin-content')
-    {!! breadcrumbs(['Admin Panel' => 'admin', ucwords(__('raids.raid').' '.__('raids.bosses')) => 'admin/data/'.__('raids.raid').'-'.__('raids.bosses'), ($raidBoss->id ? 'Edit' : 'Create') . ' '.ucwords(__('raids.raid').' '.__('raids.boss')) => $raidBoss->id ? 'admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/edit/' . $raidBoss->id : 'admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/create']) !!}
+    {!! breadcrumbs([
+        'Admin Panel' => 'admin',
+        ucwords(__('raids.raid') . ' ' . __('raids.bosses')) => 'admin/data/' . __('raids.raid') . '-' . __('raids.bosses'),
+        ($raidBoss->id ? 'Edit' : 'Create') . ' ' . ucwords(__('raids.raid') . ' ' . __('raids.boss')) => $raidBoss->id
+            ? 'admin/data/' . __('raids.raid') . '-' . __('raids.bosses') . '/edit/' . $raidBoss->id
+            : 'admin/data/' . __('raids.raid') . '-' . __('raids.bosses') . '/create',
+    ]) !!}
 
     <h1>
-        {{ $raidBoss->id ? 'Edit' : 'Create' }} {{ ucwords(__('raids.raid').' '.__('raids.boss')) }}
+        {{ $raidBoss->id ? 'Edit' : 'Create' }} {{ ucwords(__('raids.raid') . ' ' . __('raids.boss')) }}
         @if ($raidBoss->id)
-            <a href="#" class="btn btn-danger float-right delete-raid-boss-button m-1">Delete {{ ucwords(__('raids.raid').' '.__('raids.boss')) }}</a>
-            <a href="{{ url('admin/data/raids/edit/'.$raidBoss->raid_id) }}" class="btn btn-info float-right m-1">Edit {{ ucfirst(__('raids.raid')) }}</a>
+            <a href="#" class="btn btn-danger float-right delete-raid-boss-button m-1">Delete {{ ucwords(__('raids.raid') . ' ' . __('raids.boss')) }}</a>
+            <a href="{{ url('admin/data/raids/edit/' . $raidBoss->raid_id) }}" class="btn btn-info float-right m-1">Edit {{ ucfirst(__('raids.raid')) }}</a>
         @endif
     </h1>
 
@@ -29,11 +35,11 @@
         </div>
     @endif
 
-    {!! Form::open(['url' => $raidBoss->id ? 'admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/edit/' . $raidBoss->id : 'admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/create/' . $raid->id, 'files' => true]) !!}
+    {!! Form::open(['url' => $raidBoss->id ? 'admin/data/' . __('raids.raid') . '-' . __('raids.bosses') . '/edit/' . $raidBoss->id : 'admin/data/' . __('raids.raid') . '-' . __('raids.bosses') . '/create/' . $raid->id, 'files' => true]) !!}
 
     @if (!$raidBoss->id)
         <div class="alert alert-danger">
-            You are creating a {{ __('raids.raid').' '.__('raids.boss') }} for <b>{!! $raid->name !!}</b>.
+            You are creating a {{ __('raids.raid') . ' ' . __('raids.boss') }} for <b>{!! $raid->name !!}</b>.
             {!! Form::hidden('raid_id', $raid->id) !!}
         </div>
     @endif
@@ -52,7 +58,7 @@
     @endif
 
     <div class="form-group">
-        {!! Form::label('Description (Optional)') !!} {!! add_help('This is the description of the '.__('raids.raid').' '.__('raids.boss').'.') !!}
+        {!! Form::label('Description (Optional)') !!} {!! add_help('This is the description of the ' . __('raids.raid') . ' ' . __('raids.boss') . '.') !!}
         {!! Form::textarea('description', $raidBoss->description, ['class' => 'form-control wysiwyg']) !!}
     </div>
 
@@ -60,14 +66,14 @@
         <div class="col-md">
             <div class="form-group">
                 {!! Form::checkbox('is_visible', 1, $raidBoss->id ? $raidBoss->is_visible : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-                {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help(ucfirst(__('raids.raid')).' '.__('raids.bosses').' that are not visible will be hidden from the '.__('raids.raid').' '.__('raids.boss').' list.') !!}
+                {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help(ucfirst(__('raids.raid')) . ' ' . __('raids.bosses') . ' that are not visible will be hidden from the ' . __('raids.raid') . ' ' . __('raids.boss') . ' list.') !!}
             </div>
         </div>
 
         @if (isset($raidBoss->raid->status) && $raidBoss->raid->status < 3)
             <div class="col-md">
                 <div class="form-group">
-                    {!! Form::label('health', 'Health', ['class' => 'form-label']) !!} {!! add_help('The total health the '.__('raids.raid').' '.__('raids.boss').' has.') !!}
+                    {!! Form::label('health', 'Health', ['class' => 'form-label']) !!} {!! add_help('The total health the ' . __('raids.raid') . ' ' . __('raids.boss') . ' has.') !!}
                     {!! Form::number('health', $raidBoss->id ? $raidBoss->health : null, ['class' => 'form-control', 'placeholder' => 'Enter health...']) !!}
                 </div>
             </div>
@@ -77,7 +83,8 @@
     @if ($raidBoss->id && $raidBoss->raid->status < 3)
         <h3>Health Thresholds</h3>
         <p class="mb-0">
-            Here you can indicate if the color of the remaining health bar and text should change based on the {{ __('raids.boss') }}'s current health. <b>You must indicate a color for the bar AND/OR bar's text</b> for the entry to be saved. Type and amount are <b>required</b>.
+            Here you can indicate if the color of the remaining health bar and text should change based on the {{ __('raids.boss') }}'s current health. <b>You must indicate a color for the bar AND/OR bar's text</b> for the entry to be saved. Type and
+            amount are <b>required</b>.
         </p>
         <div class="text-right mb-2">
             <a class="btn btn-primary" id="addThreshold" href="#" type="button">Add Threshold</a>
@@ -146,13 +153,16 @@
                                 </h5>
                                 @if ($threshold['type'] == 'amount')
                                     <div class="progress font-weight-bold">
-                                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{ $threshold['amount'] > 0 ? ($threshold['amount'] / $raidBoss->health) * 100 : 0 }}%; {!! isset($threshold['bar_color']) ? 'background-color: '.$threshold['bar_color'].'; ' : '' !!}{!! isset($threshold['text_color']) ? 'color: '.$threshold['text_color'].';' : '' !!}" aria-valuenow="{{ $threshold['amount'] }}" aria-valuemin="0" aria-valuemax="{{ $raidBoss->health }}">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                                            style="width: {{ $threshold['amount'] > 0 ? ($threshold['amount'] / $raidBoss->health) * 100 : 0 }}%; {!! isset($threshold['bar_color']) ? 'background-color: ' . $threshold['bar_color'] . '; ' : '' !!}{!! isset($threshold['text_color']) ? 'color: ' . $threshold['text_color'] . ';' : '' !!}" aria-valuenow="{{ $threshold['amount'] }}"
+                                            aria-valuemin="0" aria-valuemax="{{ $raidBoss->health }}">
                                             {{ $threshold['amount'] }} / {{ $raidBoss->health }}
                                         </div>
                                     </div>
                                 @else
                                     <div class="progress font-weight-bold">
-                                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{ $threshold['amount'] }}%; {!! isset($threshold['bar_color']) ? 'background-color: '.$threshold['bar_color'].'; ' : '' !!}{!! isset($threshold['text_color']) ? 'color: '.$threshold['text_color'].';' : '' !!}" aria-valuenow="{{ $threshold['amount'] > 0 ? $raidBoss->health * ($threshold['amount'] / 100) : '0' }}" aria-valuemin="0" aria-valuemax="{{ $raidBoss->health }}">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{ $threshold['amount'] }}%; {!! isset($threshold['bar_color']) ? 'background-color: ' . $threshold['bar_color'] . '; ' : '' !!}{!! isset($threshold['text_color']) ? 'color: ' . $threshold['text_color'] . ';' : '' !!}"
+                                            aria-valuenow="{{ $threshold['amount'] > 0 ? $raidBoss->health * ($threshold['amount'] / 100) : '0' }}" aria-valuemin="0" aria-valuemax="{{ $raidBoss->health }}">
                                             {{ $threshold['amount'] > 0 ? $raidBoss->health * ($threshold['amount'] / 100) : '0' }} / {{ $raidBoss->health }}
                                         </div>
                                     </div>
@@ -287,19 +297,19 @@
             @if ($raidBoss->id)
                 $('.delete-raid-boss-button').on('click', function(e) {
                     e.preventDefault();
-                    loadModal("{{ url('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/delete') }}/{{ $raidBoss->id }}", "Delete {{ ucwords(__('raids.raid').' '.__('raids.boss')) }}");
+                    loadModal("{{ url('admin/data/' . __('raids.raid') . '-' . __('raids.bosses') . '/delete') }}/{{ $raidBoss->id }}", "Delete {{ ucwords(__('raids.raid') . ' ' . __('raids.boss')) }}");
                 });
                 $('.create-boss-image').on('click', function(e) {
                     e.preventDefault();
-                    loadModal("{{ url('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/'.$raidBoss->id.'/image/create') }}", "Add {{ ucfirst(__('raids.boss')) }} Image");
+                    loadModal("{{ url('admin/data/' . __('raids.raid') . '-' . __('raids.bosses') . '/' . $raidBoss->id . '/image/create') }}", "Add {{ ucfirst(__('raids.boss')) }} Image");
                 });
                 $('.edit-boss-image').on('click', function(e) {
                     e.preventDefault();
-                    loadModal("{{ url('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/'.$raidBoss->id.'/image/edit') }}/" + $(this).data('id'), "Edit {{ ucfirst(__('raids.boss')) }} Image");
+                    loadModal("{{ url('admin/data/' . __('raids.raid') . '-' . __('raids.bosses') . '/' . $raidBoss->id . '/image/edit') }}/" + $(this).data('id'), "Edit {{ ucfirst(__('raids.boss')) }} Image");
                 });
                 $('.delete-boss-image').on('click', function(e) {
                     e.preventDefault();
-                    loadModal("{{ url('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/'.$raidBoss->id.'/image/delete') }}/" + $(this).data('id'), "Delete {{ ucfirst(__('raids.boss')) }} Image");
+                    loadModal("{{ url('admin/data/' . __('raids.raid') . '-' . __('raids.bosses') . '/' . $raidBoss->id . '/image/delete') }}/" + $(this).data('id'), "Delete {{ ucfirst(__('raids.boss')) }} Image");
                 });
 
                 var $thresholds = $('#thresholdsBody');

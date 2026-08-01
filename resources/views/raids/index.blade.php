@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    {!! breadcrumbs([ucfirst(__('raids.raids')).' Index' => __('raids.raids')]) !!}
+    {!! breadcrumbs([ucfirst(__('raids.raids')) . ' Index' => __('raids.raids')]) !!}
 
     <h1>{{ ucfirst(__('raids.raids')) }} Index</h1>
     <p>

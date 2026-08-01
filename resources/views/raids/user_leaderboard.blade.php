@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    {!! breadcrumbs([ucfirst(__('raids.raids')).' Index' => __('raids.raids'), 'Current '.ucfirst(__('raids.raid')). ($currentRaid ? ' - '.$currentRaid->name : '') => __('raids.raids').'/current']) !!}
+    {!! breadcrumbs([ucfirst(__('raids.raids')) . ' Index' => __('raids.raids'), 'Current ' . ucfirst(__('raids.raid')) . ($currentRaid ? ' - ' . $currentRaid->name : '') => __('raids.raids') . '/current']) !!}
 
     <h2 class="text-center mb-1">
         {!! $raid->displayName !!} Leaderboard
@@ -17,5 +17,4 @@
     </div>
 
     @include('raids.widgets._leaderboard_table', ['entries' => $entries, 'raid' => $raid, 'limit' => 10])
-
 @endsection

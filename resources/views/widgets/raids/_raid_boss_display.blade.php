@@ -1,4 +1,4 @@
-<div class="raid-display" style="{!! $raid->imageUrl ? "background-image: url('" . $raid->imageUrl . "');" : "" !!}">
+<div class="raid-display" style="{!! $raid->imageUrl ? "background-image: url('" . $raid->imageUrl . "');" : '' !!}">
     <div class="h-100 d-flex flex-column justify-content-center">
         <div class="{{ $heading ?? 'h5' }} mb-0">
             {!! $raidBoss->displayName !!}

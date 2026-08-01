@@ -28,7 +28,8 @@
                             <div class="mb-2" style="background: transparent url('{{ $activeRaid->first()->imageUrl }}') no-repeat center; background-size: cover; height: 50px;"></div>
                         @endif
                         @if ($activeRaid->first()->status == 2)
-                            The active {{ __('raids.raid') }} {!! $activeRaid->first()->displayName !!} has been <b>defeated</b> and participation has closed! <b>Rewards have yet to be distributed.</b> Please <a href="{{ $activeRaid->first()->adminUrl }}">proceed to the {{ __('raids.raid') }}'s admin panel page</a> to do so.
+                            The active {{ __('raids.raid') }} {!! $activeRaid->first()->displayName !!} has been <b>defeated</b> and participation has closed! <b>Rewards have yet to be distributed.</b> Please <a href="{{ $activeRaid->first()->adminUrl }}">proceed to the
+                                {{ __('raids.raid') }}'s admin panel page</a> to do so.
                         @else
                             There is an ongoing {{ __('raids.raid') }}: {!! $activeRaid->first()->displayName !!}! Visit <a href="{{ $activeRaid->first()->adminUrl }}">the {{ __('raids.raid') }}'s admin panel page</a> if you wish to review its settings.
                         @endif
@@ -37,7 +38,7 @@
                     @endif
                 </p>
                 <div class="text-right">
-                    <a href="{{ url('admin/data/'.__('raids.raids')) }}" class="card-link">
+                    <a href="{{ url('admin/data/' . __('raids.raids')) }}" class="card-link">
                         View {{ ucfirst(__('raids.raids')) }} Index <span class="fas fa-caret-right ml-1"></span>
                     </a>
                 </div>

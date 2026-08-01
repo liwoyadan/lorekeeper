@@ -1,16 +1,16 @@
 @extends('admin.layout')
 
 @section('admin-title')
-    {{ ucwords(__('raids.raid').' '.__('raids.bosses')) }}
+    {{ ucwords(__('raids.raid') . ' ' . __('raids.bosses')) }}
 @endsection
 
 @section('admin-content')
-    {!! breadcrumbs(['Admin Panel' => 'admin', ucwords(__('raids.raid').' '.__('raids.bosses')) => 'admin/data/'.__('raids.raid').'-'.__('raids.bosses')]) !!}
+    {!! breadcrumbs(['Admin Panel' => 'admin', ucwords(__('raids.raid') . ' ' . __('raids.bosses')) => 'admin/data/' . __('raids.raid') . '-' . __('raids.bosses')]) !!}
 
-    <h1>{{ ucwords(__('raids.raid').' '.__('raids.bosses')) }}</h1>
+    <h1>{{ ucwords(__('raids.raid') . ' ' . __('raids.bosses')) }}</h1>
 
     <p>
-        This is a list of all the {{ __('raids.raid').' '.__('raids.bosses') }} on the site. <b>{{ ucfirst(__('raids.raid').' '.__('raids.bosses')) }} must be created directly from a {{ __('raids.raid') }}'s page.</b>
+        This is a list of all the {{ __('raids.raid') . ' ' . __('raids.bosses') }} on the site. <b>{{ ucfirst(__('raids.raid') . ' ' . __('raids.bosses')) }} must be created directly from a {{ __('raids.raid') }}'s page.</b>
     </p>
 
     <div>
@@ -19,14 +19,14 @@
             {!! Form::text('name', Request::get('name'), ['class' => 'form-control', 'placeholder' => 'Name']) !!}
         </div>
         <div class="form-group mr-3 mb-3">
-            {!! Form::select('raid_id', ['any' => 'Any '.ucfirst(__('raids.raid'))] + $raids->pluck('name', 'id')->toArray(), Request::get('raid_id'), ['class' => 'form-control']) !!}
+            {!! Form::select('raid_id', ['any' => 'Any ' . ucfirst(__('raids.raid'))] + $raids->pluck('name', 'id')->toArray(), Request::get('raid_id'), ['class' => 'form-control']) !!}
         </div>
         <div class="form-group mb-3">{!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}</div>
         {!! Form::close() !!}
     </div>
 
     @if (!count($bosses))
-        <p>No {{ __('raids.raid').' '.__('raids.bosses') }} found.</p>
+        <p>No {{ __('raids.raid') . ' ' . __('raids.bosses') }} found.</p>
     @else
         {!! $bosses->render() !!}
         <div class="mb-4 logs-table">
@@ -86,7 +86,7 @@
                             </div>
                             <div class="col text-right">
                                 <div class="logs-table-cell">
-                                    <a href="{{ url('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/edit/' . $boss->id) }}" class="btn btn-primary py-0 px-2">Edit</a>
+                                    <a href="{{ url('admin/data/' . __('raids.raid') . '-' . __('raids.bosses') . '/edit/' . $boss->id) }}" class="btn btn-primary py-0 px-2">Edit</a>
                                 </div>
                             </div>
                         </div>

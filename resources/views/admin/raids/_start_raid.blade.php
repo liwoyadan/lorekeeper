@@ -1,5 +1,5 @@
 @if ($raid)
-    {!! Form::open(['url' => 'admin/data/'.__('raids.raids').'/start/' . $raid->id]) !!}
+    {!! Form::open(['url' => 'admin/data/' . __('raids.raids') . '/start/' . $raid->id]) !!}
     <p>
         The {{ __('raids.raid') }} <strong>{{ $raid->name }}</strong> hasn't begun yet.
         @if (isset($raid->start_at) && $raid->start_at < Carbon\Carbon::now())
@@ -16,7 +16,7 @@
     </p>
 
     <div class="text-right">
-        {!! Form::submit('Start '.ucfirst(__('raids.raid')), ['class' => 'btn btn-primary']) !!}
+        {!! Form::submit('Start ' . ucfirst(__('raids.raid')), ['class' => 'btn btn-primary']) !!}
     </div>
 
     {!! Form::close() !!}

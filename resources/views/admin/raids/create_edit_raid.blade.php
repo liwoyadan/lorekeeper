@@ -5,7 +5,11 @@
 @endsection
 
 @section('admin-content')
-    {!! breadcrumbs(['Admin Panel' => 'admin', ucfirst(__('raids.raids')) => 'admin/data/'.__('raids.raids'), ($raid->id ? 'Edit' : 'Create') . ' '.ucfirst(__('raids.raid')) => $raid->id ? 'admin/data/'.__('raids.raids').'/edit/' . $raid->id : 'admin/data/'.__('raids.raids').'/create']) !!}
+    {!! breadcrumbs([
+        'Admin Panel' => 'admin',
+        ucfirst(__('raids.raids')) => 'admin/data/' . __('raids.raids'),
+        ($raid->id ? 'Edit' : 'Create') . ' ' . ucfirst(__('raids.raid')) => $raid->id ? 'admin/data/' . __('raids.raids') . '/edit/' . $raid->id : 'admin/data/' . __('raids.raids') . '/create',
+    ]) !!}
 
     <h1>
         {{ $raid->id ? 'Edit' : 'Create' }} {{ ucfirst(__('raids.raid')) }}
@@ -75,7 +79,7 @@
         @endif
     @endif
 
-    {!! Form::open(['url' => $raid->id ? 'admin/data/'.__('raids.raids').'/edit/' . $raid->id : 'admin/data/'.__('raids.raids').'/create', 'files' => true]) !!}
+    {!! Form::open(['url' => $raid->id ? 'admin/data/' . __('raids.raids') . '/edit/' . $raid->id : 'admin/data/' . __('raids.raids') . '/create', 'files' => true]) !!}
 
     @if (!$raid->id)
         <div class="alert alert-danger">
@@ -91,7 +95,7 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('Background Image (Optional)') !!} {!! add_help('This image is the '.__('raids.raid').'\'s background that the '.__('raids.boss').' will be placed on top of.') !!}
+        {!! Form::label('Background Image (Optional)') !!} {!! add_help('This image is the ' . __('raids.raid') . '\'s background that the ' . __('raids.boss') . ' will be placed on top of.') !!}
         <div class="custom-file">
             {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
             {!! Form::file('image', ['class' => 'custom-file-input']) !!}
@@ -109,7 +113,7 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('Description (Optional)') !!} {!! add_help('This is the description of the '.__('raids.raid').' that shows up on the '.__('raids.raid').' page.') !!}
+        {!! Form::label('Description (Optional)') !!} {!! add_help('This is the description of the ' . __('raids.raid') . ' that shows up on the ' . __('raids.raid') . ' page.') !!}
         {!! Form::textarea('description', $raid->description, ['class' => 'form-control wysiwyg']) !!}
     </div>
 
@@ -117,13 +121,15 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    {!! Form::label('start_at', 'Start Time (Optional)') !!} {!! add_help(ucfirst(__('raids.raids')).' cannot be attacked before the starting time. If the '.__('raids.raid').' currently is set to not be visible, the '.__('raids.raid').' will <b>automatically become visible</b> once past starting time.') !!}
+                    {!! Form::label('start_at', 'Start Time (Optional)') !!} {!! add_help(
+                        ucfirst(__('raids.raids')) . ' cannot be attacked before the starting time. If the ' . __('raids.raid') . ' currently is set to not be visible, the ' . __('raids.raid') . ' will <b>automatically become visible</b> once past starting time.',
+                    ) !!}
                     {!! Form::text('start_at', $raid->start_at, ['class' => 'form-control datepicker']) !!}
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    {!! Form::label('end_at', 'End Time (Optional)') !!} {!! add_help(ucfirst(__('raids.raids')).' cannot be attacked after the ending time.') !!}
+                    {!! Form::label('end_at', 'End Time (Optional)') !!} {!! add_help(ucfirst(__('raids.raids')) . ' cannot be attacked after the ending time.') !!}
                     {!! Form::text('end_at', $raid->end_at, ['class' => 'form-control datepicker']) !!}
                 </div>
             </div>
@@ -142,25 +148,27 @@
             <div class="col-md">
                 <div class="form-group">
                     {!! Form::checkbox('is_visible', 1, $raid->id ? $raid->is_visible : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-                    {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help(ucfirst(__('raids.raids')).' that are not visible will be hidden from the '.__('raids.raid').' list. The start time setting overrides this setting, i.e. if this is set to hidden, it will still be visible past the start time.') !!}
+                    {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help(
+                        ucfirst(__('raids.raids')) . ' that are not visible will be hidden from the ' . __('raids.raid') . ' list. The start time setting overrides this setting, i.e. if this is set to hidden, it will still be visible past the start time.',
+                    ) !!}
                 </div>
             </div>
 
             <div class="col-md">
                 <div class="form-group">
                     {!! Form::checkbox('continue_raid', 1, $raid->id ? $raid->continue_raid : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-                    {!! Form::label('continue_raid', 'Continue after health depleted?', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is toggled <b>on</b>, the '.__('raids.raid').' will not end when the '.__('raids.boss').'\'s health is surpassed in damage. When set to <b>off</b>, the '.__('raids.raid').' will automatically conclude.') !!}
+                    {!! Form::label('continue_raid', 'Continue after health depleted?', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is toggled <b>on</b>, the ' . __('raids.raid') . ' will not end when the ' . __('raids.boss') . '\'s health is surpassed in damage. When set to <b>off</b>, the ' . __('raids.raid') . ' will automatically conclude.') !!}
                 </div>
             </div>
         </div>
 
-        <h3>{{ ucwords(__('raids.raid').' '.__('raids.boss')) }}</h3>
+        <h3>{{ ucwords(__('raids.raid') . ' ' . __('raids.boss')) }}</h3>
         @if (!$raid->currentBoss())
             <p>
                 Click the button below to create a {{ __('raids.boss') }} for this {{ __('raids.raid') }}.
             </p>
-            <a href="{{ url('admin/data/'.__('raids.raid').'-'.__('raids.bosses').'/create/'.$raid->id) }}" class="btn btn-primary d-block mb-3">
-                Create {{ ucwords(__('raids.raid').' '.__('raids.boss')) }}
+            <a href="{{ url('admin/data/' . __('raids.raid') . '-' . __('raids.bosses') . '/create/' . $raid->id) }}" class="btn btn-primary d-block mb-3">
+                Create {{ ucwords(__('raids.raid') . ' ' . __('raids.boss')) }}
             </a>
         @else
             @if ($raid->currentBoss())
@@ -192,7 +200,9 @@
 
         <h3>Rewards</h3>
         <p>
-            Rewards are credited on a per-user basis. Only users who have participated in the {{ __('raids.raid') }} and have done sufficient enough damage will be rewarded anything indicated below. Rewards are distributed at the end of the {{ __('raids.raid') }}. The prizes a user receives is <b>inclusive of all the damage thresholds they have passed</b> - i.e. if you reward 5 currency for dealing 20 damage, 10 currency for dealing 30 damage, and 50 currency for dealing 35 damage, a user who has dealt 31 damage by the end of the {{ __('raids.raid') }} will receive a total of 15 currency.
+            Rewards are credited on a per-user basis. Only users who have participated in the {{ __('raids.raid') }} and have done sufficient enough damage will be rewarded anything indicated below. Rewards are distributed at the end of the
+            {{ __('raids.raid') }}. The prizes a user receives is <b>inclusive of all the damage thresholds they have passed</b> - i.e. if you reward 5 currency for dealing 20 damage, 10 currency for dealing 30 damage, and 50 currency for dealing 35
+            damage, a user who has dealt 31 damage by the end of the {{ __('raids.raid') }} will receive a total of 15 currency.
         </p>
         <p>
             If you want a reward to be distributed to <i>all participating users</i> regardless of the amount of damage they dealt, set the damage requirement to <b>0</b>
@@ -220,24 +230,24 @@
         $(document).ready(function() {
             $('.delete-raid-button').on('click', function(e) {
                 e.preventDefault();
-                loadModal("{{ url('admin/data/'.__('raids.raids').'/delete') }}/{{ $raid->id }}", "Delete {{ ucfirst(__('raids.raid')) }}");
+                loadModal("{{ url('admin/data/' . __('raids.raids') . '/delete') }}/{{ $raid->id }}", "Delete {{ ucfirst(__('raids.raid')) }}");
             });
 
             @if ($raid->id)
                 @if (!$raid->status)
                     $('.start-raid-button').on('click', function(e) {
                         e.preventDefault();
-                        loadModal("{{ url('admin/data/'.__('raids.raids').'/start') }}/{{ $raid->id }}", "Manually Start {{ ucfirst(__('raids.raid')) }}?");
+                        loadModal("{{ url('admin/data/' . __('raids.raids') . '/start') }}/{{ $raid->id }}", "Manually Start {{ ucfirst(__('raids.raid')) }}?");
                     });
                 @elseif ($raid->status == 1)
                     $('.end-raid-button').on('click', function(e) {
                         e.preventDefault();
-                        loadModal("{{ url('admin/data/'.__('raids.raids').'/end') }}/{{ $raid->id }}", "Manually End {{ ucfirst(__('raids.raid')) }}?");
+                        loadModal("{{ url('admin/data/' . __('raids.raids') . '/end') }}/{{ $raid->id }}", "Manually End {{ ucfirst(__('raids.raid')) }}?");
                     });
                 @elseif ($raid->status == 2)
                     $('.reward-raid-button').on('click', function(e) {
                         e.preventDefault();
-                        loadModal("{{ url('admin/data/'.__('raids.raids').'/reward') }}/{{ $raid->id }}", "Distribute {{ ucfirst(__('raids.raid')) }} Rewards");
+                        loadModal("{{ url('admin/data/' . __('raids.raids') . '/reward') }}/{{ $raid->id }}", "Distribute {{ ucfirst(__('raids.raid')) }} Rewards");
                     });
                 @endif
             @endif

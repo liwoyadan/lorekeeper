@@ -33,7 +33,7 @@
                         <div class="col-6 col-md">
                             <div class="logs-table-cell">
                                 {{ $reward->damage_required }}
-                                @if (isset($raid) && $raid->userDamage(Auth::user() ?? null) && ($raid->userDamage(Auth::user() ?? null) >= $reward->damage_required))
+                                @if (isset($raid) && $raid->userDamage(Auth::user() ?? null) && $raid->userDamage(Auth::user() ?? null) >= $reward->damage_required)
                                     <i class="text-success fas fa-check ml-1" data-toggle="tooltip" title="You have dealt enough damage to receive this reward!"></i>
                                 @endif
                             </div>

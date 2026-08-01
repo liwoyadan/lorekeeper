@@ -6,7 +6,7 @@
             This {{ __('raids.boss') }} has concluded.
         @endif
     </div>
-    <div class="alert alert-{{ $raid->logs()->where('user_id', Auth::user()->id)->first() ? 'success' : 'primary' }} text-center mt-2">
+    <div class="alert alert-{{ $raid->logs()->where('user_id', Auth::user()->id)->first()? 'success': 'primary' }} text-center mt-2">
         @if ($raid->logs()->where('user_id', Auth::user()->id)->first())
             <b>You participated in this {{ __('raids.raid') }}!</b>
             @if ($raid->distributed_at && $raid->distributed_at <= Carbon\Carbon::now())
@@ -16,7 +16,7 @@
             @endif
             @if ($raid->userDamage(Auth::user() ?? null) && $raid->userDamage(Auth::user() ?? null) >= 0)
                 <br>
-                You have dealt a total of <b>{{ $raid->userDamage(Auth::user() ?? null) }} damage</b> to this {{ __('raids.raid').' '.__('raids.boss') }}.
+                You have dealt a total of <b>{{ $raid->userDamage(Auth::user() ?? null) }} damage</b> to this {{ __('raids.raid') . ' ' . __('raids.boss') }}.
             @endif
         @else
             You didn't participate in this {{ __('raids.raid') }}.
@@ -29,7 +29,8 @@
         </div>
         @if ($raid->attackAsset()['asset']->imageUrl || $raid->attackAsset()['asset']->currencyImageUrl || $raid->attackAsset()['asset']->currencyIconUrl)
             <div class="text-center my-2">
-                <img src="{{ ($raid->attackAsset()['asset']->imageUrl ?? $raid->attackAsset()['asset']->currencyImageUrl) ?? ($raid->attackAsset()['asset']->currencyIconUrl ?? null) }}" alt="{{ $raid->attackAsset()['asset']->name }}" class="img-fluid p-2 bg-secondary rounded-circle">
+                <img src="{{ $raid->attackAsset()['asset']->imageUrl ?? $raid->attackAsset()['asset']->currencyImageUrl ?? ($raid->attackAsset()['asset']->currencyIconUrl ?? null) }}" alt="{{ $raid->attackAsset()['asset']->name }}"
+                    class="img-fluid p-2 bg-secondary rounded-circle">
             </div>
         @endif
         <div class="text-center">
@@ -41,7 +42,7 @@
         </div>
         @if ($raid->userDamage(Auth::user() ?? null) && $raid->userDamage(Auth::user() ?? null) >= 0)
             <div class="text-center">
-                You have dealt <b>{{ $raid->userDamage(Auth::user() ?? null) }} damage</b> to this {{ __('raids.raid').' '.__('raids.boss') }} so far.
+                You have dealt <b>{{ $raid->userDamage(Auth::user() ?? null) }} damage</b> to this {{ __('raids.raid') . ' ' . __('raids.boss') }} so far.
             </div>
         @endif
 
@@ -58,7 +59,7 @@
         @endif
 
         @if ($raid->canAttack(Auth::user() ?? null))
-            {!! Form::open(['url' => __('raids.raids').'/attack/' . $raid->id .'/'.__('raids.boss').'/' . $boss->id, 'class' => 'mt-2']) !!}
+            {!! Form::open(['url' => __('raids.raids') . '/attack/' . $raid->id . '/' . __('raids.boss') . '/' . $boss->id, 'class' => 'mt-2']) !!}
             <div class="text-center">
                 {!! Form::submit('Attack!', ['class' => 'btn btn-primary font-weight-bold']) !!}
             </div>

@@ -23,7 +23,7 @@
                         <b>Ends</b> when {{ __('raids.boss') }} is defeated.
                     @endif
                 @else
-                    <b>Ended</b> {!! $raid->end_at ? pretty_date($raid->end_at) : 'when '.__('raids.boss').' was defeated' !!}.
+                    <b>Ended</b> {!! $raid->end_at ? pretty_date($raid->end_at) : 'when ' . __('raids.boss') . ' was defeated' !!}.
                 @endif
             </div>
         </div>
@@ -64,7 +64,7 @@
             @endif
         </div>
         <div class="mt-2">
-            <a href="{{ url('raids/leaderboard/'.$raid->id) }}" class="btn btn-secondary d-block text-center">
+            <a href="{{ url('raids/leaderboard/' . $raid->id) }}" class="btn btn-secondary d-block text-center">
                 Leaderboard
             </a>
         </div>

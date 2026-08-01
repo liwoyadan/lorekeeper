@@ -23,7 +23,7 @@
                         'class' => 'form-control reward-type',
                         'placeholder' => 'Select Reward Type',
                     ]) !!}
-                    </div>
+                </div>
             </div>
             <div class="col-6 col-md">
                 <div class="logs-table-cell loot-row-select"></div>

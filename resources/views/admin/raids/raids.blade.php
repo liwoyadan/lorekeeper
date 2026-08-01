@@ -5,7 +5,7 @@
 @endsection
 
 @section('admin-content')
-    {!! breadcrumbs(['Admin Panel' => 'admin', ucfirst(__('raids.raids')) => 'admin/data/'.__('raids.raids')]) !!}
+    {!! breadcrumbs(['Admin Panel' => 'admin', ucfirst(__('raids.raids')) => 'admin/data/' . __('raids.raids')]) !!}
 
     <h1>{{ ucfirst(__('raids.raids')) }}</h1>
 
@@ -14,7 +14,7 @@
     </p>
 
     <div class="text-right mb-3">
-        <a class="btn btn-primary" href="{{ url('admin/data/'.__('raids.raids').'/create') }}">
+        <a class="btn btn-primary" href="{{ url('admin/data/' . __('raids.raids') . '/create') }}">
             <i class="fas fa-plus"></i> Create New {{ ucfirst(__('raids.raid')) }}
         </a>
     </div>
@@ -37,7 +37,7 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col-auto">
                         <div class="logs-table-cell pl-0">
-                            {!! add_help('<b>Regardless of visibility</b>, whether or not the '.__('raids.raid').' is active based on <b>start time</b> and <b>end time</b>.') !!}
+                            {!! add_help('<b>Regardless of visibility</b>, whether or not the ' . __('raids.raid') . ' is active based on <b>start time</b> and <b>end time</b>.') !!}
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
@@ -81,10 +81,11 @@
                                         @if (!$raid->is_visible)
                                             <i class="fas fa-eye-slash" data-toggle="tooltip" title="This {{ __('raids.raid') }} is currently not visible."></i>
                                         @endif
-                                        @if (($raid->status == 1 || $raid->status == 2) && (!$raid->isDefeated || $raid->isDefeated && $raid->continue_raid))
+                                        @if (($raid->status == 1 || $raid->status == 2) && (!$raid->isDefeated || ($raid->isDefeated && $raid->continue_raid)))
                                             <i class="fas fa-sync-alt" data-toggle="tooltip" title="This {{ __('raids.raid') }} is currently <b>ongoing</b>."></i>
                                         @elseif ($raid->status == 2 && !$raid->distributed_at)
-                                            <i class="fas fa-exclamation-triangle text-danger fa-fade" data-toggle="tooltip" title="<b>This {{ __('raids.raid') }} has been defeated!</b> Rewards need to be distributed. Please proceed to the edit page."></i>
+                                            <i class="fas fa-exclamation-triangle text-danger fa-fade" data-toggle="tooltip"
+                                                title="<b>This {{ __('raids.raid') }} has been defeated!</b> Rewards need to be distributed. Please proceed to the edit page."></i>
                                         @elseif ($raid->status == 3)
                                             <i class="fas fa-check-circle text-success" data-toggle="tooltip" title="This {{ __('raids.raid') }} has <b>concluded</b>."></i>
                                         @endif
@@ -111,7 +112,7 @@
                             </div>
                             <div class="col-2 col-md-auto text-right">
                                 <div class="logs-table-cell">
-                                    <a href="{{ url('admin/data/'.__('raids.raids').'/edit/' . $raid->id) }}" class="btn btn-primary py-0 px-2">
+                                    <a href="{{ url('admin/data/' . __('raids.raids') . '/edit/' . $raid->id) }}" class="btn btn-primary py-0 px-2">
                                         <i class="fas fa-cog" data-toggle="tooltip" title="Edit"></i>
                                     </a>
                                 </div>

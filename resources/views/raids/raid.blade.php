@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    {!! breadcrumbs([ucfirst(__('raids.raids')).' Index' =>  __('raids.raids'), $raid->name =>  __('raids.raids').'/data/' . $raid->id]) !!}
+    {!! breadcrumbs([ucfirst(__('raids.raids')) . ' Index' => __('raids.raids'), $raid->name => __('raids.raids') . '/data/' . $raid->id]) !!}
 
     <div class="row no-gutters justify-content-center">
         <div class="col-md-11">
@@ -55,7 +55,7 @@
                                     <b>Ends</b> when {{ __('raids.boss') }} is defeated.
                                 @endif
                             @else
-                                <b>Ended</b> {!! $raid->end_at ? pretty_date($raid->end_at) : 'when '.__('raids.boss').' was defeated' !!}.
+                                <b>Ended</b> {!! $raid->end_at ? pretty_date($raid->end_at) : 'when ' . __('raids.boss') . ' was defeated' !!}.
                             @endif
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                         </div>
                     @endif
                     <div class="mb-3">
-                        <a href="{{ url('raids/leaderboard/'.$raid->id) }}" class="btn btn-secondary d-block text-center">
+                        <a href="{{ url('raids/leaderboard/' . $raid->id) }}" class="btn btn-secondary d-block text-center">
                             Leaderboard
                         </a>
                     </div>

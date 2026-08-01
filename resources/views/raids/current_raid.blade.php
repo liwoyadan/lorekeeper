@@ -1,11 +1,11 @@
 @extends('raids.layout')
 
 @section('raids-title')
-    Current {{ ucfirst(__('raids.raid')) }}{!! $currentRaid ? ' - '.$currentRaid->name : '' !!}
+    Current {{ ucfirst(__('raids.raid')) }}{!! $currentRaid ? ' - ' . $currentRaid->name : '' !!}
 @endsection
 
 @section('content')
-    {!! breadcrumbs([ucfirst(__('raids.raids')).' Index' => __('raids.raids'), 'Current '.ucfirst(__('raids.raid')). ($currentRaid ? ' - '.$currentRaid->name : '') => __('raids.raids').'/current']) !!}
+    {!! breadcrumbs([ucfirst(__('raids.raids')) . ' Index' => __('raids.raids'), 'Current ' . ucfirst(__('raids.raid')) . ($currentRaid ? ' - ' . $currentRaid->name : '') => __('raids.raids') . '/current']) !!}
 
     <h1 class="text-center mb-0">
         Current {{ ucfirst(__('raids.raid')) }}
@@ -28,7 +28,7 @@
                         ||
                     </div>
                     <div class="col-md">
-                        {{ $currentRaid->end_at && $currentRaid->end_at < Carbon\Carbon::now() ? 'Ended' : 'Ends' }} {!! $currentRaid->end_at ? format_date($currentRaid->end_at) : 'when '.__('raids.boss').' is defeated' !!}
+                        {{ $currentRaid->end_at && $currentRaid->end_at < Carbon\Carbon::now() ? 'Ended' : 'Ends' }} {!! $currentRaid->end_at ? format_date($currentRaid->end_at) : 'when ' . __('raids.boss') . ' is defeated' !!}
                     </div>
                 </div>
                 @if (Auth::check())
