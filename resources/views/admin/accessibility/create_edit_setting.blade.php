@@ -11,10 +11,16 @@
         foreach ($catalog as $key => $entry) {
             $catalogMeta[$key] = [
                 'input_type' => $entry['input_type'],
-                'selector'   => $entry['selector'] ?? (isset($entry['levels']) ? '#main headings (h1 to h6)' : ''),
-                'property'   => $entry['property'] ?? (isset($entry['levels']) ? 'font-size' : ''),
-                'has_bases'  => isset($entry['levels']),
-                'bases'      => isset($entry['levels']) ? collect($entry['levels'])->map(function ($lvl) { return $lvl['base'] ?? ''; })->toArray() : [],
+                'selector' => $entry['selector'] ?? (isset($entry['levels']) ? '#main headings (h1 to h6)' : ''),
+                'property' => $entry['property'] ?? (isset($entry['levels']) ? 'font-size' : ''),
+                'has_bases' => isset($entry['levels']),
+                'bases' => isset($entry['levels'])
+                    ? collect($entry['levels'])
+                        ->map(function ($lvl) {
+                            return $lvl['base'] ?? '';
+                        })
+                        ->toArray()
+                    : [],
             ];
             $keyOptions[$key] = $entry['label'] . ' (' . $key . ')';
         }
@@ -48,7 +54,9 @@
         <div class="col-md">
             <div class="form-group">
                 {!! Form::label('setting_key', 'Target') !!}
-                {!! add_help('The target this setting uses. It sets the CSS selector, property and input type, and <b>cannot be changed</b> after creation. (You will have to delete and re-create.) If this site has custom styling or you would otherwise like to change it, you can do so on the <b>overrides page</b> or the <b>config file.</b>') !!}
+                {!! add_help(
+                    'The target this setting uses. It sets the CSS selector, property and input type, and <b>cannot be changed</b> after creation. (You will have to delete and re-create.) If this site has custom styling or you would otherwise like to change it, you can do so on the <b>overrides page</b> or the <b>config file.</b>',
+                ) !!}
                 @if ($setting->id)
                     {!! Form::hidden('setting_key', $setting->setting_key) !!}
                     {!! Form::text('setting_key_label', ($catalog[$setting->setting_key]['label'] ?? $setting->setting_key) . ' (' . $setting->setting_key . ')', ['class' => 'form-control', 'disabled']) !!}

@@ -49,8 +49,8 @@
 @section('scripts')
     @parent
     <script>
-        $(document).ready(function () {
-            $('.a11y-theme-toggle').on('click', function (e) {
+        $(document).ready(function() {
+            $('.a11y-theme-toggle').on('click', function(e) {
                 e.preventDefault();
                 var body = $(this).closest('.a11y-theme-row').find('.a11y-theme-body');
                 body.toggleClass('hide');
@@ -60,12 +60,14 @@
                 if (open) {
                     // toggles that auto-init while hidden come out zero-width; rebuild once visible
                     var tog = body.find('input[data-toggle="toggle"]');
-                    try { tog.bootstrapToggle('destroy'); } catch (err) {}
+                    try {
+                        tog.bootstrapToggle('destroy');
+                    } catch (err) {}
                     tog.bootstrapToggle();
                 }
             });
 
-            $('.a11y-add-row').on('click', function (e) {
+            $('.a11y-add-row').on('click', function(e) {
                 e.preventDefault();
                 var field = $(this).data('field');
                 var key = $(this).data('key');
@@ -86,7 +88,7 @@
                 }
             });
 
-            $(document).on('click', '.a11y-remove-row', function (e) {
+            $(document).on('click', '.a11y-remove-row', function(e) {
                 e.preventDefault();
                 $(this).closest('.a11y-choice-row').remove();
             });

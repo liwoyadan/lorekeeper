@@ -1,7 +1,7 @@
 {{-- Client-side builder that's shared. Mirrors cssFor in AccessibilityManager,
     so the guest head script produces identical CSS from a single source. --}}
 <script>
-    window.a11yBuildRule = function (target, value) {
+    window.a11yBuildRule = function(target, value) {
         if (!target || !target.selector || !target.property || value == null || value == '') {
             return '';
         }

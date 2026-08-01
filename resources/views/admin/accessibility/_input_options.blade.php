@@ -68,10 +68,10 @@
         @foreach ($choices as $choice)
             <div class="form-row a11y-choice-row mb-2">
                 <div class="col-md">
-                    {!! Form::text('choices_value[]', is_array($choice) ? ($choice['value'] ?? '') : $choice, ['class' => 'form-control', 'placeholder' => 'Value']) !!}
+                    {!! Form::text('choices_value[]', is_array($choice) ? $choice['value'] ?? '' : $choice, ['class' => 'form-control', 'placeholder' => 'Value']) !!}
                 </div>
                 <div class="col-md">
-                    {!! Form::text('choices_label[]', is_array($choice) ? ($choice['label'] ?? '') : '', ['class' => 'form-control', 'placeholder' => 'Label']) !!}
+                    {!! Form::text('choices_label[]', is_array($choice) ? $choice['label'] ?? '' : '', ['class' => 'form-control', 'placeholder' => 'Label']) !!}
                 </div>
                 <div class="col-md-auto text-right">
                     <a href="#" class="btn btn-danger a11y-remove-row" aria-label="Remove"><i class="fas fa-times" aria-hidden="true"></i></a>
@@ -103,14 +103,14 @@
             <div class="a11y-choice-row row mb-2">
                 <div class="col-md">
                     <div class="input-group cp">
-                        {!! Form::text('presets_value[]', is_array($preset) ? ($preset['value'] ?? '') : $preset, ['class' => 'form-control', 'placeholder' => '#000000']) !!}
+                        {!! Form::text('presets_value[]', is_array($preset) ? $preset['value'] ?? '' : $preset, ['class' => 'form-control', 'placeholder' => '#000000']) !!}
                         <span class="input-group-append">
                             <span class="input-group-text colorpicker-input-addon"><i></i></span>
                         </span>
                     </div>
                 </div>
                 <div class="col-md">
-                    {!! Form::text('presets_label[]', is_array($preset) ? ($preset['label'] ?? '') : '', ['class' => 'form-control', 'placeholder' => 'Label (optional)']) !!}
+                    {!! Form::text('presets_label[]', is_array($preset) ? $preset['label'] ?? '' : '', ['class' => 'form-control', 'placeholder' => 'Label (optional)']) !!}
                 </div>
 
                 <div class="col-md-auto pl-1 text-right">

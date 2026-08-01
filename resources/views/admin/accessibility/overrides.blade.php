@@ -16,7 +16,8 @@
         Selector Overrides
     </h1>
     <p>
-        Each target comes with a default CSS selector and property adjusted for Lorekeeper's default styling. If your site's styling differs, override the selector (and optionally, the property itself) here, generally only needs to be once per site. (Unless if you make changes to your styling, have alternate layouts with meaningful differences, etc.) Leave a field blank to keep the config file default shown as the placeholder. These apply site-wide, across every theme.
+        Each target comes with a default CSS selector and property adjusted for Lorekeeper's default styling. If your site's styling differs, override the selector (and optionally, the property itself) here, generally only needs to be once per site.
+        (Unless if you make changes to your styling, have alternate layouts with meaningful differences, etc.) Leave a field blank to keep the config file default shown as the placeholder. These apply site-wide, across every theme.
     </p>
 
     {!! Form::open(['url' => 'admin/accessibility-settings/overrides']) !!}

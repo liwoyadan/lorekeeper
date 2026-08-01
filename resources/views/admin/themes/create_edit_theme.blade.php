@@ -112,7 +112,7 @@
                     {!! Form::label('creator_name[]', 'Creator(s) Name', ['class' => 'mb-md-0']) !!}{!! add_help('On-site users you would like to credit for this theme.') !!}
                 </div>
                 <div class="col-md">
-                    {!! Form::select('creator_name[]', $userOptions, $theme->creatorData['name'] ?? null ?? null, ['class' => 'form-control creator-select', 'multiple']) !!}
+                    {!! Form::select('creator_name[]', $userOptions, $theme->creatorData['name'] ?? (null ?? null), ['class' => 'form-control creator-select', 'multiple']) !!}
                 </div>
             </div>
         </div>

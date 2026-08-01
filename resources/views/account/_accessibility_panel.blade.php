@@ -42,11 +42,15 @@
                     The quick brown fox jumps over the lazy dog. <a href="#" onclick="return false;">This is a sample link.</a> <span class="text-muted">This is some muted text.</span>
                 </p>
                 <p class="mb-2">
-                    <b>Some bolded text for preview.</b> <i>Here's some text that's italicized.</i> <u>This sentence is underlined.</u> <span class="font-weight-bold font-italic">This text is bolded AND italicized.</span> <span class="text-uppercase">This text is in all caps!</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor, magna quis tristique bibendum, nulla ante sagittis massa, vel dignissim risus nisi non nisi. Integer non semper enim, quis ultrices nunc.
+                    <b>Some bolded text for preview.</b> <i>Here's some text that's italicized.</i> <u>This sentence is underlined.</u> <span class="font-weight-bold font-italic">This text is bolded AND italicized.</span> <span
+                        class="text-uppercase">This text is in all caps!</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor, magna quis tristique bibendum, nulla ante sagittis massa, vel dignissim risus nisi non nisi. Integer
+                    non semper enim, quis ultrices nunc.
                 </p>
                 <div class="card">
                     <div class="card-body">
-                        <b>This text is in a card element.</b> Proin tristique mauris fermentum, convallis elit ut, aliquam est. Sed arcu tortor, auctor a lorem ut, interdum tincidunt est. Vestibulum et elit id elit tempor luctus in ac ex. Vivamus quis ligula ipsum. Sed varius tincidunt fermentum. Fusce efficitur turpis nec nibh cursus gravida. Quisque scelerisque hendrerit auctor. Vestibulum dapibus erat feugiat blandit pharetra. Morbi fermentum nisl ut felis ultricies gravida.
+                        <b>This text is in a card element.</b> Proin tristique mauris fermentum, convallis elit ut, aliquam est. Sed arcu tortor, auctor a lorem ut, interdum tincidunt est. Vestibulum et elit id elit tempor luctus in ac ex. Vivamus
+                        quis ligula ipsum. Sed varius tincidunt fermentum. Fusce efficitur turpis nec nibh cursus gravida. Quisque scelerisque hendrerit auctor. Vestibulum dapibus erat feugiat blandit pharetra. Morbi fermentum nisl ut felis ultricies
+                        gravida.
                     </div>
                 </div>
             </div>
@@ -88,8 +92,8 @@
         window.a11yClientMap = {{ Js::from($a11yClientMap) }};
         window.a11yUserValues = {{ Js::from((object) $a11ySaved) }};
         window.a11yBaseUrl = '{{ url('accessibility') }}';
-        if (typeof initA11yPanel == 'function') { 
-            initA11yPanel(); 
+        if (typeof initA11yPanel == 'function') {
+            initA11yPanel();
         }
     </script>
 @endif

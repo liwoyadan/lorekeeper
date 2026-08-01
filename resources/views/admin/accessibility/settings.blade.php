@@ -11,15 +11,18 @@
         Accessibility Settings
     </h1>
     <p>
-        Accessibility (or just alt/alternative) settings are options that users adjust for themselves (font size, colours, spacing, motion, etc). Similar to picking a theme, but only to adjust specific individual aspects of the site such as the size of text! Defaults are written in a config file at <code>config/lorekeeper/themes.php</code>.<br>
-        Each setting maps to a target from the accessibility config file catalog; you can choose which target a setting uses, name it, and decide how users pick a value (i.e. only select from a preset list of options or enter any value). If your site's styling is customized past the Lorekeeper default, remap a target's selector on the <a href="{{ url('admin/accessibility-settings/overrides') }}" class="font-weight-bold">selector overrides</a> page, and tune per-theme defaults on the <a href="{{ url('admin/accessibility-settings/themes') }}" class="font-weight-bold">theme overrides</a> page!<br>
+        Accessibility (or just alt/alternative) settings are options that users adjust for themselves (font size, colours, spacing, motion, etc). Similar to picking a theme, but only to adjust specific individual aspects of the site such as the size of
+        text! Defaults are written in a config file at <code>config/lorekeeper/themes.php</code>.<br>
+        Each setting maps to a target from the accessibility config file catalog; you can choose which target a setting uses, name it, and decide how users pick a value (i.e. only select from a preset list of options or enter any value). If your site's
+        styling is customized past the Lorekeeper default, remap a target's selector on the <a href="{{ url('admin/accessibility-settings/overrides') }}" class="font-weight-bold">selector overrides</a> page, and tune per-theme defaults on the <a
+            href="{{ url('admin/accessibility-settings/themes') }}" class="font-weight-bold">theme overrides</a> page!<br>
         You can also edit the config file to add, remove, and adjust as you see fit.
     </p>
 
     @if (!Settings::get('accessibility_menu_enabled'))
         <div class="alert alert-primary text-center">
             The accessibility menu is currently disabled, so users will not see it in the site navigation, but you can still create and manage accessibility/alternate settings here.<br>
-            Set the <code>accessibility_menu_enabled</code> site setting to <code>1</code> to make the menu available to users over at the <a href="{{ url('admin/settings')}}" class="font-weight-bold">site settings page</a>.
+            Set the <code>accessibility_menu_enabled</code> site setting to <code>1</code> to make the menu available to users over at the <a href="{{ url('admin/settings') }}" class="font-weight-bold">site settings page</a>.
         </div>
     @endif
 

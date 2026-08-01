@@ -5,7 +5,7 @@
     Plain JS because jQuery doesn't load in this early... --}}
 @include('layouts._accessibility_rule_js')
 <script>
-    (function () {
+    (function() {
         try {
             var map = {{ Js::from($a11yClientMap ?? []) }};
             var raw = localStorage.getItem('a11y');

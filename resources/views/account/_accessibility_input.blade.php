@@ -10,8 +10,8 @@
     $a11yName = $setting->setting_key;
     $a11ySelectOptions = [];
     foreach ($a11yChoices as $choice) {
-        $cv = is_array($choice) ? ($choice['value'] ?? '') : $choice;
-        $a11ySelectOptions[$cv] = is_array($choice) ? ($choice['label'] ?? $cv) : $choice;
+        $cv = is_array($choice) ? $choice['value'] ?? '' : $choice;
+        $a11ySelectOptions[$cv] = is_array($choice) ? $choice['label'] ?? $cv : $choice;
     }
 @endphp
 
@@ -39,32 +39,33 @@
                     Default: {{ $default }}{{ is_numeric($default) ? $a11yUnit : '' }}
                 </div>
             @endif
-            @break
+        @break
 
         @case('number')
             {!! Form::number($a11yName, $value, ['class' => 'form-control a11y-input', 'min' => $a11yMin, 'max' => $a11yMax, 'step' => $a11yStep, 'placeholder' => $default]) !!}
-            @break
+        @break
 
         @case('select')
             {!! Form::select($a11yName, $a11ySelectOptions, $value, ['class' => 'form-control a11y-input', 'placeholder' => $a11ySelectOptions[$default] ?? 'Default']) !!}
-            @break
+        @break
 
         @case('toggle')
             <div>
                 {!! Form::checkbox($a11yName, 1, $value == '1', ['class' => 'a11y-input', 'data-toggle' => 'toggle']) !!}
             </div>
-            @break
-            
+        @break
+
         @case('color')
             @if ($setting->is_constrained)
                 {!! Form::hidden($a11yName, $value, ['class' => 'a11y-input']) !!}
                 <div class="a11y-swatches">
                     @foreach ($a11yPresets as $preset)
                         @php
-                            $pv = is_array($preset) ? ($preset['value'] ?? '') : $preset;
-                            $pl = is_array($preset) ? ($preset['label'] ?? $pv) : $preset;
+                            $pv = is_array($preset) ? $preset['value'] ?? '' : $preset;
+                            $pl = is_array($preset) ? $preset['label'] ?? $pv : $preset;
                         @endphp
-                        <a href="#" class="a11y-swatch d-inline-block mr-1 mb-1 {{ $value == $pv ? 'active' : '' }}" data-value="{{ $pv }}" data-toggle="tooltip" title="{{ $pl }}" style="width: 28px; height: 28px; border-radius: 4px; border: 2px solid rgba(0,0,0,.15); background-color: {{ $pv }}; vertical-align: middle;"></a>
+                        <a href="#" class="a11y-swatch d-inline-block mr-1 mb-1 {{ $value == $pv ? 'active' : '' }}" data-value="{{ $pv }}" data-toggle="tooltip" title="{{ $pl }}"
+                            style="width: 28px; height: 28px; border-radius: 4px; border: 2px solid rgba(0,0,0,.15); background-color: {{ $pv }}; vertical-align: middle;"></a>
                     @endforeach
                 </div>
             @else
@@ -75,6 +76,7 @@
                     </span>
                 </div>
             @endif
-            @break
+        @break
+
     @endswitch
 </div>
