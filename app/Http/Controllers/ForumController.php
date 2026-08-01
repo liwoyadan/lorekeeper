@@ -6,7 +6,6 @@ use App\Models\Comment\Comment;
 use App\Models\Forum\Forum;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
 
 class ForumController extends Controller {
     /**
@@ -31,7 +30,7 @@ class ForumController extends Controller {
         }
 
         return view('forums.index', [
-            'forums' => $customForums,
+            'forums'      => $customForums,
             'recentPosts' => $recentPosts,
         ]);
     }
@@ -51,12 +50,15 @@ class ForumController extends Controller {
 
         if ($board->hasRestrictions && (!Auth::check() || Auth::check() && !Auth::user()->canVisitForum($id))) {
             flash('You do not have permission to access this forum.')->error();
+
             return redirect(url('/forum'));
         } elseif ($board->parent ? (($board->parent->hasRestrictions && !Auth::check()) || Auth::check() && !Auth::user()->canVisitForum($board->parent->id)) : false) {
             flash('You do not have permission to access this forum.')->error();
+
             return redirect(url('/forum'));
         } elseif ($board->parent && $board->parent->parent ? (($board->parent->parent->hasRestrictions && !Auth::check()) || Auth::check() && !Auth::user()->canVisitForum($board->parent->parent->id)) : false) {
             flash('You do not have permission to access this forum.')->error();
+
             return redirect(url('/forum'));
         }
 

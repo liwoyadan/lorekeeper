@@ -24,7 +24,7 @@ class ForumDecorService extends Service {
      */
     public function getEditData() {
         return [
-            'decors' => ForumDecor::default(0)->isStaff(0)->orderBy('type')->sortAlphabetical()->get()->pluck('fullName', 'id')->toArray(),
+            'decors'     => ForumDecor::default(0)->isStaff(0)->orderBy('type')->sortAlphabetical()->get()->pluck('fullName', 'id')->toArray(),
             'grantTypes' => ['Choice' => 'User Choice', 'Random' => 'Randomized from Choices', 'All' => 'All Selected Decors'],
         ];
     }

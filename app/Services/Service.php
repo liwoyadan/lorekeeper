@@ -124,7 +124,7 @@ abstract class Service {
         if (!$oldName && !$image) {
             return true;
         }
-        
+
         if (!$image) {
             // Check if we're moving an old image, and move it if it does.
             if ($oldName) {

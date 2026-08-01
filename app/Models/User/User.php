@@ -214,14 +214,14 @@ class User extends Authenticatable implements MustVerifyEmail {
     public function commentLikes() {
         return $this->hasMany(CommentLike::class);
     }
-    
+
     /**
      * Gets all of a user's obtained forum flairs.
      */
     public function forumFlairs() {
         return $this->hasMany(UserForumFlair::class, 'user_id');
     }
-    
+
     /**
      * Gets all of a user's obtained forum decors.
      */

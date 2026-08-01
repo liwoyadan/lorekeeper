@@ -2,8 +2,8 @@
 
 namespace App\Models\Forum;
 
-use App\Models\Model;
 use App\Models\Comment\Comment;
+use App\Models\Model;
 use App\Models\Rank\Rank;
 use App\Traits\Commentable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -29,7 +29,7 @@ class Forum extends Model {
      * @var array
      */
     protected $casts = [
-        'forum_rules' => 'array',
+        'forum_rules'  => 'array',
         'forum_styles' => 'array',
     ];
 
@@ -56,7 +56,7 @@ class Forum extends Model {
         'name'              => 'required|unique:forums|between:2,100',
         'description'       => 'nullable',
         'image'             => 'nullable|mimes:png,gif,webp|max:2048',
-        'icon'             => 'nullable|mimes:png,gif,webp|max:2048',
+        'icon'              => 'nullable|mimes:png,gif,webp|max:2048',
     ];
 
     /**
@@ -68,7 +68,7 @@ class Forum extends Model {
         'name'              => 'required|between:2,100',
         'description'       => 'nullable',
         'image'             => 'mimes:png,gif,webp|max:2048',
-        'icon'             => 'nullable|mimes:png,gif,webp|max:2048',
+        'icon'              => 'nullable|mimes:png,gif,webp|max:2048',
     ];
 
     /**********************************************************************************************
@@ -116,8 +116,8 @@ class Forum extends Model {
     /**
      * Scope forums that are staff only.
      *
-     * @param mixed $query
-     * @param mixed $only
+     * @param mixed      $query
+     * @param mixed|null $user
      */
     public function scopeStaff($query, $user = null) {
         if ($user && $user->isStaff) {
@@ -140,8 +140,8 @@ class Forum extends Model {
     /**
      * Scope forums are locked for new posts/comments.
      *
-     * @param mixed $query
-     * @param mixed $state
+     * @param mixed      $query
+     * @param mixed|null $user
      */
     public function scopeVisible($query, $user = null) {
         if ($user && $user->hasPower('manage_forums')) {
@@ -155,7 +155,7 @@ class Forum extends Model {
      * Scope forums that have children.
      *
      * @param mixed $query
-     * @param boolean $children
+     * @param bool  $children
      */
     public function scopeHasChildren($query, $children = true) {
         if ($children) {
@@ -168,8 +168,8 @@ class Forum extends Model {
     /**
      * Scope forums that have children.
      *
-     * @param mixed $query
-     * @param boolean $children
+     * @param mixed      $query
+     * @param mixed|null $user
      */
     public function scopeCanAccess($query, $user = null) {
         if ($user && $user->hasPower('manage_forums')) {
@@ -379,9 +379,11 @@ class Forum extends Model {
 
         return true;
     }
-    
+
     /**
      * Display's the forum's icon.
+     *
+     * @param mixed|null $sizeLimit
      *
      * @return string
      */

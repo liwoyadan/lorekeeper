@@ -9,7 +9,7 @@ return [
     | This file contains some configuration options for forums overall.
     |
     */
-    
+
     // Allow signatures
     // If enabled, users can set a custom forum signature
     'allow_signatures' => [

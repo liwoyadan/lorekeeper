@@ -30,7 +30,7 @@ return [
         'text_color'       => '#ffffff',
         'background_color' => '#802e47',
     ],
-    
+
     'forum_decor' => [
         'name'             => 'Forum Decor',
         'text_color'       => '#ffffff',

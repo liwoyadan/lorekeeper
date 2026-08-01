@@ -2,9 +2,9 @@
 
 namespace App\Models\User;
 
-use App\Models\Model;
 use App\Models\Forum\ForumDecor;
 use App\Models\Forum\ForumFlair;
+use App\Models\Model;
 use App\Traits\Commentable;
 
 class UserProfile extends Model {
@@ -49,7 +49,7 @@ class UserProfile extends Model {
     public function user() {
         return $this->belongsTo(User::class);
     }
-    
+
     /**
      * Get the user's set forum flair.
      */
@@ -74,7 +74,7 @@ class UserProfile extends Model {
      * Gets the file name of the user's forum background image.
      */
     public function getForumBgFileNameAttribute() {
-        return $this->user_id . $this->forum_bg_hash . '.' . ($this->forum_bg_extension ?? 'png');
+        return $this->user_id.$this->forum_bg_hash.'.'.($this->forum_bg_extension ?? 'png');
     }
 
     /**
@@ -85,7 +85,7 @@ class UserProfile extends Model {
             return null;
         }
 
-        return asset($this->forumBgDirectory . '/' . $this->forumBgFileName);
+        return asset($this->forumBgDirectory.'/'.$this->forumBgFileName);
     }
 
     /**
@@ -105,6 +105,8 @@ class UserProfile extends Model {
 
     /**
      * Get the user's active forum decor of a given type.
+     *
+     * @param mixed|null $type
      */
     public function forumDecorOf($type = null) {
         if (!$type) {

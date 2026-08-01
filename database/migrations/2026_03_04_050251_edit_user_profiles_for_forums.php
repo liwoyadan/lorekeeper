@@ -4,13 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up()
-    {
+    public function up() {
         Schema::table('user_profiles', function (Blueprint $table) {
             $table->dropColumn('forum_decor_id');
             $table->dropColumn('forum_decor_hash');
@@ -23,8 +21,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
-    {
+    public function down() {
         Schema::table('user_profiles', function (Blueprint $table) {
             $table->dropColumn('forum_decor');
             $table->unsignedInteger('forum_decor_id')->nullable()->after('forum_flair_id');

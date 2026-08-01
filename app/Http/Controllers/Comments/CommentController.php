@@ -68,7 +68,7 @@ class CommentController extends Controller {
 
         // Merge guest rules, if any, with normal validation rules.
         Validator::make($request->all(), array_merge($guest_rules ?? [], [
-            'message'      => 'required|string',
+            'message'              => 'required|string',
             'comment_character_id' => 'nullable|integer|exists:characters,id',
         ]))->validate();
 
@@ -107,7 +107,7 @@ class CommentController extends Controller {
                 }
             }
         }
-        
+
         $comment->save();
 
         $recipient = null;
@@ -202,7 +202,7 @@ class CommentController extends Controller {
         if ($isForum && Auth::check()) {
             if ((isset($request['comment_character_id']) && $request['comment_character_id'])) {
                 $character = Character::find($request['comment_character_id']);
-                
+
                 if ($character && ($character->user_id == Auth::user()->id) && $characterAllowed) {
                     $characterChange = $comment->character_id != $character->id;
                     $oldCharacterId = $comment->character_id;
@@ -221,7 +221,7 @@ class CommentController extends Controller {
             'data'       => json_encode([
                 'action'      => 'edit',
                 'old_comment' => config('lorekeeper.settings.wysiwyg_comments') ? parse($comment->comment) : $comment->comment,
-                'new_comment' => config('lorekeeper.settings.wysiwyg_comments') ? parse($request->message) : $request->message, 
+                'new_comment' => config('lorekeeper.settings.wysiwyg_comments') ? parse($request->message) : $request->message,
             ] + ((isset($characterChange) && $characterChange) ? [
                 'old_character' => $oldCharacterId ?? null,
                 'new_character' => $newCharacterId ?? null,
@@ -285,7 +285,7 @@ class CommentController extends Controller {
         Gate::authorize('reply-to-comment', $comment);
 
         Validator::make($request->all(), [
-            'message'      => 'required|string',
+            'message'              => 'required|string',
             'comment_character_id' => 'nullable|integer|exists:characters,id',
         ])->validate();
 

@@ -43,6 +43,5 @@ class UpdateForumComments extends Command {
             $this->line('No comments need updating!');
         }
 
-        return;
     }
 }

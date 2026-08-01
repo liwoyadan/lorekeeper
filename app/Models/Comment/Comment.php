@@ -5,8 +5,8 @@ namespace App\Models\Comment;
 use App\Events\CommentCreated;
 use App\Events\CommentDeleted;
 use App\Events\CommentUpdated;
-use App\Models\Model;
 use App\Models\Character\Character;
+use App\Models\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model {

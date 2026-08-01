@@ -3,10 +3,8 @@
 namespace App\Models\Forum;
 
 use App\Models\Model;
-use Illuminate\Support\Facades\Auth;
 
 class ForumDecor extends Model {
-
     /**
      * The attributes that are mass assignable.
      *
@@ -25,13 +23,6 @@ class ForumDecor extends Model {
     protected $table = 'forum_decors';
 
     /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = false;
-
-    /**
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -39,6 +30,13 @@ class ForumDecor extends Model {
     protected $casts = [
         'data' => 'array',
     ];
+
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = false;
 
     /**
      * Validation rules for creation.
@@ -84,6 +82,7 @@ class ForumDecor extends Model {
      * Scope a query to sort forum flairs by newest first or reverse.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed                                 $reverse
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -121,7 +120,7 @@ class ForumDecor extends Model {
      * Scope forum flairs that are/aren't staff only.
      *
      * @param mixed $query
-     * @param boolean $isStaff
+     * @param bool  $isStaff
      */
     public function scopeIsStaff($query, $isStaff = true) {
         return $query->where('staff_only', $isStaff);
@@ -202,7 +201,7 @@ class ForumDecor extends Model {
         }
 
         $imageUrl = 'url('.$this->imageUrl.')';
-    
+
         if ($this->type == 'border') {
             $styles = ['border-image-source' => $imageUrl];
             foreach ($this->data ?? [] as $key => $value) {
@@ -223,7 +222,7 @@ class ForumDecor extends Model {
             }
         }
 
-        return implode('; ', array_map(fn($property, $value) => $property.': '.$value, array_keys($styles), $styles));
+        return implode('; ', array_map(fn ($property, $value) => $property.': '.$value, array_keys($styles), $styles));
     }
 
     /**********************************************************************************************

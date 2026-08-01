@@ -24,7 +24,7 @@ class ForumFlairService extends Service {
      */
     public function getEditData() {
         return [
-            'flairs' => ForumFlair::default(0)->isStaff(0)->sortAlphabetical()->pluck('name', 'id')->toArray(),
+            'flairs'     => ForumFlair::default(0)->isStaff(0)->sortAlphabetical()->pluck('name', 'id')->toArray(),
             'grantTypes' => ['Choice' => 'User Choice', 'Random' => 'Randomized from Choices', 'All' => 'All Selected Flairs'],
         ];
     }

@@ -81,7 +81,7 @@ class AccountController extends Controller {
         }
 
         return view('account.settings', [
-            'flairOptions' => ($user->isStaff ? ['Staff Flairs' => $staffFlairs] : []) + ['Default Flairs' => $defaultFlairs, 'Obtained Flairs' => $obtainedFlairs],
+            'flairOptions'       => ($user->isStaff ? ['Staff Flairs' => $staffFlairs] : []) + ['Default Flairs' => $defaultFlairs, 'Obtained Flairs' => $obtainedFlairs],
             'decorOptionsByType' => $decorOptionsByType,
         ]);
     }

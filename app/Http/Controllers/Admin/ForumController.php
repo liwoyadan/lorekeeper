@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Forum\Forum;
-use App\Models\Forum\ForumFlair;
 use App\Models\Forum\ForumDecor;
+use App\Models\Forum\ForumFlair;
 use App\Models\Rank\Rank;
 use App\Services\ForumService;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ForumController extends Controller {
     /*
@@ -86,7 +86,7 @@ class ForumController extends Controller {
             'name', 'description', 'layout', 'is_active', 'is_locked', 'staff_only', 'sort', 'role_limit', 'parent_id', 'image', 'remove_image',
             'color', 'icon', 'remove_icon', 'characters_enabled', 'forum_rules', 'forum_styles',
         ]);
-        
+
         if ($id && $service->updateForum(Forum::find($id), $data, Auth::user())) {
             flash('Forum updated successfully.')->success();
         } elseif (!$id && $forum = $service->createForum($data, Auth::user())) {
@@ -203,7 +203,7 @@ class ForumController extends Controller {
 
         $data = $request->only([
             'name', 'post_requirement', 'description', 'color', 'bg_color', 'image', 'remove_image',
-            'staff_only', 'is_default', 'is_visible', 'text_shadow_x', 'text_shadow_y', 'text_shadow_blur', 'text_shadow_color'
+            'staff_only', 'is_default', 'is_visible', 'text_shadow_x', 'text_shadow_y', 'text_shadow_blur', 'text_shadow_color',
         ]);
 
         if ($id && $service->updateForumFlair(ForumFlair::find($id), $data, Auth::user())) {

@@ -2,15 +2,9 @@
 
 namespace App\Models\Forum;
 
-use App\Models\Comment\Comment;
-use App\Models\Rank\Rank;
-use App\Traits\Commentable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Model;
-use Illuminate\Support\Facades\Auth;
 
 class ForumFlair extends Model {
-
     /**
      * The attributes that are mass assignable.
      *
@@ -29,13 +23,6 @@ class ForumFlair extends Model {
     protected $table = 'forum_flairs';
 
     /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = false;
-
-    /**
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -43,6 +30,13 @@ class ForumFlair extends Model {
     protected $casts = [
         'data' => 'array',
     ];
+
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = false;
 
     /**
      * Validation rules for creation.
@@ -88,6 +82,7 @@ class ForumFlair extends Model {
      * Scope a query to sort forum flairs by newest first or reverse.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed                                 $reverse
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -125,7 +120,7 @@ class ForumFlair extends Model {
      * Scope forum flairs that are/aren't staff only.
      *
      * @param mixed $query
-     * @param boolean $isStaff
+     * @param bool  $isStaff
      */
     public function scopeIsStaff($query, $isStaff = true) {
         return $query->where('staff_only', $isStaff);
@@ -157,6 +152,8 @@ class ForumFlair extends Model {
 
     /**
      * Previews the flair with a given string.
+     *
+     * @param mixed $name
      *
      * @return string
      */
