@@ -29,7 +29,7 @@
         </div>
         @if ($raid->attackAsset()['asset']->imageUrl || $raid->attackAsset()['asset']->currencyImageUrl || $raid->attackAsset()['asset']->currencyIconUrl)
             <div class="text-center my-2">
-                <img src="{{ $raid->attackAsset()['asset']->imageUrl ?? $raid->attackAsset()['asset']->currencyImageUrl ?? ($raid->attackAsset()['asset']->currencyIconUrl ?? null) }}" alt="{{ $raid->attackAsset()['asset']->name }}"
+                <img src="{{ $raid->attackAsset()['asset']->imageUrl ?? ($raid->attackAsset()['asset']->currencyImageUrl ?? ($raid->attackAsset()['asset']->currencyIconUrl ?? null)) }}" alt="{{ $raid->attackAsset()['asset']->name }}"
                     class="img-fluid p-2 bg-secondary rounded-circle">
             </div>
         @endif
