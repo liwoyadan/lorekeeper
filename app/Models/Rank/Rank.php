@@ -140,7 +140,7 @@ class Rank extends Model {
             return true;
         }
 
-        return $this->powers()->where('power', $power)->exists();
+        return $this->powers->where('power', $power)->count();
     }
 
     /**

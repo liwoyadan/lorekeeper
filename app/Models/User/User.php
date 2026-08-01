@@ -17,7 +17,6 @@ use App\Models\Item\Item;
 use App\Models\Item\ItemLog;
 use App\Models\Notification;
 use App\Models\Rank\Rank;
-use App\Models\Rank\RankPower;
 use App\Models\Shop\ShopLog;
 use App\Models\Submission\Submission;
 use App\Traits\Commenter;
@@ -84,6 +83,15 @@ class User extends Authenticatable implements MustVerifyEmail {
      * @var string
      */
     public $timestamps = true;
+
+    /**
+     * Validation rules for updating.
+     *
+     * @var array
+     */
+    public static $avatarUpdateRules = [
+        'avatar'      => 'required|mimes:jpeg,jpg,gif,png,webp|max:1024',
+    ];
 
     /**********************************************************************************************
 
@@ -305,7 +313,7 @@ class User extends Authenticatable implements MustVerifyEmail {
      * @return bool
      */
     public function getIsStaffAttribute() {
-        return RankPower::where('rank_id', $this->rank_id)->exists() || $this->isAdmin;
+        return $this->isAdmin || $this->rank->powers->count();
     }
 
     /**
