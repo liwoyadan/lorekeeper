@@ -69,10 +69,27 @@
                         <div class="row flex-wrap">
                             <div class="col-12 col-md-3">
                                 <div class="logs-table-cell">
+                                    @php
+                                        $visibleCount = $visibleCharacterCounts->get($feature->id, 0);
+                                        $hiddenCount = $hiddenCharacterCounts->get($feature->id, 0);
+                                        $updateCount = $designUpdateCounts->get($feature->id, 0);
+                                    @endphp
+
                                     @if (!$feature->is_visible)
                                         <i class="fas fa-eye-slash mr-1"></i>
                                     @endif
                                     {{ $feature->name }}
+                                    <span class="small text-muted">
+                                        <span>
+                                            {{ $visibleCount }} character{{ $visibleCount == 1 ? '' : 's' }}
+                                            @if ($hiddenCount)
+                                                {!! add_help($hiddenCount . ' character(s) with this trait is hidden.') !!}
+                                            @endif
+                                        </span>
+                                        <span>
+                                            / {{ $updateCount }} design update{{ $updateCount == 1 ? '' : 's' }}
+                                        </span>
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-6 col-md-2">

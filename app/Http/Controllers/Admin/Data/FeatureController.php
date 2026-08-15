@@ -11,6 +11,7 @@ use App\Models\Species\Subtype;
 use App\Services\FeatureService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class FeatureController extends Controller {
     /*
@@ -181,8 +182,34 @@ class FeatureController extends Controller {
             $query->where('name', 'LIKE', '%'.$data['name'].'%');
         }
 
+        $features = $query->paginate(20)->appends($request->query());
+        $featureIds = $features->pluck('id')->toArray();
+
+        $characterCounts = DB::table('character_features')
+            ->join('characters', 'character_features.character_image_id', '=', 'characters.character_image_id')
+            ->where('character_features.character_type', 'Character')
+            ->whereIn('character_features.feature_id', $featureIds)
+            ->groupBy('character_features.feature_id', 'characters.is_visible')
+            ->selectRaw('character_features.feature_id, characters.is_visible, count(*) as total')
+            ->get();
+
+        $visibleCharacterCounts = $characterCounts->where('is_visible', 1)->pluck('total', 'feature_id');
+        $hiddenCharacterCounts = $characterCounts->where('is_visible', 0)->pluck('total', 'feature_id');
+
+        $designUpdateCounts = DB::table('character_features')
+            ->join('design_updates', 'character_features.character_image_id', '=', 'design_updates.id')
+            ->where('character_features.character_type', 'Update')
+            ->whereNotIn('design_updates.status', ['Approved', 'Rejected'])
+            ->whereIn('character_features.feature_id', $featureIds)
+            ->groupBy('character_features.feature_id')
+            ->selectRaw('character_features.feature_id, count(distinct design_updates.id) as total')
+            ->pluck('total', 'character_features.feature_id');
+
         return view('admin.features.features', [
-            'features'   => $query->paginate(20)->appends($request->query()),
+            'features'                => $features,
+            'visibleCharacterCounts'  => $visibleCharacterCounts,
+            'hiddenCharacterCounts'   => $hiddenCharacterCounts,
+            'designUpdateCounts'      => $designUpdateCounts,
             'rarities'   => ['none' => 'Any Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'specieses'  => ['none' => 'Any Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes'   => ['none' => 'Any Subtype'] + Subtype::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
