@@ -23,17 +23,17 @@
         </div>
         <div class="form-group ml-3">
             {{ html()->select(
-                'sort',
-                [
-                    'bump-reverse' => 'Updated Newest',
-                    'bump' => 'Updated Oldest',
-                    'newest' => 'Created Newest',
-                    'oldest' => 'Created Oldest',
-                    'alpha' => 'Sort Alphabetically (A-Z)',
-                    'alpha-reverse' => 'Sort Alphabetically (Z-A)',
-                ],
-                Request::get('sort') ?: 'bump-reverse',
-            )->class('form-control') }}
+                    'sort',
+                    [
+                        'bump-reverse' => 'Updated Newest',
+                        'bump' => 'Updated Oldest',
+                        'newest' => 'Created Newest',
+                        'oldest' => 'Created Oldest',
+                        'alpha' => 'Sort Alphabetically (A-Z)',
+                        'alpha-reverse' => 'Sort Alphabetically (Z-A)',
+                    ],
+                    Request::get('sort') ?: 'bump-reverse',
+                )->class('form-control') }}
         </div>
         <div class="form-group ml-3">
             {{ html()->submit('Search')->class('btn btn-primary') }}

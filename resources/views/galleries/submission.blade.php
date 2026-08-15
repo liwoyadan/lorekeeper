@@ -19,7 +19,8 @@
             @if (Auth::check())
                 {{ html()->form('POST', '/gallery/favorite/' . $submission->id)->open() }}
                 @if ($submission->user->id != Auth::user()->id && $submission->collaborators->where('user_id', Auth::user()->id)->first() == null && $submission->isVisible)
-                    <button type="submit" class="btn {{ $submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'btn-outline-primary' : 'btn-primary' }}" data-toggle="tooltip" title="{{ ($submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'Add to' : 'Remove from') . ' your Favorites' }}"><i class="fas fa-star"></i> </button>
+                    <button type="submit" class="btn {{ $submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'btn-outline-primary' : 'btn-primary' }}" data-toggle="tooltip"
+                        title="{{ ($submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'Add to' : 'Remove from') . ' your Favorites' }}"><i class="fas fa-star"></i> </button>
                 @endif
                 @if ($submission->user->id == Auth::user()->id || Auth::user()->hasPower('manage_submissions'))
                     <a class="btn btn-outline-primary" href="/gallery/queue/{{ $submission->id }}" data-toggle="tooltip" title="View Log Details"><i class="fas fa-clipboard-list"></i></a>
@@ -82,7 +83,9 @@
                             <div class="float-right">
                                 @if (Auth::check() && ($submission->user->id != Auth::user()->id && $submission->collaborators->where('user_id', Auth::user()->id)->first() == null) && $submission->isVisible)
                                     {{ html()->form('POST', '/gallery/favorite/' . $submission->id)->open() }}
-                                    {{ $submission->favorites->count() }} <button type="submit" style="border:0; border-radius:.5em;" class="{{ $submission->favorites->where('user_id', Auth::user()->id)->first() != null ? 'btn-success' : '' }}" data-toggle="tooltip" title="{{ ($submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'Add to' : 'Remove from') . ' your Favorites' }}"><i class="fas fa-star"></i> </button> ・ {{ $submission->comments->where('type', 'User-User')->count() }} <i class="fas fa-comment"></i>
+                                    {{ $submission->favorites->count() }} <button type="submit" style="border:0; border-radius:.5em;" class="{{ $submission->favorites->where('user_id', Auth::user()->id)->first() != null ? 'btn-success' : '' }}"
+                                        data-toggle="tooltip" title="{{ ($submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'Add to' : 'Remove from') . ' your Favorites' }}"><i class="fas fa-star"></i> </button> ・
+                                    {{ $submission->comments->where('type', 'User-User')->count() }} <i class="fas fa-comment"></i>
                                     {{ html()->form()->close() }}
                                 @else
                                     {{ $submission->favorites->count() }} <i class="fas fa-star" data-toggle="tooltip" title="Favorites"></i> ・ {{ $submission->comments->where('type', 'User-User')->count() }} <i class="fas fa-comment"

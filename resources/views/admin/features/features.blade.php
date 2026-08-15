@@ -38,30 +38,30 @@
         <div class="form-inline justify-content-end">
             <div class="form-group ml-3 mb-3">
                 {{ html()->select(
-                    'visibility',
-                    [
-                        'visibleOnly' => 'Visible Only',
-                        'hiddenOnly' => 'Hidden Only',
-                    ],
-                    Request::get('visibility'),
-                )->class('form-control')->placeholder('Any Visibility') }}
+                        'visibility',
+                        [
+                            'visibleOnly' => 'Visible Only',
+                            'hiddenOnly' => 'Hidden Only',
+                        ],
+                        Request::get('visibility'),
+                    )->class('form-control')->placeholder('Any Visibility') }}
             </div>
             <div class="form-group ml-3 mb-3">
                 {{ html()->select(
-                    'sort',
-                    [
-                        'alpha' => 'Sort Alphabetically (A-Z)',
-                        'alpha-reverse' => 'Sort Alphabetically (Z-A)',
-                        'category' => 'Sort by Category',
-                        'rarity-reverse' => 'Sort by Rarity (Common to Rare)',
-                        'rarity' => 'Sort by Rarity (Rare to Common)',
-                        'species' => 'Sort by Species',
-                        'subtypes' => 'Sort by Subtype',
-                        'newest' => 'Newest First',
-                        'oldest' => 'Oldest First',
-                    ],
-                    Request::get('sort') ?: 'oldest',
-                )->class('form-control') }}
+                        'sort',
+                        [
+                            'alpha' => 'Sort Alphabetically (A-Z)',
+                            'alpha-reverse' => 'Sort Alphabetically (Z-A)',
+                            'category' => 'Sort by Category',
+                            'rarity-reverse' => 'Sort by Rarity (Common to Rare)',
+                            'rarity' => 'Sort by Rarity (Rare to Common)',
+                            'species' => 'Sort by Species',
+                            'subtypes' => 'Sort by Subtype',
+                            'newest' => 'Newest First',
+                            'oldest' => 'Oldest First',
+                        ],
+                        Request::get('sort') ?: 'oldest',
+                    )->class('form-control') }}
             </div>
             <div class="form-group ml-3 mb-3">
                 {{ html()->submit('Search')->class('btn btn-primary') }}

@@ -55,12 +55,13 @@
                 @foreach ($table->loot as $loot)
                     <tr class="loot-row">
                         <td>{{ html()->select(
-                            'rewardable_type[]',
-                            config('lorekeeper.extensions.item_entry_expansion.loot_tables.enable')
-                                ? ['Item' => 'Item', 'ItemRarity' => 'Item Rarity', 'Currency' => 'Currency', 'LootTable' => 'Loot Table', 'ItemCategory' => 'Item Category', 'ItemCategoryRarity' => 'Item Category (Conditional)', 'None' => 'None']
-                                : ['Item' => 'Item', 'Currency' => 'Currency', 'LootTable' => 'Loot Table', 'ItemCategory' => 'Item Category', 'None' => 'None'],
-                            $loot->rewardable_type,
-                        )->class('form-control reward-type')->placeholder('Select Reward Type') }}</td>
+                                'rewardable_type[]',
+                                config('lorekeeper.extensions.item_entry_expansion.loot_tables.enable')
+                                    ? ['Item' => 'Item', 'ItemRarity' => 'Item Rarity', 'Currency' => 'Currency', 'LootTable' => 'Loot Table', 'ItemCategory' => 'Item Category', 'ItemCategoryRarity' => 'Item Category (Conditional)', 'None' => 'None']
+                                    : ['Item' => 'Item', 'Currency' => 'Currency', 'LootTable' => 'Loot Table', 'ItemCategory' => 'Item Category', 'None' => 'None'],
+                                $loot->rewardable_type,
+                            )->class('form-control reward-type')->placeholder('Select Reward Type') }}
+                        </td>
                         <td class="loot-row-select">
                             @if ($loot->rewardable_type == 'Item')
                                 {{ html()->select('rewardable_id[]', $items, $loot->rewardable_id)->class('form-control item-select selectize')->placeholder('Select Item') }}
@@ -106,12 +107,13 @@
             <tbody id="lootRow">
                 <tr class="loot-row">
                     <td>{{ html()->select(
-                        'rewardable_type[]',
-                        config('lorekeeper.extensions.item_entry_expansion.loot_tables.enable')
-                            ? ['Item' => 'Item', 'ItemRarity' => 'Item Rarity', 'Currency' => 'Currency', 'LootTable' => 'Loot Table', 'ItemCategory' => 'Item Category', 'ItemCategoryRarity' => 'Item Category (Conditional)', 'None' => 'None']
-                            : ['Item' => 'Item', 'Currency' => 'Currency', 'LootTable' => 'Loot Table', 'ItemCategory' => 'Item Category', 'None' => 'None'],
-                        null,
-                    )->class('form-control reward-type')->placeholder('Select Reward Type') }}</td>
+                            'rewardable_type[]',
+                            config('lorekeeper.extensions.item_entry_expansion.loot_tables.enable')
+                                ? ['Item' => 'Item', 'ItemRarity' => 'Item Rarity', 'Currency' => 'Currency', 'LootTable' => 'Loot Table', 'ItemCategory' => 'Item Category', 'ItemCategoryRarity' => 'Item Category (Conditional)', 'None' => 'None']
+                                : ['Item' => 'Item', 'Currency' => 'Currency', 'LootTable' => 'Loot Table', 'ItemCategory' => 'Item Category', 'None' => 'None'],
+                            null,
+                        )->class('form-control reward-type')->placeholder('Select Reward Type') }}
+                    </td>
                     <td class="loot-row-select"></td>
                     <td>{{ html()->text('quantity[]', 1)->class('form-control') }}</td>
                     <td class="loot-row-weight">{{ html()->text('weight[]', 1)->class('form-control loot-weight') }}</td>

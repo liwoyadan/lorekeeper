@@ -41,9 +41,12 @@
                         <td class="col">{!! array_key_exists('notes', $itemRow->data) ? ($itemRow->data['notes'] ? $itemRow->data['notes'] : 'N/A') : 'N/A' !!}</td>
                         @if ($user && !$readOnly && ($owner_id == $user->id || $has_power == true))
                             @if ($itemRow->availableQuantity)
-                                <td class="col-2">{{ html()->select('', array_combine(range(1, $itemRow->availableQuantity), range(1, $itemRow->availableQuantity)), 1)->class('quantity-select')->attribute('type', 'number')->attribute('style', 'min-width:40px;') }} /{{ $itemRow->availableQuantity }}</td>
+                                <td class="col-2">
+                                    {{ html()->select('', array_combine(range(1, $itemRow->availableQuantity), range(1, $itemRow->availableQuantity)), 1)->class('quantity-select')->attribute('type', 'number')->attribute('style', 'min-width:40px;') }}
+                                    /{{ $itemRow->availableQuantity }}</td>
                             @else
-                                <td class="col-2">{{ html()->select('', [0 => 0], 0)->class('quantity-select')->attribute('type', 'number')->attribute('style', 'min-width:40px;')->attribute('disabled', true) }} /{{ $itemRow->availableQuantity }}</td>
+                                <td class="col-2">{{ html()->select('', [0 => 0], 0)->class('quantity-select')->attribute('type', 'number')->attribute('style', 'min-width:40px;')->attribute('disabled', true) }} /{{ $itemRow->availableQuantity }}
+                                </td>
                             @endif
                         @else
                             <td class="col-3">{!! $itemRow->count !!}</td>

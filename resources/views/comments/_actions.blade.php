@@ -28,11 +28,13 @@
                 </button>
             </a>
             {{ html()->form('POST', 'comments/' . $comment->id . '/like/1')->class('d-inline-block')->open() }}
-            <button type="submit" class="btn btn-sm px-3 py-2 px-sm-2 py-sm-1 {{ $comment->likes()->where('user_id', Auth::user()->id)->where('is_like', 1)->exists() ? 'btn-success' : 'btn-outline-success' }} text-uppercase"><i class="fas fa-thumbs-up"></i></button>
+            <button type="submit" class="btn btn-sm px-3 py-2 px-sm-2 py-sm-1 {{ $comment->likes()->where('user_id', Auth::user()->id)->where('is_like', 1)->exists()? 'btn-success': 'btn-outline-success' }} text-uppercase"><i
+                    class="fas fa-thumbs-up"></i></button>
             {{ html()->form()->close() }}
             @if (Settings::get('comment_dislikes_enabled') || (isset($allow_dislikes) && $allow_dislikes))
                 {{ html()->form('POST', 'comments/' . $comment->id . '/like/0')->class('d-inline-block')->open() }}
-                <button type="submit" class="btn btn-sm px-3 py-2 px-sm-2 py-sm-1 {{ $comment->likes()->where('user_id', Auth::user()->id)->where('is_like', 0)->exists() ? 'btn-danger' : 'btn-outline-danger' }} text-uppercase"><i class="fas fa-thumbs-down"></i></button>
+                <button type="submit" class="btn btn-sm px-3 py-2 px-sm-2 py-sm-1 {{ $comment->likes()->where('user_id', Auth::user()->id)->where('is_like', 0)->exists()? 'btn-danger': 'btn-outline-danger' }} text-uppercase"><i
+                        class="fas fa-thumbs-down"></i></button>
                 {{ html()->form()->close() }}
             @endif
         </div>

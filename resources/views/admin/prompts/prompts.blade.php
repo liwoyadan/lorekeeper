@@ -29,20 +29,20 @@
         </div>
         <div class="form-group ml-3">
             {{ html()->select(
-                'sort',
-                [
-                    'alpha' => 'Sort Alphabetically (A-Z)',
-                    'alpha-reverse' => 'Sort Alphabetically (Z-A)',
-                    'category' => 'Sort by Category',
-                    'newest' => 'Newest First',
-                    'oldest' => 'Oldest First',
-                    'start' => 'Starts Earliest',
-                    'start-reverse' => 'Starts Latest',
-                    'end' => 'Ends Earliest',
-                    'end-reverse' => 'Ends Latest',
-                ],
-                Request::get('sort') ?: 'category',
-            )->class('form-control') }}
+                    'sort',
+                    [
+                        'alpha' => 'Sort Alphabetically (A-Z)',
+                        'alpha-reverse' => 'Sort Alphabetically (Z-A)',
+                        'category' => 'Sort by Category',
+                        'newest' => 'Newest First',
+                        'oldest' => 'Oldest First',
+                        'start' => 'Starts Earliest',
+                        'start-reverse' => 'Starts Latest',
+                        'end' => 'Ends Earliest',
+                        'end-reverse' => 'Ends Latest',
+                    ],
+                    Request::get('sort') ?: 'category',
+                )->class('form-control') }}
         </div>
         <div class="form-group ml-3">
             {{ html()->submit('Search')->class('btn btn-primary') }}

@@ -51,13 +51,13 @@
                 <div class="row mb-3">
                     <div class="col-3">
                         {{ html()->select(
-                            'cost_type[]',
-                            [
-                                'Currency' => 'Currency',
-                                'Item' => 'Item',
-                            ],
-                            $cost->cost_type ?? null,
-                        )->class('form-control cost-type')->placeholder('Select Cost Type') }}
+                                'cost_type[]',
+                                [
+                                    'Currency' => 'Currency',
+                                    'Item' => 'Item',
+                                ],
+                                $cost->cost_type ?? null,
+                            )->class('form-control cost-type')->placeholder('Select Cost Type') }}
                     </div>
                     <div class="col-4 costObjects">
                         @include('admin.shops._stock_cost', [
@@ -194,23 +194,23 @@
             <div class="form-group">
                 {{ html()->label('Months of the Year', 'stock_months') }}
                 {{ html()->select(
-                    'stock_months[]',
-                    [
-                        'January' => 'January',
-                        'February' => 'February',
-                        'March' => 'March',
-                        'April' => 'April',
-                        'May' => 'May',
-                        'June' => 'June',
-                        'July' => 'July',
-                        'August' => 'August',
-                        'September' => 'September',
-                        'October' => 'October',
-                        'November' => 'November',
-                        'December' => 'December',
-                    ],
-                    $stock->months ?? null,
-                )->class('form-control selectize')->attribute('multiple', 'multiple') }}
+                        'stock_months[]',
+                        [
+                            'January' => 'January',
+                            'February' => 'February',
+                            'March' => 'March',
+                            'April' => 'April',
+                            'May' => 'May',
+                            'June' => 'June',
+                            'July' => 'July',
+                            'August' => 'August',
+                            'September' => 'September',
+                            'October' => 'October',
+                            'November' => 'November',
+                            'December' => 'December',
+                        ],
+                        $stock->months ?? null,
+                    )->class('form-control selectize')->attribute('multiple', 'multiple') }}
             </div>
         </div>
     </div>
@@ -224,13 +224,13 @@
         <div class="row">
             <div class="col-3">
                 {{ html()->select(
-                    'cost_type[]',
-                    [
-                        'Currency' => 'Currency',
-                        'Item' => 'Item',
-                    ],
-                    null,
-                )->class('form-control cost-type')->placeholder('Select Cost Type') }}
+                        'cost_type[]',
+                        [
+                            'Currency' => 'Currency',
+                            'Item' => 'Item',
+                        ],
+                        null,
+                    )->class('form-control cost-type')->placeholder('Select Cost Type') }}
             </div>
             <div class="col-4 costObjects">
                 Select Cost Type

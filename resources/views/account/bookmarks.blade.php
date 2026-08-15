@@ -17,25 +17,25 @@
         <div class="form-group mr-3">
             {{ html()->label('Sort: ', 'sort')->class('mr-2') }}
             {{ html()->select(
-                'sort',
-                [
-                    'number_desc' => 'Number Descending',
-                    'number_asc' => 'Number Ascending',
-                    'id_desc' => 'Newest Characters First',
-                    'id_asc' => 'Oldest Characters First',
-                    'sale_value_desc' => 'Highest Sale Value',
-                    'sale_value_asc' => 'Lowest Sale Value',
-                    'species_asc' => 'Species',
-                    'species_desc' => 'Species (Reverse)',
-                    'trade_asc' => 'Trade Status',
-                    'trade_desc' => 'Trade Status (Reverse)',
-                    'gift_art_asc' => 'Gift Art Status',
-                    'gift_art_desc' => 'Gift Art Status (Reverse)',
-                    'gift_write_asc' => 'Gift Writing Status',
-                    'gift_write_desc' => 'Gift Writing Status (Reverse)',
-                ],
-                Request::get('sort'),
-            )->class('form-control') }}
+                    'sort',
+                    [
+                        'number_desc' => 'Number Descending',
+                        'number_asc' => 'Number Ascending',
+                        'id_desc' => 'Newest Characters First',
+                        'id_asc' => 'Oldest Characters First',
+                        'sale_value_desc' => 'Highest Sale Value',
+                        'sale_value_asc' => 'Lowest Sale Value',
+                        'species_asc' => 'Species',
+                        'species_desc' => 'Species (Reverse)',
+                        'trade_asc' => 'Trade Status',
+                        'trade_desc' => 'Trade Status (Reverse)',
+                        'gift_art_asc' => 'Gift Art Status',
+                        'gift_art_desc' => 'Gift Art Status (Reverse)',
+                        'gift_write_asc' => 'Gift Writing Status',
+                        'gift_write_desc' => 'Gift Writing Status (Reverse)',
+                    ],
+                    Request::get('sort'),
+                )->class('form-control') }}
         </div>
         {{ html()->submit('Search')->class('btn btn-primary') }}
     </div>

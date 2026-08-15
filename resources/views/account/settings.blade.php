@@ -90,11 +90,7 @@
         <div class="form-group row">
             <label class="col-md-2 col-form-label">Setting</label>
             <div class="col-md-10">
-                {{ html()->select(
-                    'birthday_setting',
-                    ['0' => '0: No one can see your birthday.', '1' => '1: Members can see your day and month.', '2' => '2: Anyone can see your day and month.', '3' => '3: Full date public.'],
-                    Auth::user()->settings->birthday_setting,
-                )->class('form-control') }}
+                {{ html()->select('birthday_setting', ['0' => '0: No one can see your birthday.', '1' => '1: Members can see your day and month.', '2' => '2: Anyone can see your day and month.', '3' => '3: Full date public.'], Auth::user()->settings->birthday_setting)->class('form-control') }}
             </div>
         </div>
         <div class="text-right">
@@ -127,10 +123,10 @@
             <label class="col-md-2 col-form-label">Setting</label>
             <div class="col-md-10">
                 {{ html()->select(
-                    'content_warning_visibility',
-                    ['0' => '0: Character has pop-up warning and censored icons.', '1' => '1: Character has pop-up warnings only.', '2' => '2: No warnings will appear on characters.'],
-                    Auth::user()->settings->content_warning_visibility,
-                )->class('form-control') }}
+                        'content_warning_visibility',
+                        ['0' => '0: Character has pop-up warning and censored icons.', '1' => '1: Character has pop-up warnings only.', '2' => '2: No warnings will appear on characters.'],
+                        Auth::user()->settings->content_warning_visibility,
+                    )->class('form-control') }}
             </div>
         </div>
         <div class="text-right">

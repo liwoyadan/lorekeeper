@@ -27,7 +27,8 @@
             @else
                 ・
             @endif
-            {{ $submission->favorites_count }} <button type="submit" style="border:0; border-radius:.5em;" class="{{ $submission->favorites->where('user_id', Auth::user()->id)->first() != null ? 'btn-success' : '' }}" data-toggle="tooltip" title="{{ ($submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'Add to' : 'Remove from') . ' your Favorites' }}"><i class="fas fa-star"></i> </button> ・
+            {{ $submission->favorites_count }} <button type="submit" style="border:0; border-radius:.5em;" class="{{ $submission->favorites->where('user_id', Auth::user()->id)->first() != null ? 'btn-success' : '' }}" data-toggle="tooltip"
+                title="{{ ($submission->favorites->where('user_id', Auth::user()->id)->first() == null ? 'Add to' : 'Remove from') . ' your Favorites' }}"><i class="fas fa-star"></i> </button> ・
             {{ $submission->comments->where('type', 'User-User')->count() }}
             <i class="fas fa-comment"></i>
             {{ html()->form()->close() }}

@@ -39,13 +39,13 @@
     <div class="form-inline justify-content-end">
         <div class="form-group ml-3 mb-3">
             {{ html()->select(
-                'sort',
-                [
-                    'newest' => 'Newest First',
-                    'oldest' => 'Oldest First',
-                ],
-                Request::get('sort') ?: 'oldest',
-            )->class('form-control') }}
+                    'sort',
+                    [
+                        'newest' => 'Newest First',
+                        'oldest' => 'Oldest First',
+                    ],
+                    Request::get('sort') ?: 'oldest',
+                )->class('form-control') }}
         </div>
         <div class="form-group ml-3 mb-3">
             {{ html()->submit('Search')->class('btn btn-primary') }}

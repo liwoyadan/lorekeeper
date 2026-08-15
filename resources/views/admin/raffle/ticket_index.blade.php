@@ -97,7 +97,8 @@
                             </div>
                             @if ($raffle->is_active < 2)
                                 <div class="col-3">
-                                    <div class="logs-table-cell text-right">{{ html()->form('POST', 'admin/raffles/view/ticket/delete/' . $ticket->id)->open() }}{{ html()->submit('Delete')->class('btn btn-danger btn-sm') }}{{ html()->form()->close() }}</div>
+                                    <div class="logs-table-cell text-right">{{ html()->form('POST', 'admin/raffles/view/ticket/delete/' . $ticket->id)->open() }}{{ html()->submit('Delete')->class('btn btn-danger btn-sm') }}{{ html()->form()->close() }}
+                                    </div>
                                 </div>
                             @endif
                         </div>

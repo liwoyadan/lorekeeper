@@ -104,23 +104,23 @@
             <div class="form-group">
                 {{ html()->label('Months of the Year', 'shop_months') }}
                 {{ html()->select(
-                    'shop_months[]',
-                    [
-                        'January' => 'January',
-                        'February' => 'February',
-                        'March' => 'March',
-                        'April' => 'April',
-                        'May' => 'May',
-                        'June' => 'June',
-                        'July' => 'July',
-                        'August' => 'August',
-                        'September' => 'September',
-                        'October' => 'October',
-                        'November' => 'November',
-                        'December' => 'December',
-                    ],
-                    $shop->months ?? null,
-                )->class('form-control selectize')->attribute('multiple', 'multiple') }}
+                        'shop_months[]',
+                        [
+                            'January' => 'January',
+                            'February' => 'February',
+                            'March' => 'March',
+                            'April' => 'April',
+                            'May' => 'May',
+                            'June' => 'June',
+                            'July' => 'July',
+                            'August' => 'August',
+                            'September' => 'September',
+                            'October' => 'October',
+                            'November' => 'November',
+                            'December' => 'December',
+                        ],
+                        $shop->months ?? null,
+                    )->class('form-control selectize')->attribute('multiple', 'multiple') }}
             </div>
         </div>
     </div>

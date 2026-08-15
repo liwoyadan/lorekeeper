@@ -26,18 +26,18 @@
         </div>
         <div class="form-group mr-3 mb-3">
             {{ html()->select(
-                'sort',
-                [
-                    'alpha' => 'Sort Alphabetically (A-Z)',
-                    'alpha-reverse' => 'Sort Alphabetically (Z-A)',
-                    'alias' => 'Sort by Alias (A-Z)',
-                    'alias-reverse' => 'Sort by Alias (Z-A)',
-                    'rank' => 'Sort by Rank (Default)',
-                    'newest' => 'Newest First',
-                    'oldest' => 'Oldest First',
-                ],
-                Request::get('sort') ?: 'rank',
-            )->class('form-control') }}
+                    'sort',
+                    [
+                        'alpha' => 'Sort Alphabetically (A-Z)',
+                        'alpha-reverse' => 'Sort Alphabetically (Z-A)',
+                        'alias' => 'Sort by Alias (A-Z)',
+                        'alias-reverse' => 'Sort by Alias (Z-A)',
+                        'rank' => 'Sort by Rank (Default)',
+                        'newest' => 'Newest First',
+                        'oldest' => 'Oldest First',
+                    ],
+                    Request::get('sort') ?: 'rank',
+                )->class('form-control') }}
         </div>
         <div class="form-group mb-3">
             {{ html()->submit('Search')->class('btn btn-primary') }}
