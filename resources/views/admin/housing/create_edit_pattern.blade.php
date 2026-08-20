@@ -5,7 +5,11 @@
 @endsection
 
 @section('admin-content')
-    {!! breadcrumbs(['Admin Panel' => 'admin', 'Housing Patterns' => 'admin/data/housing-patterns', ($pattern->id ? 'Edit' : 'Create').' Pattern' => $pattern->id ? 'admin/data/housing-patterns/edit/'.$pattern->id : 'admin/data/housing-patterns/create']) !!}
+    {!! breadcrumbs([
+        'Admin Panel' => 'admin',
+        'Housing Patterns' => 'admin/data/housing-patterns',
+        ($pattern->id ? 'Edit' : 'Create') . ' Pattern' => $pattern->id ? 'admin/data/housing-patterns/edit/' . $pattern->id : 'admin/data/housing-patterns/create',
+    ]) !!}
 
     <h1>{{ $pattern->id ? 'Edit' : 'Create' }} Pattern
         @if ($pattern->id)
@@ -13,7 +17,7 @@
         @endif
     </h1>
 
-    {!! Form::open(['url' => $pattern->id ? 'admin/data/housing-patterns/edit/'.$pattern->id : 'admin/data/housing-patterns/create', 'files' => true]) !!}
+    {!! Form::open(['url' => $pattern->id ? 'admin/data/housing-patterns/edit/' . $pattern->id : 'admin/data/housing-patterns/create', 'files' => true]) !!}
 
     <div class="form-group">
         {!! Form::label('Name') !!}

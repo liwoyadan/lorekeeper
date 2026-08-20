@@ -5,7 +5,7 @@
 @endsection
 
 @section('admin-content')
-    {!! breadcrumbs(['Admin Panel' => 'admin', 'Housing' => 'admin/data/housing', ($decor->id ? 'Edit' : 'Create').' Decor' => $decor->id ? 'admin/data/housing/edit/'.$decor->id : 'admin/data/housing/create']) !!}
+    {!! breadcrumbs(['Admin Panel' => 'admin', 'Housing' => 'admin/data/housing', ($decor->id ? 'Edit' : 'Create') . ' Decor' => $decor->id ? 'admin/data/housing/edit/' . $decor->id : 'admin/data/housing/create']) !!}
 
     <h1>{{ $decor->id ? 'Edit' : 'Create' }} Decor
         @if ($decor->id)
@@ -13,7 +13,7 @@
         @endif
     </h1>
 
-    {!! Form::open(['url' => $decor->id ? 'admin/data/housing/edit/'.$decor->id : 'admin/data/housing/create', 'files' => true]) !!}
+    {!! Form::open(['url' => $decor->id ? 'admin/data/housing/edit/' . $decor->id : 'admin/data/housing/create', 'files' => true]) !!}
 
     <h3>Basic Information</h3>
 

@@ -30,7 +30,7 @@
                             @endif
                         </td>
                         <td class="text-right">
-                            <a href="{{ url('admin/data/housing-patterns/edit/'.$pattern->id) }}" class="btn btn-primary">Edit</a>
+                            <a href="{{ url('admin/data/housing-patterns/edit/' . $pattern->id) }}" class="btn btn-primary">Edit</a>
                         </td>
                     </tr>
                 @endforeach

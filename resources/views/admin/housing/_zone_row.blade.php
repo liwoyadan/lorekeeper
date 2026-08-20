@@ -30,7 +30,7 @@
 
         <div class="form-group">
             {!! Form::label('Allowed Patterns') !!} {!! add_help('Library patterns the user may fill this zone with.') !!}
-            {!! Form::select('zone_patterns['.$index.'][]', $patterns->pluck('name', 'id'), $zone ? $zone->patterns->pluck('id')->toArray() : [], ['class' => 'form-control zone-patterns', 'multiple']) !!}
+            {!! Form::select('zone_patterns[' . $index . '][]', $patterns->pluck('name', 'id'), $zone ? $zone->patterns->pluck('id')->toArray() : [], ['class' => 'form-control zone-patterns', 'multiple']) !!}
         </div>
 
         <div class="form-group">

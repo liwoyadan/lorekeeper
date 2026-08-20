@@ -1,5 +1,5 @@
 @if ($pattern)
-    {!! Form::open(['url' => 'admin/data/housing-patterns/delete/'.$pattern->id]) !!}
+    {!! Form::open(['url' => 'admin/data/housing-patterns/delete/' . $pattern->id]) !!}
 
     <p>You are about to delete the pattern <strong>{{ $pattern->name }}</strong>. This is not reversible.</p>
     <p>Are you sure you want to delete <strong>{{ $pattern->name }}</strong>?</p>

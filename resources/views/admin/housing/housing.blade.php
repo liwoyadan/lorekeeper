@@ -7,7 +7,8 @@
 @section('admin-content')
     {!! breadcrumbs(['Admin Panel' => 'admin', 'Housing' => 'admin/data/housing']) !!}
 
-    <h1>Housing Decor</h1>
+    <h1>
+        Housing Decor</h1>
 
     <p>These are the decor pieces players can obtain and place: furniture, walls, and floors. Recolor zones for each piece are managed on its edit page.</p>
 
@@ -25,13 +26,16 @@
                                 <img src="{{ $decor->decorImageUrl }}" style="width:32px; height:32px; object-fit:contain; vertical-align:middle;" class="mr-2" alt="">
                             @endif
                             {{ $decor->name }}
-                            <span class="badge badge-secondary ml-1">{{ $decor->kindLabel }}@if ($decor->layerLabel) &middot; {{ $decor->layerLabel }}@endif</span>
+                            <span class="badge badge-secondary ml-1">{{ $decor->kindLabel }}@if ($decor->layerLabel)
+                                    &middot; {{ $decor->layerLabel }}
+                                @endif
+                            </span>
                             @if (!$decor->is_visible)
                                 <i class="fas fa-eye-slash ml-1" data-toggle="tooltip" title="This decor is hidden."></i>
                             @endif
                         </td>
                         <td class="text-right">
-                            <a href="{{ url('admin/data/housing/edit/'.$decor->id) }}" class="btn btn-primary">Edit</a>
+                            <a href="{{ url('admin/data/housing/edit/' . $decor->id) }}" class="btn btn-primary">Edit</a>
                         </td>
                     </tr>
                 @endforeach

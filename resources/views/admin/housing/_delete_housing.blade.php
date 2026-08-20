@@ -1,5 +1,5 @@
 @if ($decor)
-    {!! Form::open(['url' => 'admin/data/housing/delete/'.$decor->id]) !!}
+    {!! Form::open(['url' => 'admin/data/housing/delete/' . $decor->id]) !!}
 
     <p>You are about to delete the decor <strong>{{ $decor->name }}</strong>. This is not reversible.</p>
     <p>Are you sure you want to delete <strong>{{ $decor->name }}</strong>?</p>
