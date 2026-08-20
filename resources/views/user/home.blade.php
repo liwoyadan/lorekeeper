@@ -5,7 +5,7 @@
 @endsection
 
 @section('profile-content')
-    {!! breadcrumbs(['Users' => 'users', $user->name => $user->url, 'Home' => $user->url.'/home']) !!}
+    {!! breadcrumbs(['Users' => 'users', $user->name => $user->url, 'Home' => $user->url . '/home']) !!}
 
     <h1>{{ $user->name }}'s Home</h1>
 

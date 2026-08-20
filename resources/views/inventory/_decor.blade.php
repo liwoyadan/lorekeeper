@@ -18,7 +18,7 @@
                     @else
                         @foreach ($zone->colors as $color)
                             <div class="form-check">
-                                {!! Form::radio('zone_choice['.$zone->id.']', 'color:'.$color->hex, $loop->first, ['class' => 'form-check-input']) !!}
+                                {!! Form::radio('zone_choice[' . $zone->id . ']', 'color:' . $color->hex, $loop->first, ['class' => 'form-check-input']) !!}
                                 <label class="form-check-label">
                                     <span class="d-inline-block border" style="width:16px; height:16px; background:#{{ $color->hex }}; vertical-align:middle;"></span>
                                     #{{ $color->hex }}
@@ -28,16 +28,16 @@
 
                         @foreach ($zone->patterns as $pattern)
                             <div class="form-check">
-                                {!! Form::radio('zone_choice['.$zone->id.']', 'pattern:'.$pattern->id, false, ['class' => 'form-check-input']) !!}
+                                {!! Form::radio('zone_choice[' . $zone->id . ']', 'pattern:' . $pattern->id, false, ['class' => 'form-check-input']) !!}
                                 <label class="form-check-label">Pattern: {{ $pattern->name }}</label>
                             </div>
                         @endforeach
 
                         @if ($zone->allow_free_color)
                             <div class="form-check">
-                                {!! Form::radio('zone_choice['.$zone->id.']', 'free', false, ['class' => 'form-check-input']) !!}
+                                {!! Form::radio('zone_choice[' . $zone->id . ']', 'free', false, ['class' => 'form-check-input']) !!}
                                 <label class="form-check-label">Custom color</label>
-                                {!! Form::text('zone_free_color['.$zone->id.']', null, ['class' => 'form-control form-control-sm mt-1', 'placeholder' => 'b8794a']) !!}
+                                {!! Form::text('zone_free_color[' . $zone->id . ']', null, ['class' => 'form-control form-control-sm mt-1', 'placeholder' => 'b8794a']) !!}
                             </div>
                         @endif
                     @endif

@@ -5,7 +5,7 @@
 @endsection
 
 @section('profile-content')
-    {!! breadcrumbs(['Character masterlist' => 'masterlist', $character->fullName => $character->url, 'Home' => $character->url.'/home']) !!}
+    {!! breadcrumbs(['Character masterlist' => 'masterlist', $character->fullName => $character->url, 'Home' => $character->url . '/home']) !!}
 
     @include('character._header', ['character' => $character])
 

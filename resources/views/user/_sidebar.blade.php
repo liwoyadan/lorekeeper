@@ -17,7 +17,7 @@
         @endif
         <div class="sidebar-item"><a href="{{ $user->url . '/myos' }}" class="{{ set_active('user/' . $user->name . '/myos*') }}">MYO Slots</a></div>
         <div class="sidebar-item"><a href="{{ $user->url . '/inventory' }}" class="{{ set_active('user/' . $user->name . '/inventory*') }}">Inventory</a></div>
-        @if (Settings::get('housing_enabled') && (Settings::get('housing_mode') != 1))
+        @if (Settings::get('housing_enabled') && Settings::get('housing_mode') != 1)
             <div class="sidebar-item"><a href="{{ $user->url . '/home' }}" class="{{ set_active('user/' . $user->name . '/home*') }}">Home</a></div>
         @endif
         <div class="sidebar-item"><a href="{{ $user->url . '/bank' }}" class="{{ set_active('user/' . $user->name . '/bank*') }}">Bank</a></div>
