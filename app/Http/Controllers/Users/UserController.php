@@ -15,6 +15,7 @@ use App\Models\Item\ItemCategory;
 use App\Models\User\User;
 use App\Models\User\UserCurrency;
 use App\Models\User\UserUpdateLog;
+use App\Services\HousingManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -221,6 +222,17 @@ class UserController extends Controller {
             'userOptions' => User::where('id', '!=', $this->user->id)->orderBy('name')->pluck('name', 'id')->toArray(),
             'user'        => $this->user,
             'logs'        => $this->user->getItemLogs(),
+        ]);
+    }
+
+    public function getUserHome($name) {
+        if (!HousingManager::homeEnabledFor($this->user)) {
+            abort(404);
+        }
+
+        return view('user.home', [
+            'user' => $this->user,
+            'home' => (new HousingManager)->getOrProvisionHome($this->user),
         ]);
     }
 

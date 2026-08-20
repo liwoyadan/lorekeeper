@@ -56,6 +56,7 @@ Route::group(['prefix' => 'user', 'namespace' => 'Users'], function () {
     Route::get('{name}/sublist/{key}', 'UserController@getUserSublist');
     Route::get('{name}/myos', 'UserController@getUserMyoSlots');
     Route::get('{name}/inventory', 'UserController@getUserInventory');
+    Route::get('{name}/home', 'UserController@getUserHome');
     Route::get('{name}/bank', 'UserController@getUserBank');
 
     Route::get('{name}/currency-logs', 'UserController@getUserCurrencyLogs');
@@ -75,6 +76,7 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function ()
     Route::get('{slug}/profile', 'CharacterController@getCharacterProfile');
     Route::get('{slug}/bank', 'CharacterController@getCharacterBank');
     Route::get('{slug}/inventory', 'CharacterController@getCharacterInventory');
+    Route::get('{slug}/home', 'CharacterController@getCharacterHome');
     Route::get('{slug}/images', 'CharacterController@getCharacterImages');
 
     Route::get('{slug}/currency-logs', 'CharacterController@getCharacterCurrencyLogs');

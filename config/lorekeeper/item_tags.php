@@ -24,4 +24,10 @@ return [
         'text_color'       => '#ffffff',
         'background_color' => '#1fd1a7',
     ],
+
+    'decor' => [
+        'name'             => 'Housing Decor',
+        'text_color'       => '#ffffff',
+        'background_color' => '#6f42c1',
+    ],
 ];

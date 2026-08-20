@@ -83,6 +83,12 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('comment_dislikes_enabled', 0, '0: Dislikes disabled, 1: Dislikes enabled.');
 
+        $this->addSiteSetting('housing_enabled', 0, '0: Housing off (default), 1: Housing on.');
+
+        $this->addSiteSetting('housing_mode', 2, 'Who can own a home. 0: Users only, 1: Characters only, 2: Both (default).');
+
+        $this->addSiteSetting('housing_acquirement', 0, 'How homes are created. 0: Auto on first visit (default), 1: Claim.');
+
         $this->line("\nSite settings up to date!");
     }
 

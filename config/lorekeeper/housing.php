@@ -17,4 +17,6 @@ return [
         'mid'   => 'Mid (furniture)',
         'front' => 'Front (foreground)',
     ],
+
+    'stage_ratio' => '3 / 2',
 ];

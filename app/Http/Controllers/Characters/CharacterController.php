@@ -18,6 +18,7 @@ use App\Models\User\UserCurrency;
 use App\Models\User\UserItem;
 use App\Services\CharacterManager;
 use App\Services\CurrencyManager;
+use App\Services\HousingManager;
 use App\Services\DesignUpdateManager;
 use App\Services\InventoryManager;
 use Illuminate\Http\Request;
@@ -203,6 +204,24 @@ class CharacterController extends Controller {
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/gallery',
             'submissions'           => GallerySubmission::whereIn('id', $this->character->gallerySubmissions->pluck('gallery_submission_id')->toArray())->visible(Auth::user() ?? null)->orderBy('created_at', 'DESC')->paginate(20),
+        ]);
+    }
+
+    /**
+     * Shows a character's home.
+     *
+     * @param string $slug
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCharacterHome($slug) {
+        if (!HousingManager::homeEnabledFor($this->character)) {
+            abort(404);
+        }
+
+        return view('character.home', [
+            'character' => $this->character,
+            'home'      => (new HousingManager)->getOrProvisionHome($this->character),
         ]);
     }
 
