@@ -24,7 +24,7 @@ class HousingService extends Service {
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return bool|\App\Models\Housing\HousingPattern
+     * @return bool|HousingPattern
      */
     public function createPattern($data, $user) {
         DB::beginTransaction();
@@ -61,11 +61,11 @@ class HousingService extends Service {
     /**
      * Updates a housing pattern.
      *
-     * @param \App\Models\Housing\HousingPattern $pattern
-     * @param array                              $data
-     * @param \App\Models\User\User              $user
+     * @param HousingPattern        $pattern
+     * @param array                 $data
+     * @param \App\Models\User\User $user
      *
-     * @return bool|\App\Models\Housing\HousingPattern
+     * @return bool|HousingPattern
      */
     public function updatePattern($pattern, $data, $user) {
         DB::beginTransaction();
@@ -112,7 +112,7 @@ class HousingService extends Service {
     /**
      * Deletes a housing pattern.
      *
-     * @param \App\Models\Housing\HousingPattern $pattern
+     * @param HousingPattern $pattern
      *
      * @return bool
      */
@@ -163,7 +163,7 @@ class HousingService extends Service {
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return bool|\App\Models\Housing\HousingDecor
+     * @return bool|HousingDecor
      */
     public function createDecor($data, $user) {
         DB::beginTransaction();
@@ -198,11 +198,11 @@ class HousingService extends Service {
     /**
      * Updates a housing decor.
      *
-     * @param \App\Models\Housing\HousingDecor $decor
-     * @param array                            $data
-     * @param \App\Models\User\User            $user
+     * @param HousingDecor          $decor
+     * @param array                 $data
+     * @param \App\Models\User\User $user
      *
-     * @return bool|\App\Models\Housing\HousingDecor
+     * @return bool|HousingDecor
      */
     public function updateDecor($decor, $data, $user) {
         DB::beginTransaction();
@@ -249,7 +249,7 @@ class HousingService extends Service {
     /**
      * Deletes a housing decor.
      *
-     * @param \App\Models\Housing\HousingDecor $decor
+     * @param HousingDecor $decor
      *
      * @return bool
      */
@@ -306,19 +306,17 @@ class HousingService extends Service {
     /**
      * Syncs a decor's recolor zones, patterns, and colors from submitted form data.
      *
-     * @param \App\Models\Housing\HousingDecor $decor
-     * @param array                            $data
-     *
-     * @return void
+     * @param HousingDecor $decor
+     * @param array        $data
      */
     private function syncDecorZones($decor, $data) {
-        $names = isset($data['zone_name']) ? $data['zone_name'] : [];
-        $ids = isset($data['zone_id']) ? $data['zone_id'] : [];
-        $selectors = isset($data['zone_selector']) ? $data['zone_selector'] : [];
-        $frees = isset($data['zone_free_color']) ? $data['zone_free_color'] : [];
-        $colors = isset($data['zone_colors']) ? $data['zone_colors'] : [];
-        $masks = isset($data['zone_mask']) ? $data['zone_mask'] : [];
-        $patterns = isset($data['zone_patterns']) ? $data['zone_patterns'] : [];
+        $names = $data['zone_name'] ?? [];
+        $ids = $data['zone_id'] ?? [];
+        $selectors = $data['zone_selector'] ?? [];
+        $frees = $data['zone_free_color'] ?? [];
+        $colors = $data['zone_colors'] ?? [];
+        $masks = $data['zone_mask'] ?? [];
+        $patterns = $data['zone_patterns'] ?? [];
 
         $keptIds = [];
 
@@ -386,8 +384,8 @@ class HousingService extends Service {
     /**
      * Processes decor data for saving.
      *
-     * @param array                            $data
-     * @param \App\Models\Housing\HousingDecor $decor
+     * @param array        $data
+     * @param HousingDecor $decor
      *
      * @return array
      */
