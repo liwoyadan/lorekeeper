@@ -194,6 +194,14 @@ return [
                 'name' => 'Items',
                 'url'  => 'admin/data/items',
             ],
+            [
+                'name' => 'Housing',
+                'url'  => 'admin/data/housing',
+            ],
+            [
+                'name' => 'Housing Patterns',
+                'url'  => 'admin/data/housing-patterns',
+            ],
         ],
     ],
     'Raffles'    => [
