@@ -69,7 +69,7 @@ class Home extends Model {
      * @return \Illuminate\Support\Collection
      */
     public function placementsByLayer() {
-        $placements = isset($this->layoutData['placements']) ? $this->layoutData['placements'] : [];
+        $placements = $this->layoutData['placements'] ?? [];
         $ownedIds = collect($placements)->pluck('owned_decor_id')->unique()->all();
         $owned = OwnedDecor::with('decor.zones.patterns')->whereIn('id', $ownedIds)->get()->keyBy('id');
 

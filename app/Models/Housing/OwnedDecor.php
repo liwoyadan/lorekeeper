@@ -74,7 +74,7 @@ class OwnedDecor extends Model {
      * Builds the CSS background declaration for a zone's locked fill (color or
      * pattern), or an empty string when the zone has no applicable fill.
      *
-     * @param \App\Models\Housing\HousingZone $zone
+     * @param HousingZone $zone
      *
      * @return string
      */

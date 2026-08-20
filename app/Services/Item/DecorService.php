@@ -85,7 +85,7 @@ class DecorService extends Service {
                 }
 
                 $tagData = $stack->item->tag('decor')->data;
-                $decor = HousingDecor::with(['zones.patterns', 'zones.colors'])->find(isset($tagData['decor_id']) ? $tagData['decor_id'] : null);
+                $decor = HousingDecor::with(['zones.patterns', 'zones.colors'])->find($tagData['decor_id'] ?? null);
                 if (!$decor) {
                     throw new \Exception('This item does not grant a valid decor piece.');
                 }
@@ -127,15 +127,15 @@ class DecorService extends Service {
     /**
      * Validates the decor selection...
      *
-     * @param \App\Models\Housing\HousingDecor $decor
-     * @param array                            $data
+     * @param HousingDecor $decor
+     * @param array        $data
      *
      * @return array
      */
     private function buildCustomization($decor, $data) {
         $result = [];
-        $choices = isset($data['zone_choice']) ? $data['zone_choice'] : [];
-        $freeColors = isset($data['zone_free_color']) ? $data['zone_free_color'] : [];
+        $choices = $data['zone_choice'] ?? [];
+        $freeColors = $data['zone_free_color'] ?? [];
 
         foreach ($decor->zones as $zone) {
             $hasOptions = $zone->colors->count() || $zone->patterns->count() || $zone->allow_free_color;

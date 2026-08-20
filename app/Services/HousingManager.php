@@ -45,7 +45,7 @@ class HousingManager extends Service {
      *
      * @param mixed $owner
      *
-     * @return \App\Models\Housing\Home|null
+     * @return Home|null
      */
     public function getOrProvisionHome($owner) {
         $home = Home::where('owner_type', get_class($owner))->where('owner_id', $owner->id)->first();
