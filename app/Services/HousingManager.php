@@ -70,7 +70,7 @@ class HousingManager extends Service {
      * @param mixed $user
      * @param mixed $layout
      *
-     * @return Home|bool
+     * @return bool|Home
      */
     public function saveLayout($home, $user, $layout) {
         DB::beginTransaction();
