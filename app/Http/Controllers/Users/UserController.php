@@ -16,6 +16,7 @@ use App\Models\Item\ItemCategory;
 use App\Models\User\User;
 use App\Models\User\UserCurrency;
 use App\Models\User\UserUpdateLog;
+use App\Facades\Settings;
 use App\Services\HousingManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -226,18 +227,32 @@ class UserController extends Controller {
         ]);
     }
 
+    /**
+     * Shows a user's Home.
+     *
+     * @param string $name
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
     public function getUserHome($name) {
         if (!HousingManager::homeEnabledFor($this->user)) {
             abort(404);
         }
 
+        $userId = $this->user->id;
         $home = (new HousingManager)->getOrProvisionHome($this->user);
-        $canEdit = $home && Auth::check() && Auth::id() == $this->user->id;
+        $canEdit = $home && Auth::check() && (Auth::user()->id == $userId);
+        $canClaim = !$home && (Settings::get('housing_acquirement') == 1) && Auth::check() && (Auth::user()->id == $userId);
+        $claimCost = $canClaim ? (int) Settings::get('housing_claim_cost') : 0;
+        $claimCurrency = ($canClaim && $claimCost > 0) ? Currency::find(Settings::get('housing_claim_currency')) : null;
 
         return view('user.home', [
-            'user'         => $this->user,
-            'home'         => $home,
-            'canEdit'      => $canEdit,
+            'user'          => $this->user,
+            'home'          => $home,
+            'canEdit'       => $canEdit,
+            'canClaim'      => $canClaim,
+            'claimCost'     => $claimCost,
+            'claimCurrency' => $claimCurrency,
             'palette'      => $canEdit ? OwnedDecor::ownedFor($this->user->id, 'furniture')->get() : collect(),
             'wallOptions'  => $canEdit ? OwnedDecor::ownedFor($this->user->id, 'wall')->get() : collect(),
             'floorOptions' => $canEdit ? OwnedDecor::ownedFor($this->user->id, 'floor')->get() : collect(),

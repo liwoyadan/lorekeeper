@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Facades\Settings;
 use App\Models\Character\Character;
+use App\Models\Currency\Currency;
 use App\Models\Housing\Home;
 use App\Models\Housing\OwnedDecor;
 use App\Models\User\User;
@@ -60,6 +61,62 @@ class HousingManager extends Service {
         }
 
         return $home;
+    }
+
+    /**
+     * Claims an empty home for its owner when acquirement is set to Claim,
+     * debiting the configured currency from the acting user when priced.
+     *
+     * @param mixed $owner
+     * @param mixed $user
+     *
+     * @return bool|Home
+     */
+    public function claimHome($owner, $user) {
+        DB::beginTransaction();
+
+        try {
+            if (!self::homeEnabledFor($owner)) {
+                throw new \Exception('Housing is not available for this owner.');
+            }
+
+            if (Settings::get('housing_acquirement') != 1) {
+                throw new \Exception('Homes are not claimable right now.');
+            }
+
+            if (!$this->userControlsOwner($owner, $user)) {
+                throw new \Exception('You do not have permission to claim this home.');
+            }
+
+            $existing = Home::where('owner_type', get_class($owner))->where('owner_id', $owner->id)->first();
+            if ($existing) {
+                throw new \Exception('This home has already been claimed.');
+            }
+
+            $cost = (int) Settings::get('housing_claim_cost');
+            $currencyId = (int) Settings::get('housing_claim_currency');
+            if ($cost > 0 && $currencyId) {
+                $currency = Currency::find($currencyId);
+                if (!$currency) {
+                    throw new \Exception('The configured claim currency does not exist.');
+                }
+
+                if (!(new CurrencyManager)->debitCurrency($user, null, 'Home Claim', 'Claimed a home.', $currency, $cost)) {
+                    throw new \Exception('You do not have enough '.$currency->name.' to claim this home.');
+                }
+            }
+
+            $home = Home::create([
+                'owner_type' => get_class($owner),
+                'owner_id'   => $owner->id,
+            ]);
+
+            return $this->commitReturn($home);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
     }
 
     /**
@@ -199,6 +256,29 @@ class HousingManager extends Service {
             $character = Character::find($home->owner_id);
 
             return $character && $character->user_id == $user->id;
+        }
+
+        return false;
+    }
+
+    /**
+     * Whether the acting user controls this owner directly (is the user, or
+     * owns the character).
+     *
+     * @param mixed $owner
+     * @param mixed $user
+     *
+     * @return bool
+     */
+    private function userControlsOwner($owner, $user) {
+        if (!$user) {
+            return false;
+        }
+        if ($owner instanceof User) {
+            return $owner->id == $user->id;
+        }
+        if ($owner instanceof Character) {
+            return $owner->user_id == $user->id;
         }
 
         return false;

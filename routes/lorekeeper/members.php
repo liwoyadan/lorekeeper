@@ -56,6 +56,8 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function () {
 
 Route::group(['prefix' => 'housing', 'namespace' => 'Users'], function () {
     Route::post('{id}/layout', 'HousingController@postLayout');
+    Route::post('claim', 'HousingController@postClaim');
+    Route::post('character/{id}/claim', 'HousingController@postClaimCharacter');
 });
 
 Route::group(['prefix' => 'inventory', 'namespace' => 'Users'], function () {

@@ -15,6 +15,10 @@
             @include('housing._editor', ['home' => $home, 'palette' => $palette])
         @endif
     @else
-        <p>This home has not been set up yet.</p>
+        @if ($canClaim)
+            @include('housing._claim', ['action' => 'housing/claim', 'intro' => 'This home has not been claimed yet.', 'cost' => $claimCost, 'currency' => $claimCurrency])
+        @else
+            <p>This home has not been set up yet.</p>
+        @endif
     @endif
 @endsection

@@ -91,6 +91,10 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('housing_max_placements', 40, 'Maximum number of decor pieces that can be placed in a single home.');
 
+        $this->addSiteSetting('housing_claim_currency', 0, 'Currency ID charged to claim a home when acquirement is set to Claim. 0: No currency cost.');
+
+        $this->addSiteSetting('housing_claim_cost', 0, 'Amount of the claim currency charged to claim a home. 0: Free.');
+
         $this->line("\nSite settings up to date!");
     }
 

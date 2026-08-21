@@ -221,13 +221,19 @@ class CharacterController extends Controller {
         }
 
         $home = (new HousingManager)->getOrProvisionHome($this->character);
-        $canEdit = $home && Auth::check() && Auth::id() == $this->character->user_id;
         $userId = $this->character->user_id;
+        $canEdit = $home && Auth::check() && (Auth::user()->id == $userId);
+        $canClaim = !$home && (Settings::get('housing_acquirement') == 1) && Auth::check() && (Auth::user()->id == $userId);
+        $claimCost = $canClaim ? (int) Settings::get('housing_claim_cost') : 0;
+        $claimCurrency = ($canClaim && $claimCost > 0) ? Currency::find(Settings::get('housing_claim_currency')) : null;
 
         return view('character.home', [
             'character'    => $this->character,
             'home'         => $home,
             'canEdit'      => $canEdit,
+            'canClaim'      => $canClaim,
+            'claimCost'     => $claimCost,
+            'claimCurrency' => $claimCurrency,
             'palette'      => $canEdit ? OwnedDecor::ownedFor($userId, 'furniture')->get() : collect(),
             'wallOptions'  => $canEdit ? OwnedDecor::ownedFor($userId, 'wall')->get() : collect(),
             'floorOptions' => $canEdit ? OwnedDecor::ownedFor($userId, 'floor')->get() : collect(),

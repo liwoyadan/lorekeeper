@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
+use App\Models\Character\Character;
 use App\Models\Housing\Home;
 use App\Services\HousingManager;
 use Illuminate\Http\Request;
@@ -39,11 +40,55 @@ class HousingController extends Controller {
         if ($service->saveLayout($home, Auth::user(), $layout)) {
             flash('Home updated successfully.')->success();
         } else {
-            foreach ($service->errors()->getMessages()['error'] ?? [] as $error) {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
             }
         }
 
         return redirect()->back();
+    }
+
+    /**
+     * Claims the acting user's own home.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postClaim(HousingManager $service) {
+        $this->claim($service, Auth::user());
+
+        return redirect()->back();
+    }
+
+    /**
+     * Claims a home for a character the acting user owns.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postClaimCharacter(HousingManager $service, $id) {
+        $character = Character::find($id);
+        if (!$character) {
+            abort(404);
+        }
+
+        $this->claim($service, $character);
+
+        return redirect()->back();
+    }
+
+    /**
+     * Runs a claim for the given owner and flashes the result.
+     *
+     * @param mixed $owner
+     */
+    private function claim(HousingManager $service, $owner) {
+        if ($service->claimHome($owner, Auth::user())) {
+            flash('Home claimed successfully.')->success();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
     }
 }
