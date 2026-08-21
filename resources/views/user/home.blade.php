@@ -11,6 +11,9 @@
 
     @if ($home)
         @include('housing._room', ['home' => $home])
+        @if ($canEdit)
+            @include('housing._editor', ['home' => $home, 'palette' => $palette])
+        @endif
     @else
         <p>This home has not been set up yet.</p>
     @endif

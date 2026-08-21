@@ -10,6 +10,7 @@ use App\Models\Currency\Currency;
 use App\Models\Gallery\Gallery;
 use App\Models\Gallery\GalleryCharacter;
 use App\Models\Gallery\GallerySubmission;
+use App\Models\Housing\OwnedDecor;
 use App\Models\Item\Item;
 use App\Models\Item\ItemCategory;
 use App\Models\User\User;
@@ -230,9 +231,16 @@ class UserController extends Controller {
             abort(404);
         }
 
+        $home = (new HousingManager)->getOrProvisionHome($this->user);
+        $canEdit = $home && Auth::check() && Auth::id() == $this->user->id;
+
         return view('user.home', [
-            'user' => $this->user,
-            'home' => (new HousingManager)->getOrProvisionHome($this->user),
+            'user'         => $this->user,
+            'home'         => $home,
+            'canEdit'      => $canEdit,
+            'palette'      => $canEdit ? OwnedDecor::ownedFor($this->user->id, 'furniture')->get() : collect(),
+            'wallOptions'  => $canEdit ? OwnedDecor::ownedFor($this->user->id, 'wall')->get() : collect(),
+            'floorOptions' => $canEdit ? OwnedDecor::ownedFor($this->user->id, 'floor')->get() : collect(),
         ]);
     }
 

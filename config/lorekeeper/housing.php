@@ -19,4 +19,15 @@ return [
     ],
 
     'stage_ratio' => '3 / 2',
+
+    'reference_width' => 960,
+
+    'min_scale' => 3,
+
+    'max_scale' => 100,
+
+    'backdrop_z' => [
+        'wall'  => 1,
+        'floor' => 2,
+    ],
 ];

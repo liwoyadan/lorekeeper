@@ -11,6 +11,7 @@ use App\Models\Character\CharacterProfile;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Currency\Currency;
 use App\Models\Gallery\GallerySubmission;
+use App\Models\Housing\OwnedDecor;
 use App\Models\Item\Item;
 use App\Models\Item\ItemCategory;
 use App\Models\User\User;
@@ -219,9 +220,17 @@ class CharacterController extends Controller {
             abort(404);
         }
 
+        $home = (new HousingManager)->getOrProvisionHome($this->character);
+        $canEdit = $home && Auth::check() && Auth::id() == $this->character->user_id;
+        $userId = $this->character->user_id;
+
         return view('character.home', [
-            'character' => $this->character,
-            'home'      => (new HousingManager)->getOrProvisionHome($this->character),
+            'character'    => $this->character,
+            'home'         => $home,
+            'canEdit'      => $canEdit,
+            'palette'      => $canEdit ? OwnedDecor::ownedFor($userId, 'furniture')->get() : collect(),
+            'wallOptions'  => $canEdit ? OwnedDecor::ownedFor($userId, 'wall')->get() : collect(),
+            'floorOptions' => $canEdit ? OwnedDecor::ownedFor($userId, 'floor')->get() : collect(),
         ]);
     }
 

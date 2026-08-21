@@ -81,4 +81,20 @@ class Home extends Model {
             return $item['ownedDecor']->decor->layer;
         });
     }
+
+    /**
+     * Resolves the wall and floor slots to their owned decor (or null).
+     *
+     * @return array
+     */
+    public function backdrops() {
+        $layout = $this->layoutData;
+        $ids = collect(['wall' => $layout['wall'] ?? null, 'floor' => $layout['floor'] ?? null])->filter()->values()->all();
+        $owned = $ids ? OwnedDecor::with('decor.zones.patterns')->whereIn('id', $ids)->get()->keyBy('id') : collect();
+
+        return [
+            'wall'  => $owned[$layout['wall'] ?? null] ?? null,
+            'floor' => $owned[$layout['floor'] ?? null] ?? null,
+        ];
+    }
 }

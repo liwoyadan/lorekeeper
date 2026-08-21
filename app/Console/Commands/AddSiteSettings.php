@@ -89,6 +89,8 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('housing_acquirement', 0, 'How homes are created. 0: Auto on first visit (default), 1: Claim.');
 
+        $this->addSiteSetting('housing_max_placements', 40, 'Maximum number of decor pieces that can be placed in a single home.');
+
         $this->line("\nSite settings up to date!");
     }
 

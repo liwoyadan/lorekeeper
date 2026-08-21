@@ -54,6 +54,10 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function () {
     Route::post('bookmarks/delete/{id}', 'BookmarkController@postDeleteBookmark');
 });
 
+Route::group(['prefix' => 'housing', 'namespace' => 'Users'], function () {
+    Route::post('{id}/layout', 'HousingController@postLayout');
+});
+
 Route::group(['prefix' => 'inventory', 'namespace' => 'Users'], function () {
     Route::get('/', 'InventoryController@getIndex');
     Route::post('edit', 'InventoryController@postEdit');

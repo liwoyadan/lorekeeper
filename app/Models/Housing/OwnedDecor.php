@@ -49,6 +49,21 @@ class OwnedDecor extends Model {
         return $this->belongsTo(HousingDecor::class, 'decor_id');
     }
 
+    /**
+     * Scope: the user's owned stacks of a given decor kind that still have count.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int                                   $userId
+     * @param string                                $kind
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOwnedFor($query, $userId, $kind) {
+        return $query->where('user_id', $userId)->where('count', '>', 0)->with('decor.zones.patterns')->whereHas('decor', function ($q) use ($kind) {
+            $q->where('kind', $kind);
+        });
+    }
+
     /**********************************************************************************************
 
         ACCESSORS
