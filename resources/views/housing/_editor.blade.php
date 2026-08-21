@@ -1,4 +1,5 @@
-<div class="housing-editor mt-3" data-reference-width="{{ config('lorekeeper.housing.reference_width') }}" data-min-scale="{{ config('lorekeeper.housing.min_scale') }}" data-max-scale="{{ config('lorekeeper.housing.max_scale') }}" data-max-placements="{{ Settings::get('housing_max_placements') }}">
+<div class="housing-editor mt-3" data-reference-width="{{ config('lorekeeper.housing.reference_width') }}" data-min-scale="{{ config('lorekeeper.housing.min_scale') }}" data-max-scale="{{ config('lorekeeper.housing.max_scale') }}"
+    data-max-placements="{{ Settings::get('housing_max_placements') }}">
     <hr>
     <h3>Decorate</h3>
     <p class="text-muted small">Click a decor to add it, then drag to move and drag the corner to resize. Select a placed decor to flip, layer, or remove it.</p>
@@ -52,7 +53,8 @@
 
     <div class="housing-palette d-flex flex-wrap border rounded p-2 mb-2" style="gap: 0.5rem; max-height: 220px; overflow-y: auto;">
         @forelse ($palette as $owned)
-            <div class="housing-palette-item text-center" role="button" data-owned-decor-id="{{ $owned->id }}" data-layer="{{ $owned->decor->layer }}" data-default-scale="{{ $owned->decor->default_scale ?: 1 }}" data-owned-count="{{ $owned->count }}" style="width: 92px;">
+            <div class="housing-palette-item text-center" role="button" data-owned-decor-id="{{ $owned->id }}" data-layer="{{ $owned->decor->layer }}" data-default-scale="{{ $owned->decor->default_scale ?: 1 }}"
+                data-owned-count="{{ $owned->count }}" style="width: 92px;">
                 <div class="border rounded p-1" style="height: 72px; display: flex; align-items: center; justify-content: center;">
                     @if ($owned->decor->has_image)
                         <img src="{{ $owned->decor->decorImageUrl }}" alt="{{ $owned->decor->name }}" style="max-width: 100%; max-height: 64px;">
@@ -284,7 +286,11 @@
                     flip_x: $piece.attr('data-flip') == '1'
                 });
             });
-            $('#housingLayoutField').val(JSON.stringify({placements: placements, wall: currentSlotId('wall'), floor: currentSlotId('floor')}));
+            $('#housingLayoutField').val(JSON.stringify({
+                placements: placements,
+                wall: currentSlotId('wall'),
+                floor: currentSlotId('floor')
+            }));
         });
 
         refreshAvailability();
