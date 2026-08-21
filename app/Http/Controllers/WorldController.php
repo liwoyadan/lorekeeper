@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\Settings;
 use App\Models\Character\CharacterCategory;
 use App\Models\Currency\Currency;
 use App\Models\Feature\Feature;
 use App\Models\Feature\FeatureCategory;
+use App\Models\Housing\HousingDecor;
 use App\Models\Item\Item;
 use App\Models\Item\ItemCategory;
 use App\Models\Rarity;
@@ -401,6 +403,73 @@ class WorldController extends Controller {
             'imageUrl'    => $item->imageUrl,
             'name'        => $item->displayName,
             'description' => $item->parsed_description,
+        ]);
+    }
+
+    /**
+     * Shows the housing decor catalogue.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getHousing(Request $request) {
+        if (!Settings::get('housing_enabled')) {
+            abort(404);
+        }
+
+        $query = HousingDecor::visible(Auth::user() ?? null);
+
+        $data = $request->only(['kind', 'layer', 'name', 'sort']);
+        if (isset($data['kind']) && $data['kind'] != 'none') {
+            $query->where('kind', $data['kind']);
+        }
+        if (isset($data['layer']) && $data['layer'] != 'none') {
+            $query->where('layer', $data['layer']);
+        }
+        if (isset($data['name'])) {
+            $query->where('name', 'LIKE', '%'.$data['name'].'%');
+        }
+
+        switch ($data['sort'] ?? 'alpha') {
+            case 'alpha-reverse':
+                $query->orderBy('name', 'DESC');
+                break;
+            case 'newest':
+                $query->orderBy('id', 'DESC');
+                break;
+            case 'oldest':
+                $query->orderBy('id');
+                break;
+            default:
+                $query->orderBy('name');
+        }
+
+        return view('world.housing', [
+            'decors' => $query->paginate(20)->appends($request->query()),
+            'kinds'  => ['none' => 'Any Kind'] + config('lorekeeper.housing.kinds'),
+            'layers' => ['none' => 'Any Layer'] + config('lorekeeper.housing.layers'),
+        ]);
+    }
+
+    /**
+     * Shows an individual decor's catalogue page.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getHousingDecor($id) {
+        if (!Settings::get('housing_enabled')) {
+            abort(404);
+        }
+
+        $decor = HousingDecor::visible(Auth::user() ?? null)->with('zones.colors', 'zones.patterns')->find($id);
+        if (!$decor) {
+            abort(404);
+        }
+
+        return view('world.housing_decor', [
+            'decor'         => $decor,
+            'grantingItems' => $decor->grantingItems()->released(Auth::user() ?? null)->get(),
         ]);
     }
 

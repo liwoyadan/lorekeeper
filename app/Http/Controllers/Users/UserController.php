@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Facades\Settings;
 use App\Http\Controllers\Controller;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterImage;
@@ -16,7 +17,6 @@ use App\Models\Item\ItemCategory;
 use App\Models\User\User;
 use App\Models\User\UserCurrency;
 use App\Models\User\UserUpdateLog;
-use App\Facades\Settings;
 use App\Services\HousingManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -253,9 +253,9 @@ class UserController extends Controller {
             'canClaim'      => $canClaim,
             'claimCost'     => $claimCost,
             'claimCurrency' => $claimCurrency,
-            'palette'      => $canEdit ? OwnedDecor::ownedFor($this->user->id, 'furniture')->get() : collect(),
-            'wallOptions'  => $canEdit ? OwnedDecor::ownedFor($this->user->id, 'wall')->get() : collect(),
-            'floorOptions' => $canEdit ? OwnedDecor::ownedFor($this->user->id, 'floor')->get() : collect(),
+            'palette'       => $canEdit ? OwnedDecor::ownedFor($this->user->id, 'furniture')->get() : collect(),
+            'wallOptions'   => $canEdit ? OwnedDecor::ownedFor($this->user->id, 'wall')->get() : collect(),
+            'floorOptions'  => $canEdit ? OwnedDecor::ownedFor($this->user->id, 'floor')->get() : collect(),
         ]);
     }
 

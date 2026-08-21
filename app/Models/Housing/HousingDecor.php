@@ -2,6 +2,8 @@
 
 namespace App\Models\Housing;
 
+use App\Models\Item\Item;
+use App\Models\Item\ItemTag;
 use App\Models\Model;
 
 class HousingDecor extends Model {
@@ -64,6 +66,43 @@ class HousingDecor extends Model {
      */
     public function zones() {
         return $this->hasMany(HousingZone::class, 'decor_id')->orderBy('sort');
+    }
+
+    /**
+     * Items whose Housing decor tag grants this decor.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function grantingItems() {
+        $itemIds = ItemTag::active()->type('decor')->get()
+            ->filter(function ($tag) {
+                return ($tag->data['decor_id'] ?? null) == $this->id;
+            })
+            ->pluck('item_id')->all();
+
+        return Item::without('tags')->whereIn('id', $itemIds);
+    }
+
+    /**********************************************************************************************
+
+        SCOPES
+
+    **********************************************************************************************/
+
+    /**
+     * Scope a query to decor visible to the given user (staff see all).
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed                                 $user
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeVisible($query, $user = null) {
+        if ($user && $user->hasPower('edit_data')) {
+            return $query;
+        }
+
+        return $query->where('is_visible', 1);
     }
 
     /**********************************************************************************************

@@ -228,15 +228,15 @@ class CharacterController extends Controller {
         $claimCurrency = ($canClaim && $claimCost > 0) ? Currency::find(Settings::get('housing_claim_currency')) : null;
 
         return view('character.home', [
-            'character'    => $this->character,
-            'home'         => $home,
-            'canEdit'      => $canEdit,
+            'character'     => $this->character,
+            'home'          => $home,
+            'canEdit'       => $canEdit,
             'canClaim'      => $canClaim,
             'claimCost'     => $claimCost,
             'claimCurrency' => $claimCurrency,
-            'palette'      => $canEdit ? OwnedDecor::ownedFor($userId, 'furniture')->get() : collect(),
-            'wallOptions'  => $canEdit ? OwnedDecor::ownedFor($userId, 'wall')->get() : collect(),
-            'floorOptions' => $canEdit ? OwnedDecor::ownedFor($userId, 'floor')->get() : collect(),
+            'palette'       => $canEdit ? OwnedDecor::ownedFor($userId, 'furniture')->get() : collect(),
+            'wallOptions'   => $canEdit ? OwnedDecor::ownedFor($userId, 'wall')->get() : collect(),
+            'floorOptions'  => $canEdit ? OwnedDecor::ownedFor($userId, 'floor')->get() : collect(),
         ]);
     }
 

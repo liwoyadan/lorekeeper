@@ -15,4 +15,10 @@
         <div class="sidebar-item"><a href="{{ url('world/items') }}" class="{{ set_active('world/items*') }}">All Items</a></div>
         <div class="sidebar-item"><a href="{{ url('world/currencies') }}" class="{{ set_active('world/currencies*') }}">Currencies</a></div>
     </li>
+    @if (Settings::get('housing_enabled'))
+        <li class="sidebar-section">
+            <div class="sidebar-section-header">Housing</div>
+            <div class="sidebar-item"><a href="{{ url('world/housing') }}" class="{{ set_active('world/housing*') }}">Decor Catalogue</a></div>
+        </li>
+    @endif
 </ul>
