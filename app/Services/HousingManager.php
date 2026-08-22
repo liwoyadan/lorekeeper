@@ -22,6 +22,8 @@ class HousingManager extends Service {
 
     /**
      * Whether housing is enabled and this owner type may own a home.
+     *
+     * @param mixed $owner
      */
     public static function homeEnabledFor($owner) {
         if (!Settings::get('housing_enabled')) {
@@ -41,6 +43,8 @@ class HousingManager extends Service {
 
     /**
      * Gets the owner's home, auto-creating it when provisioning is set to auto.
+     *
+     * @param mixed $owner
      */
     public function getOrProvisionHome($owner) {
         $home = Home::where('owner_type', get_class($owner))->where('owner_id', $owner->id)->first();
@@ -58,6 +62,9 @@ class HousingManager extends Service {
     /**
      * Claims an empty home for its owner when acquirement is set to Claim,
      * debiting the configured currency from the acting user when priced.
+     *
+     * @param mixed $owner
+     * @param mixed $user
      */
     public function claimHome($owner, $user) {
         DB::beginTransaction();
@@ -109,6 +116,10 @@ class HousingManager extends Service {
     /**
      * Overwrites a home's layout (placements + wall/floor slots) after validating
      * ownership, per-decor counts, the placement cap, and clamping every field.
+     *
+     * @param mixed $home
+     * @param mixed $user
+     * @param mixed $layout
      */
     public function saveLayout($home, $user, $layout) {
         DB::beginTransaction();
@@ -181,6 +192,11 @@ class HousingManager extends Service {
     /**
      * Validates a wall/floor slot selection, returning the owned decor id (or
      * null), and counting the slot against the shared per-decor count invariant.
+     *
+     * @param mixed $ownedId
+     * @param mixed $kind
+     * @param mixed $owned
+     * @param mixed $used
      */
     private function validateSlot($ownedId, $kind, $owned, &$used) {
         $ownedId = (int) $ownedId;
@@ -201,6 +217,10 @@ class HousingManager extends Service {
     /**
      * Counts one use of an owned stack against the shared per-decor tally,
      * throwing when the placements plus slot uses exceed what the user owns.
+     *
+     * @param mixed $stack
+     * @param mixed $ownedId
+     * @param mixed $used
      */
     private function chargeStack($stack, $ownedId, &$used) {
         $used[$ownedId] = ($used[$ownedId] ?? 0) + 1;
@@ -212,6 +232,9 @@ class HousingManager extends Service {
     /**
      * Whether the acting user controls this home (owns it, or owns the character
      * that owns it).
+     *
+     * @param mixed $home
+     * @param mixed $user
      */
     private function userControlsHome($home, $user) {
         if ($home->owner_type == User::class) {
@@ -229,6 +252,9 @@ class HousingManager extends Service {
     /**
      * Whether the acting user controls this owner directly (is the user, or
      * owns the character).
+     *
+     * @param mixed $owner
+     * @param mixed $user
      */
     private function userControlsOwner($owner, $user) {
         if (!$user) {
@@ -246,6 +272,10 @@ class HousingManager extends Service {
 
     /**
      * Clamps a numeric value into a range, rounded to 2 decimals.
+     *
+     * @param mixed $value
+     * @param mixed $min
+     * @param mixed $max
      */
     private function clampNum($value, $min, $max) {
         $value = (float) $value;

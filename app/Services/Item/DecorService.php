@@ -29,6 +29,8 @@ class DecorService extends Service {
 
     /**
      * Processes the data attribute of the tag and returns it in the preferred format.
+     *
+     * @param mixed $tag
      */
     public function getTagData($tag) {
         return $tag->data ?: [];
@@ -36,6 +38,9 @@ class DecorService extends Service {
 
     /**
      * Stores which decor the item grants.
+     *
+     * @param mixed $tag
+     * @param mixed $data
      */
     public function updateData($tag, $data) {
         DB::beginTransaction();
@@ -57,6 +62,10 @@ class DecorService extends Service {
 
     /**
      * Acts upon the item when redeemed from the inventory.
+     *
+     * @param mixed $stacks
+     * @param mixed $user
+     * @param mixed $data
      */
     public function act($stacks, $user, $data) {
         DB::beginTransaction();
@@ -109,6 +118,9 @@ class DecorService extends Service {
 
     /**
      * Validates the decor selection...
+     *
+     * @param mixed $decor
+     * @param mixed $data
      */
     private function buildCustomization($decor, $data) {
         $result = [];

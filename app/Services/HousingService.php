@@ -20,6 +20,9 @@ class HousingService extends Service {
 
     /**
      * Creates a new housing pattern.
+     *
+     * @param mixed $data
+     * @param mixed $user
      */
     public function createPattern($data, $user) {
         DB::beginTransaction();
@@ -55,6 +58,10 @@ class HousingService extends Service {
 
     /**
      * Updates a housing pattern.
+     *
+     * @param mixed $pattern
+     * @param mixed $data
+     * @param mixed $user
      */
     public function updatePattern($pattern, $data, $user) {
         DB::beginTransaction();
@@ -100,6 +107,8 @@ class HousingService extends Service {
 
     /**
      * Deletes a housing pattern.
+     *
+     * @param mixed $pattern
      */
     public function deletePattern($pattern) {
         DB::beginTransaction();
@@ -120,6 +129,8 @@ class HousingService extends Service {
 
     /**
      * Sorts housing pattern order.
+     *
+     * @param mixed $data
      */
     public function sortPattern($data) {
         DB::beginTransaction();
@@ -140,6 +151,9 @@ class HousingService extends Service {
 
     /**
      * Creates a new housing decor.
+     *
+     * @param mixed $data
+     * @param mixed $user
      */
     public function createDecor($data, $user) {
         DB::beginTransaction();
@@ -178,6 +192,10 @@ class HousingService extends Service {
 
     /**
      * Updates a housing decor.
+     *
+     * @param mixed $decor
+     * @param mixed $data
+     * @param mixed $user
      */
     public function updateDecor($decor, $data, $user) {
         DB::beginTransaction();
@@ -239,6 +257,8 @@ class HousingService extends Service {
 
     /**
      * Deletes a housing decor.
+     *
+     * @param mixed $decor
      */
     public function deleteDecor($decor) {
         DB::beginTransaction();
@@ -268,6 +288,8 @@ class HousingService extends Service {
 
     /**
      * Sorts housing decor order.
+     *
+     * @param mixed $data
      */
     public function sortDecor($data) {
         DB::beginTransaction();
@@ -288,6 +310,9 @@ class HousingService extends Service {
 
     /**
      * Syncs a decor's recolor zones, patterns, and colors from submitted form data.
+     *
+     * @param mixed $decor
+     * @param mixed $data
      */
     private function syncDecorZones($decor, $data) {
         $names = $data['zone_name'] ?? [];
@@ -368,6 +393,9 @@ class HousingService extends Service {
 
     /**
      * Processes decor data for saving.
+     *
+     * @param mixed      $data
+     * @param mixed|null $decor
      */
     private function populateDecorData($data, $decor = null) {
         if (isset($data['description']) && $data['description']) {
@@ -403,6 +431,8 @@ class HousingService extends Service {
      * Strips scriptable content from a stored SVG in place. Housing SVGs are
      * inlined unescaped when a room renders, so an upload carrying <script>,
      * event handlers, or javascript: links would run for every viewer.
+     *
+     * @param mixed $path
      */
     private function sanitizeStoredSvg($path) {
         if (!file_exists($path)) {

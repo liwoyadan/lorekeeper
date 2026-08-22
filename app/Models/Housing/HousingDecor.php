@@ -91,6 +91,9 @@ class HousingDecor extends Model {
 
     /**
      * Scope a query to decor visible to the given user (staff see all).
+     *
+     * @param mixed      $query
+     * @param mixed|null $user
      */
     public function scopeVisible($query, $user = null) {
         if ($user && $user->hasPower('edit_data')) {

@@ -51,6 +51,10 @@ class OwnedDecor extends Model {
 
     /**
      * Scope: the user's owned stacks of a given decor kind that still have count.
+     *
+     * @param mixed $query
+     * @param mixed $userId
+     * @param mixed $kind
      */
     public function scopeOwnedFor($query, $userId, $kind) {
         return $query->where('user_id', $userId)->where('count', '>', 0)->with('decor.zones.patterns')->whereHas('decor', function ($q) use ($kind) {
@@ -80,6 +84,8 @@ class OwnedDecor extends Model {
     /**
      * Builds the CSS background declaration for a zone's locked fill (color or
      * pattern), or an empty string when the zone has no applicable fill.
+     *
+     * @param mixed $zone
      */
     public function zoneFill($zone) {
         $cust = $this->customizationData;
@@ -129,9 +135,11 @@ class OwnedDecor extends Model {
 
     /**
      * The subset of svgFills() backed by an injected SVG pattern def.
+     *
+     * @param mixed|null $fills
      */
     public function svgPatternFills($fills = null) {
-        $fills = $fills ?? $this->svgFills();
+        $fills ??= $this->svgFills();
 
         return array_filter($fills, function ($f) {
             return $f['patternDefId'];
@@ -160,6 +168,8 @@ class OwnedDecor extends Model {
     /**
      * Rewrites id references (#name) in a zone selector to match the namespaced
      * markup, leaving class and element selectors untouched.
+     *
+     * @param mixed $selector
      */
     private function namespaceSelectorIds($selector) {
         return preg_replace('/#([A-Za-z][\w-]*)/', '#'.$this->svgIdPrefix().'$1', $selector);

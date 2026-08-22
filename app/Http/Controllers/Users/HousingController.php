@@ -21,6 +21,8 @@ class HousingController extends Controller {
 
     /**
      * Saves the posted layout for a home the acting user controls.
+     *
+     * @param mixed $id
      */
     public function postLayout(Request $request, HousingManager $service, $id) {
         $home = Home::find($id);
@@ -55,6 +57,8 @@ class HousingController extends Controller {
 
     /**
      * Claims a home for a character the acting user owns.
+     *
+     * @param mixed $id
      */
     public function postClaimCharacter(HousingManager $service, $id) {
         $character = Character::find($id);
@@ -69,6 +73,8 @@ class HousingController extends Controller {
 
     /**
      * Runs a claim for the given owner and flashes the result.
+     *
+     * @param mixed $owner
      */
     private function claim(HousingManager $service, $owner) {
         if ($service->claimHome($owner, Auth::user())) {

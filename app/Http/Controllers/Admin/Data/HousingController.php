@@ -39,6 +39,8 @@ class HousingController extends Controller {
 
     /**
      * Shows the edit decor page.
+     *
+     * @param mixed $id
      */
     public function getEditHousing($id) {
         $decor = HousingDecor::with(['zones.patterns', 'zones.colors'])->find($id);
@@ -54,6 +56,8 @@ class HousingController extends Controller {
 
     /**
      * Creates or edits a housing decor.
+     *
+     * @param mixed|null $id
      */
     public function postCreateEditHousing(Request $request, HousingService $service, $id = null) {
         $id ? $request->validate(HousingDecor::$updateRules) : $request->validate(HousingDecor::$createRules);
@@ -78,6 +82,8 @@ class HousingController extends Controller {
 
     /**
      * Gets the decor deletion modal.
+     *
+     * @param mixed $id
      */
     public function getDeleteHousing($id) {
         $decor = HousingDecor::find($id);
@@ -89,6 +95,8 @@ class HousingController extends Controller {
 
     /**
      * Deletes a housing decor.
+     *
+     * @param mixed $id
      */
     public function postDeleteHousing(Request $request, HousingService $service, $id) {
         if ($id && $service->deleteDecor(HousingDecor::find($id))) {
@@ -137,6 +145,8 @@ class HousingController extends Controller {
 
     /**
      * Shows the edit pattern page.
+     *
+     * @param mixed $id
      */
     public function getEditPattern($id) {
         $pattern = HousingPattern::find($id);
@@ -151,6 +161,8 @@ class HousingController extends Controller {
 
     /**
      * Creates or edits a housing pattern.
+     *
+     * @param mixed|null $id
      */
     public function postCreateEditPattern(Request $request, HousingService $service, $id = null) {
         $id ? $request->validate(HousingPattern::$updateRules) : $request->validate(HousingPattern::$createRules);
@@ -174,6 +186,8 @@ class HousingController extends Controller {
 
     /**
      * Gets the pattern deletion modal.
+     *
+     * @param mixed $id
      */
     public function getDeletePattern($id) {
         $pattern = HousingPattern::find($id);
@@ -185,6 +199,8 @@ class HousingController extends Controller {
 
     /**
      * Deletes a housing pattern.
+     *
+     * @param mixed $id
      */
     public function postDeletePattern(Request $request, HousingService $service, $id) {
         if ($id && $service->deletePattern(HousingPattern::find($id))) {
