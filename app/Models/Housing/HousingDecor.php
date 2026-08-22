@@ -72,8 +72,6 @@ class HousingDecor extends Model {
 
     /**
      * Items whose Housing decor tag grants this decor.
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function grantingItems() {
         $itemIds = ItemTag::active()->type('decor')->get()
@@ -93,11 +91,6 @@ class HousingDecor extends Model {
 
     /**
      * Scope a query to decor visible to the given user (staff see all).
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param mixed                                 $user
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeVisible($query, $user = null) {
         if ($user && $user->hasPower('edit_data')) {
@@ -115,8 +108,6 @@ class HousingDecor extends Model {
 
     /**
      * Gets the file directory containing the model's image.
-     *
-     * @return string
      */
     public function getImageDirectoryAttribute() {
         return 'images/data/housing';
@@ -124,8 +115,6 @@ class HousingDecor extends Model {
 
     /**
      * Gets the file name of the model's image.
-     *
-     * @return string
      */
     public function getDecorImageFileNameAttribute() {
         return $this->hash.$this->id.'-image.png';
@@ -133,8 +122,6 @@ class HousingDecor extends Model {
 
     /**
      * Gets the path to the file directory containing the model's image.
-     *
-     * @return string
      */
     public function getDecorImagePathAttribute() {
         return public_path($this->imageDirectory);
@@ -142,8 +129,6 @@ class HousingDecor extends Model {
 
     /**
      * Gets the URL of the model's image.
-     *
-     * @return string
      */
     public function getDecorImageUrlAttribute() {
         if (!$this->has_image) {
@@ -155,8 +140,6 @@ class HousingDecor extends Model {
 
     /**
      * Gets the file name of the model's SVG art (svg render mode).
-     *
-     * @return string
      */
     public function getDecorSvgFileNameAttribute() {
         return $this->hash.$this->id.'.svg';
@@ -164,11 +147,9 @@ class HousingDecor extends Model {
 
     /**
      * Gets the URL of the model's SVG art.
-     *
-     * @return string
      */
     public function getDecorSvgUrlAttribute() {
-        if (!$this->has_image || $this->render_mode != 'svg') {
+        if (!$this->has_image || !$this->isSvg) {
             return null;
         }
 
@@ -177,12 +158,10 @@ class HousingDecor extends Model {
 
     /**
      * Gets the raw SVG markup for inlining (svg render mode), or '' when absent.
-     *
-     * @return string
      */
     public function getSvgContentsAttribute() {
         $path = $this->decorImagePath.'/'.$this->decorSvgFileName;
-        if ($this->render_mode != 'svg' || !$this->has_image || !file_exists($path)) {
+        if (!$this->isSvg || !$this->has_image || !file_exists($path)) {
             return '';
         }
 
@@ -191,17 +170,20 @@ class HousingDecor extends Model {
 
     /**
      * Gets the file name of the decor's active art for its render mode.
-     *
-     * @return string
      */
     public function getDecorArtFileNameAttribute() {
-        return $this->render_mode == 'svg' ? $this->decorSvgFileName : $this->decorImageFileName;
+        return $this->isSvg ? $this->decorSvgFileName : $this->decorImageFileName;
+    }
+
+    /**
+     * Whether the decor renders as inline SVG rather than a masked image.
+     */
+    public function getIsSvgAttribute() {
+        return $this->render_mode == 'svg';
     }
 
     /**
      * Gets the human-readable label for the decor's kind.
-     *
-     * @return string
      */
     public function getKindLabelAttribute() {
         return config('lorekeeper.housing.kinds')[$this->kind] ?? $this->kind;
@@ -209,8 +191,6 @@ class HousingDecor extends Model {
 
     /**
      * Gets the human-readable label for the decor's layer.
-     *
-     * @return string
      */
     public function getLayerLabelAttribute() {
         if (!$this->layer) {
@@ -222,8 +202,6 @@ class HousingDecor extends Model {
 
     /**
      * Gets the admin edit URL.
-     *
-     * @return string
      */
     public function getAdminUrlAttribute() {
         return url('admin/data/housing/edit/'.$this->id);
@@ -231,8 +209,6 @@ class HousingDecor extends Model {
 
     /**
      * Gets the power required to edit this model.
-     *
-     * @return string
      */
     public function getAdminPowerAttribute() {
         return 'edit_data';

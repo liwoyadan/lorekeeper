@@ -56,8 +56,6 @@ class HousingZone extends Model {
 
     /**
      * Gets the file directory containing the model's image.
-     *
-     * @return string
      */
     public function getImageDirectoryAttribute() {
         return 'images/data/housing/zones';
@@ -65,8 +63,6 @@ class HousingZone extends Model {
 
     /**
      * Gets the file name of the model's mask image.
-     *
-     * @return string
      */
     public function getMaskFileNameAttribute() {
         return $this->hash.$this->id.'-mask.png';
@@ -74,8 +70,6 @@ class HousingZone extends Model {
 
     /**
      * Gets the path to the file directory containing the model's image.
-     *
-     * @return string
      */
     public function getMaskPathAttribute() {
         return public_path($this->imageDirectory);
@@ -83,8 +77,6 @@ class HousingZone extends Model {
 
     /**
      * Gets the URL of the model's mask image.
-     *
-     * @return string
      */
     public function getMaskUrlAttribute() {
         if (!$this->has_mask) {

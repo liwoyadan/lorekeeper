@@ -49,8 +49,6 @@ class HousingPattern extends Model {
 
     /**
      * Gets the file directory containing the model's image.
-     *
-     * @return string
      */
     public function getImageDirectoryAttribute() {
         return 'images/data/housing-patterns';
@@ -58,8 +56,6 @@ class HousingPattern extends Model {
 
     /**
      * Gets the file name of the model's image.
-     *
-     * @return string
      */
     public function getPatternImageFileNameAttribute() {
         return $this->hash.$this->id.'-image.png';
@@ -67,8 +63,6 @@ class HousingPattern extends Model {
 
     /**
      * Gets the path to the file directory containing the model's image.
-     *
-     * @return string
      */
     public function getPatternImagePathAttribute() {
         return public_path($this->imageDirectory);
@@ -76,8 +70,6 @@ class HousingPattern extends Model {
 
     /**
      * Gets the URL of the model's image.
-     *
-     * @return string
      */
     public function getPatternImageUrlAttribute() {
         if (!$this->has_image) {
@@ -89,8 +81,6 @@ class HousingPattern extends Model {
 
     /**
      * Gets the admin edit URL.
-     *
-     * @return string
      */
     public function getAdminUrlAttribute() {
         return url('admin/data/housing-patterns/edit/'.$this->id);
@@ -98,8 +88,6 @@ class HousingPattern extends Model {
 
     /**
      * Gets the power required to edit this model.
-     *
-     * @return string
      */
     public function getAdminPowerAttribute() {
         return 'edit_data';

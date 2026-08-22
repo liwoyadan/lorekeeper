@@ -20,8 +20,6 @@ class DecorService extends Service {
 
     /**
      * Retrieves any data that should be used in the item tag editing form.
-     *
-     * @return array
      */
     public function getEditData() {
         return [
@@ -31,10 +29,6 @@ class DecorService extends Service {
 
     /**
      * Processes the data attribute of the tag and returns it in the preferred format.
-     *
-     * @param object $tag
-     *
-     * @return mixed
      */
     public function getTagData($tag) {
         return $tag->data ?: [];
@@ -42,11 +36,6 @@ class DecorService extends Service {
 
     /**
      * Stores which decor the item grants.
-     *
-     * @param object $tag
-     * @param array  $data
-     *
-     * @return bool
      */
     public function updateData($tag, $data) {
         DB::beginTransaction();
@@ -68,12 +57,6 @@ class DecorService extends Service {
 
     /**
      * Acts upon the item when redeemed from the inventory.
-     *
-     * @param \App\Models\User\UserItem $stacks
-     * @param \App\Models\User\User     $user
-     * @param array                     $data
-     *
-     * @return bool
      */
     public function act($stacks, $user, $data) {
         DB::beginTransaction();
@@ -126,11 +109,6 @@ class DecorService extends Service {
 
     /**
      * Validates the decor selection...
-     *
-     * @param HousingDecor $decor
-     * @param array        $data
-     *
-     * @return array
      */
     private function buildCustomization($decor, $data) {
         $result = [];

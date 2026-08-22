@@ -118,7 +118,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('rarities/delete/{id}', 'RarityController@postDeleteRarity');
     Route::post('rarities/sort', 'RarityController@postSortRarity');
 
-    /* Housing Decor */
+    // HOUSING DECOR
     Route::get('housing', 'HousingController@getIndex');
     Route::get('housing/create', 'HousingController@getCreateHousing');
     Route::get('housing/edit/{id}', 'HousingController@getEditHousing');
@@ -128,7 +128,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('housing/delete/{id}', 'HousingController@postDeleteHousing');
     Route::post('housing/sort', 'HousingController@postSortHousing');
 
-    /* Housing Patterns */
+    // HOUSING PATTERNS
     Route::get('housing-patterns', 'HousingController@getPatternIndex');
     Route::get('housing-patterns/create', 'HousingController@getCreatePattern');
     Route::get('housing-patterns/edit/{id}', 'HousingController@getEditPattern');

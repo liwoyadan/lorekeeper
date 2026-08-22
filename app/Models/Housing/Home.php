@@ -49,8 +49,6 @@ class Home extends Model {
 
     /**
      * Gets the decoded room layout ({ placements: [...] }).
-     *
-     * @return array
      */
     public function getLayoutDataAttribute() {
         return $this->layout ? json_decode($this->layout, true) : [];
@@ -63,10 +61,8 @@ class Home extends Model {
     **********************************************************************************************/
 
     /**
-     * Resolves the saved layout into placements grouped by decor layer, each item
-     * pairing the raw placement with its owned decor.
-     *
-     * @return \Illuminate\Support\Collection
+     * Resolves the saved layout into placements grouped by decor layer and sorted
+     * by z within each layer, each item pairing the raw placement with its owned decor.
      */
     public function placementsByLayer() {
         $placements = $this->layoutData['placements'] ?? [];
@@ -79,13 +75,13 @@ class Home extends Model {
             return ['placement' => $p, 'ownedDecor' => $owned[$p['owned_decor_id']]];
         })->groupBy(function ($item) {
             return $item['ownedDecor']->decor->layer;
+        })->map(function ($group) {
+            return $group->sortBy('placement.z')->values();
         });
     }
 
     /**
      * Resolves the wall and floor slots to their owned decor (or null).
-     *
-     * @return array
      */
     public function backdrops() {
         $layout = $this->layoutData;

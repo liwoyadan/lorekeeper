@@ -6,7 +6,8 @@
 
 @section('content')
     {!! breadcrumbs(['World' => 'world', 'Housing' => 'world/housing']) !!}
-    <h1>Housing Decor</h1>
+    <h1>
+        Housing Decor</h1>
 
     <div>
         {!! Form::open(['method' => 'GET', 'class' => '']) !!}
@@ -59,7 +60,10 @@
                             @endif
                             <a href="{{ url('world/housing/' . $decor->id) }}">{{ $decor->name }}</a>
                         </h3>
-                        <p class="text-muted mb-1">{{ $decor->kindLabel }}@if ($decor->layer) &middot; {{ $decor->layerLabel }}@endif</p>
+                        <p class="text-muted mb-1">{{ $decor->kindLabel }}@if ($decor->layer)
+                                &middot; {{ $decor->layerLabel }}
+                            @endif
+                        </p>
                         <div class="world-entry-text">{!! $decor->parsed_description !!}</div>
                     </div>
                 </div>

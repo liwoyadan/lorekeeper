@@ -22,7 +22,10 @@
                         @endif
                         {{ $decor->name }}
                     </h1>
-                    <p><strong>Kind:</strong> {{ $decor->kindLabel }}@if ($decor->layer) &nbsp;&nbsp; <strong>Layer:</strong> {{ $decor->layerLabel }}@endif</p>
+                    <p><strong>Kind:</strong> {{ $decor->kindLabel }}@if ($decor->layer)
+                            &nbsp;&nbsp; <strong>Layer:</strong> {{ $decor->layerLabel }}
+                        @endif
+                    </p>
                     <div class="world-entry-text">{!! $decor->parsed_description !!}</div>
                 </div>
             </div>

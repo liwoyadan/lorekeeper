@@ -21,8 +21,6 @@ class HousingController extends Controller {
 
     /**
      * Shows the housing decor index.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getIndex() {
         return view('admin.housing.housing', [
@@ -32,8 +30,6 @@ class HousingController extends Controller {
 
     /**
      * Shows the create decor page.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreateHousing() {
         return view('admin.housing.create_edit_housing', [
@@ -43,10 +39,6 @@ class HousingController extends Controller {
 
     /**
      * Shows the edit decor page.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditHousing($id) {
         $decor = HousingDecor::with(['zones.patterns', 'zones.colors'])->find($id);
@@ -62,11 +54,6 @@ class HousingController extends Controller {
 
     /**
      * Creates or edits a housing decor.
-     *
-     * @param App\Services\HousingService $service
-     * @param int|null                    $id
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function postCreateEditHousing(Request $request, HousingService $service, $id = null) {
         $id ? $request->validate(HousingDecor::$updateRules) : $request->validate(HousingDecor::$createRules);
@@ -91,10 +78,6 @@ class HousingController extends Controller {
 
     /**
      * Gets the decor deletion modal.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeleteHousing($id) {
         $decor = HousingDecor::find($id);
@@ -106,11 +89,6 @@ class HousingController extends Controller {
 
     /**
      * Deletes a housing decor.
-     *
-     * @param App\Services\HousingService $service
-     * @param int                         $id
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeleteHousing(Request $request, HousingService $service, $id) {
         if ($id && $service->deleteDecor(HousingDecor::find($id))) {
@@ -126,10 +104,6 @@ class HousingController extends Controller {
 
     /**
      * Sorts housing decor.
-     *
-     * @param App\Services\HousingService $service
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortHousing(Request $request, HousingService $service) {
         if ($service->sortDecor($request->get('sort'))) {
@@ -145,8 +119,6 @@ class HousingController extends Controller {
 
     /**
      * Shows the housing pattern index.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPatternIndex() {
         return view('admin.housing.patterns', [
@@ -156,8 +128,6 @@ class HousingController extends Controller {
 
     /**
      * Shows the create pattern page.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreatePattern() {
         return view('admin.housing.create_edit_pattern', [
@@ -167,10 +137,6 @@ class HousingController extends Controller {
 
     /**
      * Shows the edit pattern page.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditPattern($id) {
         $pattern = HousingPattern::find($id);
@@ -185,11 +151,6 @@ class HousingController extends Controller {
 
     /**
      * Creates or edits a housing pattern.
-     *
-     * @param App\Services\HousingService $service
-     * @param int|null                    $id
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function postCreateEditPattern(Request $request, HousingService $service, $id = null) {
         $id ? $request->validate(HousingPattern::$updateRules) : $request->validate(HousingPattern::$createRules);
@@ -213,10 +174,6 @@ class HousingController extends Controller {
 
     /**
      * Gets the pattern deletion modal.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeletePattern($id) {
         $pattern = HousingPattern::find($id);
@@ -228,11 +185,6 @@ class HousingController extends Controller {
 
     /**
      * Deletes a housing pattern.
-     *
-     * @param App\Services\HousingService $service
-     * @param int                         $id
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeletePattern(Request $request, HousingService $service, $id) {
         if ($id && $service->deletePattern(HousingPattern::find($id))) {
@@ -248,10 +200,6 @@ class HousingController extends Controller {
 
     /**
      * Sorts housing patterns.
-     *
-     * @param App\Services\HousingService $service
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortPattern(Request $request, HousingService $service) {
         if ($service->sortPattern($request->get('sort'))) {

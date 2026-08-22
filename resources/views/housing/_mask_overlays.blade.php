@@ -2,7 +2,7 @@
     $decor = $ownedDecor->decor;
 @endphp
 
-@if ($decor->render_mode == 'mask')
+@if (!$decor->isSvg)
     @foreach ($decor->zones as $zone)
         @php
             $fill = $ownedDecor->zoneFill($zone);

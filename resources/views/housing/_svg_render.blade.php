@@ -1,10 +1,10 @@
 @php
     $fills = $ownedDecor->svgFills();
-    $patternFills = $ownedDecor->svgPatternFills();
+    $patternFills = $ownedDecor->svgPatternFills($fills);
 @endphp
 
 <div class="housing-svg-art" style="width: 100%; height: 100%;">
-    {!! $ownedDecor->decor->svgContents !!}
+    {!! $ownedDecor->svgMarkup() !!}
 </div>
 
 @if (count($patternFills))
@@ -26,8 +26,11 @@
             height: 100%;
             display: block;
         }
+
         @foreach ($fills as $f)
-            [data-owned-decor-id="{{ $ownedDecor->id }}"] {!! $f['selector'] !!} { fill: {{ $f['fill'] }}; }
+            [data-owned-decor-id="{{ $ownedDecor->id }}"] {!! $f['selector'] !!} {
+                fill: {{ $f['fill'] }};
+            }
         @endforeach
     </style>
 @endif

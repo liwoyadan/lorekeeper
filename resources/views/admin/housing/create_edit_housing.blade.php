@@ -43,20 +43,20 @@
     </div>
 
     <div class="mask-art-field">
-    <div class="form-group">
-        {!! Form::label('Base Image (PNG)') !!} {!! add_help('The base art. In mask mode this is the fixed, non-recolored parts. Recolor zones are added after saving.') !!}
-        <div class="custom-file">
-            {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
-            {!! Form::file('image', ['class' => 'custom-file-input']) !!}
-        </div>
-        @if ($decor->has_image)
-            <div class="mt-2"><img src="{{ $decor->decorImageUrl }}" style="max-width:160px;" alt=""></div>
-            <div class="form-check">
-                {!! Form::checkbox('remove_image', 1, false, ['class' => 'form-check-input']) !!}
-                {!! Form::label('remove_image', 'Remove current image', ['class' => 'form-check-label']) !!}
+        <div class="form-group">
+            {!! Form::label('Base Image (PNG)') !!} {!! add_help('The base art. In mask mode this is the fixed, non-recolored parts. Recolor zones are added after saving.') !!}
+            <div class="custom-file">
+                {!! Form::label('image', 'Choose file...', ['class' => 'custom-file-label']) !!}
+                {!! Form::file('image', ['class' => 'custom-file-input']) !!}
             </div>
-        @endif
-    </div>
+            @if ($decor->has_image)
+                <div class="mt-2"><img src="{{ $decor->decorImageUrl }}" style="max-width:160px;" alt=""></div>
+                <div class="form-check">
+                    {!! Form::checkbox('remove_image', 1, false, ['class' => 'form-check-input']) !!}
+                    {!! Form::label('remove_image', 'Remove current image', ['class' => 'form-check-label']) !!}
+                </div>
+            @endif
+        </div>
     </div>
 
     <div class="form-group svg-art-field">

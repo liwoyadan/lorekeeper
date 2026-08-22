@@ -11,7 +11,7 @@
     @endforeach
     @foreach (['back', 'mid', 'front'] as $layer)
         <div class="housing-layer housing-layer-{{ $layer }}" style="position: absolute; inset: 0; z-index: {{ $loop->index + 3 }};">
-            @foreach (($byLayer[$layer] ?? collect())->sortBy('placement.z') as $item)
+            @foreach ($byLayer[$layer] ?? collect() as $item)
                 @include('housing._piece', ['p' => $item['placement'], 'ownedDecor' => $item['ownedDecor']])
             @endforeach
         </div>

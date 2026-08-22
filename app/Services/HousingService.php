@@ -20,11 +20,6 @@ class HousingService extends Service {
 
     /**
      * Creates a new housing pattern.
-     *
-     * @param array                 $data
-     * @param \App\Models\User\User $user
-     *
-     * @return bool|HousingPattern
      */
     public function createPattern($data, $user) {
         DB::beginTransaction();
@@ -60,12 +55,6 @@ class HousingService extends Service {
 
     /**
      * Updates a housing pattern.
-     *
-     * @param HousingPattern        $pattern
-     * @param array                 $data
-     * @param \App\Models\User\User $user
-     *
-     * @return bool|HousingPattern
      */
     public function updatePattern($pattern, $data, $user) {
         DB::beginTransaction();
@@ -111,10 +100,6 @@ class HousingService extends Service {
 
     /**
      * Deletes a housing pattern.
-     *
-     * @param HousingPattern $pattern
-     *
-     * @return bool
      */
     public function deletePattern($pattern) {
         DB::beginTransaction();
@@ -135,10 +120,6 @@ class HousingService extends Service {
 
     /**
      * Sorts housing pattern order.
-     *
-     * @param array $data
-     *
-     * @return bool
      */
     public function sortPattern($data) {
         DB::beginTransaction();
@@ -159,11 +140,6 @@ class HousingService extends Service {
 
     /**
      * Creates a new housing decor.
-     *
-     * @param array                 $data
-     * @param \App\Models\User\User $user
-     *
-     * @return bool|HousingDecor
      */
     public function createDecor($data, $user) {
         DB::beginTransaction();
@@ -187,6 +163,9 @@ class HousingService extends Service {
 
             if ($art) {
                 $this->handleImage($art, $decor->decorImagePath, $decor->decorArtFileName);
+                if ($isSvg) {
+                    $this->sanitizeStoredSvg($decor->decorImagePath.'/'.$decor->decorSvgFileName);
+                }
             }
 
             return $this->commitReturn($decor);
@@ -199,12 +178,6 @@ class HousingService extends Service {
 
     /**
      * Updates a housing decor.
-     *
-     * @param HousingDecor          $decor
-     * @param array                 $data
-     * @param \App\Models\User\User $user
-     *
-     * @return bool|HousingDecor
      */
     public function updateDecor($decor, $data, $user) {
         DB::beginTransaction();
@@ -236,10 +209,22 @@ class HousingService extends Service {
             }
             unset($data['image'], $data['svg_file']);
 
+            if (isset($data['render_mode']) && $data['render_mode'] != $decor->render_mode && $decor->has_image) {
+                if (file_exists($decor->decorImagePath.'/'.$decor->decorArtFileName)) {
+                    $this->deleteImage($decor->decorImagePath, $decor->decorArtFileName);
+                }
+                if (!$art) {
+                    $data['has_image'] = 0;
+                }
+            }
+
             $decor->update($data);
 
             if ($art) {
                 $this->handleImage($art, $decor->decorImagePath, $decor->decorArtFileName);
+                if ($isSvg) {
+                    $this->sanitizeStoredSvg($decor->decorImagePath.'/'.$decor->decorSvgFileName);
+                }
             }
 
             $this->syncDecorZones($decor, $zoneData);
@@ -254,10 +239,6 @@ class HousingService extends Service {
 
     /**
      * Deletes a housing decor.
-     *
-     * @param HousingDecor $decor
-     *
-     * @return bool
      */
     public function deleteDecor($decor) {
         DB::beginTransaction();
@@ -287,10 +268,6 @@ class HousingService extends Service {
 
     /**
      * Sorts housing decor order.
-     *
-     * @param array $data
-     *
-     * @return bool
      */
     public function sortDecor($data) {
         DB::beginTransaction();
@@ -311,9 +288,6 @@ class HousingService extends Service {
 
     /**
      * Syncs a decor's recolor zones, patterns, and colors from submitted form data.
-     *
-     * @param HousingDecor $decor
-     * @param array        $data
      */
     private function syncDecorZones($decor, $data) {
         $names = $data['zone_name'] ?? [];
@@ -334,11 +308,16 @@ class HousingService extends Service {
             $zoneId = isset($ids[$i]) && $ids[$i] ? $ids[$i] : null;
             $zone = $zoneId ? HousingZone::where('id', $zoneId)->where('decor_id', $decor->id)->first() : null;
 
+            $selector = $decor->isSvg && isset($selectors[$i]) ? trim($selectors[$i]) : null;
+            if ($selector && !preg_match('/^[a-zA-Z0-9 ._#>\[\]="\':()\-,*~+]+$/', $selector)) {
+                throw new \Exception('Zone "'.$name.'" has an invalid SVG selector.');
+            }
+
             $attrs = [
                 'decor_id'         => $decor->id,
                 'name'             => $name,
                 'sort'             => $i,
-                'svg_selector'     => $decor->render_mode == 'svg' && isset($selectors[$i]) ? $selectors[$i] : null,
+                'svg_selector'     => $selector,
                 'allow_free_color' => isset($frees[$i]) && $frees[$i] ? 1 : 0,
             ];
 
@@ -389,11 +368,6 @@ class HousingService extends Service {
 
     /**
      * Processes decor data for saving.
-     *
-     * @param array        $data
-     * @param HousingDecor $decor
-     *
-     * @return array
      */
     private function populateDecorData($data, $decor = null) {
         if (isset($data['description']) && $data['description']) {
@@ -423,5 +397,46 @@ class HousingService extends Service {
         }
 
         return $data;
+    }
+
+    /**
+     * Strips scriptable content from a stored SVG in place. Housing SVGs are
+     * inlined unescaped when a room renders, so an upload carrying <script>,
+     * event handlers, or javascript: links would run for every viewer.
+     */
+    private function sanitizeStoredSvg($path) {
+        if (!file_exists($path)) {
+            return;
+        }
+
+        $dom = new \DOMDocument;
+        libxml_use_internal_errors(true);
+        if (!$dom->loadXML(file_get_contents($path), LIBXML_NONET)) {
+            libxml_clear_errors();
+            throw new \Exception('The SVG file could not be processed.');
+        }
+        libxml_clear_errors();
+
+        foreach (['script', 'foreignObject'] as $tag) {
+            $nodes = $dom->getElementsByTagName($tag);
+            for ($i = $nodes->length - 1; $i >= 0; $i--) {
+                $node = $nodes->item($i);
+                $node->parentNode->removeChild($node);
+            }
+        }
+
+        $xpath = new \DOMXPath($dom);
+        foreach ($xpath->query('//*') as $el) {
+            foreach (iterator_to_array($el->attributes) as $attr) {
+                $name = strtolower($attr->nodeName);
+                $isHandler = str_starts_with($name, 'on');
+                $isJsLink = ($name == 'href' || $name == 'xlink:href') && str_starts_with(strtolower(trim($attr->value)), 'javascript:');
+                if ($isHandler || $isJsLink) {
+                    $el->removeAttributeNode($attr);
+                }
+            }
+        }
+
+        file_put_contents($path, $dom->saveXML($dom->documentElement));
     }
 }

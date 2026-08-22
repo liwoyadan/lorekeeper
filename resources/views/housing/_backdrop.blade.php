@@ -3,7 +3,7 @@
 @endphp
 
 <div class="housing-backdrop housing-backdrop-{{ $slot }}" data-owned-decor-id="{{ $ownedDecor->id }}" style="position: absolute; inset: 0; z-index: {{ config('lorekeeper.housing.backdrop_z')[$slot] ?? 0 }};">
-    @if ($decor->render_mode == 'svg')
+    @if ($decor->isSvg)
         @include('housing._svg_render', ['ownedDecor' => $ownedDecor])
     @else
         @if ($decor->has_image)

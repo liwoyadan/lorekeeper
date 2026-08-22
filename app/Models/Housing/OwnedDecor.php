@@ -51,12 +51,6 @@ class OwnedDecor extends Model {
 
     /**
      * Scope: the user's owned stacks of a given decor kind that still have count.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int                                   $userId
-     * @param string                                $kind
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeOwnedFor($query, $userId, $kind) {
         return $query->where('user_id', $userId)->where('count', '>', 0)->with('decor.zones.patterns')->whereHas('decor', function ($q) use ($kind) {
@@ -72,8 +66,6 @@ class OwnedDecor extends Model {
 
     /**
      * Gets the locked customization as a decoded array of zoneId => [type, value].
-     *
-     * @return array
      */
     public function getCustomizationDataAttribute() {
         return $this->customization ? json_decode($this->customization, true) : [];
@@ -88,10 +80,6 @@ class OwnedDecor extends Model {
     /**
      * Builds the CSS background declaration for a zone's locked fill (color or
      * pattern), or an empty string when the zone has no applicable fill.
-     *
-     * @param HousingZone $zone
-     *
-     * @return string
      */
     public function zoneFill($zone) {
         $cust = $this->customizationData;
@@ -113,8 +101,6 @@ class OwnedDecor extends Model {
      * Resolves per-zone SVG fills for svg render mode: each entry has the zone's
      * selector, the CSS fill value, and (for pattern fills) the injected def id
      * and pattern image URL.
-     *
-     * @return array
      */
     public function svgFills() {
         $cust = $this->customizationData;
@@ -125,15 +111,16 @@ class OwnedDecor extends Model {
             }
 
             $fill = $cust[$zone->id];
+            $selector = $this->namespaceSelectorIds($zone->svg_selector);
             if ($fill['type'] == 'pattern') {
                 $pattern = $zone->patterns->find($fill['value']);
                 if (!$pattern || !$pattern->patternImageUrl) {
                     continue;
                 }
                 $defId = 'pat-'.$this->id.'-'.$zone->id;
-                $out[] = ['selector' => $zone->svg_selector, 'fill' => 'url(#'.$defId.')', 'patternDefId' => $defId, 'patternUrl' => $pattern->patternImageUrl];
+                $out[] = ['selector' => $selector, 'fill' => 'url(#'.$defId.')', 'patternDefId' => $defId, 'patternUrl' => $pattern->patternImageUrl];
             } else {
-                $out[] = ['selector' => $zone->svg_selector, 'fill' => '#'.$fill['value'], 'patternDefId' => null, 'patternUrl' => null];
+                $out[] = ['selector' => $selector, 'fill' => '#'.$fill['value'], 'patternDefId' => null, 'patternUrl' => null];
             }
         }
 
@@ -142,12 +129,46 @@ class OwnedDecor extends Model {
 
     /**
      * The subset of svgFills() backed by an injected SVG pattern def.
-     *
-     * @return array
      */
-    public function svgPatternFills() {
-        return array_filter($this->svgFills(), function ($f) {
+    public function svgPatternFills($fills = null) {
+        $fills = $fills ?? $this->svgFills();
+
+        return array_filter($fills, function ($f) {
             return $f['patternDefId'];
         });
+    }
+
+    /**
+     * The decor's SVG markup with its internal ids (and every reference to them)
+     * prefixed for this owned decor, so distinct decors sharing an id name can't
+     * collide when several are inlined on one page.
+     */
+    public function svgMarkup() {
+        $svg = $this->decor->svgContents;
+        if (!$svg) {
+            return '';
+        }
+
+        $ns = $this->svgIdPrefix();
+        $svg = preg_replace('/\bid="([^"]+)"/', 'id="'.$ns.'$1"', $svg);
+        $svg = preg_replace('/url\(#([^)]+)\)/', 'url(#'.$ns.'$1)', $svg);
+        $svg = preg_replace('/\b(xlink:href|href)="#([^"]+)"/', '$1="#'.$ns.'$2"', $svg);
+
+        return $svg;
+    }
+
+    /**
+     * Rewrites id references (#name) in a zone selector to match the namespaced
+     * markup, leaving class and element selectors untouched.
+     */
+    private function namespaceSelectorIds($selector) {
+        return preg_replace('/#([A-Za-z][\w-]*)/', '#'.$this->svgIdPrefix().'$1', $selector);
+    }
+
+    /**
+     * The id-namespace prefix that scopes this owned decor's inlined SVG.
+     */
+    private function svgIdPrefix() {
+        return 'd'.$this->id.'-';
     }
 }
