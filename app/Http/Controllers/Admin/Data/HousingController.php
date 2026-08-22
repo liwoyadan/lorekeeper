@@ -71,7 +71,7 @@ class HousingController extends Controller {
     public function postCreateEditHousing(Request $request, HousingService $service, $id = null) {
         $id ? $request->validate(HousingDecor::$updateRules) : $request->validate(HousingDecor::$createRules);
         $data = $request->only([
-            'name', 'kind', 'render_mode', 'layer', 'description', 'default_scale', 'is_visible', 'image', 'remove_image',
+            'name', 'kind', 'render_mode', 'layer', 'description', 'default_scale', 'is_visible', 'image', 'svg_file', 'remove_image',
             'zone_id', 'zone_name', 'zone_selector', 'zone_free_color', 'zone_colors', 'zone_patterns', 'zone_mask',
         ]);
         if ($id && $service->updateDecor(HousingDecor::find($id), $data, Auth::user())) {

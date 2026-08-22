@@ -38,6 +38,7 @@ class HousingDecor extends Model {
         'default_scale' => 'nullable|numeric|min:0.1|max:10',
         'description'   => 'nullable',
         'image'         => 'mimes:png',
+        'svg_file'      => 'nullable|mimetypes:image/svg+xml,text/xml,text/plain,application/xml',
     ];
 
     /**
@@ -53,6 +54,7 @@ class HousingDecor extends Model {
         'default_scale' => 'nullable|numeric|min:0.1|max:10',
         'description'   => 'nullable',
         'image'         => 'mimes:png',
+        'svg_file'      => 'nullable|mimetypes:image/svg+xml,text/xml,text/plain,application/xml',
     ];
 
     /**********************************************************************************************
@@ -149,6 +151,51 @@ class HousingDecor extends Model {
         }
 
         return asset($this->imageDirectory.'/'.$this->decorImageFileName);
+    }
+
+    /**
+     * Gets the file name of the model's SVG art (svg render mode).
+     *
+     * @return string
+     */
+    public function getDecorSvgFileNameAttribute() {
+        return $this->hash.$this->id.'.svg';
+    }
+
+    /**
+     * Gets the URL of the model's SVG art.
+     *
+     * @return string
+     */
+    public function getDecorSvgUrlAttribute() {
+        if (!$this->has_image || $this->render_mode != 'svg') {
+            return null;
+        }
+
+        return asset($this->imageDirectory.'/'.$this->decorSvgFileName);
+    }
+
+    /**
+     * Gets the raw SVG markup for inlining (svg render mode), or '' when absent.
+     *
+     * @return string
+     */
+    public function getSvgContentsAttribute() {
+        $path = $this->decorImagePath.'/'.$this->decorSvgFileName;
+        if ($this->render_mode != 'svg' || !$this->has_image || !file_exists($path)) {
+            return '';
+        }
+
+        return file_get_contents($path);
+    }
+
+    /**
+     * Gets the file name of the decor's active art for its render mode.
+     *
+     * @return string
+     */
+    public function getDecorArtFileNameAttribute() {
+        return $this->render_mode == 'svg' ? $this->decorSvgFileName : $this->decorImageFileName;
     }
 
     /**

@@ -108,4 +108,46 @@ class OwnedDecor extends Model {
 
         return 'background-color: #'.$fill['value'].';';
     }
+
+    /**
+     * Resolves per-zone SVG fills for svg render mode: each entry has the zone's
+     * selector, the CSS fill value, and (for pattern fills) the injected def id
+     * and pattern image URL.
+     *
+     * @return array
+     */
+    public function svgFills() {
+        $cust = $this->customizationData;
+        $out = [];
+        foreach ($this->decor->zones as $zone) {
+            if (!$zone->svg_selector || !isset($cust[$zone->id])) {
+                continue;
+            }
+
+            $fill = $cust[$zone->id];
+            if ($fill['type'] == 'pattern') {
+                $pattern = $zone->patterns->find($fill['value']);
+                if (!$pattern || !$pattern->patternImageUrl) {
+                    continue;
+                }
+                $defId = 'pat-'.$this->id.'-'.$zone->id;
+                $out[] = ['selector' => $zone->svg_selector, 'fill' => 'url(#'.$defId.')', 'patternDefId' => $defId, 'patternUrl' => $pattern->patternImageUrl];
+            } else {
+                $out[] = ['selector' => $zone->svg_selector, 'fill' => '#'.$fill['value'], 'patternDefId' => null, 'patternUrl' => null];
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * The subset of svgFills() backed by an injected SVG pattern def.
+     *
+     * @return array
+     */
+    public function svgPatternFills() {
+        return array_filter($this->svgFills(), function ($f) {
+            return $f['patternDefId'];
+        });
+    }
 }

@@ -42,6 +42,7 @@
         {!! Form::text('default_scale', $decor->default_scale ?: 1, ['class' => 'form-control']) !!}
     </div>
 
+    <div class="mask-art-field">
     <div class="form-group">
         {!! Form::label('Base Image (PNG)') !!} {!! add_help('The base art. In mask mode this is the fixed, non-recolored parts. Recolor zones are added after saving.') !!}
         <div class="custom-file">
@@ -55,6 +56,15 @@
                 {!! Form::label('remove_image', 'Remove current image', ['class' => 'form-check-label']) !!}
             </div>
         @endif
+    </div>
+    </div>
+
+    <div class="form-group svg-art-field">
+        {!! Form::label('SVG Art') !!} {!! add_help('The single SVG whose named elements (targeted by each zone selector) are recolored. Author it with a viewBox and give each recolor region a class or id, then reference that as the zone selector.') !!}
+        <div class="custom-file">
+            {!! Form::label('svg_file', 'Choose file...', ['class' => 'custom-file-label']) !!}
+            {!! Form::file('svg_file', ['class' => 'custom-file-input']) !!}
+        </div>
     </div>
 
     <div class="form-group">
@@ -126,6 +136,18 @@
             }
             toggleZoneFields();
             $('select[name=render_mode]').on('change', toggleZoneFields);
+
+            function toggleArtFields() {
+                if ($('select[name=render_mode]').val() == 'svg') {
+                    $('.mask-art-field').hide();
+                    $('.svg-art-field').show();
+                } else {
+                    $('.mask-art-field').show();
+                    $('.svg-art-field').hide();
+                }
+            }
+            toggleArtFields();
+            $('select[name=render_mode]').on('change', toggleArtFields);
 
             var $zoneProto = $('#zonePrototype').find('.zone-row');
 

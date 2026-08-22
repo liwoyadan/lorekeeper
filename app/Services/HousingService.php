@@ -171,20 +171,22 @@ class HousingService extends Service {
         try {
             $data = $this->populateDecorData($data);
 
-            $image = null;
-            if (isset($data['image']) && $data['image']) {
+            $art = null;
+            $isSvg = ($data['render_mode'] ?? 'mask') == 'svg';
+            $field = $isSvg ? 'svg_file' : 'image';
+            if (isset($data[$field]) && $data[$field]) {
                 $data['has_image'] = 1;
                 $data['hash'] = randomString(10);
-                $image = $data['image'];
-                unset($data['image']);
+                $art = $data[$field];
             } else {
                 $data['has_image'] = 0;
             }
+            unset($data['image'], $data['svg_file']);
 
             $decor = HousingDecor::create($data);
 
-            if ($image) {
-                $this->handleImage($image, $decor->decorImagePath, $decor->decorImageFileName);
+            if ($art) {
+                $this->handleImage($art, $decor->decorImagePath, $decor->decorArtFileName);
             }
 
             return $this->commitReturn($decor);
@@ -222,18 +224,22 @@ class HousingService extends Service {
 
             $data = $this->populateDecorData($data, $decor);
 
-            $image = null;
-            if (isset($data['image']) && $data['image']) {
+            $art = null;
+            $isSvg = ($data['render_mode'] ?? $decor->render_mode) == 'svg';
+            $field = $isSvg ? 'svg_file' : 'image';
+            if (isset($data[$field]) && $data[$field]) {
                 $data['has_image'] = 1;
-                $data['hash'] = randomString(10);
-                $image = $data['image'];
-                unset($data['image']);
+                if (!$decor->hash) {
+                    $data['hash'] = randomString(10);
+                }
+                $art = $data[$field];
             }
+            unset($data['image'], $data['svg_file']);
 
             $decor->update($data);
 
-            if ($image) {
-                $this->handleImage($image, $decor->decorImagePath, $decor->decorImageFileName);
+            if ($art) {
+                $this->handleImage($art, $decor->decorImagePath, $decor->decorArtFileName);
             }
 
             $this->syncDecorZones($decor, $zoneData);
@@ -267,7 +273,7 @@ class HousingService extends Service {
             }
 
             if ($decor->has_image) {
-                $this->deleteImage($decor->decorImagePath, $decor->decorImageFileName);
+                $this->deleteImage($decor->decorImagePath, $decor->decorArtFileName);
             }
             $decor->delete();
 
@@ -411,7 +417,7 @@ class HousingService extends Service {
         if (isset($data['remove_image'])) {
             if ($decor && $decor->has_image && $data['remove_image']) {
                 $data['has_image'] = 0;
-                $this->deleteImage($decor->decorImagePath, $decor->decorImageFileName);
+                $this->deleteImage($decor->decorImagePath, $decor->decorArtFileName);
             }
             unset($data['remove_image']);
         }
