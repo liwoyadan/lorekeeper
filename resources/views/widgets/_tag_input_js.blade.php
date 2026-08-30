@@ -1,5 +1,5 @@
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('.tag-input').selectize({
             delimiter: ',',
             persist: false,
