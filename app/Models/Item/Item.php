@@ -216,7 +216,7 @@ class Item extends Model {
             $lines[] = $t->displayTagTooltip.' '.$description;
         }
 
-        if (!$lines) {
+        if (empty($lines)) {
             return null;
         }
 
