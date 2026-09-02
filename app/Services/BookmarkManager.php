@@ -333,5 +333,4 @@ class BookmarkManager extends Service {
 
         return $folder;
     }
-
 }
