@@ -10,7 +10,11 @@
                     {!! Form::text('name', $folder->name, ['class' => 'form-control form-control-sm flex-grow-1 mr-2', 'maxLength' => 50]) !!}
                     {!! Form::submit('Rename', ['class' => 'btn btn-sm btn-primary']) !!}
                     {!! Form::close() !!}
-                    {!! Form::open(['url' => 'account/bookmarks/folders/delete/' . $folder->id, 'class' => 'ml-2', 'onsubmit' => 'return confirm(' . json_encode('Delete folder "' . $folder->name . '"? Its ' . $folder->bookmarks_count . ' bookmark(s) will move to Uncategorized.') . ');']) !!}
+                    {!! Form::open([
+                        'url' => 'account/bookmarks/folders/delete/' . $folder->id,
+                        'class' => 'ml-2',
+                        'onsubmit' => 'return confirm(' . json_encode('Delete folder "' . $folder->name . '"? Its ' . $folder->bookmarks_count . ' bookmark(s) will move to Uncategorized.') . ');',
+                    ]) !!}
                     {!! Form::submit('Delete', ['class' => 'btn btn-sm btn-danger']) !!}
                     {!! Form::close() !!}
                 </div>
